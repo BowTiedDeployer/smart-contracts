@@ -1,6 +1,4 @@
 
-settings/Mainnet.toml
-settings/Testnet.toml
 .vscode
 node_modules
 Devnet.toml
