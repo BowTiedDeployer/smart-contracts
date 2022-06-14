@@ -68,23 +68,10 @@
     (ok (unwrap-panic (map-get? lobbies {id: id})))
 )
 
-;; anyone can call to join lobbies
-;; (define-public (join (id uint))
-;;     (let (
-;;         (entry-price (default-to DEFAULT-PRICE (get price (map-get? lobbies {id: id}))))
-;;         )
-;;         (unwrap-panic (map-get? lobbies {id: id}))
-;;         (asserts! (default-to false (get active (map-get? lobbies {id: id}))) ERR-NOT-ACTIVE)
-;;         (add-balance id tx-sender entry-price)
-;;         (map-set scoreboard {lobby-id: id, address: tx-sender} {score: u0, rank: u0, rank-factor: u0, rewards: u0, rac: u0, nft: ""})
-;;         (print {action: "join", lobby-id: id, address: tx-sender })
-;;         (ok OK-SUCCESS)
-;;     )
-;; )
 
 ;; optimize one time join
 ;; after join, map-inset scoreboard default values
-;; if map-insert return false -> err ERR-ALREADY-JJOINED
+;; if map-insert return false -> err ERR-ALREADY-JOINED
 ;; else add balance print action etc 
 ;; anyone can call to join lobbies
 (define-public (join (id uint))
@@ -100,7 +87,6 @@
         (ok OK-SUCCESS)
     )
 )
-
 
 (define-public (disable-lobby (id uint))
     (begin

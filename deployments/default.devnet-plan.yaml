@@ -1,0 +1,29 @@
+---
+id: 0
+name: Devnet deployment
+network: devnet
+node: "http://localhost:20443"
+plan:
+  batches:
+    - id: 0
+      transactions:
+        - contract-publish:
+            contract-name: nft-trait
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/nft-trait.clar
+            cost: 4660
+        - contract-publish:
+            contract-name: miami-degens
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/miami-degens.clar
+            cost: 48180
+        - contract-publish:
+            contract-name: ft-trait
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/ft-trait.clar
+            cost: 8340
+        - contract-publish:
+            contract-name: trustless-rewards
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/trustless-rewards.clar
+            cost: 91070

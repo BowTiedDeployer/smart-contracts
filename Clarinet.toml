@@ -9,6 +9,10 @@ requirements = []
 path = "contracts/ft-trait.clar"
 depends_on = []
 
+[contracts.miami-degens]
+path = "contracts/miami-degens.clar"
+depends_on = ["nft-trait"]
+
 [contracts.nft-trait]
 path = "contracts/nft-trait.clar"
 depends_on = []
