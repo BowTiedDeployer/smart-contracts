@@ -1,0 +1,43 @@
+[project]
+name = "stacksdegens"
+authors = []
+description = ""
+telemetry = true
+requirements = []
+boot_contracts = ["pox", "costs-v2", "bns"]
+
+[project.cache_location]
+path = ".requirements"
+[contracts.conversion]
+path = "contracts/conversion.clar"
+
+[contracts.ft-trait]
+path = "contracts/ft-trait.clar"
+
+[contracts.miami-degens]
+path = "contracts/miami-degens.clar"
+
+[contracts.nft-trait]
+path = "contracts/nft-trait.clar"
+
+[contracts.nyc-degens]
+path = "contracts/nyc-degens.clar"
+
+[contracts.third-party]
+path = "contracts/third-party.clar"
+
+[contracts.trustless-rewards]
+path = "contracts/trustless-rewards.clar"
+
+[repl]
+costs_version = 2
+parser_version = 2
+
+[repl.analysis]
+passes = ["check_checker"]
+
+[repl.analysis.check_checker]
+strict = false
+trusted_sender = false
+trusted_caller = false
+callee_filter = false
