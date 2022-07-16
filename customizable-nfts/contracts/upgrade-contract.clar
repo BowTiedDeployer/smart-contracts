@@ -4,6 +4,7 @@
 
 ;; constants
 ;;
+(define-constant INVALID u300)
 
 ;; data maps and vars
 ;;
@@ -23,5 +24,18 @@
     (unwrap-panic (contract-call? .backgrounds claim ))
     (unwrap-panic (contract-call? .dgn-heads claim ))
     (contract-call? .wheels claim )
+  )
+)
+
+
+
+(define-public (assemble (background-id uint) (body-id uint) (rim-id uint) (head-id uint) (metadata-uri (string-ascii 99)))
+  (begin
+    (unwrap! (contract-call? .backgrounds burn-token background-id) (err INVALID))
+    (unwrap! (contract-call? .body-kits burn-token body-id) (err INVALID))
+    (unwrap! (contract-call? .wheels burn-token rim-id) (err INVALID))
+    (unwrap! (contract-call? .dgn-heads burn-token head-id) (err INVALID))
+  
+    (contract-call? .degen-nft claim )
   )
 )

@@ -5,18 +5,33 @@
 ;; define a new NFT. Make sure to replace DEGENS
 (define-non-fungible-token DEGENS uint)
 
+;; define constants
+(define-constant ERR-NO-RIGHTS (err u403))
+
 ;; Store the last issues token ID
 (define-data-var last-id uint u0)
+
+(define-map token-url { token-id: uint } { url: (string-ascii 256) })
+
 
 ;; Claim a new NFT
 (define-public (claim)
   (mint tx-sender)
 )
 
+(define-public (mint-url (address principal) (url (string-ascii 256)))
+   (let 
+    ((next-id (+ u1 (var-get last-id))))
+    (map-set token-url {token-id: next-id} {url: url})
+    (var-set last-id next-id)
+    (nft-mint? DEGENS next-id address)
+  )
+)
+
 ;; SIP009: Transfer token to a specified principal
-(define-public (transfer (token-id uint) (sender principal) (recipient principal))
+(define-public (transfer (token-id uint) (sender principal) (recipient principal)) 
   (begin
-    (asserts! (is-eq tx-sender sender) (err u403))
+    (asserts! (is-eq tx-sender sender) ERR-NO-RIGHTS)
     (nft-transfer? DEGENS token-id sender recipient)
   )
 )
@@ -41,9 +56,14 @@
 )
 
 ;; SIP009: Get the token URI. You can set it to any other URI
-(define-read-only (get-token-uri (token-id uint))
-  (ok (some "https://token.stacks.co/{id}.json"))
-)
+(define-read-only (get-token-uri (token-id uint)) 
+  (let ((token-urr (get url (map-get? token-url {token-id: token-id})))) 
+  (ok 
+    (if (is-none token-urr)
+      (some "no-link")
+      token-urr
+    )
+  )))
 
 ;; Internal - Mint new NFT
 (define-private (mint (new-owner principal))
@@ -51,43 +71,21 @@
     ((next-id (+ u1 (var-get last-id))))
     (var-set last-id next-id)
     (nft-mint? DEGENS next-id new-owner)
-  )
-)
+  ))
 
 ;; Burn a token
 (define-public (burn-token (token-id uint))  
 	(begin     
-		(asserts! (is-eq (some tx-sender) (nft-get-owner? DEGENS token-id) ) (err u403))     
+		(asserts! (is-eq (some tx-sender) (nft-get-owner? DEGENS token-id) ) ERR-NO-RIGHTS)     
 		(nft-burn? DEGENS token-id tx-sender)
   )
 )
 
-;; Disassemble
-;; Burn this
-;; call mint from the other callections
-(define-public (disassemble-call (token-id uint)) 
-	(begin     
-		(asserts! (is-eq (some tx-sender) (nft-get-owner? DEGENS token-id) ) (err u403))     
-		(unwrap-panic (nft-burn? DEGENS token-id tx-sender))
-    ;; mint in those collections
-    (unwrap-panic (contract-call? .body-kits claim ))
-    (contract-call? .wheels claim )
-  )
-)
 
 
-(define-private (custom-mint (argument uint)) 
-  (mint tx-sender)
-)
 
+(mint-url 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 "11111")   
+(mint-url 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 "22222")
 
-;; verifications for assemble
-(define-public (call-assemble (wheels-token-id uint) (body-kits-token-id uint)) 
-	(begin     
-    (asserts! (is-eq (some tx-sender) (unwrap-panic (contract-call? .wheels get-owner wheels-token-id)))  (err u403))
-    (asserts! (is-eq (some tx-sender) (unwrap-panic (contract-call? .body-kits get-owner body-kits-token-id)))  (err u403))
-    (custom-mint u23)
-  )
-)
-
-
+(get-token-uri u1)
+(get-token-uri u4)

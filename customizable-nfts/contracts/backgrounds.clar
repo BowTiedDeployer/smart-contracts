@@ -5,16 +5,21 @@
 ;; define a new NFT. Make sure to replace background
 (define-non-fungible-token background uint)
 
+;; define constants
+(define-constant ERR-INVALID-NAME (err u301))
+(define-constant ERR-NO-RIGHTS (err u403))
+
+
 ;; Store the last issues token ID
 (define-data-var last-id uint u0)
 
-(define-map background-uri 
-  { background-name: (string-ascii 256)} { metadata-url: (string-ascii 256) }
-)
+(define-map token-url { token-id: uint } { url: (string-ascii 256) })
+;; this is used if we want for a given attribute value to give a specific url
+;; eg. purple background -> ipfs://dasd..
+(define-map name-url { name: (string-ascii 30)} { url: (string-ascii 256) })
 
-(map-set background-uri  (tuple (background-name "MiamiLostOrange"))
- (tuple (metadata-url "ipfs://example/MiamiLostOrange.json"))
-)
+(map-set name-url  {name: "MiamiLostOrange"} {url: "ipfs://example/MiamiLostOrange.json"})
+
 
 
 
@@ -27,7 +32,7 @@
 ;; SIP009: Transfer token to a specified principal
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
   (begin
-    (asserts! (is-eq tx-sender sender) (err u403))
+    (asserts! (is-eq tx-sender sender) ERR-NO-RIGHTS)
     (nft-transfer? background token-id sender recipient)
   )
 )
@@ -51,16 +56,16 @@
   (ok (var-get last-id))
 )
 
-;; ;; SIP009: Get the token URI. You can set it to any other URI
-(define-read-only (get-token-uri (token-id uint))
-  (ok (some "https://token.stacks.co/{id}.json"))
-  ;; (ok (some (map-get? background-uri (tuple ( background-name "MiamiLostOrange")))))
-)
 
+(define-read-only (get-token-uri (token-id uint)) 
+  (let ((token-urr (get url (map-get? token-url {token-id: token-id})))) 
+  (ok 
+    (if (is-none token-urr)
+      (some "no-link")
+      token-urr
+    )
+  )))
 
-;; (define-read-only (get-token-uri (token-id uint))
-;;   (ok (some (map-get? background-uri  (tuple (background-name "MiamiLostOrange")))))
-;; )
 
 ;; Internal - Mint new NFT
 (define-private (mint (new-owner principal))
@@ -71,10 +76,39 @@
   )
 )
 
+;; pretty sure we don't need this but better to have it for now
+(define-public (mint-url (address principal) (url (string-ascii 256)))
+   (let 
+    ((next-id (+ u1 (var-get last-id))))
+    (map-set token-url {token-id: next-id} {url: url})
+    (var-set last-id next-id)
+    (nft-mint? background next-id address)
+  )
+)
+
+
+(define-public (mint-name (address principal) (name (string-ascii 30)))
+    ;; define and assign: next-id and url
+   (let 
+    ((next-id (+ u1 (var-get last-id)))
+    (url (get url (map-get? name-url {name: name})))
+    )
+    (if (is-none url)
+      ERR-INVALID-NAME
+      (begin 
+        (map-set token-url {token-id: next-id} {url: (unwrap-panic url)})
+        (var-set last-id next-id)
+        (nft-mint? background next-id address)
+      )
+    ))
+)
+
+
+
 ;; Burn a token
 (define-public (burn-token (token-id uint))  
 	(begin     
-		(asserts! (is-eq (some tx-sender) (nft-get-owner? background token-id) ) (err u403))     
+		(asserts! (is-eq (some tx-sender) (nft-get-owner? background token-id) ) ERR-NO-RIGHTS)     
 		(nft-burn? background token-id tx-sender)
   )
 )
