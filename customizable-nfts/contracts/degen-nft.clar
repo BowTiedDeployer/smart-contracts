@@ -28,6 +28,10 @@
   )
 )
 
+(define-public (update-uri (token-id uint) (url (string-ascii 256))) 
+  (ok (map-set token-url {token-id: token-id} {url: url}))
+)
+
 ;; SIP009: Transfer token to a specified principal
 (define-public (transfer (token-id uint) (sender principal) (recipient principal)) 
   (begin

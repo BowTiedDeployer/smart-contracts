@@ -26,6 +26,12 @@ path = "contracts/dgn-heads.clar"
 [contracts.nft-trait]
 path = "contracts/nft-trait.clar"
 
+[contracts.sip-010-trait-ft-standard]
+path = "contracts/sip-010-trait-ft-standard.clar"
+
+[contracts.token-metadata-update-notify]
+path = "contracts/token-metadata-update-notify.clar"
+
 [contracts.upgrade-contract]
 path = "contracts/upgrade-contract.clar"
 
