@@ -14,28 +14,45 @@
 
 ;; public functions
 ;;
+;; run-case
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degen-nft mint-url 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 "11111")    
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract disassemble u3 "background-eg" "not-yet" "not-yet" "not-yet")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.backgrounds get-token-uri u1)
 
-(define-public (disassemble-call (token-id uint)) 
+(define-public (disassemble (token-id uint) (background-url (string-ascii 256)) (body-url (string-ascii 256)) (rim-url (string-ascii 256)) (head-url (string-ascii 256))) 
 	(begin     
-		(asserts! (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) (err u403))     
+		;; (asserts! (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) (err u403)) 
+    ;; if not the owner, the burn function will throw the error     
 		(unwrap-panic (contract-call? .degen-nft burn-token token-id))
-    ;; mint in those collections
+    ;; mint in component collections
+    (unwrap-panic (contract-call? .backgrounds mint-url tx-sender background-url))
+    ;; TODO: if alright,do the same for the other components 
     (unwrap-panic (contract-call? .body-kits claim ))
-    (unwrap-panic (contract-call? .backgrounds claim ))
-    (unwrap-panic (contract-call? .dgn-heads claim ))
-    (contract-call? .wheels claim )
+    (unwrap-panic (contract-call? .wheels claim ))
+    (contract-call? .dgn-heads claim )
+  )
+)
+
+;; helper for running and 'pseudo' testing
+(define-public (mint-components )
+  (begin
+    (unwrap-panic (contract-call? .backgrounds mint-name tx-sender "MiamiLostOrange"))
+    (unwrap-panic (contract-call? .body-kits claim ))
+    (unwrap-panic (contract-call? .wheels claim ))
+    (contract-call? .dgn-heads claim )
   )
 )
 
 
-
-(define-public (assemble (background-id uint) (body-id uint) (rim-id uint) (head-id uint) (metadata-uri (string-ascii 99)))
+;; run-case
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract mint-components)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract assemble "custom-degen-url" u2 u2 u2 u2)
+(define-public (assemble (metadata-url (string-ascii 99)) (background-id uint) (body-id uint) (rim-id uint) (head-id uint))
   (begin
     (unwrap! (contract-call? .backgrounds burn-token background-id) (err INVALID))
     (unwrap! (contract-call? .body-kits burn-token body-id) (err INVALID))
     (unwrap! (contract-call? .wheels burn-token rim-id) (err INVALID))
     (unwrap! (contract-call? .dgn-heads burn-token head-id) (err INVALID))
-  
-    (contract-call? .degen-nft claim )
+    (contract-call? .degen-nft mint-url tx-sender metadata-url)  
   )
 )

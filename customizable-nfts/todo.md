@@ -14,9 +14,11 @@ Components Contract:
   x read only metadata change
 
 Wrapper Contract:
-  call for assemble 
-  call for disassemble
-  call for swap
+  call for assemble  (address, degen-url, background-id, body-id, rim-id, head-id)
+  call for disassemble (address, degen-id, background-url, body-url, rim-url, head-url)
+  
+  // should keep the id, update metadata and use the sip 019
+  call for swap (address, degen-id, degen-url, component-type, burnt-component-id, unmounted-component-url)
 
 
 second stage: 
