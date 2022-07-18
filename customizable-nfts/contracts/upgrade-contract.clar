@@ -32,6 +32,33 @@
   )
 )
 
+;; A map that creates a principal => uint relation.
+(define-map user-request-to-disassemble principal (list 5 uint))
+(define-map work-to-disassemble {member: principal, token-id: uint} (string-ascii 256))
+
+(define-public (add-work-for-user (token-id uint))
+  (let ((user-request (map-get? user-request-to-disassemble tx-sender)))
+    (if (is-none user-request)
+      (ok (add-user-to-request token-id))
+      (err INVALID)
+    )
+  )
+)
+
+(define-private (add-user-to-request (token-id uint))
+  (map-insert user-request-to-disassemble tx-sender (list token-id))
+)
+
+(define-public (get-work-in-progress)
+  (let ((user-request (map-get? user-request-to-disassemble tx-sender)))
+    (if (not (is-none user-request))
+      (ok user-request)
+      (err INVALID)
+    )
+  )
+)
+
+
 ;; helper for running and 'pseudo' testing
 (define-public (mint-components )
   (begin
