@@ -2,6 +2,10 @@
 ;; upgrade-contract
 ;; <add a description here>
 
+;; Owner
+(define-data-var contract-owner principal tx-sender)
+
+
 ;; constants
 ;;
 (define-constant INVALID u300)
@@ -32,32 +36,62 @@
   )
 )
 
-;; A map that creates a principal => uint relation.
+;; A map that creates a map from the user who is calling disassemble and the token id which is needed.
 (define-map user-request-to-disassemble principal (list 5 uint))
-(define-map work-to-disassemble {member: principal, token-id: uint} (string-ascii 256))
 
+
+;; adding work for user
 (define-public (add-work-for-user (token-id uint))
   (let ((user-request (map-get? user-request-to-disassemble tx-sender)))
     (if (is-none user-request)
+      ;; first time we are seeing the user
       (ok (add-user-to-request token-id))
-      (err INVALID)
+      (
+        let ((
+          user-request-list 
+          (unwrap-panic user-request)
+        )) 
+        (
+          ;; adding work to the existing queue of work
+          add-token-to-user-request-list token-id (unwrap-panic (as-max-len? user-request-list u4))
+        )
+      )      
+      ;; (ok ((map-set user-request-to-disassemble tx-sender (add-token-to-user-request-list token-id user-request))))
     )
   )
 )
 
 (define-private (add-user-to-request (token-id uint))
-  (map-insert user-request-to-disassemble tx-sender (list token-id))
+    (map-insert user-request-to-disassemble tx-sender (list token-id))
+)
+
+(define-private (add-token-to-user-request-list (token-id uint) (request-list (list 4 uint)))
+  (begin 
+    ;; check that the token id is not already queued
+    (asserts! (is-none (index-of request-list token-id)) (err INVALID))
+    (ok (map-set user-request-to-disassemble tx-sender (concat request-list (list token-id))))
+  ) 
 )
 
 (define-public (get-work-in-progress)
-  (let ((user-request (map-get? user-request-to-disassemble tx-sender)))
+  (get-work-in-progress-for-principal tx-sender)
+)
+
+(define-public (get-work-in-progress-admin (member principal))
+  (begin 
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err INVALID))
+    (get-work-in-progress-for-principal member)
+  )
+)
+
+(define-private (get-work-in-progress-for-principal (member principal))
+  (let ((user-request (map-get? user-request-to-disassemble member)))
     (if (not (is-none user-request))
       (ok user-request)
       (err INVALID)
     )
   )
 )
-
 
 ;; helper for running and 'pseudo' testing
 (define-public (mint-components )
