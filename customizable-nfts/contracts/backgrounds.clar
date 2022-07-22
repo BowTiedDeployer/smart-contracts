@@ -20,13 +20,24 @@
 
 (map-set name-url  {name: "MiamiLostOrange"} {url: "ipfs://example/MiamiLostOrange.json"})
 
+;; Owner
+(define-data-var contract-owner principal tx-sender)
 
-
+;; Errors
+(define-constant err-owner-only (err u100))
+(define-constant err-already-locked (err u101))
+(define-constant err-more-votes-than-members-required (err u102))
+(define-constant err-not-a-member (err u103))
+(define-constant err-votes-required-not-met (err u104))
 
 
 ;; Claim a new NFT
 (define-public (claim)
   (mint tx-sender)
+)
+
+(define-public (mint-for-user (recipient principal))
+  (mint recipient)
 )
 
 ;; SIP009: Transfer token to a specified principal
@@ -69,12 +80,16 @@
 
 ;; Internal - Mint new NFT
 (define-private (mint (new-owner principal))
-  (let 
-    ((next-id (+ u1 (var-get last-id))))
-    (var-set last-id next-id)
-    (nft-mint? background next-id new-owner)
+  (begin 
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
+    (let 
+      ((next-id (+ u1 (var-get last-id))))
+      (var-set last-id next-id)
+      (nft-mint? background next-id new-owner)
+    )
   )
 )
+
 
 ;; pretty sure we don't need this but better to have it for now
 (define-public (mint-url (address principal) (url (string-ascii 256)))
