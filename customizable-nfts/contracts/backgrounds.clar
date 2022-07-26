@@ -104,19 +104,22 @@
 
 
 (define-public (mint-name (address principal) (name (string-ascii 30)))
-    ;; define and assign: next-id and url
-   (let 
-    ((next-id (+ u1 (var-get last-id)))
-    (url (get url (map-get? name-url {name: name})))
-    )
-    (if (is-none url)
-      ERR_INVALID_NAME
-      (begin 
-        (map-set token-url {token-id: next-id} {url: (unwrap-panic url)})
-        (var-set last-id next-id)
-        (nft-mint? background next-id address)
+  ;; define and assign: next-id and url
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
+    (let 
+      ((next-id (+ u1 (var-get last-id)))
+      (url (get url (map-get? name-url {name: name})))
       )
-    ))
+      (if (is-none url)
+        ERR_INVALID_NAME
+        (begin 
+          (map-set token-url {token-id: next-id} {url: (unwrap-panic url)})
+          (var-set last-id next-id)
+          (nft-mint? background next-id address)
+        )
+      ))
+  )
 )
 
 
