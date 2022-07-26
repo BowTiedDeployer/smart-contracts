@@ -6,8 +6,8 @@
 (define-non-fungible-token background uint)
 
 ;; define constants
-(define-constant ERR-INVALID-NAME (err u301))
-(define-constant ERR-NO-RIGHTS (err u403))
+(define-constant ERR_INVALID_NAME (err u301))
+(define-constant ERR_NO_RIGHTS (err u403))
 
 
 ;; Store the last issues token ID
@@ -43,7 +43,7 @@
 ;; SIP009: Transfer token to a specified principal
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
   (begin
-    (asserts! (is-eq tx-sender sender) ERR-NO-RIGHTS)
+    (asserts! (is-eq tx-sender sender) ERR_NO_RIGHTS)
     (nft-transfer? background token-id sender recipient)
   )
 )
@@ -109,7 +109,7 @@
     (url (get url (map-get? name-url {name: name})))
     )
     (if (is-none url)
-      ERR-INVALID-NAME
+      ERR_INVALID_NAME
       (begin 
         (map-set token-url {token-id: next-id} {url: (unwrap-panic url)})
         (var-set last-id next-id)
@@ -123,7 +123,7 @@
 ;; Burn a token
 (define-public (burn-token (token-id uint))  
 	(begin     
-		(asserts! (is-eq (some tx-sender) (nft-get-owner? background token-id) ) ERR-NO-RIGHTS)     
+		(asserts! (is-eq (some tx-sender) (nft-get-owner? background token-id) ) ERR_NO_RIGHTS)     
 		(nft-burn? background token-id tx-sender)
   )
 )

@@ -12,8 +12,9 @@
 
 
 ;; constants
-(define-constant INVALID u300)
-(define-constant TOO_MANY_DISSASSEMBLE u200)
+(define-constant ERR_INVALID (err u300))
+(define-constant ERR_TOO_MANY_DISSASSEMBLE (err u200))
+(define-constant ERR-NOT_OWNER (err u100))
 
 ;; public functions
 (define-public (disassemble (token-id uint) (background-name (string-ascii 30)) (body-name (string-ascii 30)) (rim-name (string-ascii 30)) (head-name (string-ascii 30))) 
@@ -37,7 +38,7 @@
 (define-public (get-work-queue)
   (begin  
     ;; Check that admin is calling this contract
-    (asserts! (is-eq tx-sender (var-get contract-owner)) (err INVALID))
+    (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
     ;; Get the actual work-queue so that we can process it
     (ok (var-get work-queue))
   )
@@ -46,7 +47,7 @@
 (define-public (get-head-work-queue)
   (begin  
     ;; Check that admin is calling this contract
-    (asserts! (is-eq tx-sender (var-get contract-owner)) (err INVALID))
+    (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
     ;; Get the first element in the work queue so that we can process it
     (ok (element-at (var-get work-queue) u0))
   )
@@ -65,15 +66,19 @@
           ;; check user has not already inserted this
           (asserts! 
             (is-none (index-of work-queue-value value-to-add))
-            (err INVALID)
+            ERR_INVALID
           )
           ;; check user is not abusing the queue
           (asserts! 
             (< (len (filter is-value-for-principal work-queue-value)) u5)
-            (err TOO_MANY_DISSASSEMBLE)
+            ERR_TOO_MANY_DISSASSEMBLE
           )
-          ;; TODO(Deployer): add an assert to make sure token-id is owned by tx-sender
-          ;; TODO(Deployer): burn degen
+          ;; check user is owner of nft
+          (asserts! 
+            (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) 
+            ERR-NOT_OWNER
+          )    
+      		(unwrap-panic (contract-call? .degen-nft burn-token token-id))
 
           (append 
             (unwrap-panic (as-max-len? work-queue-value u99)) 
@@ -93,7 +98,7 @@
       (var-set work-queue
         (begin
           ;; Check that admin is calling this contract
-          (asserts! (is-eq tx-sender (var-get contract-owner)) (err INVALID))
+          (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
           ;; Remove first element in list
           (filter is-first-element work-queue-value)
         )
@@ -125,7 +130,7 @@
 ;; Utility functions
 ;; (define-private (is-admin) 
 ;;   (begin
-;;     (asserts! (is-eq tx-sender (var-get contract-owner)) (err INVALID))
+;;     (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
 ;;     (ok none)
 ;;   )
 ;; )
@@ -166,7 +171,7 @@
 (define-private (add-token-to-user-request-list (token-id uint) (request-list (list 4 uint)))
   (begin 
     ;; check that the token id is not already queued
-    (asserts! (is-none (index-of request-list token-id)) (err INVALID))
+    (asserts! (is-none (index-of request-list token-id)) ERR_INVALID)
     (ok (map-set user-request-to-disassemble tx-sender (concat request-list (list token-id))))
   ) 
 )
@@ -177,7 +182,7 @@
 
 (define-public (get-work-in-progress-admin (member principal))
   (begin 
-    (asserts! (is-eq tx-sender (var-get contract-owner)) (err INVALID))
+    (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
     (get-work-in-progress-for-principal member)
   )
 )
@@ -186,7 +191,7 @@
   (let ((user-request (map-get? user-request-to-disassemble member)))
     (if (not (is-none user-request))
       (ok user-request)
-      (err INVALID)
+      ERR_INVALID
     )
   )
 )
@@ -207,10 +212,10 @@
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract assemble "custom-degen-url" u2 u2 u2 u2)
 (define-public (assemble (metadata-url (string-ascii 99)) (background-id uint) (body-id uint) (rim-id uint) (head-id uint))
   (begin
-    (unwrap! (contract-call? .backgrounds burn-token background-id) (err INVALID))
-    (unwrap! (contract-call? .body-kits burn-token body-id) (err INVALID))
-    (unwrap! (contract-call? .wheels burn-token rim-id) (err INVALID))
-    (unwrap! (contract-call? .dgn-heads burn-token head-id) (err INVALID))
+    (unwrap! (contract-call? .backgrounds burn-token background-id) ERR_INVALID)
+    (unwrap! (contract-call? .body-kits burn-token body-id) ERR_INVALID)
+    (unwrap! (contract-call? .wheels burn-token rim-id) ERR_INVALID)
+    (unwrap! (contract-call? .dgn-heads burn-token head-id) ERR_INVALID)
     (contract-call? .degen-nft mint-url tx-sender metadata-url)  
   )
 )
@@ -225,9 +230,9 @@
 ;;   (component-name (string-ascii 30)) 
 ;;   )
 ;;   (begin 
-;;     (unwrap! (contract-call? .degen-nft burn-token degen-id) (err INVALID)) 
-;;     (unwrap! (contract-call? .backgrounds burn-token component-id) (err INVALID))
-;;     (unwrap! (contract-call? .degen-nft mint-url tx-sender degen-url) (err INVALID))
+;;     (unwrap! (contract-call? .degen-nft burn-token degen-id) ERR_INVALID) 
+;;     (unwrap! (contract-call? .backgrounds burn-token component-id) ERR_INVALID)
+;;     (unwrap! (contract-call? .degen-nft mint-url tx-sender degen-url) ERR_INVALID)
 ;;     (contract-call? .backgrounds mint-name tx-sender component-name)
 ;;   )
 ;; )
@@ -248,10 +253,10 @@
   ) 
   (begin
     ;; can also change component uri and not burn mint another - not so important rn
-    (unwrap! (contract-call? .backgrounds burn-token component-id)  (err INVALID))
-    (unwrap! (contract-call? .backgrounds mint-name tx-sender component-name) (err INVALID))
+    (unwrap! (contract-call? .backgrounds burn-token component-id)  ERR_INVALID)
+    (unwrap! (contract-call? .backgrounds mint-name tx-sender component-name) ERR_INVALID)
     ;; change url
-    (unwrap! (contract-call? .degen-nft update-uri degen-id degen-url) (err INVALID))
+    (unwrap! (contract-call? .degen-nft update-uri degen-id degen-url) ERR_INVALID)
     ;; trigger metadata update notifier for Degen SM and id of the swapped Degen
     (contract-call? .token-metadata-update-notify nft-metadata-update-notify 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degen-nft (list degen-id))
 
