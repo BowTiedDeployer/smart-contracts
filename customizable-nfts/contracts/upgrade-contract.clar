@@ -1,46 +1,142 @@
+;;
+;; run-case
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degen-nft mint-url 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 "11111")    
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract disassemble u3 "background-eg" "not-yet" "not-yet" "not-yet")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.backgrounds get-token-uri u1)
 
 ;; upgrade-contract
-;; <add a description here>
+;; Wrapper which is combining parts and degens
 
 ;; Owner
 (define-data-var contract-owner principal tx-sender)
 
 
 ;; constants
-;;
 (define-constant INVALID u300)
-
-;; data maps and vars
-;;
-
-;; private functions
-;;
+(define-constant TOO_MANY_DISSASSEMBLE u200)
 
 ;; public functions
-;;
-;; run-case
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degen-nft mint-url 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 "11111")    
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract disassemble u3 "background-eg" "not-yet" "not-yet" "not-yet")
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.backgrounds get-token-uri u1)
-(define-public (disassemble (token-id uint) (background-url (string-ascii 256)) (body-url (string-ascii 256)) (rim-url (string-ascii 256)) (head-url (string-ascii 256))) 
+(define-public (disassemble (token-id uint) (background-name (string-ascii 30)) (body-name (string-ascii 30)) (rim-name (string-ascii 30)) (head-name (string-ascii 30))) 
 	(begin     
 		;; (asserts! (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) (err u403)) 
     ;; if not the owner, the burn function will throw the error     
-		(unwrap-panic (contract-call? .degen-nft burn-token token-id))
+		;; (unwrap-panic (contract-call? .degen-nft burn-token token-id))
     ;; mint in component collections
-    (unwrap-panic (contract-call? .backgrounds mint-url tx-sender background-url))
+    ;; (unwrap-panic (contract-call? .backgrounds mint-url tx-sender background-url))
     ;; TODO: if alright,do the same for the other components 
-    (unwrap-panic (contract-call? .body-kits claim ))
-    (unwrap-panic (contract-call? .wheels claim ))
+    ;; (unwrap-panic (contract-call? .body-kits claim ))
+    ;; (unwrap-panic (contract-call? .wheels claim ))
     (contract-call? .dgn-heads claim )
   )
 )
+
+;; Queue for work
+(define-data-var work-queue (list 100 {member: principal, token-id: uint}) (list))
+
+
+(define-public (get-work-queue)
+  (begin  
+    ;; Check that admin is calling this contract
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err INVALID))
+    ;; Get the actual work-queue so that we can process it
+    (ok (var-get work-queue))
+  )
+)
+
+(define-public (get-head-work-queue)
+  (begin  
+    ;; Check that admin is calling this contract
+    (asserts! (is-eq tx-sender (var-get contract-owner)) (err INVALID))
+    ;; Get the first element in the work queue so that we can process it
+    (ok (element-at (var-get work-queue) u0))
+  )
+)
+
+(define-public (add-work-in-queue (token-id uint))
+  (ok 
+    (let 
+      (
+        (work-queue-value (var-get work-queue))
+        (value-to-add {token-id: token-id, member: tx-sender})
+      )
+    
+      (var-set work-queue
+        (begin
+          ;; check user has not already inserted this
+          (asserts! 
+            (is-none (index-of work-queue-value value-to-add))
+            (err INVALID)
+          )
+          ;; check user is not abusing the queue
+          (asserts! 
+            (< (len (filter is-value-for-principal work-queue-value)) u5)
+            (err TOO_MANY_DISSASSEMBLE)
+          )
+          ;; TODO(Deployer): add an assert to make sure token-id is owned by tx-sender
+          ;; TODO(Deployer): burn degen
+
+          (append 
+            (unwrap-panic (as-max-len? work-queue-value u99)) 
+            {token-id: token-id, member: tx-sender}
+          )
+        )
+      )
+    )
+  )
+)
+
+(define-public (pop-work-queue)
+  (ok 
+    (let
+      ((work-queue-value (var-get work-queue)))
+
+      (var-set work-queue
+        (begin
+          ;; Check that admin is calling this contract
+          (asserts! (is-eq tx-sender (var-get contract-owner)) (err INVALID))
+          ;; Remove first element in list
+          (filter is-first-element work-queue-value)
+        )
+      )
+    )
+  )
+)
+
+(define-private (is-value-for-principal (value (tuple (token-id uint) (member principal))))
+  (is-eq (get member value) tx-sender)
+)
+
+(define-private (is-first-element (value (tuple (token-id uint) (member principal))))
+  (let
+    ((first-element (element-at (var-get work-queue) u0)))
+
+    (not 
+      (and
+        (is-some first-element)
+        (is-eq value (unwrap-panic first-element))
+      )
+    )
+  )
+)
+
+;; (define-public (remove-work-from-queue))
+
+
+;; Utility functions
+;; (define-private (is-admin) 
+;;   (begin
+;;     (asserts! (is-eq tx-sender (var-get contract-owner)) (err INVALID))
+;;     (ok none)
+;;   )
+;; )
+
+
 
 ;; A map that creates a map from the user who is calling disassemble and the token id which is needed.
 (define-map user-request-to-disassemble principal (list 5 uint))
 
 
-;; adding work for user
+;; adding work for user - called by user to add token in queue
 (define-public (add-work-for-user (token-id uint))
   (let ((user-request (map-get? user-request-to-disassemble tx-sender)))
     (if (is-none user-request)
@@ -62,7 +158,9 @@
 )
 
 (define-private (add-user-to-request (token-id uint))
+  (begin 
     (map-insert user-request-to-disassemble tx-sender (list token-id))
+  )
 )
 
 (define-private (add-token-to-user-request-list (token-id uint) (request-list (list 4 uint)))
