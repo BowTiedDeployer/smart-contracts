@@ -19,6 +19,8 @@
 (define-map name-url { name: (string-ascii 30)} { url: (string-ascii 256) })
 
 (map-set name-url  {name: "MiamiLostOrange"} {url: "ipfs://example/MiamiLostOrange.json"})
+(map-set name-url  {name: "MiamiSunsetMist"} {url: "ipfs://example/MiamiSunsetMist.json"})
+(map-set name-url  {name: "MiamiLunaPurple"} {url: "ipfs://example/MiamiLunaPurple.json"})
 
 ;; Owner
 (define-data-var contract-owner principal tx-sender)
@@ -105,18 +107,23 @@
 
 (define-public (mint-name (address principal) (name (string-ascii 30)))
     ;; define and assign: next-id and url
-   (let 
-    ((next-id (+ u1 (var-get last-id)))
-    (url (get url (map-get? name-url {name: name})))
-    )
-    (if (is-none url)
-      ERR_INVALID_NAME
-      (begin 
-        (map-set token-url {token-id: next-id} {url: (unwrap-panic url)})
-        (var-set last-id next-id)
-        (nft-mint? background next-id address)
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
+    (let 
+      (
+        (next-id (+ u1 (var-get last-id)))
+        (url (get url (map-get? name-url {name: name})))
       )
-    ))
+      (if (is-none url)
+        ERR_INVALID_NAME
+        (begin 
+          (map-set token-url {token-id: next-id} {url: (unwrap-panic url)})
+          (var-set last-id next-id)
+          (nft-mint? background next-id address)
+        )
+      )
+    )
+  )
 )
 
 
