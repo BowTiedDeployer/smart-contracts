@@ -3,7 +3,9 @@ import { Clarinet, Tx, Chain, Account, types } from 'https://deno.land/x/clarine
 import { assertEquals } from 'https://deno.land/std@0.90.0/testing/asserts.ts';
 
 const CONTRACT_NAME = 'backgrounds';
-const MINT_URL_FNC = 'mint-url';
+const MINT_URL = 'mint-url';
+const MINT_NAME = 'mint-name';
+const BURN_TOKEN = 'burn-token';
 const GET_TOKEN_URI = 'get-token-uri';
 const ERR_OWNER_ONLY = `(err ${types.uint(100)})`;
 const URL_NO_LINK = 'no-link';
@@ -31,108 +33,372 @@ Clarinet.test({
     },
 });
 
+//mint-url
 Clarinet.test({
-    name: 'Ensure that owner can mint a custom url background for himself and others',
+    name: "mint-url_deployer_deployer_ok",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
-        const wallet_1 = accounts.get('wallet_1')!;
         const url = 'custom-url-link';
-        // console.log(deployer)
-        
-        // general: mine two transactions in a block
-        // exactly: mint url function for two addresses by the contract owner wallet
+
         let block = chain.mineBlock([
             Tx.contractCall(
                 CONTRACT_NAME,
-                MINT_URL_FNC,
+                MINT_URL,
                 [
                     types.principal(deployer.address),
                     types.ascii(url)
                 ],
                 deployer.address
-            ),Tx.contractCall(
+            ),
+        ]);
+
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectOk().expectBool(true);
+    },
+});
+
+Clarinet.test({
+    name: "mint-url_deployer_address_ok",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+        const url = 'custom-url-link';
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
                 CONTRACT_NAME,
-                MINT_URL_FNC,
+                MINT_URL,
                 [
-                    types.principal(wallet_1.address),
+                    types.principal(receiver.address),
                     types.ascii(url)
                 ],
                 deployer.address
             ),
         ]);
-        // verify that the results of the transactions is as expected
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
         block.receipts[0].result.expectOk().expectBool(true);
-        block.receipts[1].result.expectOk().expectBool(true);
         // console.log(`block `, block)
+        // console.log(`block `, block.receipts[0].events)
+    },
+});
 
-        // call the read-only funcitons to get the uri of the specific nfts minted and check if the link is as expected
-        const tx = chain.callReadOnlyFn(
+Clarinet.test({
+    name: "mint-url_address_address_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const sender = accounts.get('wallet_1')!;
+        const receiver = accounts.get('wallet_2')!;
+        const url = 'custom-url-link';
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                MINT_URL,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(url)
+                ],
+                sender.address
+            ),
+        ]);
+
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectErr().expectUint(100);
+    },
+});
+
+
+//get-token-uri
+Clarinet.test({
+    name: "get-token-uri_existendId_ok",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+        const url = 'custom-url-link';
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                MINT_URL,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(url)
+                ],
+                deployer.address
+            ),
+        ]);
+
+        const token_uri = chain.callReadOnlyFn(
             CONTRACT_NAME,
             GET_TOKEN_URI,
             [
                 types.uint(1),
             ],
             deployer.address
-        );
-        // console.log(`tx `, tx);
-        assertEquals(
-            tx.result,
-            `(ok (some "${url}"))`
-        )
-        const tx2 = chain.callReadOnlyFn(
+        );        
+        const token_uri_result = token_uri.result
+        token_uri_result.expectOk()
+        assertEquals(token_uri_result, `(ok (some "${url}"))`)
+    },
+});
+
+Clarinet.test({
+    name: "get-token-uri_inexistendId_no-link",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+        const url = 'custom-url-link';
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                MINT_URL,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(url)
+                ],
+                deployer.address
+            ),
+        ]);
+
+        const token_uri = chain.callReadOnlyFn(
             CONTRACT_NAME,
             GET_TOKEN_URI,
             [
                 types.uint(2),
             ],
             deployer.address
-        );
-        // console.log(`tx2 `, tx2);
-        assertEquals(
-            tx2.result,
-            `(ok (some "${url}"))`
-        )
-    }
-})
+        );        
+        const token_uri_result = token_uri.result
+        token_uri_result.expectOk()
+        assertEquals(token_uri_result, `(ok (some "${URL_NO_LINK}"))`)
+    },
+});
 
 
+//mint-name
 Clarinet.test({
-    name: 'Ensure that other addresses than the owner cannot mint a custom url background',
+    name: "mint-name_deployer_deployer_existentName_ok",
     async fn(chain: Chain, accounts: Map<string, Account>) {
-        const wallet_1 = accounts.get('wallet_1')!;
-        const wallet_2 = accounts.get('wallet_2')!;
-        const url = 'custom-url-link';
-        // console.log(deployer)
-        
-        // calls mint url function and checks if it throws the error for not having the contract owner address when calling
+        const deployer = accounts.get('deployer')!;
+        const name = 'MiamiLunaPurple';
+
         let block = chain.mineBlock([
             Tx.contractCall(
                 CONTRACT_NAME,
-                MINT_URL_FNC,
+                MINT_NAME,
                 [
-                    types.principal(wallet_1.address),
-                    types.ascii(url)
+                    types.principal(deployer.address),
+                    types.ascii(name)
                 ],
-                wallet_1.address
+                deployer.address
             ),
         ]);
-        assertEquals(block.receipts[0].result, '(err u100)');
-        // console.log(`block `, block.receipts[0].result);
         
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectOk().expectBool(true);
+    },
+});
 
-        const tx = chain.callReadOnlyFn(
-            CONTRACT_NAME,
-            GET_TOKEN_URI,
-            [
-                types.uint(1),
-            ],
-            wallet_1.address
-        );
-        // console.log(`tx `, tx);
-        assertEquals(
-            tx.result,
-            `(ok (some "${URL_NO_LINK}"))`
-        )
-    }
-})
+Clarinet.test({
+    name: "mint-name_deployer_address_existentName_ok",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+        const name = 'MiamiLunaPurple';
 
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(name)
+                ],
+                deployer.address
+            ),
+        ]);
+        
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectOk().expectBool(true);
+    },
+});
+
+Clarinet.test({
+    name: "mint-name_address_address_existentName_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const sender = accounts.get('wallet_1')!;
+        const receiver = accounts.get('wallet_1')!;
+        const name = 'MiamiLunaPurple';
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(name)
+                ],
+                sender.address
+            ),
+        ]);
+        
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectErr().expectUint(100);
+    },
+});
+
+Clarinet.test({
+    name: "mint-name_deployer_address_inexistentName_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+        const name = 'random-name';
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(name)
+                ],
+                deployer.address
+            ),
+        ]);
+        
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectErr().expectUint(301);
+    },
+});
+
+
+//burn-token
+Clarinet.test({
+    name: "burn-token_owner_tokenOwned_ok",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+        const name = 'MiamiLunaPurple';
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(name)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CONTRACT_NAME,
+                BURN_TOKEN,
+                [
+                    types.uint(1)
+                ],
+                receiver.address
+            ),
+        ]);
+        
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 2);
+        block.receipts[1].result.expectOk().expectBool(true);
+    },
+});
+
+Clarinet.test({
+    name: "burn-token_deployer_tokenNotOwned_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+        const name = 'MiamiLunaPurple';
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(name)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CONTRACT_NAME,
+                BURN_TOKEN,
+                [
+                    types.uint(1)
+                ],
+                deployer.address
+            ),
+        ]);
+        
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 2);
+        block.receipts[1].result.expectErr().expectUint(403);
+    },
+});
+
+
+Clarinet.test({
+    name: "burn-token_address_tokenNotOwned_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+        const notOwner = accounts.get('wallet_2')!;
+        const name = 'MiamiLunaPurple';
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(name)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CONTRACT_NAME,
+                BURN_TOKEN,
+                [
+                    types.uint(1)
+                ],
+                notOwner.address
+            ),
+        ]);
+        
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 2);
+        block.receipts[1].result.expectErr().expectUint(403);
+    },
+});
+
+Clarinet.test({
+    name: "burn-token_address_tokenInexistent_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const user = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                BURN_TOKEN,
+                [
+                    types.uint(1)
+                ],
+                user.address
+            ),
+        ]);
+
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectErr().expectUint(403);
+    },
+});
