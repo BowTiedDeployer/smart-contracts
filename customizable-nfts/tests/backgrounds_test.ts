@@ -7,6 +7,7 @@ const MINT_URL = 'mint-url';
 const MINT_NAME = 'mint-name';
 const BURN_TOKEN = 'burn-token';
 const GET_TOKEN_URI = 'get-token-uri';
+const ERR_OWNER_ONLY = `(err ${types.uint(100)})`;
 const URL_NO_LINK = 'no-link';
 
 Clarinet.test({
@@ -31,7 +32,6 @@ Clarinet.test({
         assertEquals(block.height, 3);
     },
 });
-
 
 //mint-url
 Clarinet.test({
@@ -76,7 +76,6 @@ Clarinet.test({
                 deployer.address
             ),
         ]);
-
         assertEquals(block.height, 2);
         assertEquals(block.receipts.length, 1);
         block.receipts[0].result.expectOk().expectBool(true);
@@ -138,8 +137,7 @@ Clarinet.test({
                 types.uint(1),
             ],
             deployer.address
-        );
-        
+        );        
         const token_uri_result = token_uri.result
         token_uri_result.expectOk()
         assertEquals(token_uri_result, `(ok (some "${url}"))`)
@@ -172,8 +170,7 @@ Clarinet.test({
                 types.uint(2),
             ],
             deployer.address
-        );
-        
+        );        
         const token_uri_result = token_uri.result
         token_uri_result.expectOk()
         assertEquals(token_uri_result, `(ok (some "${URL_NO_LINK}"))`)
