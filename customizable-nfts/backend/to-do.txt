@@ -1,0 +1,25 @@
+disassemble
+
+useru da burn de pe client
+se duce in lista de pe contract
+
+serveru face calluri recurente pe lista din contract 
+daca is valori, ia prima valoare - id
+iau pt id uri metadata -> json cu atribute
+
+de 4 ori - odata pt fiecare componenta - 
+  !!! problema cand vreau sa fac 2 in acelasi block, get ul va aduce aceeasi valoare, adaug o valoare in json si alta e aia din mint
+  iau din contract last id
+  creez jsonuri cu idul luat mai sus
+  fac push pe pinata cu jsonu cu id ul ala + link imgagine reusable ( din name-url contract )
+
+contract call disassemble cu parametrii url urile de pinata create mai sus cu 2 randuri
+
+
+actual calls
+  general-contract-call
+    get-list-work ( disassemble / assemble / swap )
+  get read only - metadata-uri(smart contract, token-id) -> return json content
+
+
+
