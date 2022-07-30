@@ -15,9 +15,6 @@
 
 (define-map token-url { token-id: uint } { url: (string-ascii 256) })
 
-;; Owner
-(define-data-var contract-owner principal tx-sender)
-
 
 ;; SIP009: Transfer token to a specified principal
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
