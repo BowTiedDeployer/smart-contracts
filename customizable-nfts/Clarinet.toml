@@ -23,8 +23,14 @@ path = "contracts/degen-nft.clar"
 [contracts.dgn-heads]
 path = "contracts/dgn-heads.clar"
 
+[contracts.miami-degens]
+path = "contracts/miami-degens.clar"
+
 [contracts.nft-trait]
 path = "contracts/nft-trait.clar"
+
+[contracts.nyc-degens]
+path = "contracts/nyc-degens.clar"
 
 [contracts.sip-010-trait-ft-standard]
 path = "contracts/sip-010-trait-ft-standard.clar"

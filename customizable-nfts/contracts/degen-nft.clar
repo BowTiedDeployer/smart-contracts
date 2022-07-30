@@ -74,11 +74,7 @@
 ;; Burn a token
 (define-public (burn-token (token-id uint))  
 	(begin     
-		(asserts! (is-eq (some tx-sender) (nft-get-owner? DEGENS token-id) ) err-no-rights)     
+		(asserts! (is-eq (some tx-sender) (nft-get-owner? DEGENS token-id)) err-no-rights)     
 		(nft-burn? DEGENS token-id tx-sender)
   )
 )
-
-(mint-url 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 "11111")   
-(mint-url 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 "22222")
-
