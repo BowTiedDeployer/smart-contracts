@@ -83,12 +83,14 @@
 
 
 (define-public (mint-url (address principal) (url (string-ascii 256)))
-   (let 
-    ((next-id (+ u1 (var-get last-id))))
+  (begin 
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
-    (map-set token-url {token-id: next-id} {url: url})
-    (var-set last-id next-id)
-    (nft-mint? background next-id address)
+    (let 
+      ((next-id (+ u1 (var-get last-id))))
+      (map-set token-url {token-id: next-id} {url: url})
+      (var-set last-id next-id)
+      (nft-mint? background next-id address)
+    )
   )
 )
 

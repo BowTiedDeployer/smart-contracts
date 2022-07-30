@@ -5,12 +5,13 @@
 ;; define a new NFT. Make sure to replace degen
 (define-non-fungible-token degen uint)
 
-;; define constants
+;; define errors
 (define-constant err-owner-only (err u100))
 (define-constant err-no-rights (err u403))
 
 ;; Store the last issues token ID
 (define-data-var last-id uint u0)
+(define-data-var contract-owner principal tx-sender)
 
 (define-map token-url { token-id: uint } { url: (string-ascii 256) })
 
