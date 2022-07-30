@@ -7,8 +7,6 @@ const MINT_URL = 'mint-url';
 const MINT_NAME = 'mint-name';
 const BURN_TOKEN = 'burn-token';
 const GET_TOKEN_URI = 'get-token-uri';
-const ERR_OWNER_ONLY = `(err ${types.uint(100)})`;
-const URL_NO_LINK = 'no-link';
 
 Clarinet.test({
     name: "Ensure that <...>",
@@ -137,7 +135,7 @@ Clarinet.test({
                 types.uint(1),
             ],
             deployer.address
-        );        
+        );
         const token_uri_result = token_uri.result
         token_uri_result.expectOk()
         assertEquals(token_uri_result, `(ok (some "${url}"))`)
@@ -170,7 +168,7 @@ Clarinet.test({
                 types.uint(2),
             ],
             deployer.address
-        );        
+        );
         const token_uri_result = token_uri.result
         token_uri_result.expectOk()
         assertEquals(token_uri_result, `(ok none)`)
