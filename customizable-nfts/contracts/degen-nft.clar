@@ -5,29 +5,34 @@
 ;; define a new NFT. Make sure to replace DEGENS
 (define-non-fungible-token DEGENS uint)
 
-;; define constants
-(define-constant ERR-NO-RIGHTS (err u403))
+
+;; define errors
+(define-constant err-owner-only (err u100))
+(define-constant err-no-rights (err u403))
 
 ;; Store the last issues token ID
 (define-data-var last-id uint u0)
+(define-data-var contract-owner principal tx-sender)
 
 (define-map token-url { token-id: uint } { url: (string-ascii 256) })
 
 
-
 (define-public (mint-url (address principal) (url (string-ascii 256)))
-  (let 
-    ((next-id (+ u1 (var-get last-id))))
-    (map-set token-url {token-id: next-id} {url: url})
-    (var-set last-id next-id)
-    (nft-mint? DEGENS next-id address)
+  (begin 
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
+    (let 
+      ((next-id (+ u1 (var-get last-id))))
+      (map-set token-url {token-id: next-id} {url: url})
+      (var-set last-id next-id)
+      (nft-mint? DEGENS next-id address)
+    )
   )
 )
 
 ;; SIP009: Transfer token to a specified principal
 (define-public (transfer (token-id uint) (sender principal) (recipient principal)) 
   (begin
-    (asserts! (is-eq tx-sender sender) ERR-NO-RIGHTS)
+    (asserts! (is-eq tx-sender sender) err-no-rights)
     (nft-transfer? DEGENS token-id sender recipient)
   )
 )
@@ -69,7 +74,7 @@
 ;; Burn a token
 (define-public (burn-token (token-id uint))  
 	(begin     
-		(asserts! (is-eq (some tx-sender) (nft-get-owner? DEGENS token-id) ) ERR-NO-RIGHTS)     
+		(asserts! (is-eq (some tx-sender) (nft-get-owner? DEGENS token-id) ) err-no-rights)     
 		(nft-burn? DEGENS token-id tx-sender)
   )
 )
