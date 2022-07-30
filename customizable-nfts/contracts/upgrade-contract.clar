@@ -19,15 +19,29 @@
 (define-constant rims-type "rims-type")
 (define-constant head-type "head-type")
 
+(define-constant miami-type "miami")
+(define-constant nyc-type "nyc")
+
+
+(define-constant burn-address 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG)
+
+
+
 ;; public functions
 
 ;; Disassemble
 
 ;; eg. case
 ;; (contract-call? .degen-nft mint-url tx-sender "urlMiamiLostOrange")
-;; (contract-call? .upgrade-contract add-disassemble-work-in-queue u3)
+;; (contract-call? .upgrade-contract add-disassemble-work-in-queue u1)
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract disassemble-finalize u3 tx-sender "MiamiLostOrange" "MiamiLostOrange" "MiamiLostOrange" "MiamiLostOrange")
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.body-kits get-token-uri u1)
+
+
+;; Queue for work
+(define-data-var disassemble-work-queue (list 100 {member: principal, token-id: uint}) (list))
+
+
 
 (define-public (disassemble-finalize (token-id uint) (member principal) (background-name (string-ascii 30)) (body-name (string-ascii 30)) (rim-name (string-ascii 30)) (head-name (string-ascii 30))) 
 	(begin     
@@ -41,9 +55,8 @@
   )
 )
 
-;; Queue for work
-(define-data-var disassemble-work-queue (list 100 {member: principal, token-id: uint}) (list))
 
+;; TODO: decide if only contrct owner or if it can be public info
 (define-public (get-disassemble-work-queue)
   (begin  
     ;; Check that admin is calling this contract
@@ -87,6 +100,7 @@
             (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) 
             err-not-owner
           )    
+          ;; transfer fees if not contract-owner
           (if (is-eq tx-sender (var-get contract-owner)) true (try! (fee-processing)))
           (unwrap-panic (contract-call? .degen-nft burn-token token-id))
           (append 
@@ -117,7 +131,7 @@
 )
 
 
-(define-private (is-disassemble-first-element (value (tuple (token-id uint) (member principal))))
+(define-private (is-disassemble-first-element (value {token-id: uint, member: principal}))
   (let
     ((first-element (element-at (var-get disassemble-work-queue) u0)))
 
@@ -133,7 +147,7 @@
 
 ;; Helper functions
 
-(define-private (is-disassemble-value-for-principal (value (tuple (token-id uint) (member principal))))
+(define-private (is-disassemble-value-for-principal (value {token-id: uint, member: principal}))
   (is-eq (get member value) tx-sender)
 )
 
@@ -286,6 +300,7 @@
 
 (define-data-var assemble-work-queue (list 100 {member: principal, background-id: uint, body-id: uint, rim-id: uint, head-id: uint}) (list))
 
+;; TODO: decide if only contrct owner or if it can be public info
 (define-public (assemble-get-work-queue)
   (begin  
     ;; Check that admin is calling this contract
@@ -409,15 +424,17 @@
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degen-nft mint-url 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "nice-link")
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.wheels mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "MiamiLunaPurple")
 ;; ::set_tx_sender STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-swap-work-in-queue u3 u1 "rims-type")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-swap-work-in-queue u1 u1 "rims-type")
 ;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-;; >> (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract swap-finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "new-nice-link" "NYCGoldie" "rims-type")
+
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract swap-finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "new-nice-link" "NYCGoldie" "rims-type")
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.wheels get-token-uri u2)
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degen-nft get-token-uri u4)
 
 
 (define-data-var swap-work-queue (list 100 {member: principal, degen-id: uint, component-id: uint, component-type: (string-ascii 30)}) (list))
 
+;; TODO: decide if only contrct owner or if it can be public info
 (define-public (get-swap-work-queue)
   (begin  
     ;; Check that admin is calling this contract
@@ -596,37 +613,6 @@
 
 
 
-
-
-
-
-;; swap changing metadata and notifying about it
-;;
-;; contract calls from zero to this
-;;
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract mint-components)
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract mint-components)
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract assemble "custom-degen-url" u2 u2 u2 u2)
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract swap u3 "background" u1 "new-custom-degen-url" "MiamiLostOrange")
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degen-nft get-token-uri u3)
-(define-public (swap (degen-id uint) (component-type (string-ascii 99)) (component-id uint) 
-  (degen-url (string-ascii 99))
-  (component-name (string-ascii 30))
-  ) 
-  (begin
-    ;; can also change component uri and not burn mint another - not so important rn
-    (unwrap! (contract-call? .backgrounds burn-token component-id)  err-invalid)
-    (unwrap! (contract-call? .backgrounds mint-name tx-sender component-name) err-invalid)
-    ;; change url
-    ;; (unwrap! (contract-call? .degen-nft update-uri degen-id degen-url) err-invalid)
-    ;; trigger metadata update notifier for Degen SM and id of the swapped Degen
-    (contract-call? .token-metadata-update-notify nft-metadata-update-notify 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degen-nft (list degen-id))
-
-  )
-)
-
-
-
 ;; Template
 
 ;; (define-data-var work-queue (list 100 {member: principal, token-id: uint}) (list))
@@ -732,6 +718,12 @@
 
 
 
+;; merge 
+;; transfer from old address to burn address
+;; add in queue
+
+
+;; mint new nft with url
 
 
 
@@ -744,19 +736,146 @@
 
 
 
-;; swap burning and minting another nft
-;;
-;; degen-url metadata for the new generated degen
-;; component-url metadata for the new generated component
-;; (define-public (swap-burn (degen-id uint) (component-type (string-ascii 99)) (component-id uint) 
-;;   (degen-url (string-ascii 99))
-;;   (component-name (string-ascii 30)) 
-;;   )
-;;   (begin 
-;;     (unwrap! (contract-call? .degen-nft burn-token degen-id) err-invalid) 
-;;     (unwrap! (contract-call? .backgrounds burn-token component-id) err-invalid)
-;;     (unwrap! (contract-call? .degen-nft mint-url tx-sender degen-url) err-invalid)
-;;     (contract-call? .backgrounds mint-name tx-sender component-name)
-;;   )
-;; )
+;; Merge
+
+;; eg. case
+;; ::set_tx_sender STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.miami-degens claim)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.nyc-degens claim)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-merge-work-in-queue u1 "miami")
+;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract get-merge-work-queue)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract merge-finalize tx-sender "nice-new-nft")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degen-nft get-token-uri u1)
+
+(define-data-var merge-work-queue (list 100 {member: principal, degen-id: uint, degen-type: (string-ascii 30)}) (list))
+
+;; TODO: decide if only contrct owner or if it can be public info
+(define-public (get-merge-work-queue)
+  (begin  
+    ;; Check that admin is calling this contract
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
+    ;; Get the actual work-queue so that we can process it
+    (ok (var-get merge-work-queue))
+  )
+)
+
+(define-public (get-merge-head-work-queue)
+  (begin  
+    ;; Check that admin is calling this contract
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
+    ;; Get the first element in the work queue so that we can process it
+    (ok (element-at (var-get merge-work-queue) u0))
+  )
+)
+
+(define-public (add-merge-work-in-queue (degen-id uint) (degen-type (string-ascii 30)))
+  (ok 
+    (let 
+      (
+        (work-queue-value (var-get merge-work-queue))
+        (value-to-add { 
+          member: tx-sender,
+          degen-id: degen-id,
+          degen-type: degen-type
+          })
+      )
+    
+      (var-set merge-work-queue
+        (begin
+          ;; check user has not already inserted this
+          (asserts! 
+            (is-none (index-of work-queue-value value-to-add))
+            err-invalid
+          )
+          ;; check user is not abusing the queue
+          (asserts! 
+            (< (len (filter is-merge-value-for-principal work-queue-value)) u5)
+            err-too-many-disassemble
+          )
+          ;; check user is owner of old Degen nft
+          (asserts! 
+            (is-eq (some tx-sender) 
+              (if (is-eq degen-type miami-type)
+                (unwrap-panic (contract-call? .miami-degens get-owner degen-id))
+                (if (is-eq degen-type nyc-type)
+                  (unwrap-panic (contract-call? .nyc-degens get-owner degen-id))
+                  none
+                )
+              )
+            ) 
+            err-not-owner
+          )    
+          (if (is-eq tx-sender (var-get contract-owner)) true (try! (fee-processing)))
+          ;; (unwrap-panic (contract-call? .old-degen-nft burn-token degen-id))
+          
+          (some (burn-old-nft degen-id degen-type))
+
+          (append 
+            (unwrap-panic (as-max-len? work-queue-value u99)) 
+            value-to-add
+          )
+        )
+      )
+    )
+  )
+)
+
+(define-public (pop-merge-work-queue)
+  (ok 
+    (let
+      ((work-queue-value (var-get merge-work-queue)))
+
+      (var-set merge-work-queue
+        (begin
+          ;; Check that admin is calling this contract
+          (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
+          ;; Remove first element in list
+          (filter is-merge-first-element work-queue-value)
+        )
+      )
+    )
+  )
+)
+
+(define-private (burn-old-nft (degen-id uint) (degen-type (string-ascii 30))) 
+  (if (is-eq 
+        false
+        (if (is-eq degen-type miami-type)
+          (unwrap-panic (contract-call? .miami-degens transfer degen-id tx-sender burn-address))
+          (if (is-eq degen-type nyc-type)
+            (unwrap-panic (contract-call? .nyc-degens transfer degen-id tx-sender burn-address))
+            false  
+          )
+        )
+      )
+    err-component-type-invalid
+    (ok (some degen-id))
+  )
+)
+
+(define-private (is-merge-value-for-principal (value {degen-id: uint, degen-type: (string-ascii 30), member: principal}))
+  (is-eq (get member value) tx-sender)
+)
+
+(define-private (is-merge-first-element (value {degen-id: uint, degen-type: (string-ascii 30), member: principal}))
+  (let
+    ((first-element (element-at (var-get merge-work-queue) u0)))
+
+    (not 
+      (and
+        (is-some first-element)
+        (is-eq value (unwrap-panic first-element))
+      )
+    )
+  )
+)
+
+(define-public (merge-finalize (member principal) (metadata-url-dgn (string-ascii 99)))
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
+    (unwrap-panic (contract-call? .degen-nft mint-url member metadata-url-dgn))
+    (pop-merge-work-queue)
+  )
+)
 
