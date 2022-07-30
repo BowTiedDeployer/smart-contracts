@@ -2,22 +2,43 @@
 ;; trait deployed by deployer address from ./settings/Devnet.toml
 (impl-trait 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.nft-trait.nft-trait)
 
-;; define a new NFT. Make sure to replace DEGENS
-(define-non-fungible-token DEGENS uint)
+;; define a new NFT. Make sure to replace rims
+(define-non-fungible-token rims uint)
+
+;; define errors
+(define-constant err-owner-only (err u100))
+(define-constant err-already-locked (err u101))
+(define-constant err-more-votes-than-members-required (err u102))
+(define-constant err-not-a-member (err u103))
+(define-constant err-votes-required-not-met (err u104))
+(define-constant err-invalid-name (err u301))
+(define-constant err-no-rights (err u403))
+
 
 ;; Store the last issues token ID
 (define-data-var last-id uint u0)
 
-;; Claim a new NFT
-(define-public (claim)
-  (mint tx-sender)
-)
+(define-map token-url { token-id: uint } { url: (string-ascii 256) })
+;; this is used if we want for a given attribute value to give a specific url
+;; eg. purple rims -> ipfs://dasd..
+(define-map name-url { name: (string-ascii 30)} { url: (string-ascii 256) })
+
+(map-set name-url  {name: "MiamiLostOrange"} {url: "ipfs://example/MiamiLostOrange.json"})
+(map-set name-url  {name: "MiamiSunsetMist"} {url: "ipfs://example/MiamiSunsetMist.json"})
+(map-set name-url  {name: "MiamiLunaPurple"} {url: "ipfs://example/MiamiLunaPurple.json"})
+(map-set name-url  {name: "NYCEmeraldie"} {url: "ipfs://example/NYCEmeraldie.json"})
+(map-set name-url  {name: "NYCGoldie"} {url: "ipfs://example/NYCGoldie.json"})
+
+;; Owner
+(define-data-var contract-owner principal tx-sender)
+
+
 
 ;; SIP009: Transfer token to a specified principal
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
   (begin
-    (asserts! (is-eq tx-sender sender) (err u403))
-    (nft-transfer? DEGENS token-id sender recipient)
+    (asserts! (is-eq tx-sender sender) err-no-rights)
+    (nft-transfer? rims token-id sender recipient)
   )
 )
 
@@ -31,8 +52,8 @@
 
 ;; SIP009: Get the owner of the specified token ID
 (define-read-only (get-owner (token-id uint))
-  ;; Make sure to replace DEGENS
-  (ok (nft-get-owner? DEGENS token-id))
+  ;; Make sure to replace rims
+  (ok (nft-get-owner? rims token-id))
 )
 
 ;; SIP009: Get the last token ID
@@ -40,26 +61,51 @@
   (ok (var-get last-id))
 )
 
-;; SIP009: Get the token URI. You can set it to any other URI
-(define-read-only (get-token-uri (token-id uint))
-  (ok (some "https://token.stacks.co/{id}.json"))
+
+(define-read-only (get-token-uri (token-id uint)) 
+  (let ((token-urr (get url (map-get? token-url {token-id: token-id})))) 
+  (ok token-urr)
+  )
 )
+
 
 ;; Internal - Mint new NFT
 (define-private (mint (new-owner principal))
-  (let 
-    ((next-id (+ u1 (var-get last-id))))
-    (var-set last-id next-id)
-    (nft-mint? DEGENS next-id new-owner)
+  (begin 
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
+    (let 
+      ((next-id (+ u1 (var-get last-id))))
+      (var-set last-id next-id)
+      (nft-mint? rims next-id new-owner)
+    )
+  )
+)
+
+(define-public (mint-name (address principal) (name (string-ascii 30)))
+    ;; define and assign: next-id and url
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
+    (let 
+      (
+        (next-id (+ u1 (var-get last-id)))
+        (url (get url (map-get? name-url {name: name})))
+      )
+      (if (is-none url)
+        err-invalid-name
+        (begin 
+          (map-set token-url {token-id: next-id} {url: (unwrap-panic url)})
+          (var-set last-id next-id)
+          (nft-mint? rims next-id address)
+        )
+      )
+    )
   )
 )
 
 ;; Burn a token
 (define-public (burn-token (token-id uint))  
 	(begin     
-		(asserts! (is-eq (some tx-sender) (nft-get-owner? DEGENS token-id) ) (err u403))     
-		(nft-burn? DEGENS token-id tx-sender)
+		(asserts! (is-eq (some tx-sender) (nft-get-owner? rims token-id) ) err-no-rights)     
+		(nft-burn? rims token-id tx-sender)
   )
 )
-
-;; return ok if it is owner of nft

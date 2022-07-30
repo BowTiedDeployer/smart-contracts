@@ -173,7 +173,7 @@ Clarinet.test({
         );        
         const token_uri_result = token_uri.result
         token_uri_result.expectOk()
-        assertEquals(token_uri_result, `(ok (some "${URL_NO_LINK}"))`)
+        assertEquals(token_uri_result, `(ok none)`)
     },
 });
 

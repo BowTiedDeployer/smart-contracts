@@ -14,22 +14,14 @@
 (define-map token-url { token-id: uint } { url: (string-ascii 256) })
 
 
-;; Claim a new NFT
-(define-public (claim)
-  (mint tx-sender)
-)
 
 (define-public (mint-url (address principal) (url (string-ascii 256)))
-   (let 
+  (let 
     ((next-id (+ u1 (var-get last-id))))
     (map-set token-url {token-id: next-id} {url: url})
     (var-set last-id next-id)
     (nft-mint? DEGENS next-id address)
   )
-)
-
-(define-public (update-uri (token-id uint) (url (string-ascii 256))) 
-  (ok (map-set token-url {token-id: token-id} {url: url}))
 )
 
 ;; SIP009: Transfer token to a specified principal
@@ -62,12 +54,9 @@
 ;; SIP009: Get the token URI. You can set it to any other URI
 (define-read-only (get-token-uri (token-id uint)) 
   (let ((token-urr (get url (map-get? token-url {token-id: token-id})))) 
-  (ok 
-    (if (is-none token-urr)
-      (some "no-link")
-      token-urr
-    )
-  )))
+    (ok token-urr)
+  )
+)
 
 ;; Internal - Mint new NFT
 (define-private (mint (new-owner principal))
@@ -85,11 +74,6 @@
   )
 )
 
-
-
-
 (mint-url 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 "11111")   
 (mint-url 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 "22222")
 
-(get-token-uri u1)
-(get-token-uri u4)

@@ -5,9 +5,14 @@
 ;; define a new NFT. Make sure to replace background
 (define-non-fungible-token background uint)
 
-;; define constants
-(define-constant ERR_INVALID_NAME (err u301))
-(define-constant ERR_NO_RIGHTS (err u403))
+;; define errors
+(define-constant err-owner-only (err u100))
+(define-constant err-already-locked (err u101))
+(define-constant err-more-votes-than-members-required (err u102))
+(define-constant err-not-a-member (err u103))
+(define-constant err-votes-required-not-met (err u104))
+(define-constant err-invalid-name (err u301))
+(define-constant err-no-rights (err u403))
 
 
 ;; Store the last issues token ID
@@ -21,31 +26,18 @@
 (map-set name-url  {name: "MiamiLostOrange"} {url: "ipfs://example/MiamiLostOrange.json"})
 (map-set name-url  {name: "MiamiSunsetMist"} {url: "ipfs://example/MiamiSunsetMist.json"})
 (map-set name-url  {name: "MiamiLunaPurple"} {url: "ipfs://example/MiamiLunaPurple.json"})
+(map-set name-url  {name: "NYCEmeraldie"} {url: "ipfs://example/NYCEmeraldie.json"})
+(map-set name-url  {name: "NYCGoldie"} {url: "ipfs://example/NYCGoldie.json"})
 
 ;; Owner
 (define-data-var contract-owner principal tx-sender)
 
-;; Errors
-(define-constant err-owner-only (err u100))
-(define-constant err-already-locked (err u101))
-(define-constant err-more-votes-than-members-required (err u102))
-(define-constant err-not-a-member (err u103))
-(define-constant err-votes-required-not-met (err u104))
 
-
-;; Claim a new NFT
-(define-public (claim)
-  (mint tx-sender)
-)
-
-(define-public (mint-for-user (recipient principal))
-  (mint recipient)
-)
 
 ;; SIP009: Transfer token to a specified principal
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
   (begin
-    (asserts! (is-eq tx-sender sender) ERR_NO_RIGHTS)
+    (asserts! (is-eq tx-sender sender) err-no-rights)
     (nft-transfer? background token-id sender recipient)
   )
 )
@@ -72,12 +64,9 @@
 
 (define-read-only (get-token-uri (token-id uint)) 
   (let ((token-urr (get url (map-get? token-url {token-id: token-id})))) 
-  (ok 
-    (if (is-none token-urr)
-      (some "no-link")
-      token-urr
-    )
-  )))
+  (ok token-urr)
+  )
+)
 
 
 ;; Internal - Mint new NFT
@@ -93,7 +82,6 @@
 )
 
 
-;; pretty sure we don't need this but better to have it for now
 (define-public (mint-url (address principal) (url (string-ascii 256)))
    (let 
     ((next-id (+ u1 (var-get last-id))))
@@ -106,16 +94,16 @@
 
 
 (define-public (mint-name (address principal) (name (string-ascii 30)))
-    ;; define and assign: next-id and url
   (begin
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
     (let 
+    ;; define and assign: next-id and url
       (
         (next-id (+ u1 (var-get last-id)))
         (url (get url (map-get? name-url {name: name})))
       )
       (if (is-none url)
-        ERR_INVALID_NAME
+        err-invalid-name
         (begin 
           (map-set token-url {token-id: next-id} {url: (unwrap-panic url)})
           (var-set last-id next-id)
@@ -126,12 +114,10 @@
   )
 )
 
-
-
 ;; Burn a token
 (define-public (burn-token (token-id uint))  
 	(begin     
-		(asserts! (is-eq (some tx-sender) (nft-get-owner? background token-id) ) ERR_NO_RIGHTS)     
+		(asserts! (is-eq (some tx-sender) (nft-get-owner? background token-id) ) err-no-rights)     
 		(nft-burn? background token-id tx-sender)
   )
 )

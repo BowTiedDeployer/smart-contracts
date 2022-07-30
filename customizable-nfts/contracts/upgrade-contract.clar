@@ -1,9 +1,3 @@
-;;
-;; run-case
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degen-nft mint-url 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 "11111")    
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract disassemble u3 "background-eg" "not-yet" "not-yet" "not-yet")
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.backgrounds get-token-uri u1)
-
 ;; upgrade-contract
 ;; Wrapper which is combining parts and degens
 
@@ -14,26 +8,29 @@
 
 
 ;; constants
-(define-constant ERR_INVALID (err u300))
-(define-constant ERR_TOO_MANY_DISSASSEMBLE (err u200))
-(define-constant ERR-NOT_OWNER (err u100))
+(define-constant err-invalid (err u300))
+(define-constant err-too-many-disassemble (err u200))
+(define-constant err-not-owner (err u100))
 
 ;; public functions
 
 ;; Disassemble
-(define-public (disassemble (token-id uint) (background-name (string-ascii 30)) (body-name (string-ascii 30)) (rim-name (string-ascii 30)) (head-name (string-ascii 30))) 
+
+;; eg. case
+;; (contract-call? .degen-nft mint-url tx-sender "urlMiamiLostOrange")
+;; (contract-call? .upgrade-contract add-disassemble-work-in-queue u3)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract disassemble-finalize u3 tx-sender "MiamiLostOrange" "MiamiLostOrange" "MiamiLostOrange" "MiamiLostOrange")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.body-kits get-token-uri u1)
+
+(define-public (disassemble-finalize (token-id uint) (member principal) (background-name (string-ascii 30)) (body-name (string-ascii 30)) (rim-name (string-ascii 30)) (head-name (string-ascii 30))) 
 	(begin     
-		;; (asserts! (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) (err u403)) 
-    ;; if not the owner, the burn function will throw the error     
-		;; (unwrap-panic (contract-call? .degen-nft burn-token token-id))
-    ;; mint in component collections
-    ;; (unwrap-panic (contract-call? .backgrounds mint-url tx-sender background-url))
-    ;; TODO: if alright,do the same for the other components 
-    ;; (unwrap-panic (contract-call? .body-kits claim ))
-    ;; (unwrap-panic (contract-call? .wheels claim ))
-    
-    (unwrap-panic (pop-disassemble-work-queue))
-    (contract-call? .dgn-heads claim )
+    ;; Check that admin is calling this contract
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
+    (unwrap-panic (contract-call? .backgrounds mint-name member background-name))
+    (unwrap-panic (contract-call? .body-kits mint-name member body-name))
+    (unwrap-panic (contract-call? .dgn-heads mint-name member rim-name))
+    (unwrap-panic (contract-call? .wheels mint-name member head-name))    
+    (pop-disassemble-work-queue)
   )
 )
 
@@ -43,7 +40,7 @@
 (define-public (get-disassemble-work-queue)
   (begin  
     ;; Check that admin is calling this contract
-    (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
     ;; Get the actual work-queue so that we can process it
     (ok (var-get disassemble-work-queue))
   )
@@ -52,11 +49,12 @@
 (define-public (get-disassemble-head-work-queue)
   (begin  
     ;; Check that admin is calling this contract
-    (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
     ;; Get the first element in the work queue so that we can process it
     (ok (element-at (var-get disassemble-work-queue) u0))
   )
 )
+
 (define-public (add-disassemble-work-in-queue (token-id uint))
   (ok 
     (let 
@@ -70,20 +68,20 @@
           ;; check user has not already inserted this
           (asserts! 
             (is-none (index-of work-queue-value value-to-add))
-            ERR_INVALID
+            err-invalid
           )
           ;; check user is not abusing the queue
           (asserts! 
             (< (len (filter is-disassemble-value-for-principal work-queue-value)) u5)
-            ERR_TOO_MANY_DISSASSEMBLE
+            err-too-many-disassemble
           )
           ;; check user is owner of nft
           (asserts! 
             (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) 
-            ERR-NOT_OWNER
+            err-not-owner
           )    
-      		(unwrap-panic (contract-call? .degen-nft burn-token token-id))
-
+          (if (is-eq tx-sender (var-get contract-owner)) true (try! (fee-processing)))
+          (unwrap-panic (contract-call? .degen-nft burn-token token-id))
           (append 
             (unwrap-panic (as-max-len? work-queue-value u99)) 
             value-to-add
@@ -102,7 +100,7 @@
       (var-set disassemble-work-queue
         (begin
           ;; Check that admin is calling this contract
-          (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
+          (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
           ;; Remove first element in list
           (filter is-disassemble-first-element work-queue-value)
         )
@@ -110,7 +108,6 @@
     )
   )
 )
-
 
 
 (define-private (is-disassemble-first-element (value (tuple (token-id uint) (member principal))))
@@ -133,6 +130,9 @@
   (is-eq (get member value) tx-sender)
 )
 
+(define-private (fee-processing)
+  (stx-transfer? u10000 tx-sender (var-get contract-owner))
+)
 
 
 ;; Template
@@ -142,7 +142,7 @@
 ;; (define-public (get-work-queue)
 ;;   (begin  
 ;;     ;; Check that admin is calling this contract
-;;     (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
+;;     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
 ;;     ;; Get the actual work-queue so that we can process it
 ;;     (ok (var-get work-queue))
 ;;   )
@@ -151,7 +151,7 @@
 ;; (define-public (get-head-work-queue)
 ;;   (begin  
 ;;     ;; Check that admin is calling this contract
-;;     (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
+;;     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
 ;;     ;; Get the first element in the work queue so that we can process it
 ;;     (ok (element-at (var-get work-queue) u0))
 ;;   )
@@ -170,17 +170,17 @@
 ;;           ;; check user has not already inserted this
 ;;           (asserts! 
 ;;             (is-none (index-of work-queue-value value-to-add))
-;;             ERR_INVALID
+;;             err-invalid
 ;;           )
 ;;           ;; check user is not abusing the queue
 ;;           (asserts! 
 ;;             (< (len (filter is-value-for-principal work-queue-value)) u5)
-;;             ERR_TOO_MANY_DISSASSEMBLE
+;;             err-too-many-disassemble
 ;;           )
 ;;           ;; check user is owner of nft
 ;;           (asserts! 
 ;;             (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) 
-;;             ERR-NOT_OWNER
+;;             err-not-owner
 ;;           )    
       		;; (unwrap-panic (contract-call? .degen-nft burn-token token-id))
 
@@ -203,7 +203,7 @@
 ;;       (var-set work-queue
 ;;         (begin
 ;;           ;; Check that admin is calling this contract
-;;           (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
+;;           (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
 ;;           ;; Remove first element in list
 ;;           (filter is-first-element work-queue-value)
 ;;         )
@@ -239,6 +239,18 @@
 
 
 
+(define-public (assemble (metadata-url (string-ascii 99)))
+  (begin
+    ;; (unwrap! (contract-call? .backgrounds burn-token background-id) err-invalid)
+    ;; (unwrap! (contract-call? .body-kits burn-token body-id) err-invalid)
+    ;; (unwrap! (contract-call? .wheels burn-token rim-id) err-invalid)
+    ;; (unwrap! (contract-call? .dgn-heads burn-token head-id) err-invalid)
+
+    ;; TODO(Deployer): For extra safety we can add a param with what work we are expecting to do and check that is in the queue before bindly popping
+    (unwrap-panic (pop-assemble-work-queue))
+    (contract-call? .degen-nft mint-url tx-sender metadata-url)  
+  )
+)
 
 
 
@@ -247,18 +259,20 @@
 ;; Assemble
 
 ;; run-case
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract mint-components)
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract assemble "custom-degen-url" u2 u2 u2 u2)
-(define-public (assemble (metadata-url (string-ascii 99)))
-  (begin
-    ;; (unwrap! (contract-call? .backgrounds burn-token background-id) ERR_INVALID)
-    ;; (unwrap! (contract-call? .body-kits burn-token body-id) ERR_INVALID)
-    ;; (unwrap! (contract-call? .wheels burn-token rim-id) ERR_INVALID)
-    ;; (unwrap! (contract-call? .dgn-heads burn-token head-id) ERR_INVALID)
-
-    ;; TODO(Deployer): For extra safety we can add a param with what work we are expecting to do and check that is in the queue before bindly popping
-    (unwrap-panic (pop-assemble-work-queue))
-    (contract-call? .degen-nft mint-url tx-sender metadata-url)  
+;; (contract-call? .backgrounds mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "MiamiLostOrange")
+;; (contract-call? .body-kits mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "MiamiLostOrange")
+;; (contract-call? .wheels mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "MiamiLostOrange")
+;; (contract-call? .dgn-heads mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "MiamiLostOrange")
+;; ::set_tx_sender STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-assemble-work-in-queue u1 u1 u1 u1)
+;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+;; (contract-call? .upgrade-contract finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "url-custom")
+(define-public (assemble-finalize (member principal) (metadata-url (string-ascii 99))) 
+	(begin     
+    ;; Check that admin is calling this contract
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
+    (unwrap-panic (contract-call? .degen-nft mint-url member metadata-url))
+    (pop-disassemble-work-queue)
   )
 )
 
@@ -268,7 +282,7 @@
 (define-public (assemble-get-work-queue)
   (begin  
     ;; Check that admin is calling this contract
-    (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
     ;; Get the actual work-queue so that we can process it
     (ok (var-get assemble-work-queue))
   )
@@ -277,7 +291,7 @@
 (define-public (get-assemble-head-work-queue)
   (begin  
     ;; Check that admin is calling this contract
-    (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
     ;; Get the first element in the work queue so that we can process it
     (ok (element-at (var-get assemble-work-queue) u0))
   )
@@ -302,22 +316,32 @@
           ;; check user has not already inserted this
           (asserts! 
             (is-none (index-of work-queue-value value-to-add))
-            ERR_INVALID
+            err-invalid
           )
           ;; check user is not abusing the queue
           (asserts! 
             (< (len (filter is-assemble-value-for-principal work-queue-value)) u5)
-            ERR_TOO_MANY_DISSASSEMBLE
+            err-too-many-disassemble
           )
           ;; check user is owner of nft
           (asserts! 
-            ;; (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) 
-            (is-eq (some tx-sender) (unwrap-panic (contract-call? .backgrounds get-owner background-id))) 
-            ;; (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) 
-            ERR-NOT_OWNER
+            (and
+              (is-eq (some tx-sender) (unwrap-panic (contract-call? .backgrounds get-owner rim-id)))       
+              (and
+                (is-eq (some tx-sender) (unwrap-panic (contract-call? .body-kits get-owner body-id))) 
+                (and
+                  (is-eq (some tx-sender) (unwrap-panic (contract-call? .wheels get-owner rim-id))) 
+                  (is-eq (some tx-sender) (unwrap-panic (contract-call? .dgn-heads get-owner head-id))) 
+                )
+              )
+            )
+            err-not-owner
           )    
-      		(unwrap-panic (contract-call? .backgrounds burn-token background-id))
-
+          (unwrap-panic (contract-call? .backgrounds burn-token background-id))
+          (unwrap-panic (contract-call? .body-kits burn-token background-id))
+          (unwrap-panic (contract-call? .wheels burn-token background-id))
+          (unwrap-panic (contract-call? .dgn-heads burn-token background-id))
+          (if (is-eq tx-sender (var-get contract-owner)) true (try! (fee-processing)))
 
           (append 
             (unwrap-panic (as-max-len? work-queue-value u99)) 
@@ -337,7 +361,7 @@
       (var-set assemble-work-queue
         (begin
           ;; Check that admin is calling this contract
-          (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
+          (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
           ;; Remove first element in list
           (filter is-assemble-first-element work-queue-value)
         )
@@ -408,10 +432,10 @@
   ) 
   (begin
     ;; can also change component uri and not burn mint another - not so important rn
-    (unwrap! (contract-call? .backgrounds burn-token component-id)  ERR_INVALID)
-    (unwrap! (contract-call? .backgrounds mint-name tx-sender component-name) ERR_INVALID)
+    (unwrap! (contract-call? .backgrounds burn-token component-id)  err-invalid)
+    (unwrap! (contract-call? .backgrounds mint-name tx-sender component-name) err-invalid)
     ;; change url
-    (unwrap! (contract-call? .degen-nft update-uri degen-id degen-url) ERR_INVALID)
+    ;; (unwrap! (contract-call? .degen-nft update-uri degen-id degen-url) err-invalid)
     ;; trigger metadata update notifier for Degen SM and id of the swapped Degen
     (contract-call? .token-metadata-update-notify nft-metadata-update-notify 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degen-nft (list degen-id))
 
@@ -427,7 +451,7 @@
 ;; (define-public (get-work-queue)
 ;;   (begin  
 ;;     ;; Check that admin is calling this contract
-;;     (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
+;;     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
 ;;     ;; Get the actual work-queue so that we can process it
 ;;     (ok (var-get work-queue))
 ;;   )
@@ -436,7 +460,7 @@
 ;; (define-public (get-head-work-queue)
 ;;   (begin  
 ;;     ;; Check that admin is calling this contract
-;;     (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
+;;     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
 ;;     ;; Get the first element in the work queue so that we can process it
 ;;     (ok (element-at (var-get work-queue) u0))
 ;;   )
@@ -455,17 +479,17 @@
 ;;           ;; check user has not already inserted this
 ;;           (asserts! 
 ;;             (is-none (index-of work-queue-value value-to-add))
-;;             ERR_INVALID
+;;             err-invalid
 ;;           )
 ;;           ;; check user is not abusing the queue
 ;;           (asserts! 
 ;;             (< (len (filter is-value-for-principal work-queue-value)) u5)
-;;             ERR_TOO_MANY_DISSASSEMBLE
+;;             err-too-many-disassemble
 ;;           )
 ;;           ;; check user is owner of nft
 ;;           (asserts! 
 ;;             (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) 
-;;             ERR-NOT_OWNER
+;;             err-not-owner
 ;;           )    
       		;; (unwrap-panic (contract-call? .degen-nft burn-token token-id))
 
@@ -488,7 +512,7 @@
 ;;       (var-set work-queue
 ;;         (begin
 ;;           ;; Check that admin is calling this contract
-;;           (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
+;;           (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
 ;;           ;; Remove first element in list
 ;;           (filter is-first-element work-queue-value)
 ;;         )
@@ -537,91 +561,6 @@
 
 
 
-;; Oldie but goodie
-
-;; (define-public (remove-work-from-queue))
-
-
-;; Utility functions
-;; (define-private (is-admin) 
-;;   (begin
-;;     (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
-;;     (ok none)
-;;   )
-;; )
-
-
-
-;; A map that creates a map from the user who is calling disassemble and the token id which is needed.
-(define-map user-request-to-disassemble principal (list 5 uint))
-
-
-;; adding work for user - called by user to add token in queue
-(define-public (add-work-for-user (token-id uint))
-  (let ((user-request (map-get? user-request-to-disassemble tx-sender)))
-    (if (is-none user-request)
-      ;; first time we are seeing the user
-      (ok (add-user-to-request token-id))
-      (
-        let ((
-          user-request-list 
-          (unwrap-panic user-request)
-        )) 
-        (
-          ;; adding work to the existing queue of work
-          add-token-to-user-request-list token-id (unwrap-panic (as-max-len? user-request-list u4))
-        )
-      )      
-      ;; (ok ((map-set user-request-to-disassemble tx-sender (add-token-to-user-request-list token-id user-request))))
-    )
-  )
-)
-
-(define-private (add-user-to-request (token-id uint))
-  (begin 
-    (map-insert user-request-to-disassemble tx-sender (list token-id))
-  )
-)
-
-(define-private (add-token-to-user-request-list (token-id uint) (request-list (list 4 uint)))
-  (begin 
-    ;; check that the token id is not already queued
-    (asserts! (is-none (index-of request-list token-id)) ERR_INVALID)
-    (ok (map-set user-request-to-disassemble tx-sender (concat request-list (list token-id))))
-  ) 
-)
-
-(define-public (get-work-in-progress)
-  (get-work-in-progress-for-principal tx-sender)
-)
-
-(define-public (get-work-in-progress-admin (member principal))
-  (begin 
-    (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_INVALID)
-    (get-work-in-progress-for-principal member)
-  )
-)
-
-(define-private (get-work-in-progress-for-principal (member principal))
-  (let ((user-request (map-get? user-request-to-disassemble member)))
-    (if (not (is-none user-request))
-      (ok user-request)
-      ERR_INVALID
-    )
-  )
-)
-
-;; helper for running and 'pseudo' testing
-(define-public (mint-components )
-  (begin
-    (unwrap-panic (contract-call? .backgrounds mint-name tx-sender "MiamiLostOrange"))
-    (unwrap-panic (contract-call? .body-kits claim ))
-    (unwrap-panic (contract-call? .wheels claim ))
-    (contract-call? .dgn-heads claim )
-  )
-)
-
-
 ;; swap burning and minting another nft
 ;;
 ;; degen-url metadata for the new generated degen
@@ -631,9 +570,9 @@
 ;;   (component-name (string-ascii 30)) 
 ;;   )
 ;;   (begin 
-;;     (unwrap! (contract-call? .degen-nft burn-token degen-id) ERR_INVALID) 
-;;     (unwrap! (contract-call? .backgrounds burn-token component-id) ERR_INVALID)
-;;     (unwrap! (contract-call? .degen-nft mint-url tx-sender degen-url) ERR_INVALID)
+;;     (unwrap! (contract-call? .degen-nft burn-token degen-id) err-invalid) 
+;;     (unwrap! (contract-call? .backgrounds burn-token component-id) err-invalid)
+;;     (unwrap! (contract-call? .degen-nft mint-url tx-sender degen-url) err-invalid)
 ;;     (contract-call? .backgrounds mint-name tx-sender component-name)
 ;;   )
 ;; )
