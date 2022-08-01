@@ -1,0 +1,22 @@
+{
+  "sip": 16,
+  "name": "Miami_Sword_Cigar",
+  "image": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/Miami_Sword_Cigar.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Skull"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "Sword"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "Cigar"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenHeads"
+  }
+}

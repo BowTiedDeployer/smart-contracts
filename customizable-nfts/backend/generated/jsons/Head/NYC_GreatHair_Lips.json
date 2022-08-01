@@ -1,0 +1,22 @@
+{
+  "sip": 16,
+  "name": "NYC_GreatHair_Lips",
+  "image": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/NYC_GreatHair_Lips.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Alien"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "GreatHair"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "Lips"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenHeads"
+  }
+}
