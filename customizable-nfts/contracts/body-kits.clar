@@ -23,11 +23,18 @@
 ;; eg. purple body -> ipfs://dasd..
 (define-map name-url { name: (string-ascii 30)} { url: (string-ascii 256) })
 
-(map-set name-url  {name: "MiamiLostOrange"} {url: "ipfs://example/MiamiLostOrange.json"})
-(map-set name-url  {name: "MiamiSunsetMist"} {url: "ipfs://example/MiamiSunsetMist.json"})
-(map-set name-url  {name: "MiamiLunaPurple"} {url: "ipfs://example/MiamiLunaPurple.json"})
-(map-set name-url  {name: "NYCEmeraldie"} {url: "ipfs://example/NYCEmeraldie.json"})
-(map-set name-url  {name: "NYCGoldie"} {url: "ipfs://example/NYCGoldie.json"})
+(map-set name-url  {name: "BentleyBlack"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/BentleyBlack.json"})
+(map-set name-url  {name: "BentleyBlood"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/BentleyBlood.json"})
+(map-set name-url  {name: "BentleyGold"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/BentleyGold.json"})
+(map-set name-url  {name: "BentleyGrey"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/BentleyGrey.json"})
+(map-set name-url  {name: "BentleyMidnigh"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/BentleyMidnigh.json"})
+(map-set name-url  {name: "BentleyWhite"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/BentleyWhite.json"})
+(map-set name-url  {name: "LamboBlue"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/LamboBlue.json"})
+(map-set name-url  {name: "LamboEmerald"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/LamboEmerald.json"})
+(map-set name-url  {name: "LamboGold"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/LamboGold.json"})
+(map-set name-url  {name: "LamboGrey"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/LamboGrey.json"})
+(map-set name-url  {name: "LamboPearlescent"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/LamboPearlescent.json"})
+(map-set name-url  {name: "LamboRed"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/LamboRed.json"})
 
 ;; Owner
 (define-data-var contract-owner principal tx-sender)
