@@ -32,11 +32,14 @@
 ;; Disassemble
 
 ;; eg. case
+
+;; (contract-call? .degen-nft mint-url 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "urlNiceDegen")
 ;; ::set_tx_sender STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6
-;; (contract-call? .degen-nft mint-url tx-sender "urlNiceDegen")
-;; (contract-call? .upgrade-contract add-disassemble-work-in-queue u1)
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract disassemble-finalize u1 tx-sender "DarkPurple" "BentleyBlack" "ClassyCream" "MiamiLostOrange")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-disassemble-work-in-queue u1)
+;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract disassemble-finalize u1 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "DarkPurple" "BentleyBlack" "ClassyCream" "MiamiLostOrange")
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.body-kits get-token-uri u1)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.body-kits get-owner u1)
 
 
 ;; Queue for work
@@ -62,42 +65,43 @@
   (ok (var-get disassemble-work-queue))
 )
 
-(define-public (get-disassemble-head-work-queue)
+(define-read-only (get-disassemble-head-work-queue)
   ;; Get the first element in the work queue so that we can process it
   (ok (element-at (var-get disassemble-work-queue) u0))
 )
 
 (define-public (add-disassemble-work-in-queue (token-id uint))
   (ok 
-    (let 
-      (
-        (work-queue-value (var-get disassemble-work-queue))
-        (value-to-add {token-id: token-id, member: tx-sender})
-      )
-    
-      (var-set disassemble-work-queue
-        (begin
-          ;; check user has not already inserted this
-          (asserts! 
-            (is-none (index-of work-queue-value value-to-add))
-            err-invalid
-          )
-          ;; check user is not abusing the queue
-          (asserts! 
-            (< (len (filter is-disassemble-value-for-principal work-queue-value)) u5)
-            err-too-many-disassemble
-          )
-          ;; check user is owner of nft
-          (asserts! 
-            (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) 
-            err-not-owner
-          )    
-          ;; transfer fees if not contract-owner
-          (if (is-eq tx-sender (var-get contract-owner)) true (try! (fee-processing)))
-          (unwrap-panic (contract-call? .degen-nft burn-token token-id))
-          (append 
-            (unwrap-panic (as-max-len? work-queue-value u99)) 
-            value-to-add
+    (begin
+      ;; check user is owner of nft
+      (asserts! 
+        (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) 
+        err-not-owner
+      )    
+      ;; transfer fees if not contract-owner
+      (if (is-eq tx-sender (var-get contract-owner)) true (try! (fee-processing)))
+      (let 
+        (
+          (work-queue-value (var-get disassemble-work-queue))
+          (value-to-add {token-id: token-id, member: tx-sender})
+        )
+        (var-set disassemble-work-queue
+          (begin
+            ;; check user has not already inserted this
+            (asserts! 
+              (is-none (index-of work-queue-value value-to-add))
+              err-invalid
+            )
+            ;; check user is not abusing the queue
+            (asserts! 
+              (< (len (filter is-disassemble-value-for-principal work-queue-value)) u5)
+              err-too-many-disassemble
+            )
+            (unwrap-panic (contract-call? .degen-nft burn-token token-id))
+            (append 
+              (unwrap-panic (as-max-len? work-queue-value u99)) 
+              value-to-add
+            )
           )
         )
       )
@@ -105,18 +109,26 @@
   )
 )
 
-(define-public (pop-disassemble-work-queue)
+
+(define-private (pop-disassemble-work-queue)
   (ok 
     (let
       ((work-queue-value (var-get disassemble-work-queue)))
-
       (var-set disassemble-work-queue
-        (begin
-          ;; Check that admin is calling this contract
-          (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
-          ;; Remove first element in list
-          (filter is-disassemble-first-element work-queue-value)
-        )
+        ;; Remove first element in list
+        (filter is-disassemble-first-element work-queue-value)
+      )
+    )
+  )
+)
+
+(define-public (pop-disassemble-work-queue-public)
+  (ok 
+    (let
+      ((work-queue-value (var-get disassemble-work-queue)))
+      (var-set disassemble-work-queue
+        ;; Remove first element in list
+        (filter is-disassemble-first-element work-queue-value)
       )
     )
   )
@@ -126,7 +138,6 @@
 (define-private (is-disassemble-first-element (value {token-id: uint, member: principal}))
   (let
     ((first-element (element-at (var-get disassemble-work-queue) u0)))
-
     (not 
       (and
         (is-some first-element)
@@ -136,14 +147,36 @@
   )
 )
 
+(define-public (is-disassemble-first-element-public (value {token-id: uint, member: principal}))
+  (ok 
+    (let
+      ((first-element (element-at (var-get disassemble-work-queue) u0)))
+      (not 
+        (and
+          (is-some first-element)
+          (is-eq value (unwrap-panic first-element))
+        )
+      )
+    )
+  )
+)
+
 
 ;; Helper functions
-
 (define-private (is-disassemble-value-for-principal (value {token-id: uint, member: principal}))
   (is-eq (get member value) tx-sender)
 )
 
+(define-public (is-disassemble-value-for-principal-public (value {token-id: uint, member: principal}))
+  (ok (is-eq (get member value) tx-sender))
+)
+
+
 (define-private (fee-processing)
+  (stx-transfer? u10000 tx-sender (var-get contract-owner))
+)
+
+(define-public (fee-processing-public)
   (stx-transfer? u10000 tx-sender (var-get contract-owner))
 )
 
@@ -280,6 +313,7 @@
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-assemble-work-in-queue u1 u1 u1 u1)
 ;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
 ;; (contract-call? .upgrade-contract finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "url-custom")
+
 (define-public (assemble-finalize (member principal) (metadata-url (string-ascii 99))) 
 	(begin     
     ;; Check that admin is calling this contract
@@ -392,6 +426,24 @@
   )
 )
 
+
+(define-public (is-assemble-value-for-principal-public (value (tuple (background-id uint) (body-id uint) (rim-id uint) (head-id uint) (member principal))))
+  (ok (is-eq (get member value) tx-sender))
+)
+
+(define-public (is-assemble-first-element-public (value (tuple (background-id uint) (body-id uint) (rim-id uint) (head-id uint) (member principal))))
+  (ok 
+    (let
+      ((first-element (element-at (var-get assemble-work-queue) u0)))
+      (not 
+        (and
+          (is-some first-element)
+          (is-eq value (unwrap-panic first-element))
+        )
+      )
+    )
+  )
+)
 
 
 
