@@ -1,0 +1,14 @@
+{
+  "sip": 16,
+  "name": "LamboGold",
+  "image": "ipfs://QmY6NmxfHYRvW4q2jvkUbYqJto6boQG8RScwUkuie3gbjD/LamboGold.png",
+  "attributes": [
+    {
+      "trait_type": "Car", 
+      "value": "LamboGold"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenBackgrounds"
+  }
+}

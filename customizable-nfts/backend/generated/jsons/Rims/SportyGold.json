@@ -1,0 +1,14 @@
+{
+  "sip": 16,
+  "name": "SportyGold",
+  "image": "ipfs://QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31/SportyGold.png",
+  "attributes": [
+    {
+      "trait_type": "Rims", 
+      "value": "SportyGold"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenBackgrounds"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "sip": 16,
+  "name": "BentleyWhite",
+  "image": "ipfs://QmY6NmxfHYRvW4q2jvkUbYqJto6boQG8RScwUkuie3gbjD/BentleyWhite.png",
+  "attributes": [
+    {
+      "trait_type": "Car", 
+      "value": "BentleyWhite"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenBackgrounds"
+  }
+}
