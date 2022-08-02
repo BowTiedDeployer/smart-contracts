@@ -1,0 +1,22 @@
+{
+  "sip": 16,
+  "name": "Miami_None_Bandana",
+  "image": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/Miami_None_Bandana.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Skull"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "None"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "Bandana"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenHeads"
+  }
+}

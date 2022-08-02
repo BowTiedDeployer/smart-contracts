@@ -1,0 +1,14 @@
+{
+  "sip": 16,
+  "name": "BentleyMidnigh",
+  "image": "ipfs://QmY6NmxfHYRvW4q2jvkUbYqJto6boQG8RScwUkuie3gbjD/BentleyMidnigh.png",
+  "attributes": [
+    {
+      "trait_type": "Car", 
+      "value": "BentleyMidnigh"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenCars"
+  }
+}

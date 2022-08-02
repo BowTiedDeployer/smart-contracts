@@ -1,0 +1,14 @@
+{
+  "sip": 16,
+  "name": "SportyPearlescent",
+  "image": "ipfs://QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31/SportyPearlescent.png",
+  "attributes": [
+    {
+      "trait_type": "Rims", 
+      "value": "SportyPearlescent"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenRims"
+  }
+}

@@ -23,11 +23,12 @@
 ;; eg. purple background -> ipfs://dasd..
 (define-map name-url { name: (string-ascii 30)} { url: (string-ascii 256) })
 
-(map-set name-url  {name: "MiamiLostOrange"} {url: "ipfs://example/MiamiLostOrange.json"})
-(map-set name-url  {name: "MiamiSunsetMist"} {url: "ipfs://example/MiamiSunsetMist.json"})
-(map-set name-url  {name: "MiamiLunaPurple"} {url: "ipfs://example/MiamiLunaPurple.json"})
-(map-set name-url  {name: "NYCEmeraldie"} {url: "ipfs://example/NYCEmeraldie.json"})
-(map-set name-url  {name: "NYCGoldie"} {url: "ipfs://example/NYCGoldie.json"})
+(map-set name-url  {name: "DarkPurple"} {url: "ipfs://Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP/DarkPurple.json"})
+(map-set name-url  {name: "Emerald"} {url: "ipfs://Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP/Emerald.json"})
+(map-set name-url  {name: "Goldie"} {url: "ipfs://Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP/Goldie.json"})
+(map-set name-url  {name: "Orange"} {url: "ipfs://Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP/Orange.json"})
+(map-set name-url  {name: "Purple"} {url: "ipfs://Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP/Purple.json"})
+(map-set name-url  {name: "Sunset"} {url: "ipfs://Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP/Sunset.json"})
 
 ;; Owner
 (define-data-var contract-owner principal tx-sender)

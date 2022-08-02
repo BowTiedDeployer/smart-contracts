@@ -1,0 +1,14 @@
+{
+  "sip": 16,
+  "name": "DarkPurple",
+  "image": "ipfs://QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria/DarkPurple.png",
+  "attributes": [
+    {
+      "trait_type": "Background", 
+      "value": "DarkPurple"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenBackgrounds"
+  }
+}

@@ -23,11 +23,17 @@
 ;; eg. purple rims -> ipfs://dasd..
 (define-map name-url { name: (string-ascii 30)} { url: (string-ascii 256) })
 
-(map-set name-url  {name: "MiamiLostOrange"} {url: "ipfs://example/MiamiLostOrange.json"})
-(map-set name-url  {name: "MiamiSunsetMist"} {url: "ipfs://example/MiamiSunsetMist.json"})
-(map-set name-url  {name: "MiamiLunaPurple"} {url: "ipfs://example/MiamiLunaPurple.json"})
-(map-set name-url  {name: "NYCEmeraldie"} {url: "ipfs://example/NYCEmeraldie.json"})
-(map-set name-url  {name: "NYCGoldie"} {url: "ipfs://example/NYCGoldie.json"})
+(map-set name-url  {name: "ClassyCream"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/ClassyCream.json"})
+(map-set name-url  {name: "ClassyDark"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/ClassyDark.json"})
+(map-set name-url  {name: "ClassyGold"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/ClassyGold.json"})
+(map-set name-url  {name: "ClassySilver"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/ClassySilver.json"})
+(map-set name-url  {name: "ClassyWhite"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/ClassyWhite.json"})
+(map-set name-url  {name: "SportyBlack"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/SportyBlack.json"})
+(map-set name-url  {name: "SportyBlue"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/SportyBlue.json"})
+(map-set name-url  {name: "SportyGold"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/SportyGold.json"})
+(map-set name-url  {name: "SportyGrey"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/SportyGrey.json"})
+(map-set name-url  {name: "SportyLime"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/SportyLime.json"})
+(map-set name-url  {name: "SportyPearlescent"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/SportyPearlescent.json"})
 
 ;; Owner
 (define-data-var contract-owner principal tx-sender)

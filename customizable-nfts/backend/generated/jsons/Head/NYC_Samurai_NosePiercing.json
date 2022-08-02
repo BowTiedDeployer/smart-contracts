@@ -1,0 +1,22 @@
+{
+  "sip": 16,
+  "name": "NYC_Samurai_NosePiercing",
+  "image": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/NYC_Samurai_NosePiercing.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Alien"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "Samurai"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "NosePiercing"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenHeads"
+  }
+}

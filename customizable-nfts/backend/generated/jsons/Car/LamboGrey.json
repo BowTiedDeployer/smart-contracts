@@ -1,0 +1,14 @@
+{
+  "sip": 16,
+  "name": "LamboGrey",
+  "image": "ipfs://QmY6NmxfHYRvW4q2jvkUbYqJto6boQG8RScwUkuie3gbjD/LamboGrey.png",
+  "attributes": [
+    {
+      "trait_type": "Car", 
+      "value": "LamboGrey"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenCars"
+  }
+}

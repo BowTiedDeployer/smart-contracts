@@ -32,10 +32,14 @@
 ;; Disassemble
 
 ;; eg. case
-;; (contract-call? .degen-nft mint-url tx-sender "urlMiamiLostOrange")
-;; (contract-call? .upgrade-contract add-disassemble-work-in-queue u1)
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract disassemble-finalize u3 tx-sender "MiamiLostOrange" "MiamiLostOrange" "MiamiLostOrange" "MiamiLostOrange")
+
+;; (contract-call? .degen-nft mint-url 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "urlNiceDegen")
+;; ::set_tx_sender STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-disassemble-work-in-queue u1)
+;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract disassemble-finalize u1 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "DarkPurple" "BentleyBlack" "ClassyCream" "MiamiLostOrange")
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.body-kits get-token-uri u1)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.body-kits get-owner u1)
 
 
 ;; Queue for work
@@ -49,63 +53,55 @@
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
     (unwrap-panic (contract-call? .backgrounds mint-name member background-name))
     (unwrap-panic (contract-call? .body-kits mint-name member body-name))
-    (unwrap-panic (contract-call? .dgn-heads mint-name member rim-name))
-    (unwrap-panic (contract-call? .wheels mint-name member head-name))    
+    (unwrap-panic (contract-call? .dgn-heads mint-name member head-name))
+    (unwrap-panic (contract-call? .wheels mint-name member rim-name))    
     (pop-disassemble-work-queue)
   )
 )
 
 
-;; TODO: decide if only contrct owner or if it can be public info
-(define-public (get-disassemble-work-queue)
-  (begin  
-    ;; Check that admin is calling this contract
-    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
-    ;; Get the actual work-queue so that we can process it
-    (ok (var-get disassemble-work-queue))
-  )
+(define-read-only (get-disassemble-work-queue)
+  ;; Get the actual work-queue so that we can process it
+  (ok (var-get disassemble-work-queue))
 )
 
-(define-public (get-disassemble-head-work-queue)
-  (begin  
-    ;; Check that admin is calling this contract
-    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
-    ;; Get the first element in the work queue so that we can process it
-    (ok (element-at (var-get disassemble-work-queue) u0))
-  )
+(define-read-only (get-disassemble-head-work-queue)
+  ;; Get the first element in the work queue so that we can process it
+  (ok (element-at (var-get disassemble-work-queue) u0))
 )
 
 (define-public (add-disassemble-work-in-queue (token-id uint))
   (ok 
-    (let 
-      (
-        (work-queue-value (var-get disassemble-work-queue))
-        (value-to-add {token-id: token-id, member: tx-sender})
-      )
-    
-      (var-set disassemble-work-queue
-        (begin
-          ;; check user has not already inserted this
-          (asserts! 
-            (is-none (index-of work-queue-value value-to-add))
-            err-invalid
-          )
-          ;; check user is not abusing the queue
-          (asserts! 
-            (< (len (filter is-disassemble-value-for-principal work-queue-value)) u5)
-            err-too-many-disassemble
-          )
-          ;; check user is owner of nft
-          (asserts! 
-            (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) 
-            err-not-owner
-          )    
-          ;; transfer fees if not contract-owner
-          (if (is-eq tx-sender (var-get contract-owner)) true (try! (fee-processing)))
-          (unwrap-panic (contract-call? .degen-nft burn-token token-id))
-          (append 
-            (unwrap-panic (as-max-len? work-queue-value u99)) 
-            value-to-add
+    (begin
+      ;; check user is owner of nft
+      (asserts! 
+        (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) 
+        err-not-owner
+      )    
+      ;; transfer fees if not contract-owner
+      (if (is-eq tx-sender (var-get contract-owner)) true (try! (fee-processing)))
+      (let 
+        (
+          (work-queue-value (var-get disassemble-work-queue))
+          (value-to-add {token-id: token-id, member: tx-sender})
+        )
+        (var-set disassemble-work-queue
+          (begin
+            ;; check user has not already inserted this
+            (asserts! 
+              (is-none (index-of work-queue-value value-to-add))
+              err-invalid
+            )
+            ;; check user is not abusing the queue
+            (asserts! 
+              (< (len (filter is-disassemble-value-for-principal work-queue-value)) u5)
+              err-too-many-disassemble
+            )
+            (unwrap-panic (contract-call? .degen-nft burn-token token-id))
+            (append 
+              (unwrap-panic (as-max-len? work-queue-value u99)) 
+              value-to-add
+            )
           )
         )
       )
@@ -113,18 +109,26 @@
   )
 )
 
-(define-public (pop-disassemble-work-queue)
+
+(define-private (pop-disassemble-work-queue)
   (ok 
     (let
       ((work-queue-value (var-get disassemble-work-queue)))
-
       (var-set disassemble-work-queue
-        (begin
-          ;; Check that admin is calling this contract
-          (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
-          ;; Remove first element in list
-          (filter is-disassemble-first-element work-queue-value)
-        )
+        ;; Remove first element in list
+        (filter is-disassemble-first-element work-queue-value)
+      )
+    )
+  )
+)
+
+(define-public (pop-disassemble-work-queue-public)
+  (ok 
+    (let
+      ((work-queue-value (var-get disassemble-work-queue)))
+      (var-set disassemble-work-queue
+        ;; Remove first element in list
+        (filter is-disassemble-first-element work-queue-value)
       )
     )
   )
@@ -134,7 +138,6 @@
 (define-private (is-disassemble-first-element (value {token-id: uint, member: principal}))
   (let
     ((first-element (element-at (var-get disassemble-work-queue) u0)))
-
     (not 
       (and
         (is-some first-element)
@@ -144,14 +147,36 @@
   )
 )
 
+(define-public (is-disassemble-first-element-public (value {token-id: uint, member: principal}))
+  (ok 
+    (let
+      ((first-element (element-at (var-get disassemble-work-queue) u0)))
+      (not 
+        (and
+          (is-some first-element)
+          (is-eq value (unwrap-panic first-element))
+        )
+      )
+    )
+  )
+)
+
 
 ;; Helper functions
-
 (define-private (is-disassemble-value-for-principal (value {token-id: uint, member: principal}))
   (is-eq (get member value) tx-sender)
 )
 
+(define-public (is-disassemble-value-for-principal-public (value {token-id: uint, member: principal}))
+  (ok (is-eq (get member value) tx-sender))
+)
+
+
 (define-private (fee-processing)
+  (stx-transfer? u10000 tx-sender (var-get contract-owner))
+)
+
+(define-public (fee-processing-public)
   (stx-transfer? u10000 tx-sender (var-get contract-owner))
 )
 
@@ -288,6 +313,7 @@
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-assemble-work-in-queue u1 u1 u1 u1)
 ;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
 ;; (contract-call? .upgrade-contract finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "url-custom")
+
 (define-public (assemble-finalize (member principal) (metadata-url (string-ascii 99))) 
 	(begin     
     ;; Check that admin is calling this contract
@@ -300,23 +326,14 @@
 
 (define-data-var assemble-work-queue (list 100 {member: principal, background-id: uint, body-id: uint, rim-id: uint, head-id: uint}) (list))
 
-;; TODO: decide if only contrct owner or if it can be public info
-(define-public (assemble-get-work-queue)
-  (begin  
-    ;; Check that admin is calling this contract
-    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
+(define-read-only (assemble-get-work-queue)
     ;; Get the actual work-queue so that we can process it
     (ok (var-get assemble-work-queue))
-  )
 )
 
-(define-public (get-assemble-head-work-queue)
-  (begin  
-    ;; Check that admin is calling this contract
-    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
+(define-read-only (get-assemble-head-work-queue)
     ;; Get the first element in the work queue so that we can process it
     (ok (element-at (var-get assemble-work-queue) u0))
-  )
 )
 
 (define-public (add-assemble-work-in-queue (background-id uint) (body-id uint) (rim-id uint) (head-id uint))
@@ -410,6 +427,24 @@
 )
 
 
+(define-public (is-assemble-value-for-principal-public (value (tuple (background-id uint) (body-id uint) (rim-id uint) (head-id uint) (member principal))))
+  (ok (is-eq (get member value) tx-sender))
+)
+
+(define-public (is-assemble-first-element-public (value (tuple (background-id uint) (body-id uint) (rim-id uint) (head-id uint) (member principal))))
+  (ok 
+    (let
+      ((first-element (element-at (var-get assemble-work-queue) u0)))
+      (not 
+        (and
+          (is-some first-element)
+          (is-eq value (unwrap-panic first-element))
+        )
+      )
+    )
+  )
+)
+
 
 
 
@@ -434,23 +469,14 @@
 
 (define-data-var swap-work-queue (list 100 {member: principal, degen-id: uint, component-id: uint, component-type: (string-ascii 30)}) (list))
 
-;; TODO: decide if only contrct owner or if it can be public info
-(define-public (get-swap-work-queue)
-  (begin  
-    ;; Check that admin is calling this contract
-    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
-    ;; Get the actual work-queue so that we can process it
-    (ok (var-get swap-work-queue))
-  )
+(define-read-only (get-swap-work-queue)
+  ;; Get the actual work-queue so that we can process it
+  (ok (var-get swap-work-queue))
 )
 
-(define-public (get-swap-head-work-queue)
-  (begin  
-    ;; Check that admin is calling this contract
-    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
-    ;; Get the first element in the work queue so that we can process it
-    (ok (element-at (var-get swap-work-queue) u0))
-  )
+(define-read-only (get-swap-head-work-queue)
+  ;; Get the first element in the work queue so that we can process it
+  (ok (element-at (var-get swap-work-queue) u0))
 )
 
 (define-public (add-swap-work-in-queue (degen-id uint) (component-id uint) (component-type (string-ascii 30)))
@@ -745,28 +771,19 @@
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-merge-work-in-queue u1 "miami")
 ;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract get-merge-work-queue)
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract merge-finalize tx-sender "nice-new-nft")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract merge-finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "nice-new-nft")
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degen-nft get-token-uri u1)
 
 (define-data-var merge-work-queue (list 100 {member: principal, degen-id: uint, degen-type: (string-ascii 30)}) (list))
 
-;; TODO: decide if only contrct owner or if it can be public info
-(define-public (get-merge-work-queue)
-  (begin  
-    ;; Check that admin is calling this contract
-    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
-    ;; Get the actual work-queue so that we can process it
-    (ok (var-get merge-work-queue))
-  )
+(define-read-only (get-merge-work-queue)
+  ;; Get the actual work-queue so that we can process it
+  (ok (var-get merge-work-queue))
 )
 
-(define-public (get-merge-head-work-queue)
-  (begin  
-    ;; Check that admin is calling this contract
-    (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
-    ;; Get the first element in the work queue so that we can process it
-    (ok (element-at (var-get merge-work-queue) u0))
-  )
+(define-read-only (get-merge-head-work-queue)
+  ;; Get the first element in the work queue so that we can process it
+  (ok (element-at (var-get merge-work-queue) u0))
 )
 
 (define-public (add-merge-work-in-queue (degen-id uint) (degen-type (string-ascii 30)))

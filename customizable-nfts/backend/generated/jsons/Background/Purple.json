@@ -1,0 +1,14 @@
+{
+  "sip": 16,
+  "name": "Purple",
+  "image": "ipfs://QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria/Purple.png",
+  "attributes": [
+    {
+      "trait_type": "Background", 
+      "value": "Purple"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenBackgrounds"
+  }
+}
