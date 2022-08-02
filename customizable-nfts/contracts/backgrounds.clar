@@ -33,8 +33,6 @@
 ;; Owner
 (define-data-var contract-owner principal tx-sender)
 
-
-
 ;; SIP009: Transfer token to a specified principal
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
   (begin
@@ -62,13 +60,11 @@
   (ok (var-get last-id))
 )
 
-
 (define-read-only (get-token-uri (token-id uint)) 
   (let ((token-urr (get url (map-get? token-url {token-id: token-id})))) 
   (ok token-urr)
   )
 )
-
 
 ;; Internal - Mint new NFT
 (define-private (mint (new-owner principal))
@@ -82,7 +78,6 @@
   )
 )
 
-
 (define-public (mint-url (address principal) (url (string-ascii 256)))
   (begin 
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
@@ -94,7 +89,6 @@
     )
   )
 )
-
 
 (define-public (mint-name (address principal) (name (string-ascii 30)))
   (begin
@@ -122,5 +116,23 @@
 	(begin     
 		(asserts! (is-eq (some tx-sender) (nft-get-owner? background token-id) ) err-no-rights)     
 		(nft-burn? background token-id tx-sender)
+  )
+)
+
+(define-read-only (get-name-url (name (string-ascii 30)))
+  (map-get? name-url {name: name})
+)
+
+(define-public (set-name-url (name (string-ascii 30)) (url (string-ascii 30))) 
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
+    (ok (map-set name-url {name: name} {url: url}))
+  )
+)
+
+(define-public (remove-name-url (name (string-ascii 30))) 
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
+    (ok (map-delete name-url {name: name}))
   )
 )

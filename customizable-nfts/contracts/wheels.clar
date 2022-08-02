@@ -115,3 +115,21 @@
 		(nft-burn? rims token-id tx-sender)
   )
 )
+
+(define-read-only (get-name-url (name (string-ascii 30)))
+  (map-get? name-url {name: name})
+)
+
+(define-public (set-name-url (name (string-ascii 30)) (url (string-ascii 30))) 
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
+    (ok (map-set name-url {name: name} {url: url}))
+  )
+)
+
+(define-public (remove-name-url (name (string-ascii 30))) 
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
+    (ok (map-delete name-url {name: name}))
+  )
+)
