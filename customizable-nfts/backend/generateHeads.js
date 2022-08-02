@@ -8,6 +8,11 @@ const alienFace = prefix + 'AlienFace/';
 const alienHead = prefix + 'AlienHead/';
 const skullFace = prefix + 'SkullFace/';
 const skullHead = prefix + 'SkullHead/';
+const pathHeadsMapSC = "./generated/headsMap.txt";
+fs.writeFile(pathHeadsMapSC, '', function (err, result) {
+  if (err) console.log('error', err);
+});
+
 
 // Generate all NYC Heads
 
@@ -19,6 +24,7 @@ fs.readdir(alienHead, (err, heads) => {
       faces.forEach((face) => {
         const faceName = face.split('.')[0];
         generateHead('NYC', head, face, headName, faceName);
+        writeNewLine(convertCityHeadFaceToSCLine('NYC', headName, faceName));
       });
     });
   });
@@ -31,6 +37,7 @@ fs.readdir(skullHead, (err, heads) => {
       faces.forEach((face) => {
         const faceName = face.split('.')[0];
         generateHead('Miami', head, face, headName, faceName);
+        writeNewLine(convertCityHeadFaceToSCLine('Miami', headName, faceName));
       });
     });
   });
@@ -54,3 +61,14 @@ async function generateHead(city, head, face, headName, faceName) {
     if (err) console.log('error', err);
   });
 }
+
+function convertCityHeadFaceToSCLine(city, head, face) {
+  return `(map-set name-url {name: "${city}_${head}_${face}"} {url: "ipfs://QmY549kDdJDSR89yWLF3PrkoPjs1ZWboRMkaqmVmTVgsH7/${city}_${head}_${face}.json"})\n`;
+}
+
+function writeNewLine(newLine) {
+  fs.appendFile(pathHeadsMapSC, newLine, function (err, result) {
+    if (err) console.log('error', err);
+  });
+}
+
