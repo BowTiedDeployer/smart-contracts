@@ -88,10 +88,11 @@
         (var-set disassemble-work-queue
           (begin
             ;; check user has not already inserted this
-            (asserts! 
-              (is-none (index-of work-queue-value value-to-add))
-              err-invalid
-            )
+            ;; if the id is already in the queue that means the NFT is burnt => throws err-not-owner when calling for get-owner 
+            ;; (asserts! 
+            ;;   (is-none (index-of work-queue-value value-to-add))
+            ;;   err-invalid
+            ;; )
             ;; check user is not abusing the queue
             (asserts! 
               (< (len (filter is-disassemble-value-for-principal work-queue-value)) u5)
