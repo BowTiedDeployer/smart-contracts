@@ -1655,7 +1655,7 @@ Clarinet.test({
         const background_name = "DarkPurple";
         const body_name = "BentleyBlack";
         const rim_name = "ClassyCream";
-        const head_name = "MiamiLostOrange";
+        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -1690,7 +1690,7 @@ Clarinet.test({
         const background_name = "DarkPurple";
         const body_name = "BentleyBlack";
         const rim_name = "ClassyCream";
-        const head_name = "MiamiLostOrange";
+        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -1724,7 +1724,7 @@ Clarinet.test({
         const background_name = "DarkPurple";
         const body_name = "BentleyBlack";
         const rim_name = "ClassyCream";
-        const head_name = "MiamiLostOrange";
+        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -1777,7 +1777,7 @@ Clarinet.test({
             ),
         ]);
 
-        // console.log(`block `, block);
+        console.log(`block `, block);
         // console.log(`eventsmint `, block.receipts[0].events);
         // console.log(`eventsadd `, block.receipts[1].events);
         // console.log(`events-disassemble `, block.receipts[2].events);

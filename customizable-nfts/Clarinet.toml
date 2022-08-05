@@ -14,14 +14,23 @@ path = "contracts/backgrounds.clar"
 [contracts.body-kits]
 path = "contracts/body-kits.clar"
 
+[contracts.cars]
+path = "contracts/cars.clar"
+
 [contracts.component-nft]
 path = "contracts/component-nft.clar"
 
 [contracts.degen-nft]
 path = "contracts/degen-nft.clar"
 
+[contracts.degens]
+path = "contracts/degens.clar"
+
 [contracts.dgn-heads]
 path = "contracts/dgn-heads.clar"
+
+[contracts.heads]
+path = "contracts/heads.clar"
 
 [contracts.miami-degens]
 path = "contracts/miami-degens.clar"
@@ -31,6 +40,9 @@ path = "contracts/nft-trait.clar"
 
 [contracts.nyc-degens]
 path = "contracts/nyc-degens.clar"
+
+[contracts.rims]
+path = "contracts/rims.clar"
 
 [contracts.sip-010-trait-ft-standard]
 path = "contracts/sip-010-trait-ft-standard.clar"
