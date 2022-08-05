@@ -51,14 +51,14 @@
 	(begin     
     ;; Check that admin is calling this contract
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
+    (asserts! (is-eq (some token-id) (get token-id (unwrap-panic (get-disassemble-head-work-queue)))) err-invalid)
     (unwrap-panic (contract-call? .backgrounds mint-name member background-name))
     (unwrap-panic (contract-call? .body-kits mint-name member body-name))
+    (unwrap-panic (contract-call? .wheels mint-name member rim-name))
     (unwrap-panic (contract-call? .dgn-heads mint-name member head-name))
-    (unwrap-panic (contract-call? .wheels mint-name member rim-name))    
     (pop-disassemble-work-queue)
   )
 )
-
 
 (define-read-only (get-disassemble-work-queue)
   ;; Get the actual work-queue so that we can process it
@@ -88,10 +88,11 @@
         (var-set disassemble-work-queue
           (begin
             ;; check user has not already inserted this
-            (asserts! 
-              (is-none (index-of work-queue-value value-to-add))
-              err-invalid
-            )
+            ;; if the id is already in the queue that means the NFT is burnt => throws err-not-owner when calling for get-owner 
+            ;; (asserts! 
+            ;;   (is-none (index-of work-queue-value value-to-add))
+            ;;   err-invalid
+            ;; )
             ;; check user is not abusing the queue
             (asserts! 
               (< (len (filter is-disassemble-value-for-principal work-queue-value)) u5)

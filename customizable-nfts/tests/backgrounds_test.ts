@@ -33,7 +33,7 @@ Clarinet.test({
 
 //mint-url
 Clarinet.test({
-    name: "mint-url_deployer_deployer_ok",
+    name: "backgrounds_mint-url_deployer_deployer_ok",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const url = 'custom-url-link';
@@ -57,7 +57,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-    name: "mint-url_deployer_address_ok",
+    name: "backgrounds_mint-url_deployer_address_ok",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
@@ -83,7 +83,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-    name: "mint-url_address_address_error",
+    name: "backgrounds_mint-url_address_address_error",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const sender = accounts.get('wallet_1')!;
         const receiver = accounts.get('wallet_2')!;
@@ -110,7 +110,7 @@ Clarinet.test({
 
 //get-token-uri
 Clarinet.test({
-    name: "get-token-uri_existendId_ok",
+    name: "backgrounds_get-token-uri_existendId_ok",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
@@ -143,7 +143,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-    name: "get-token-uri_inexistendId_no-link",
+    name: "backgrounds_get-token-uri_inexistendId_no-link",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
@@ -178,10 +178,10 @@ Clarinet.test({
 
 //mint-name
 Clarinet.test({
-    name: "mint-name_deployer_deployer_existentName_ok",
+    name: "backgrounds_mint-name_deployer_deployer_existentName_ok",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
-        const name = 'MiamiLunaPurple';
+        const name = 'DarkPurple';
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -202,11 +202,11 @@ Clarinet.test({
 });
 
 Clarinet.test({
-    name: "mint-name_deployer_address_existentName_ok",
+    name: "backgrounds_mint-name_deployer_address_existentName_ok",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
-        const name = 'MiamiLunaPurple';
+        const name = 'DarkPurple';
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -227,11 +227,11 @@ Clarinet.test({
 });
 
 Clarinet.test({
-    name: "mint-name_address_address_existentName_error",
+    name: "backgrounds_mint-name_address_address_existentName_error",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const sender = accounts.get('wallet_1')!;
         const receiver = accounts.get('wallet_1')!;
-        const name = 'MiamiLunaPurple';
+        const name = 'DarkPurple';
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -252,7 +252,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-    name: "mint-name_deployer_address_inexistentName_error",
+    name: "backgrounds_mint-name_deployer_address_inexistentName_error",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
@@ -279,11 +279,11 @@ Clarinet.test({
 
 //burn-token
 Clarinet.test({
-    name: "burn-token_owner_tokenOwned_ok",
+    name: "backgrounds_burn-token_owner_tokenOwned_ok",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
-        const name = 'MiamiLunaPurple';
+        const name = 'DarkPurple';
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -312,11 +312,11 @@ Clarinet.test({
 });
 
 Clarinet.test({
-    name: "burn-token_deployer_tokenNotOwned_error",
+    name: "backgrounds_burn-token_deployer_tokenNotOwned_error",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
-        const name = 'MiamiLunaPurple';
+        const name = 'DarkPurple';
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -346,12 +346,12 @@ Clarinet.test({
 
 
 Clarinet.test({
-    name: "burn-token_address_tokenNotOwned_error",
+    name: "backgrounds_burn-token_address_tokenNotOwned_error",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
         const notOwner = accounts.get('wallet_2')!;
-        const name = 'MiamiLunaPurple';
+        const name = 'DarkPurple';
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -380,7 +380,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-    name: "burn-token_address_tokenInexistent_error",
+    name: "backgrounds_burn-token_address_tokenInexistent_error",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const user = accounts.get('wallet_1')!;
 
