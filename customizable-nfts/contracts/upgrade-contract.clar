@@ -51,14 +51,14 @@
 	(begin     
     ;; Check that admin is calling this contract
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
+    (asserts! (is-eq (some token-id) (get token-id (unwrap-panic (get-disassemble-head-work-queue)))) err-invalid)
     (unwrap-panic (contract-call? .backgrounds mint-name member background-name))
     (unwrap-panic (contract-call? .body-kits mint-name member body-name))
+    (unwrap-panic (contract-call? .wheels mint-name member rim-name))
     (unwrap-panic (contract-call? .dgn-heads mint-name member head-name))
-    (unwrap-panic (contract-call? .wheels mint-name member rim-name))    
     (pop-disassemble-work-queue)
   )
 )
-
 
 (define-read-only (get-disassemble-work-queue)
   ;; Get the actual work-queue so that we can process it
