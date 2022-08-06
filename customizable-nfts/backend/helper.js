@@ -1,32 +1,37 @@
-import pkg from '@stacks/transactions';
+import { standardPrincipalCV, cvToHex } from '@stacks/transactions';
 import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
+import { network, coreApiUrl, urlApis } from './consts.js';
 
-const { standardPrincipalCV, intToHexString, cvToHex } = pkg;
+// import { hexToCV, stringAsciiCV, uintCV } from '@stacks/transactions';
+let networkN =
+  network === 'mainnet' ? new StacksMocknet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
 
-let network = new StacksMainnet();
-
+// todo: invalid json response body at http://localhost:3999/v2/contracts/call-read/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM/degens/get-token-uri reason: Unexpected end of JSON input | invalid address
 async function readOnlyFromSC(userAddress, contractAddress, contractName, functionName, args) {
   // https://stacks-node-api.mainnet.stacks.co/v2/contracts/call-read/SP1SCEXE6PMGPAC6B4N5P2MDKX8V4GF9QDE1FNNGJ/nyc-degens/get-owner
   // https://stacks-node-api.mainnet.stacks.co/v2/contracts/call-read/{contract_address}/{contract_name}/{function_name}
-  const coreApiUrl = 'https://stacks-node-api.mainnet.stacks.co';
+
   let address = userAddress;
-  let id = '010000000000000000' + pkg.intToHexString(args)
+  let id = '010000000000000000' + args.toString(16);
+  console.log('id', id);
   try {
-    address = pkg.cvToHex(pkg.standardPrincipalCV(address)); 
-    const url = `${coreApiUrl}/v2/contracts/call-read/${contractAddress}/${contractName}/${functionName}`;
-    const res = await fetch( url, {
+    console.log(address);
+    address = cvToHex(standardPrincipalCV(address));
+    console.log(address);
+    const url = `${coreApiUrl[network]}${urlApis.readOnly(contractAddress, contractName, functionName)}`;
+    console.log('url', url);
+    const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        sender:user,
-        network: network,
-        arguments: [id]
-    }),
-  });
-  const data = await res.json();
-  console.log(data);
-  }
-  catch (error) {
+        sender: address, // todo: check this
+        network: networkN,
+        arguments: [id],
+      }),
+    });
+    const data = await res.json();
+    console.log(data);
+  } catch (error) {
     console.log(error.message, '| invalid address');
   }
 }
@@ -35,12 +40,17 @@ function convertArgumentsForSCReadOnlyCall(args) {
   return args;
 }
 
-
 // "@stacks/transactions": "^3.3.0",
 // "axios": "^0.27.2",
 // "bn.js": "^5.2.1",
 
-readOnlyFromSC('SP1SCEXE6PMGPAC6B4N5P2MDKX8V4GF9QDE1FNNGJ', 'SP1SCEXE6PMGPAC6B4N5P2MDKX8V4GF9QDE1FNNGJ', 'nyc-degens', 'get-owner', 1)
+readOnlyFromSC(
+  'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
+  'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+  'degens',
+  'get-token-uri',
+  1
+);
 
 async function chainJoinUserLobbyConfirmed(idLobby, userAddress) {
   let id = idLobby;

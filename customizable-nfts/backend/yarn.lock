@@ -36,7 +36,7 @@
     "@types/node" "^18.0.4"
     buffer "^6.0.3"
 
-"@stacks/network@^4.3.4":
+"@stacks/network@^4.0.0", "@stacks/network@^4.3.4":
   version "4.3.4"
   resolved "https://registry.yarnpkg.com/@stacks/network/-/network-4.3.4.tgz#d3519915a2163db67b639b4eb976fb13f1d0cf0e"
   integrity sha512-XWIYSBEzmBVCEh12cxpiRXVx4JTuejvBRLCA3qnb4Sf0WMCaQ9HxpjcoIjawMv0U3sd1O5H+9LmoozSOL3t4Wg==
@@ -44,7 +44,7 @@
     "@stacks/common" "^4.3.4"
     cross-fetch "^3.1.5"
 
-"@stacks/transactions@^4.3.4":
+"@stacks/transactions@^4.0.0":
   version "4.3.4"
   resolved "https://registry.yarnpkg.com/@stacks/transactions/-/transactions-4.3.4.tgz#854b3c3ae9a807772909789bd09b10dc334cd77f"
   integrity sha512-gkHohQhvEzghuhMH2VAarlq7RDr6BcXKAsiKq0xnwtHelWaFWhVDWVJFgvOYLLvkd6qr4179P26iKQK51N3ivA==
