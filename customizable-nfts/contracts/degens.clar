@@ -59,7 +59,7 @@
   )
 )
 
-(define-public (mint-url (address principal) (url (string-ascii 256)))
+(define-public (mint-uri (address principal) (url (string-ascii 256)))
   (begin 
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
     (let 

@@ -2,15 +2,15 @@
 import { Clarinet, Tx, Chain, Account, types } from 'https://deno.land/x/clarinet@v0.31.0/index.ts';
 import { assertEquals } from 'https://deno.land/std@0.90.0/testing/asserts.ts';
 
-const CONTRACT_NAME = 'degen-nft';
-const MINT_URL = 'mint-url';
+const CONTRACT_NAME = 'degens';
+const MINT_URI = 'mint-uri';
 const BURN_TOKEN = 'burn-token';
 const GET_TOKEN_URI = 'get-token-uri';
 
 
 //mint-url
 Clarinet.test({
-    name: "degen-nft_mint-url_deployer_deployer_ok",
+    name: "degens_mint-uri_deployer_deployer_ok",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const url = 'custom-url-link';
@@ -18,7 +18,7 @@ Clarinet.test({
         let block = chain.mineBlock([
             Tx.contractCall(
                 CONTRACT_NAME,
-                MINT_URL,
+                MINT_URI,
                 [
                     types.principal(deployer.address),
                     types.ascii(url)
@@ -34,7 +34,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-    name: "degen-nft_mint-url_deployer_address_ok",
+    name: "degens_mint-uri_deployer_address_ok",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
@@ -43,7 +43,7 @@ Clarinet.test({
         let block = chain.mineBlock([
             Tx.contractCall(
                 CONTRACT_NAME,
-                MINT_URL,
+                MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(url)
@@ -60,7 +60,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-    name: "degen-nft_mint-url_address_address_error",
+    name: "degens_mint-uri_address_address_error",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const sender = accounts.get('wallet_1')!;
         const receiver = accounts.get('wallet_2')!;
@@ -69,7 +69,7 @@ Clarinet.test({
         let block = chain.mineBlock([
             Tx.contractCall(
                 CONTRACT_NAME,
-                MINT_URL,
+                MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(url)
@@ -87,7 +87,7 @@ Clarinet.test({
 
 //get-token-uri
 Clarinet.test({
-    name: "degen-nft_get-token-uri_existendId_okUrl",
+    name: "degens_get-token-uri_existendId_okUrl",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
@@ -96,7 +96,7 @@ Clarinet.test({
         let block = chain.mineBlock([
             Tx.contractCall(
                 CONTRACT_NAME,
-                MINT_URL,
+                MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(url)
@@ -120,7 +120,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-    name: "degen-nft_get-token-uri_inexistendId_okNone",
+    name: "degens_get-token-uri_inexistendId_okNone",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
@@ -129,7 +129,7 @@ Clarinet.test({
         let block = chain.mineBlock([
             Tx.contractCall(
                 CONTRACT_NAME,
-                MINT_URL,
+                MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(url)
@@ -154,7 +154,7 @@ Clarinet.test({
 
 //burn-token
 Clarinet.test({
-    name: "degen-nft_burn-token_owner_tokenOwned_ok",
+    name: "degens_burn-token_owner_tokenOwned_ok",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
@@ -163,7 +163,7 @@ Clarinet.test({
         let block = chain.mineBlock([
             Tx.contractCall(
                 CONTRACT_NAME,
-                MINT_URL,
+                MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(url)
@@ -187,7 +187,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-    name: "degen-nft_burn-token_deployer_tokenNotOwned_error",
+    name: "degens_burn-token_deployer_tokenNotOwned_error",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
@@ -196,7 +196,7 @@ Clarinet.test({
         let block = chain.mineBlock([
             Tx.contractCall(
                 CONTRACT_NAME,
-                MINT_URL,
+                MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(url)
@@ -221,7 +221,7 @@ Clarinet.test({
 
 
 Clarinet.test({
-    name: "degen-nft_burn-token_address_tokenNotOwned_error",
+    name: "degens_burn-token_address_tokenNotOwned_error",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
@@ -231,7 +231,7 @@ Clarinet.test({
         let block = chain.mineBlock([
             Tx.contractCall(
                 CONTRACT_NAME,
-                MINT_URL,
+                MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(url)
@@ -255,7 +255,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-    name: "degen-nft_burn-token_address_tokenInexistent_error",
+    name: "degens-token_address_tokenInexistent_error",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const user = accounts.get('wallet_1')!;
 

@@ -15,8 +15,8 @@
 
 
 (define-constant background-type "background-type")
-(define-constant body-type "body-type")
-(define-constant rims-type "rims-type")
+(define-constant car-type "car-type")
+(define-constant rim-type "rim-type")
 (define-constant head-type "head-type")
 
 (define-constant miami-type "miami")
@@ -33,13 +33,13 @@
 
 ;; eg. case
 
-;; (contract-call? .degen-nft mint-url 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "urlNiceDegen")
+;; (contract-call? .degens mint-uri 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "uriNiceDegen")
 ;; ::set_tx_sender STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-disassemble-work-in-queue u1)
 ;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract disassemble-finalize u1 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "DarkPurple" "BentleyBlack" "ClassyCream" "MiamiLostOrange")
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.body-kits get-token-uri u1)
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.body-kits get-owner u1)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract disassemble-finalize u1 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "DarkPurple" "BentleyBlack" "ClassyCream" "Miami_Syringe_Cigar")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.cars get-token-uri u1)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.cars get-owner u1)
 
 
 ;; Queue for work
@@ -47,15 +47,15 @@
 
 
 
-(define-public (disassemble-finalize (token-id uint) (member principal) (background-name (string-ascii 30)) (body-name (string-ascii 30)) (rim-name (string-ascii 30)) (head-name (string-ascii 30))) 
+(define-public (disassemble-finalize (token-id uint) (member principal) (background-name (string-ascii 30)) (car-name (string-ascii 30)) (rim-name (string-ascii 30)) (head-name (string-ascii 30))) 
 	(begin     
     ;; Check that admin is calling this contract
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
     (asserts! (is-eq (some token-id) (get token-id (unwrap-panic (get-disassemble-head-work-queue)))) err-invalid)
-    (unwrap-panic (contract-call? .backgrounds mint-name member background-name))
-    (unwrap-panic (contract-call? .body-kits mint-name member body-name))
-    (unwrap-panic (contract-call? .wheels mint-name member rim-name))
-    (unwrap-panic (contract-call? .dgn-heads mint-name member head-name))
+    (unwrap-panic (contract-call? .backgrounds mint-name member background-name)) 
+    (unwrap-panic (contract-call? .cars mint-name member car-name))
+    (unwrap-panic (contract-call? .rims mint-name member rim-name))
+    (unwrap-panic (contract-call? .heads mint-name member head-name))
     (pop-disassemble-work-queue)
   )
 )
@@ -75,7 +75,7 @@
     (begin
       ;; check user is owner of nft
       (asserts! 
-        (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) 
+        (is-eq (some tx-sender) (unwrap-panic (contract-call? .degens get-owner token-id))) 
         err-not-owner
       )    
       ;; transfer fees if not contract-owner
@@ -98,7 +98,7 @@
               (< (len (filter is-disassemble-value-for-principal work-queue-value)) u5)
               err-too-many-disassemble
             )
-            (unwrap-panic (contract-call? .degen-nft burn-token token-id))
+            (unwrap-panic (contract-call? .degens burn-token token-id))
             (append 
               (unwrap-panic (as-max-len? work-queue-value u99)) 
               value-to-add
@@ -226,10 +226,10 @@
 ;;           )
 ;;           ;; check user is owner of nft
 ;;           (asserts! 
-;;             (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) 
+;;             (is-eq (some tx-sender) (unwrap-panic (contract-call? .degens get-owner token-id))) 
 ;;             err-not-owner
 ;;           )    
-      		;; (unwrap-panic (contract-call? .degen-nft burn-token token-id))
+      		;; (unwrap-panic (contract-call? .degens burn-token token-id))
 
 
 ;;           (append 
@@ -284,50 +284,31 @@
 
 
 
-
-
-(define-public (assemble (metadata-url (string-ascii 99)))
-  (begin
-    ;; (unwrap! (contract-call? .backgrounds burn-token background-id) err-invalid)
-    ;; (unwrap! (contract-call? .body-kits burn-token body-id) err-invalid)
-    ;; (unwrap! (contract-call? .wheels burn-token rim-id) err-invalid)
-    ;; (unwrap! (contract-call? .dgn-heads burn-token head-id) err-invalid)
-
-    ;; TODO(Deployer): For extra safety we can add a param with what work we are expecting to do and check that is in the queue before bindly popping
-    (unwrap-panic (pop-assemble-work-queue))
-    (contract-call? .degen-nft mint-url tx-sender metadata-url)  
-  )
-)
-
-
-
-
-
 ;; Assemble
 
 ;; run-case
-;; (contract-call? .backgrounds mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "MiamiLostOrange")
-;; (contract-call? .body-kits mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "MiamiLostOrange")
-;; (contract-call? .wheels mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "MiamiLostOrange")
-;; (contract-call? .dgn-heads mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "MiamiLostOrange")
+;; (contract-call? .backgrounds mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "DarkPurple")
+;; (contract-call? .cars mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "BentleyBlack")
+;; (contract-call? .rims mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "ClassyCream")
+;; (contract-call? .heads mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "NYC_Antenna_BigSmile")
 ;; ::set_tx_sender STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-assemble-work-in-queue u1 u1 u1 u1)
 ;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-;; (contract-call? .upgrade-contract finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "url-custom")
+;; (contract-call? .upgrade-contract assemble-finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "uri-custom")
 
-(define-public (assemble-finalize (member principal) (metadata-url (string-ascii 99))) 
+
+(define-public (assemble-finalize (member principal) (metadata-uri (string-ascii 99))) 
 	(begin     
     ;; Check that admin is calling this contract
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
-    (unwrap-panic (contract-call? .degen-nft mint-url member metadata-url))
+    (unwrap-panic (contract-call? .degens mint-uri member metadata-uri))
     (pop-assemble-work-queue)
   )
 )
 
+(define-data-var assemble-work-queue (list 100 {member: principal, background-id: uint, car-id: uint, rim-id: uint, head-id: uint}) (list))
 
-(define-data-var assemble-work-queue (list 100 {member: principal, background-id: uint, body-id: uint, rim-id: uint, head-id: uint}) (list))
-
-(define-read-only (assemble-get-work-queue)
+(define-read-only (get-assemble-work-queue)
     ;; Get the actual work-queue so that we can process it
     (ok (var-get assemble-work-queue))
 )
@@ -337,55 +318,60 @@
     (ok (element-at (var-get assemble-work-queue) u0))
 )
 
-(define-public (add-assemble-work-in-queue (background-id uint) (body-id uint) (rim-id uint) (head-id uint))
-  (ok 
-    (let 
-      (
-        (work-queue-value (var-get assemble-work-queue))
-        (value-to-add {
-          member: tx-sender, 
-          background-id: background-id,
-          body-id: body-id,
-          rim-id: rim-id,
-          head-id: head-id
-        })
-      )
-    
-      (var-set assemble-work-queue
-        (begin
-          ;; check user has not already inserted this
-          (asserts! 
-            (is-none (index-of work-queue-value value-to-add))
-            err-invalid
-          )
-          ;; check user is not abusing the queue
-          (asserts! 
-            (< (len (filter is-assemble-value-for-principal work-queue-value)) u5)
-            err-too-many-disassemble
-          )
-          ;; check user is owner of nft
-          (asserts! 
-            (and
-              (is-eq (some tx-sender) (unwrap-panic (contract-call? .backgrounds get-owner rim-id)))       
-              (and
-                (is-eq (some tx-sender) (unwrap-panic (contract-call? .body-kits get-owner body-id))) 
-                (and
-                  (is-eq (some tx-sender) (unwrap-panic (contract-call? .wheels get-owner rim-id))) 
-                  (is-eq (some tx-sender) (unwrap-panic (contract-call? .dgn-heads get-owner head-id))) 
-                )
-              )
-            )
-            err-not-owner
-          )    
-          (if (is-eq tx-sender (var-get contract-owner)) true (try! (fee-processing)))
-          (unwrap-panic (contract-call? .backgrounds burn-token background-id))
-          (unwrap-panic (contract-call? .body-kits burn-token background-id))
-          (unwrap-panic (contract-call? .wheels burn-token background-id))
-          (unwrap-panic (contract-call? .dgn-heads burn-token background-id))
 
-          (append 
-            (unwrap-panic (as-max-len? work-queue-value u99)) 
-            value-to-add
+(define-public (add-assemble-work-in-queue (background-id uint) (car-id uint) (rim-id uint) (head-id uint))
+  (ok 
+    (begin 
+      ;; check user is owner of nft
+      (asserts! 
+        (and
+          (is-eq (some tx-sender) (unwrap-panic (contract-call? .backgrounds get-owner background-id)))       
+          (and
+            (is-eq (some tx-sender) (unwrap-panic (contract-call? .cars get-owner car-id))) 
+            (and
+              (is-eq (some tx-sender) (unwrap-panic (contract-call? .rims get-owner rim-id))) 
+              (is-eq (some tx-sender) (unwrap-panic (contract-call? .heads get-owner head-id))) 
+            )
+          )
+        )
+        err-not-owner
+      )    
+      ;; payment
+      (if (is-eq tx-sender (var-get contract-owner)) true (try! (fee-processing)))
+      (let 
+        (
+          (work-queue-value (var-get assemble-work-queue))
+          (value-to-add {
+            member: tx-sender, 
+            background-id: background-id,
+            car-id: car-id,
+            rim-id: rim-id,
+            head-id: head-id
+          })
+        )
+      
+        (var-set assemble-work-queue
+          (begin
+            ;; check user has not already inserted this
+            ;; if the id is already in the queue that means the NFT is burnt => throws err-not-owner when calling for get-owner 
+            ;; (asserts! 
+            ;;   (is-none (index-of work-queue-value value-to-add))
+            ;;   err-invalid
+            ;; )
+            ;; check user is not abusing the queue
+            (asserts! 
+              (< (len (filter is-assemble-value-for-principal work-queue-value)) u5)
+              err-too-many-disassemble
+            )
+            (unwrap-panic (contract-call? .backgrounds burn-token background-id))
+            (unwrap-panic (contract-call? .cars burn-token car-id))
+            (unwrap-panic (contract-call? .rims burn-token rim-id))
+            (unwrap-panic (contract-call? .heads burn-token head-id))
+
+            (append 
+              (unwrap-panic (as-max-len? work-queue-value u99)) 
+              value-to-add
+            )
           )
         )
       )
@@ -393,28 +379,42 @@
   )
 )
 
-(define-public (pop-assemble-work-queue)
+
+(define-private (pop-assemble-work-queue)
   (ok 
     (let
       ((work-queue-value (var-get assemble-work-queue)))
-
       (var-set assemble-work-queue
-        (begin
-          ;; Check that admin is calling this contract
-          (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
-          ;; Remove first element in list
-          (filter is-assemble-first-element work-queue-value)
-        )
+        ;; Remove first element in list
+        (filter is-assemble-first-element work-queue-value)
       )
     )
   )
 )
 
-(define-private (is-assemble-value-for-principal (value (tuple (background-id uint) (body-id uint) (rim-id uint) (head-id uint) (member principal))))
+(define-public (pop-assemble-work-queue-public)
+  (ok 
+    (let
+      ((work-queue-value (var-get assemble-work-queue)))
+      (var-set assemble-work-queue
+        ;; Remove first element in list
+        (filter is-assemble-first-element work-queue-value)
+      )
+    )
+  )
+)
+
+
+(define-private (is-assemble-value-for-principal (value {background-id: uint, car-id: uint, rim-id: uint, head-id: uint, member: principal}))
   (is-eq (get member value) tx-sender)
 )
 
-(define-private (is-assemble-first-element (value (tuple (background-id uint) (body-id uint) (rim-id uint) (head-id uint) (member principal))))
+(define-public (is-assemble-value-for-principal-public (value {background-id: uint, car-id: uint, rim-id: uint, head-id: uint, member: principal}))
+  (ok (is-eq (get member value) tx-sender))
+)
+
+
+(define-private (is-assemble-first-element (value {background-id: uint, car-id: uint, rim-id: uint, head-id: uint, member: principal}))
   (let
     ((first-element (element-at (var-get assemble-work-queue) u0)))
 
@@ -427,12 +427,7 @@
   )
 )
 
-
-(define-public (is-assemble-value-for-principal-public (value (tuple (background-id uint) (body-id uint) (rim-id uint) (head-id uint) (member principal))))
-  (ok (is-eq (get member value) tx-sender))
-)
-
-(define-public (is-assemble-first-element-public (value (tuple (background-id uint) (body-id uint) (rim-id uint) (head-id uint) (member principal))))
+(define-public (is-assemble-first-element-public (value {background-id: uint, car-id: uint, rim-id: uint, head-id: uint, member: principal}))
   (ok 
     (let
       ((first-element (element-at (var-get assemble-work-queue) u0)))
@@ -457,15 +452,15 @@
 ;; SWAP
 
 ;; eg. case
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degen-nft mint-url 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "nice-link")
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.wheels mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "MiamiLunaPurple")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degens mint-uri 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "nice-link")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.rims mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "ClassyCream")
 ;; ::set_tx_sender STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-swap-work-in-queue u1 u1 "rims-type")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-swap-work-in-queue u1 u1 "rim-type")
 ;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
 
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract swap-finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "new-nice-link" "NYCGoldie" "rims-type")
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.wheels get-token-uri u2)
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degen-nft get-token-uri u4)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract swap-finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "new-nice-link" "ClassyDark" "rim-type")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.rims get-token-uri u2)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degens get-token-uri u4)
 
 
 (define-data-var swap-work-queue (list 100 {member: principal, degen-id: uint, component-id: uint, component-type: (string-ascii 30)}) (list))
@@ -482,70 +477,71 @@
 
 (define-public (add-swap-work-in-queue (degen-id uint) (component-id uint) (component-type (string-ascii 30)))
   (ok 
-    (let 
-      (
-        (work-queue-value (var-get swap-work-queue))
-        (value-to-add { 
-          member: tx-sender,
-          degen-id: degen-id,
-          component-id: component-id,
-          component-type: component-type
-          })
-      )
-    
-      (var-set swap-work-queue
-        (begin
-          ;; check user has not already inserted this
-          (asserts! 
-            (is-none (index-of work-queue-value value-to-add))
-            err-invalid
-          )
-          ;; check user is not abusing the queue
-          (asserts! 
-            (< (len (filter is-swap-value-for-principal work-queue-value)) u5)
-            err-too-many-disassemble
-          )
-          ;; check user is owner of nft
-          (asserts! 
-            (and
-              (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner degen-id)))       
-              (is-eq (some tx-sender)
-                  (if (is-eq component-type background-type) 
-                    (unwrap-panic (contract-call? .backgrounds get-owner component-id))
-                    (if (is-eq component-type body-type) 
-                      (unwrap-panic (contract-call? .body-kits get-owner component-id))
-                      (if (is-eq component-type rims-type) 
-                        (unwrap-panic (contract-call? .wheels get-owner component-id))  
-                        (if (is-eq component-type head-type) 
-                          (unwrap-panic (contract-call? .dgn-heads get-owner component-id))
-                          none   ;; component-type invalid
-                        )
-                      )
+    (begin 
+      ;; check user is owner of nft
+      (asserts! 
+        (and
+          (is-eq (some tx-sender) (unwrap-panic (contract-call? .degens get-owner degen-id)))       
+          (is-eq (some tx-sender)
+              (if (is-eq component-type background-type) 
+                (unwrap-panic (contract-call? .backgrounds get-owner component-id))
+                (if (is-eq component-type car-type) 
+                  (unwrap-panic (contract-call? .cars get-owner component-id))
+                  (if (is-eq component-type rim-type) 
+                    (unwrap-panic (contract-call? .rims get-owner component-id))  
+                    (if (is-eq component-type head-type) 
+                      (unwrap-panic (contract-call? .heads get-owner component-id))
+                      none   ;; component-type invalid
                     )
                   )
-              )
-            )
-            err-not-owner
-          )    
-          (if (is-eq tx-sender (var-get contract-owner)) true (try! (fee-processing)))
-          (unwrap-panic (contract-call? .degen-nft burn-token degen-id))
-          (if (is-eq component-type background-type) 
-            (unwrap-panic (contract-call? .backgrounds burn-token component-id))
-            (if (is-eq component-type body-type) 
-              (unwrap-panic (contract-call? .body-kits burn-token component-id))
-              (if (is-eq component-type rims-type) 
-                (unwrap-panic (contract-call? .wheels burn-token component-id))  
-                (if (is-eq component-type head-type) 
-                  (unwrap-panic (contract-call? .dgn-heads burn-token component-id))
-                  false   ;; component-type invalid
                 )
               )
-            )
           )
-          
-          (append 
-            (unwrap-panic (as-max-len? work-queue-value u99)) 
-            value-to-add
+        )
+        err-not-owner
+      )    
+      (if (is-eq tx-sender (var-get contract-owner)) true (try! (fee-processing)))
+      (let 
+        (
+          (work-queue-value (var-get swap-work-queue))
+          (value-to-add { 
+            member: tx-sender,
+            degen-id: degen-id,
+            component-id: component-id,
+            component-type: component-type
+            })
+        )      
+        (var-set swap-work-queue
+          (begin
+            ;; check user has not already inserted this
+            ;; if the id is already in the queue that means the NFT is burnt => throws err-not-owner when calling for get-owner 
+            ;; (asserts! 
+            ;;   (is-none (index-of work-queue-value value-to-add))
+            ;;   err-invalid
+            ;; )
+            ;; check user is not abusing the queue
+            (asserts! 
+              (< (len (filter is-swap-value-for-principal work-queue-value)) u5)
+              err-too-many-disassemble
+            )
+            (unwrap-panic (contract-call? .degens burn-token degen-id))
+            (if (is-eq component-type background-type) 
+              (unwrap-panic (contract-call? .backgrounds burn-token component-id))
+              (if (is-eq component-type car-type) 
+                (unwrap-panic (contract-call? .cars burn-token component-id))
+                (if (is-eq component-type rim-type) 
+                  (unwrap-panic (contract-call? .rims burn-token component-id))  
+                  (if (is-eq component-type head-type) 
+                    (unwrap-panic (contract-call? .heads burn-token component-id))
+                    false   ;; component-type invalid
+                  )
+                )
+              )
+            )            
+            (append 
+              (unwrap-panic (as-max-len? work-queue-value u99)) 
+              value-to-add
+            )
           )
         )
       )
@@ -553,31 +549,44 @@
   )
 )
 
-(define-public (pop-swap-work-queue)
+
+(define-private (pop-swap-work-queue)
   (ok 
     (let
       ((work-queue-value (var-get swap-work-queue)))
-
       (var-set swap-work-queue
-        (begin
-          ;; Check that admin is calling this contract
-          (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
-          ;; Remove first element in list
-          (filter is-swap-first-element work-queue-value)
-        )
+        ;; Remove first element in list
+        (filter is-swap-first-element work-queue-value)
       )
     )
   )
 )
+
+(define-public (pop-swap-work-queue-public)
+  (ok 
+    (let
+      ((work-queue-value (var-get swap-work-queue)))
+      (var-set swap-work-queue
+        ;; Remove first element in list
+        (filter is-swap-first-element work-queue-value)
+      )
+    )
+  )
+)
+
 
 (define-private (is-swap-value-for-principal (value {degen-id: uint, component-id: uint, component-type: (string-ascii 30), member: principal}))
   (is-eq (get member value) tx-sender)
 )
 
+(define-public (is-swap-value-for-principal-public (value {degen-id: uint, component-id: uint, component-type: (string-ascii 30), member: principal}))
+  (ok (is-eq (get member value) tx-sender))
+)
+
+
 (define-private (is-swap-first-element (value {degen-id: uint, component-id: uint, component-type: (string-ascii 30), member: principal}))
   (let
     ((first-element (element-at (var-get swap-work-queue) u0)))
-
     (not 
       (and
         (is-some first-element)
@@ -587,22 +596,36 @@
   )
 )
 
+(define-public (is-swap-first-element-public (value {degen-id: uint, component-id: uint, component-type: (string-ascii 30), member: principal}))
+  (ok
+    (let
+      ((first-element (element-at (var-get swap-work-queue) u0)))
+      (not 
+        (and
+          (is-some first-element)
+          (is-eq value (unwrap-panic first-element))
+        )
+      )
+    )
+  )
+)
 
 
 
-(define-public (swap-finalize (member principal) (metadata-url-dgn (string-ascii 99)) (component-name (string-ascii 30)) (component-type (string-ascii 30)))
+
+(define-public (swap-finalize (member principal) (metadata-uri-dgn (string-ascii 99)) (component-name (string-ascii 30)) (component-type (string-ascii 30)))
   (begin
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
-    (unwrap-panic (contract-call? .degen-nft mint-url member metadata-url-dgn))
+    (unwrap-panic (contract-call? .degens mint-uri member metadata-uri-dgn))
     (if (is-eq false
           (if (is-eq component-type background-type) 
             (unwrap-panic (contract-call? .backgrounds mint-name member component-name))
-            (if (is-eq component-type body-type) 
-              (unwrap-panic (contract-call? .body-kits mint-name member component-name))
-              (if (is-eq component-type rims-type) 
-                (unwrap-panic (contract-call? .wheels mint-name member component-name))  
+            (if (is-eq component-type car-type) 
+              (unwrap-panic (contract-call? .cars mint-name member component-name))
+              (if (is-eq component-type rim-type) 
+                (unwrap-panic (contract-call? .rims mint-name member component-name))  
                 (if (is-eq component-type head-type) 
-                  (unwrap-panic (contract-call? .dgn-heads mint-name member component-name))
+                  (unwrap-panic (contract-call? .heads mint-name member component-name))
                   false   ;; component-type invalid
                 )
               )
@@ -684,10 +707,10 @@
 ;;           )
 ;;           ;; check user is owner of nft
 ;;           (asserts! 
-;;             (is-eq (some tx-sender) (unwrap-panic (contract-call? .degen-nft get-owner token-id))) 
+;;             (is-eq (some tx-sender) (unwrap-panic (contract-call? .degens get-owner token-id))) 
 ;;             err-not-owner
 ;;           )    
-      		;; (unwrap-panic (contract-call? .degen-nft burn-token token-id))
+      		;; (unwrap-panic (contract-call? .degens burn-token token-id))
 
 
 ;;           (append 
@@ -750,7 +773,7 @@
 ;; add in queue
 
 
-;; mint new nft with url
+;; mint new nft with uri
 
 
 
@@ -773,7 +796,7 @@
 ;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract get-merge-work-queue)
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract merge-finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "nice-new-nft")
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degen-nft get-token-uri u1)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degens get-token-uri u1)
 
 (define-data-var merge-work-queue (list 100 {member: principal, degen-id: uint, degen-type: (string-ascii 30)}) (list))
 
@@ -825,7 +848,7 @@
             err-not-owner
           )    
           (if (is-eq tx-sender (var-get contract-owner)) true (try! (fee-processing)))
-          ;; (unwrap-panic (contract-call? .old-degen-nft burn-token degen-id))
+          ;; (unwrap-panic (contract-call? .old-degens burn-token degen-id))
           
           (some (burn-old-nft degen-id degen-type))
 
@@ -889,10 +912,10 @@
   )
 )
 
-(define-public (merge-finalize (member principal) (metadata-url-dgn (string-ascii 99)))
+(define-public (merge-finalize (member principal) (metadata-uri-dgn (string-ascii 99)))
   (begin
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
-    (unwrap-panic (contract-call? .degen-nft mint-url member metadata-url-dgn))
+    (unwrap-panic (contract-call? .degens mint-uri member metadata-uri-dgn))
     (pop-merge-work-queue)
   )
 )

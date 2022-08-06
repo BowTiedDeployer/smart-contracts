@@ -12,12 +12,12 @@ const IS_DISASSEMBLE_VALUE_FOR_PRINCIPAL = 'is-disassemble-value-for-principal-p
 const FEE_PROCESSING = 'fee-processing-public';
 const ADD_DISASSEMBLE_WORK_IN_QUEUE = 'add-disassemble-work-in-queue';
 const DISASSEMBLE_FINALIZE = 'disassemble-finalize';
-const DEGEN_NFT_CONTRACT = 'degen-nft';
-const DEGEN_NFT_MINT_URL = 'mint-url';
+const DEGEN_NFT_CONTRACT = 'degens';
+const DEGEN_NFT_MINT_URI = 'mint-uri';
 const BACKGROUND_CONTRACT = 'backgrounds';
-const BODY_CONTRACT = 'body-kits';
-const RIM_CONTRACT = 'wheels';
-const HEAD_CONTRACT = 'dgn-heads';
+const CAR_CONTRACT = 'cars';
+const RIM_CONTRACT = 'rims';
+const HEAD_CONTRACT = 'heads';
 
 const COMPONENT_GET_OWNER = 'get-owner';
 
@@ -193,7 +193,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(url)
@@ -251,7 +251,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(deployer.address),
                     types.ascii(url)
@@ -310,7 +310,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(url)
@@ -363,7 +363,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(url)
@@ -416,7 +416,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(url)
@@ -494,7 +494,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(deployer.address),
                     types.ascii(url)
@@ -564,7 +564,7 @@ Clarinet.test({
             //mint degens for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(degen1)
@@ -573,7 +573,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(degen2)
@@ -582,7 +582,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(degen3)
@@ -591,7 +591,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(degen4)
@@ -600,7 +600,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(degen5)
@@ -609,7 +609,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(degen6)
@@ -707,7 +707,7 @@ Clarinet.test({
             //mint degens for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(deployer.address),
                     types.ascii(degen1)
@@ -716,7 +716,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(deployer.address),
                     types.ascii(degen2)
@@ -725,7 +725,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(deployer.address),
                     types.ascii(degen3)
@@ -734,7 +734,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(deployer.address),
                     types.ascii(degen4)
@@ -743,7 +743,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(deployer.address),
                     types.ascii(degen5)
@@ -752,7 +752,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(deployer.address),
                     types.ascii(degen6)
@@ -861,7 +861,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(member.address),
                     types.ascii(url)
@@ -906,7 +906,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(deployer.address),
                     types.ascii(url)
@@ -953,7 +953,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(member.address),
                     types.ascii(degen1)
@@ -962,7 +962,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(member.address),
                     types.ascii(degen2)
@@ -1017,7 +1017,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(deployer.address),
                     types.ascii(degen1)
@@ -1026,7 +1026,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(deployer.address),
                     types.ascii(degen2)
@@ -1098,7 +1098,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(receiver.address),
                     types.ascii(url)
@@ -1145,7 +1145,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(deployer.address),
                     types.ascii(url)
@@ -1194,7 +1194,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(member.address),
                     types.ascii(degen1)
@@ -1203,7 +1203,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(member.address),
                     types.ascii(degen2)
@@ -1257,7 +1257,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(deployer.address),
                     types.ascii(degen1)
@@ -1266,7 +1266,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(deployer.address),
                     types.ascii(degen2)
@@ -1322,7 +1322,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(member.address),
                     types.ascii(degen1)
@@ -1361,7 +1361,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(member.address),
                     types.ascii(degen1)
@@ -1410,7 +1410,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(member.address),
                     types.ascii(degen1)
@@ -1419,7 +1419,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(member.address),
                     types.ascii(degen2)
@@ -1477,7 +1477,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(member.address),
                     types.ascii(degen1)
@@ -1522,7 +1522,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(member.address),
                     types.ascii(degen1)
@@ -1576,7 +1576,7 @@ Clarinet.test({
             //mint degen for address of receiver
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(member.address),
                     types.ascii(degen1)
@@ -1585,7 +1585,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(member.address),
                     types.ascii(degen2)
@@ -1655,7 +1655,7 @@ Clarinet.test({
         const background_name = "DarkPurple";
         const body_name = "BentleyBlack";
         const rim_name = "ClassyCream";
-        const head_name = "MiamiLostOrange";
+        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -1690,7 +1690,7 @@ Clarinet.test({
         const background_name = "DarkPurple";
         const body_name = "BentleyBlack";
         const rim_name = "ClassyCream";
-        const head_name = "MiamiLostOrange";
+        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -1722,14 +1722,14 @@ Clarinet.test({
         const degen1 = 'urlNiceDegen1';
         const degen2 = 'urlNiceDegen2';
         const background_name = "DarkPurple";
-        const body_name = "BentleyBlack";
+        const car_name = "BentleyBlack";
         const rim_name = "ClassyCream";
-        const head_name = "MiamiLostOrange";
+        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(member.address),
                     types.ascii(degen1)
@@ -1738,7 +1738,7 @@ Clarinet.test({
             ),
             Tx.contractCall(
                 DEGEN_NFT_CONTRACT,
-                DEGEN_NFT_MINT_URL,
+                DEGEN_NFT_MINT_URI,
                 [
                     types.principal(member.address),
                     types.ascii(degen2)
@@ -1769,7 +1769,7 @@ Clarinet.test({
                     types.uint(1),
                     types.principal(member.address),
                     types.ascii(background_name),
-                    types.ascii(body_name),
+                    types.ascii(car_name),
                     types.ascii(rim_name),
                     types.ascii(head_name)
                 ],
@@ -1789,7 +1789,7 @@ Clarinet.test({
         block.receipts[4].result.expectOk().expectBool(true);
 
         const background_id = block.receipts[4].events[0]['nft_mint_event']['value'].split('u')[1];
-        const body_id = block.receipts[4].events[1]['nft_mint_event']['value'].split('u')[1];
+        const car_id = block.receipts[4].events[1]['nft_mint_event']['value'].split('u')[1];
         const rim_id = block.receipts[4].events[2]['nft_mint_event']['value'].split('u')[1];
         const head_id = block.receipts[4].events[3]['nft_mint_event']['value'].split('u')[1];
 
@@ -1808,10 +1808,10 @@ Clarinet.test({
         );
 
         const body_owner = chain.callReadOnlyFn(
-            BODY_CONTRACT,
+            CAR_CONTRACT,
             COMPONENT_GET_OWNER,
             [
-                types.uint(body_id)
+                types.uint(car_id)
             ],
             deployer.address
         );

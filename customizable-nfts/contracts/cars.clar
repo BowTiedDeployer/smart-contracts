@@ -2,8 +2,8 @@
 ;; trait deployed by deployer address from ./settings/Devnet.toml
 (impl-trait 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.nft-trait.nft-trait)
 
-;; define a new NFT. Make sure to replace body
-(define-non-fungible-token body uint)
+;; define a new NFT. Make sure to replace car
+(define-non-fungible-token car uint)
 
 ;; define errors
 (define-constant err-owner-only (err u100))
@@ -20,7 +20,7 @@
 
 (define-map token-url { token-id: uint } { url: (string-ascii 256) })
 ;; this is used if we want for a given attribute value to give a specific url
-;; eg. purple body -> ipfs://dasd..
+;; eg. purple lambo car -> ipfs://dasd..
 (define-map name-url { name: (string-ascii 30)} { url: (string-ascii 256) })
 
 (map-set name-url  {name: "BentleyBlack"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/BentleyBlack.json"})
@@ -45,7 +45,7 @@
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
   (begin
     (asserts! (is-eq tx-sender sender) err-no-rights)
-    (nft-transfer? body token-id sender recipient)
+    (nft-transfer? car token-id sender recipient)
   )
 )
 
@@ -59,8 +59,8 @@
 
 ;; SIP009: Get the owner of the specified token ID
 (define-read-only (get-owner (token-id uint))
-  ;; Make sure to replace body
-  (ok (nft-get-owner? body token-id))
+  ;; Make sure to replace car
+  (ok (nft-get-owner? car token-id))
 )
 
 ;; SIP009: Get the last token ID
@@ -83,7 +83,7 @@
     (let 
       ((next-id (+ u1 (var-get last-id))))
       (var-set last-id next-id)
-      (nft-mint? body next-id new-owner)
+      (nft-mint? car next-id new-owner)
     )
   )
 )
@@ -102,7 +102,7 @@
         (begin 
           (map-set token-url {token-id: next-id} {url: (unwrap-panic url)})
           (var-set last-id next-id)
-          (nft-mint? body next-id address)
+          (nft-mint? car next-id address)
         )
       )
     )
@@ -112,8 +112,8 @@
 ;; Burn a token
 (define-public (burn-token (token-id uint))  
 	(begin     
-		(asserts! (is-eq (some tx-sender) (nft-get-owner? body token-id) ) err-no-rights)     
-		(nft-burn? body token-id tx-sender)
+		(asserts! (is-eq (some tx-sender) (nft-get-owner? car token-id) ) err-no-rights)     
+		(nft-burn? car token-id tx-sender)
   )
 )
 
