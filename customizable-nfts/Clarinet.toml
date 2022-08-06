@@ -11,23 +11,14 @@ path = ".requirements"
 [contracts.backgrounds]
 path = "contracts/backgrounds.clar"
 
-[contracts.body-kits]
-path = "contracts/body-kits.clar"
-
 [contracts.cars]
 path = "contracts/cars.clar"
 
 [contracts.component-nft]
 path = "contracts/component-nft.clar"
 
-[contracts.degen-nft]
-path = "contracts/degen-nft.clar"
-
 [contracts.degens]
 path = "contracts/degens.clar"
-
-[contracts.dgn-heads]
-path = "contracts/dgn-heads.clar"
 
 [contracts.heads]
 path = "contracts/heads.clar"
@@ -52,9 +43,6 @@ path = "contracts/token-metadata-update-notify.clar"
 
 [contracts.upgrade-contract]
 path = "contracts/upgrade-contract.clar"
-
-[contracts.wheels]
-path = "contracts/wheels.clar"
 
 [repl]
 costs_version = 2
