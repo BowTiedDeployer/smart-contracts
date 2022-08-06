@@ -1,0 +1,106 @@
+---
+id: 0
+name: Devnet deployment
+network: devnet
+stacks-node: "http://localhost:20443"
+bitcoin-node: "http://devnet:devnet@localhost:18443"
+plan:
+  batches:
+    - id: 0
+      transactions:
+        - contract-publish:
+            contract-name: nft-trait
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 4660
+            path: "contracts\\nft-trait.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: wheels
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 48350
+            path: "contracts\\wheels.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: dgn-heads
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 185440
+            path: "contracts\\dgn-heads.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: degen-nft
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 22550
+            path: "contracts\\degen-nft.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: cars
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 49570
+            path: "contracts\\cars.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: degens
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 22550
+            path: "contracts\\degens.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: nyc-degens
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 48460
+            path: "contracts\\nyc-degens.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: rims
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 48350
+            path: "contracts\\rims.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: miami-degens
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 48560
+            path: "contracts\\miami-degens.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: heads
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 185440
+            path: "contracts\\heads.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: backgrounds
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 45830
+            path: "contracts\\backgrounds.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: body-kits
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 49610
+            path: "contracts\\body-kits.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: upgrade-contract
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 275750
+            path: "contracts\\upgrade-contract.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: sip-010-trait-ft-standard
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 8390
+            path: "contracts\\sip-010-trait-ft-standard.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: token-metadata-update-notify
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 8780
+            path: "contracts\\token-metadata-update-notify.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: component-nft
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 1380
+            path: "contracts\\component-nft.clar"
+            anchor-block-only: true
