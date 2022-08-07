@@ -1,0 +1,14 @@
+{
+  "sip": 16,
+  "name": "BentleyPurple",
+  "image": "ipfs://QmY6NmxfHYRvW4q2jvkUbYqJto6boQG8RScwUkuie3gbjD/BentleyPurple.png",
+  "attributes": [
+    {
+      "trait_type": "Car", 
+      "value": "BentleyPurple"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenCars"
+  }
+}

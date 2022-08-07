@@ -4,7 +4,7 @@ export const metadataOldDegensSrc = {
   nyc: (degenId) => `https://stxnft.mypinata.cloud/ipfs/QmayEqWwWc87a5ig4ujkRdcyTe6uw2cXEJz177iMHQY4SP/${degenId}.json`,
 };
 
-export const network = 'mocknet'; //"testnet", "mainnet";
+export const network = 'mainnet'; //"testnet", "mainnet";
 
 export const coreApiUrl = {
   mainnet: 'https://stacks-node-api.mainnet.stacks.co/',

@@ -1,0 +1,14 @@
+{
+  "sip": 16,
+  "name": "Sunset",
+  "image": "ipfs://QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria/Sunset.png",
+  "attributes": [
+    {
+      "trait_type": "Background", 
+      "value": "Sunset"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenBackgrounds"
+  }
+}

@@ -1,18 +1,16 @@
-import { standardPrincipalCV, cvToHex } from '@stacks/transactions';
+import { standardPrincipalCV, cvToHex, intToHexString } from '@stacks/transactions';
 import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
 import { network, coreApiUrl, urlApis } from './consts.js';
-
-// import { hexToCV, stringAsciiCV, uintCV } from '@stacks/transactions';
 let networkN =
   network === 'mainnet' ? new StacksMocknet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
 
 // todo: invalid json response body at http://localhost:3999/v2/contracts/call-read/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM/degens/get-token-uri reason: Unexpected end of JSON input | invalid address
-async function readOnlyFromSC(userAddress, contractAddress, contractName, functionName, args) {
+export async function readOnlyFromSC(userAddress, contractAddress, contractName, functionName, args) {
   // https://stacks-node-api.mainnet.stacks.co/v2/contracts/call-read/SP1SCEXE6PMGPAC6B4N5P2MDKX8V4GF9QDE1FNNGJ/nyc-degens/get-owner
   // https://stacks-node-api.mainnet.stacks.co/v2/contracts/call-read/{contract_address}/{contract_name}/{function_name}
 
   let address = userAddress;
-  let id = '010000000000000000' + args.toString(16);
+  let id = '010000000000000000' + intToHexString(args); //args.toString(16);
   console.log('id', id);
   try {
     console.log(address);
@@ -29,7 +27,7 @@ async function readOnlyFromSC(userAddress, contractAddress, contractName, functi
         arguments: [id],
       }),
     });
-    const data = await res.json();
+    const data = await res;
     console.log(data);
   } catch (error) {
     console.log(error.message, '| invalid address');
@@ -44,10 +42,18 @@ function convertArgumentsForSCReadOnlyCall(args) {
 // "axios": "^0.27.2",
 // "bn.js": "^5.2.1",
 
+// readOnlyFromSC(
+//   'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
+//   'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+//   'degens',
+//   'get-token-uri',
+//   1
+// );
+
 readOnlyFromSC(
-  'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
-  'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-  'degens',
+  'SP1SCEXE6PMGPAC6B4N5P2MDKX8V4GF9QDE1FNNGJ',
+  'SP1SCEXE6PMGPAC6B4N5P2MDKX8V4GF9QDE1FNNGJ',
+  'nyc-degens',
   'get-token-uri',
   1
 );

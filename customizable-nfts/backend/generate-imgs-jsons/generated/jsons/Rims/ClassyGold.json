@@ -1,0 +1,14 @@
+{
+  "sip": 16,
+  "name": "ClassyGold",
+  "image": "ipfs://QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31/ClassyGold.png",
+  "attributes": [
+    {
+      "trait_type": "Rims", 
+      "value": "ClassyGold"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenRims"
+  }
+}

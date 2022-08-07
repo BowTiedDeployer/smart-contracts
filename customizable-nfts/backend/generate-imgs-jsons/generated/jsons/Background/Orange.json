@@ -1,0 +1,14 @@
+{
+  "sip": 16,
+  "name": "Orange",
+  "image": "ipfs://QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria/Orange.png",
+  "attributes": [
+    {
+      "trait_type": "Background", 
+      "value": "Orange"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenBackgrounds"
+  }
+}

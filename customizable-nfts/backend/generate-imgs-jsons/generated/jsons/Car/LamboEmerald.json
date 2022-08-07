@@ -1,0 +1,14 @@
+{
+  "sip": 16,
+  "name": "LamboEmerald",
+  "image": "ipfs://QmY6NmxfHYRvW4q2jvkUbYqJto6boQG8RScwUkuie3gbjD/LamboEmerald.png",
+  "attributes": [
+    {
+      "trait_type": "Car", 
+      "value": "LamboEmerald"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenCars"
+  }
+}

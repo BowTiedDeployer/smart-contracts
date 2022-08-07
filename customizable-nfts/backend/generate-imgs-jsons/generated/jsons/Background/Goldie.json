@@ -1,0 +1,14 @@
+{
+  "sip": 16,
+  "name": "Goldie",
+  "image": "ipfs://QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria/Goldie.png",
+  "attributes": [
+    {
+      "trait_type": "Background", 
+      "value": "Goldie"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenBackgrounds"
+  }
+}
