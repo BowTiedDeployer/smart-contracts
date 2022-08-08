@@ -78,3 +78,8 @@
 		(nft-burn? degen token-id tx-sender)
   )
 )
+
+(mint-url 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 "ipfs://will-be-here.json")
+(mint-url 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 "ipfs://will-be-here-2.json")
+(mint-url 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 "ipfs://will-be-here-3.json")
+(mint-url 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5 "ipfs://totally-random.json")

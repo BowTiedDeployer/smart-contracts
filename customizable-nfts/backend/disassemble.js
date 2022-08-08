@@ -36,7 +36,6 @@ const getTokenUriNFT = async (userAddress, contractAddress, contractName, functi
   let address = userAddress;
   let id = '010000000000000000' + intToHexString(idArg);
   try {
-    address = cvToHex(standardPrincipalCV(address));
     const url = `${coreApiUrl[network]}${urlApis.readOnly(contractAddress, contractName, functionName)}`;
     let tokenUriNFT = await fetch(url, {
       method: 'POST',
@@ -63,21 +62,21 @@ const fetchJsonUrl = async (url) => {
   return fetch(url).then((res) => res.json());
 };
 
-// const urlNFT = await getTokenUriNFT(
-//   'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
-//   'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-//   'degens',
-//   'get-token-uri',
-//   1
-// );
+const urlNFT = await getTokenUriNFT(
+  'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
+  'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+  'degens',
+  'get-token-uri',
+  1
+);
 
-// console.log(urlNFT);
+console.log(urlNFT);
 
-// const jsonFetched = await fetchJsonUrl(urlNFT);
-// console.log(jsonFetched);
+const jsonFetched = await fetchJsonUrl(urlNFT);
+console.log(jsonFetched);
 
-// // fetch url from this - get components from attributes
-// console.log(getAttributesMapTraitValue(jsonFetched));
+// fetch url from this - get components from attributes
+console.log(getAttributesMapTraitValue(jsonFetched));
 
 // calls SC function to mint-name
 
