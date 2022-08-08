@@ -1,6 +1,10 @@
 import { standardPrincipalCV, cvToHex } from '@stacks/transactions';
 import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
 import { network, coreApiUrl, urlApis } from './consts.js';
+import { serializePayload } from '@stacks/transactions/dist/payload.js';
+
+import axios from 'axios';
+
 let networkN =
   network === 'mainnet' ? new StacksMocknet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
 
@@ -14,6 +18,8 @@ export async function readOnlyFromSC(userAddress, contractAddress, contractName,
   // https://stacks-node-api.mainnet.stacks.co/v2/contracts/call-read/{contract_address}/{contract_name}/{function_name}
 
   let address = userAddress;
+  // convertedArgs = conversion(args);
+
   let id = '010000000000000000' + intToHexString(idArg); //idArg.toString(16);
   console.log('id', id);
   try {
@@ -59,7 +65,6 @@ export async function readOnlyFromSC(userAddress, contractAddress, contractName,
 //   1
 // );
 
-
 // helper functions
 export const maxStacksTxFee = 750000;
 
@@ -69,7 +74,7 @@ export const getFeev2 = async (estimated_len, transaction_payload) => {
       estimated_len,
       transaction_payload,
     };
-    const url = `${coreApiUrl[network]}/v2/fees/transaction`;
+    const url = `${coreApiUrl[network]}v2/fees/transaction`;
     const response = await axios.post(url, reqobj);
     return response.data.estimations[0].fee;
   } catch (err) {
@@ -88,8 +93,9 @@ export const getNormalizedFee = async (transaction) => {
 };
 
 export async function getAccountNonce(queryAddress) {
-  const url = `${coreApiUrl[network]}/extended/v1/address/${queryAddress}/nonces?unanchored=true`;
-  const accountUrl = `${coreApiUrl[network]}/v2/accounts/${queryAddress}`;
+  const url = `${coreApiUrl[network]}extended/v1/address/${queryAddress}/nonces?unanchored=true`;
+  const accountUrl = `${coreApiUrl[network]}v2/accounts/${queryAddress}`;
+  console.log(url);
   try {
     const response = await axios.get(url);
     const accresponse = await axios.get(accountUrl);
@@ -108,4 +114,4 @@ export async function getAccountNonce(queryAddress) {
     console.log(`getAccountNonce error: `, e);
     return 0;
   }
-
+}

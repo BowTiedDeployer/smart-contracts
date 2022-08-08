@@ -28,9 +28,7 @@ export const contracts = {
 export const adminWallet = {
   mainnet: {},
   network: {},
-  mocknet: {
-    degens: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-  },
+  mocknet: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
 };
 
 const components = {
