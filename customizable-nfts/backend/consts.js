@@ -20,7 +20,17 @@ export const urlApis = {
 export const contracts = {
   mainnet: {},
   network: {},
-  mocknet: {},
+  mocknet: {
+    degens: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degens',
+  },
+};
+
+export const adminWallet = {
+  mainnet: {},
+  network: {},
+  mocknet: {
+    degens: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+  },
 };
 
 const components = {

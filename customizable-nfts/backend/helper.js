@@ -58,3 +58,54 @@ export async function readOnlyFromSC(userAddress, contractAddress, contractName,
 //   'get-token-uri',
 //   1
 // );
+
+
+// helper functions
+export const maxStacksTxFee = 750000;
+
+export const getFeev2 = async (estimated_len, transaction_payload) => {
+  try {
+    let reqobj = {
+      estimated_len,
+      transaction_payload,
+    };
+    const url = `${coreApiUrl[network]}/v2/fees/transaction`;
+    const response = await axios.post(url, reqobj);
+    return response.data.estimations[0].fee;
+  } catch (err) {
+    console.log('getFeev2 err ', err.message);
+    return 50000;
+  }
+};
+
+export const getNormalizedFee = async (transaction) => {
+  const serializedTx = transaction.serialize();
+  const serializedPayload = serializePayload(transaction.payload);
+  const v2fee = await getFeev2(serializedTx.byteLength, serializedPayload.toString('hex'));
+  const normalizedFee = Math.min(maxStacksTxFee, Number(v2fee));
+  console.log('normalizedFee ', normalizedFee);
+  return normalizedFee;
+};
+
+export async function getAccountNonce(queryAddress) {
+  const url = `${coreApiUrl[network]}/extended/v1/address/${queryAddress}/nonces?unanchored=true`;
+  const accountUrl = `${coreApiUrl[network]}/v2/accounts/${queryAddress}`;
+  try {
+    const response = await axios.get(url);
+    const accresponse = await axios.get(accountUrl);
+    const accountNonce = accresponse.data.nonce;
+    let stacksNonce = response.data.possible_next_nonce;
+    if (accountNonce > stacksNonce) stacksNonce = accountNonce;
+    console.log('init stacksNonce ', queryAddress, stacksNonce, response.data);
+    if (response.data.detected_missing_nonces.length > 0) {
+      // set nonce to min of missing nonces
+      const min = Math.min(...response.data.detected_missing_nonces);
+      console.log(`found missing nonces setting to min `, min);
+      stacksNonce = min;
+    }
+    return stacksNonce;
+  } catch (e) {
+    console.log(`getAccountNonce error: `, e);
+    return 0;
+  }
+

@@ -9,12 +9,14 @@
 // (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.body-kits get-owner u1)
 import { standardPrincipalCV, cvToHex, hexToCV, cvToJSON } from '@stacks/transactions';
 import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
-import { network, coreApiUrl, urlApis } from './consts.js';
-import { intToHexString } from './helper.js';
+import { network, coreApiUrl, urlApis, adminWallet } from './consts.js';
+import { intToHexString, getAccountNonce } from './helper.js';
 import { getAttributesMapTraitValue } from './merge_helper_functions.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 let networkN =
-  network === 'mainnet' ? new StacksMocknet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
+  network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
 
 // for the given id return the read only json url
 
@@ -67,70 +69,44 @@ console.log(getAttributesMapTraitValue(jsonFetched));
 
 // calls SC function to mint-name
 
-export async function chainMintNameDisassemble(address, url, nonce) {
+export async function chainMintNameDisassemble(address, url) {
   try {
+    const latestNonce = await getAccountNonce(adminWallet);
     await mintNameUrl(address, url, nonce);
   } catch (error) {
     console.log(error);
   }
 }
 
-async function mintNameUrl(address, url, nonce) {
-  try {
-    // principalCV
-    // stringCV
-    //nonce 
-    let txOptions = { // todo: finish mintNameUrl call
+// async function mintNameUrl(address, url, nonce) {
+//   try {
+//     // principalCV
+//     // stringCV
+//     //nonce
+//     let txOptions = {
+//       contractAddress: contracts[network]['degens'].split('.')[0],
+//       contractName: contracts[network]['degens'].split('.')[1],
+//       functionName: 'mint-uri',
+//       functionArgs: [address, url],
+//       senderKey: process.env.MOCKNET_ADMIN_SECRET_KEY,
+//       network: networkN,
+//       postConditionMode: PostConditionMode.Allow,
+//       fee: new BigNum(100000),
+//       nonce: nonce,
+//     };
+//     console.log(txOptions);
+//     // calculate fee
+//     let transaction = await makeContractCall(txOptions);
+//     const normalizedFee = await getNormalizedFee(transaction);
 
-    // publish-result-many (run-result (list 50 { lobby-id: uint, run-id: uint, address: principal, score: uint, rank: uint, rank-factor: uint, rewards: uint, rac: uint}))
-    let tupleArray = [];
-    for (let index = 0; index < resultsFromDB.length; index++) {
-      const obj = resultsFromDB[index];
-      console.log(obj);
+//     // set fee
+//     txOptions.fee = new BigNum(normalizedFee);
+//     transaction = await makeContractCall(txOptions);
+//     const tx = await broadcastTransaction(transaction, network);
+//     console.log('publishResults broadcasted tx: ', tx.txid);
+//   } catch (error) {
+//     console.log('publishResults error: ', error);
+//   }
+// }
 
-      const tupCV = tupleCV({
-        'lobby-id': uintCV(obj['lobby-id']),
-        // 'run-id': uintCV(obj['run-id']),
-        address: standardPrincipalCV(obj.address),
-        score: uintCV(obj.score),
-        rank: uintCV(obj.rank),
-        'sum-rank-factor': uintCV(0),
-        'rank-factor': uintCV(obj['rank-factor']),
-        rewards: uintCV(obj.rewards),
-        rac: uintCV(obj.rac),
-        nft: stringAsciiCV(obj.nft),
-      });
-      tupleArray.push(tupCV);
-    }
-    console.log('publishResults tupleArray ', tupleArray);
-    const l = listCV(tupleArray);
-    const functionArgs = [l];
-
-    const latestNonce = await getAccountNonce(wallets.owner.wallet);
-
-    let txOptions = {
-      contractAddress: contractAddress.split('.')[0],
-      contractName: contractAddress.split('.')[1],
-      functionName: 'publish-result-many',
-      functionArgs: functionArgs,
-      senderKey: wallets.owner.private_key,
-      network: network,
-      // postConditions,
-      postConditionMode: PostConditionMode.Allow,
-      fee: new BigNum(100000),
-      nonce: new BigNum(latestNonce),
-    };
-    console.log(wallets.owner);
-    // calculate fee
-    let transaction = await makeContractCall(txOptions);
-    const normalizedFee = await getNormalizedFee(transaction);
-
-    // set fee
-    txOptions.fee = new BigNum(normalizedFee);
-    transaction = await makeContractCall(txOptions);
-
-    const tx = await broadcastTransaction(transaction, network);
-    console.log('publishResults broadcasted tx: ', tx.txid);
-  } catch (error) {
-    console.log('publishResults error: ', error);
-  }
+// mintNameUrl('ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5', 'adasd', 1);
