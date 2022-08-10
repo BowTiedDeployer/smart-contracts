@@ -6,15 +6,19 @@ export const metadataOldDegensSrc = {
 
 export const network = 'mocknet'; //"testnet", "mainnet";
 
-export const coreApiUrl = {
-  mainnet: 'https://stacks-node-api.mainnet.stacks.co/',
-  testnet: 'https://stacks-node-api.testnet.stacks.co/',
-  mocknet: 'http://localhost:3999/',
+const coreApiUrl = {
+  mainnet: 'https://stacks-node-api.mainnet.stacks.co',
+  testnet: 'https://stacks-node-api.testnet.stacks.co',
+  mocknet: 'http://localhost:3999',
 };
 
 export const urlApis = {
-  readOnly: (contractAddress, contractName, functionName) =>
-    `v2/contracts/call-read/${contractAddress}/${contractName}/${functionName}`,
+  readOnly: (network, contractAddress, contractName, functionName) =>
+    `${coreApiUrl[network]}/v2/contracts/call-read/${contractAddress}/${contractName}/${functionName}`,
+  transaction: (network, txId) => `${coreApiUrl[network]}/extended/v1/tx/${txId}`,
+  feeCalc: (network) => `${coreApiUrl[network]}/v2/fees/transaction`,
+  accountNonce: (network, address) => `${coreApiUrl[network]}/extended/v1/address/${address}/nonces?unanchored=true`,
+  accountDetails: (network, address) => `${coreApiUrl[network]}/v2/accounts/${address}`,
 };
 
 export const contracts = {
@@ -30,12 +34,3 @@ export const adminWallet = {
   network: {},
   mocknet: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
 };
-
-const components = {
-  background: {
-    LostOrange: 'dsadsa',
-    PurpleS: 'das',
-  },
-};
-
-// console.log(components.background.LostOrange);

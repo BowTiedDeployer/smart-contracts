@@ -1,69 +1,18 @@
-import { standardPrincipalCV, cvToHex } from '@stacks/transactions';
+import {
+  standardPrincipalCV,
+  cvToHex,
+  hexToCV,
+  cvToJSON,
+  PostConditionMode,
+  makeContractCall,
+  broadcastTransaction,
+} from '@stacks/transactions';
 import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
-import { network, coreApiUrl, urlApis } from './consts.js';
+import { adminWallet, network, urlApis } from './consts.js';
 import { serializePayload } from '@stacks/transactions/dist/payload.js';
-
+import BigNum from 'bn.js';
 import axios from 'axios';
-
-let networkN =
-  network === 'mainnet' ? new StacksMocknet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
-
-export const intToHexString = (number) => {
-  return number.toString(16).padStart(8 * 2, '0');
-};
-
-// todo: invalid json response body at http://localhost:3999/v2/contracts/call-read/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM/degens/get-token-uri reason: Unexpected end of JSON input | invalid address
-export async function readOnlyFromSC(userAddress, contractAddress, contractName, functionName, idArg) {
-  // https://stacks-node-api.mainnet.stacks.co/v2/contracts/call-read/SP1SCEXE6PMGPAC6B4N5P2MDKX8V4GF9QDE1FNNGJ/nyc-degens/get-owner
-  // https://stacks-node-api.mainnet.stacks.co/v2/contracts/call-read/{contract_address}/{contract_name}/{function_name}
-
-  let address = userAddress;
-  // convertedArgs = conversion(args);
-
-  let id = '010000000000000000' + intToHexString(idArg); //idArg.toString(16);
-  console.log('id', id);
-  try {
-    console.log(address);
-    address = cvToHex(standardPrincipalCV(address));
-    console.log(address);
-    const url = `${coreApiUrl[network]}${urlApis.readOnly(contractAddress, contractName, functionName)}`;
-    console.log('url', url);
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sender: userAddress, // todo: check this
-        network: networkN,
-        arguments: [id],
-      }),
-    });
-    const data = await res;
-    console.log(await data.json());
-  } catch (error) {
-    console.log(error.message, '| invalid address');
-  }
-}
-
-// "@stacks/transactions": "^3.3.0",
-// "axios": "^0.27.2",
-// "bn.js": "^5.2.1",
-
-// readOnlyFromSC(
-//   'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
-//   'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-//   'degens',
-//   'get-token-uri',
-//   1
-// );
-
-// mainnet
-// readOnlyFromSC(
-//   'SP1SCEXE6PMGPAC6B4N5P2MDKX8V4GF9QDE1FNNGJ',
-//   'SP1SCEXE6PMGPAC6B4N5P2MDKX8V4GF9QDE1FNNGJ',
-//   'nyc-degens',
-//   'get-token-uri',
-//   1
-// );
+import { convertArgsReadOnly, convertArgsSCCall, stringToMap } from './converters.js';
 
 // helper functions
 export const maxStacksTxFee = 750000;
@@ -74,7 +23,7 @@ export const getFeev2 = async (estimated_len, transaction_payload) => {
       estimated_len,
       transaction_payload,
     };
-    const url = `${coreApiUrl[network]}v2/fees/transaction`;
+    const url = urlApis.feeCalc(network);
     const response = await axios.post(url, reqobj);
     return response.data.estimations[0].fee;
   } catch (err) {
@@ -93,8 +42,8 @@ export const getNormalizedFee = async (transaction) => {
 };
 
 export async function getAccountNonce(queryAddress) {
-  const url = `${coreApiUrl[network]}extended/v1/address/${queryAddress}/nonces?unanchored=true`;
-  const accountUrl = `${coreApiUrl[network]}v2/accounts/${queryAddress}`;
+  const url = urlApis.accountNonce(network, queryAddress);
+  const accountUrl = urlApis.accountDetails(network, queryAddress);
   console.log(url);
   try {
     const response = await axios.get(url);
@@ -106,12 +55,79 @@ export async function getAccountNonce(queryAddress) {
     if (response.data.detected_missing_nonces.length > 0) {
       // set nonce to min of missing nonces
       const min = Math.min(...response.data.detected_missing_nonces);
-      console.log(`found missing nonces setting to min `, min);
+      console.log(`found missing nonces setting to min ${min}`);
       stacksNonce = min;
     }
     return stacksNonce;
   } catch (e) {
-    console.log(`getAccountNonce error: `, e);
+    console.log(`getAccountNonce error: ${e}`);
     return 0;
+  }
+}
+
+export async function callSCFunction(networkInstance, contractAddress, contractName, functionName, args, nonce) {
+  try {
+    let txOptions = {
+      contractAddress: contractAddress,
+      contractName: contractName,
+      functionName: functionName,
+      functionArgs: convertArgsSCCall(args),
+      senderKey: stringToMap(process.env.ADMIN_SECRET_KEY)[network],
+      network: networkInstance,
+      postConditionMode: PostConditionMode.Allow,
+      fee: new BigNum(100000),
+      nonce: nonce,
+    };
+    // calculate fee
+    let transaction = await makeContractCall(txOptions);
+    const normalizedFee = await getNormalizedFee(transaction);
+
+    // set fee
+    txOptions.fee = new BigNum(normalizedFee);
+    transaction = await makeContractCall(txOptions);
+    const tx = await broadcastTransaction(transaction, networkInstance);
+    console.log(`${contractAddress}.${functionName} SC public function call broadcasted tx: ${tx.txid}`);
+  } catch (error) {
+    console.log(`${contractAddress}.${functionName} SC public function call ERROR: ${error}`);
+  }
+}
+
+export async function readOnlySCJsonResponse(
+  networkInstance,
+  userAddress,
+  contractAddress,
+  contractName,
+  functionName,
+  args
+) {
+  const convertedArgs = convertArgsReadOnly(args);
+  // console.log(convertedArgs); // keep it before all converts are done
+  try {
+    const url = urlApis.readOnly(network, contractAddress, contractName, functionName);
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sender: userAddress,
+        network: networkInstance,
+        arguments: convertedArgs,
+      }),
+    })
+      .then((res) => res.json())
+      .then((res2) => cvToJSON(hexToCV(res2.result)));
+    return res;
+  } catch (error) {
+    console.log(`ERROR Read Only: ${error.message}`);
+  }
+}
+
+export async function callSCFunctionWithNonce(networkInstance, contractAddress, contractName, functionName, args) {
+  try {
+    const latestNonce = await getAccountNonce(adminWallet[network]);
+    await callSCFunction(networkInstance, contractAddress, contractName, functionName, args, latestNonce);
+
+    // await mintNameUrl(address, url, latestNonce);
+  } catch (error) {
+    console.log(error);
   }
 }
