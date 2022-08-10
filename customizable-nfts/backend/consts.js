@@ -26,6 +26,7 @@ export const contracts = {
   network: {},
   mocknet: {
     degens: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degens',
+    customizable: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract',
   },
 };
 

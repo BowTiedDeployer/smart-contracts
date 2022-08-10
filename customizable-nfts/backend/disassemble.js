@@ -63,31 +63,9 @@ console.log(getAttributesMapTraitValue(jsonFetched));
 
 // calls SC function to mint-name
 
-// TODO: check and update to make it work - function not submitting SC call to blockchain
-export async function chainMintDisassemble(address, url, networkInstance) {
-  try {
-    const latestNonce = await getAccountNonce(adminWallet[network]);
-    console.log(adminWallet[network]);
-    console.log(latestNonce);
-    await callSCFunction(
-      networkInstance,
-      'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      'degens',
-      'mint-uri',
-      ['ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5', 'ipfs://will-be-here.json'],
-      latestNonce
-    );
-
-    // await mintNameUrl(address, url, latestNonce);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 console.log(stringToMap(process.env.ADMIN_SECRET_KEY)[network]);
-chainMintDisassemble('ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5', 'adasd', networkN);
 
-// callSCFunctionWithNonce(networkN, 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM', 'degens', 'mint-uri', [
-//   'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
-//   'ipfs://will-be-here.json',
-// ]);
+callSCFunctionWithNonce(networkN, 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM', 'degens', 'mint-uri', [
+  'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
+  'ipfs://will-be-here.json',
+]);
