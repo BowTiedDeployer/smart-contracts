@@ -8,7 +8,7 @@ import {
   broadcastTransaction,
 } from '@stacks/transactions';
 import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
-import { adminWallet, network, urlApis } from './consts.js';
+import { network, urlApis, wallets } from './consts.js';
 import { serializePayload } from '@stacks/transactions/dist/payload.js';
 import BigNum from 'bn.js';
 import axios from 'axios';
@@ -86,13 +86,13 @@ export async function callSCFunction(networkInstance, contractAddress, contractN
     txOptions.fee = new BigNum(normalizedFee);
     transaction = await makeContractCall(txOptions);
     const tx = await broadcastTransaction(transaction, networkInstance);
-    console.log(`${contractAddress}.${functionName} SC public function call broadcasted tx: ${tx.txid}`);
+    console.log(`${contractAddress}.${functionName} Admin SC public function call broadcasted tx: ${tx.txid}`);
   } catch (error) {
-    console.log(`${contractAddress}.${functionName} SC public function call ERROR: ${error}`);
+    console.log(`${contractAddress}.${functionName} Admin SC public function call ERROR: ${error}`);
   }
 }
 
-export async function readOnlySCJsonResponse(
+export function readOnlySCJsonResponse(
   networkInstance,
   userAddress,
   contractAddress,
@@ -104,7 +104,7 @@ export async function readOnlySCJsonResponse(
   // console.log(convertedArgs); // keep it before all converts are done
   try {
     const url = urlApis.readOnly(network, contractAddress, contractName, functionName);
-    const res = await fetch(url, {
+    const res = fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -123,11 +123,50 @@ export async function readOnlySCJsonResponse(
 
 export async function callSCFunctionWithNonce(networkInstance, contractAddress, contractName, functionName, args) {
   try {
-    const latestNonce = await getAccountNonce(adminWallet[network]);
+    const latestNonce = await getAccountNonce(wallets.admin[network]);
     await callSCFunction(networkInstance, contractAddress, contractName, functionName, args, latestNonce);
 
     // await mintNameUrl(address, url, latestNonce);
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function callSCFunctionWithNonceUser(networkInstance, contractAddress, contractName, functionName, args) {
+  try {
+    const latestNonce = await getAccountNonce(wallets.user[network]);
+    await callSCFunctionUser(networkInstance, contractAddress, contractName, functionName, args, latestNonce);
+    console.log('options', latestNonce, wallets.user[network], contractAddress, contractName, functionName, args);
+    // await mintNameUrl(address, url, latestNonce);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function callSCFunctionUser(networkInstance, contractAddress, contractName, functionName, args, nonce) {
+  try {
+    console.log(stringToMap(process.env.USER_SECRET_KEY)[network]);
+    let txOptions = {
+      contractAddress: contractAddress,
+      contractName: contractName,
+      functionName: functionName,
+      functionArgs: convertArgsSCCall(args),
+      senderKey: stringToMap(process.env.USER_SECRET_KEY)[network],
+      network: networkInstance,
+      postConditionMode: PostConditionMode.Allow,
+      fee: new BigNum(100000),
+      nonce: nonce,
+    };
+    // calculate fee
+    let transaction = await makeContractCall(txOptions);
+    const normalizedFee = await getNormalizedFee(transaction);
+
+    // set fee
+    txOptions.fee = new BigNum(normalizedFee);
+    transaction = await makeContractCall(txOptions);
+    const tx = await broadcastTransaction(transaction, networkInstance);
+    console.log(`${contractAddress}.${functionName} User SC public function call broadcasted tx: ${tx.txid}`);
+  } catch (error) {
+    console.log(`${contractAddress}.${functionName} User SC public function call ERROR: ${error}`);
   }
 }

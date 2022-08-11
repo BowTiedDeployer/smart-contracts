@@ -30,8 +30,15 @@ export const contracts = {
   },
 };
 
-export const adminWallet = {
-  mainnet: {},
-  network: {},
-  mocknet: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+export const wallets = {
+  admin: {
+    mainnet: {},
+    network: {},
+    mocknet: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+  },
+  user: {
+    mainnet: {},
+    network: {},
+    mocknet: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
+  },
 };

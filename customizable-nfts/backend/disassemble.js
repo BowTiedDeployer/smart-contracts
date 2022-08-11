@@ -1,3 +1,5 @@
+// done without insertion of elements in queue
+
 // take {id, principal} from queue
 // do this steps calling SC
 // (contract-call? .degens mint-uri 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "uriNiceDegen")
@@ -19,13 +21,14 @@ import {
 } from '@stacks/transactions';
 import BigNum from 'bn.js';
 import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
-import { network, adminWallet, contracts } from './consts.js';
+import { network, contracts, wallets } from './consts.js';
 import {
   getAccountNonce,
   getNormalizedFee,
   readOnlySCJsonResponse,
   callSCFunction,
   callSCFunctionWithNonce,
+  callSCFunctionWithNonceUser,
 } from './helper.js';
 import { getAttributesMapTraitValue } from './merge_helper_functions.js';
 
@@ -35,6 +38,30 @@ dotenv.config();
 
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
+
+const getValuesFromQueue = async () => {
+  // return a list having {address, id}
+  const values = await readOnlySCJsonResponse(
+    networkN,
+    wallets.admin,
+    contracts[network].degens.split('.')[0],
+    contracts[network].degens.split('.')[1],
+    'get-disassemble-work-queue',
+    []
+  );
+  return values;
+
+  return [
+    {
+      id: 1,
+      address: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
+    },
+    // {
+    //   id: 2,
+    //   address: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
+    // },
+  ];
+};
 
 const fetchJsonUrl = async (url) => {
   // todo: see if possible without async promise
@@ -53,19 +80,60 @@ const urlNFT = jsonResponseToTokenUri(
   )
 );
 
-console.log(urlNFT);
-
 const jsonFetched = await fetchJsonUrl(urlNFT);
-console.log(jsonFetched);
 
 // fetch url from this - get components from attributes
 console.log(getAttributesMapTraitValue(jsonFetched));
 
-// calls SC function to mint-name
+// calls SC function to mint-uri
+// callSCFunctionWithNonce(networkN, 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM', 'degens', 'mint-uri', [
+//   'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
+//   'ipfs://will-be-here.json',
+// ]);
 
-console.log(stringToMap(process.env.ADMIN_SECRET_KEY)[network]);
+const disassembleServerFlow = async () => {
+  // for every work queue element
+  (await getValuesFromQueue()).forEach(async (x) => {
+    // get the token uri
+    console.log('x', x);
+    const urlNFT = await jsonResponseToTokenUri(
+      await readOnlySCJsonResponse(
+        network,
+        'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
+        contracts[network].degens.split('.')[0],
+        contracts[network].degens.split('.')[1],
+        'get-token-uri',
+        [x.id]
+      )
+    );
+    console.log('y', x);
+    console.log('urlNFT', urlNFT);
+    // -> get the json
+    const jsonFetched = await fetchJsonUrl(urlNFT);
 
-callSCFunctionWithNonce(networkN, 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM', 'degens', 'mint-uri', [
-  'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
-  'ipfs://will-be-here.json',
-]);
+    // -> get the attributes
+    const attributes = getAttributesMapTraitValue(jsonFetched);
+    // console.log(attributes.Background);
+
+    // -> mint them
+    // (disassemble-finalize (token-id uint) (member principal) (background-name (string-ascii 30)) (body-name (string-ascii 30)) (rim-name (string-ascii 30)) (head-name (string-ascii 30)))
+
+    callSCFunctionWithNonce(
+      // TODO: add in list values so this can be done
+      networkN,
+      contracts[network].degens.split('.')[0],
+      contracts[network].degens.split('.')[1],
+      'disassemble-finalize',
+      [
+        x.id,
+        x.address,
+        attributes.Background,
+        attributes.Car,
+        attributes.Rims,
+        `${attributes.Type}_${attributes.Head}_${attributes.Face}`,
+      ]
+    );
+  });
+};
+
+await disassembleServerFlow();
