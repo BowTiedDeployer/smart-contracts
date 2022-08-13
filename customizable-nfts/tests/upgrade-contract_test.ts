@@ -12,14 +12,6 @@ const IS_DISASSEMBLE_VALUE_FOR_PRINCIPAL = 'is-disassemble-value-for-principal-p
 const FEE_PROCESSING = 'fee-processing-public';
 const ADD_DISASSEMBLE_WORK_IN_QUEUE = 'add-disassemble-work-in-queue';
 const DISASSEMBLE_FINALIZE = 'disassemble-finalize';
-const DEGEN_CONTRACT = 'degens';
-const DEGEN_MINT_URI = 'mint-uri';
-const BACKGROUND_CONTRACT = 'backgrounds';
-const CAR_CONTRACT = 'cars';
-const RIM_CONTRACT = 'rims';
-const HEAD_CONTRACT = 'heads';
-const COMPONENT_GET_OWNER = 'get-owner';
-const COMPONENT_MINT_NAME = 'mint-name';
 
 const GET_ASSEMBLE_WORK_QUEUE = 'get-assemble-work-queue';
 const GET_ASSEMBLE_HEAD_WORK_QUEUE = 'get-assemble-head-work-queue';
@@ -28,6 +20,23 @@ const IS_ASSEMBLE_FIRST_ELEMENT = 'is-assemble-first-element-public';
 const IS_ASSEMBLE_VALUE_FOR_PRINCIPAL = 'is-assemble-value-for-principal-public';
 const ADD_ASSEMBLE_WORK_IN_QUEUE = 'add-assemble-work-in-queue';
 const ASSEMBLE_FINALIZE = 'assemble-finalize';
+
+const GET_SWAP_WORK_QUEUE = 'get-swap-work-queue';
+const GET_SWAP_HEAD_WORK_QUEUE = 'get-swap-head-work-queue';
+const POP_SWAP_WORK_QUEUE = 'pop-swap-work-queue-public';
+const IS_SWAP_FIRST_ELEMENT = 'is-swap-first-element-public';
+const IS_SWAP_VALUE_FOR_PRINCIPAL = 'is-swap-value-for-principal-public';
+const ADD_SWAP_WORK_IN_QUEUE = 'add-swap-work-in-queue';
+const SWAP_FINALIZE = 'swap-finalize';
+
+const DEGEN_CONTRACT = 'degens';
+const DEGEN_MINT_URI = 'mint-uri';
+const BACKGROUND_CONTRACT = 'backgrounds';
+const CAR_CONTRACT = 'cars';
+const RIM_CONTRACT = 'rims';
+const HEAD_CONTRACT = 'heads';
+const COMPONENT_GET_OWNER = 'get-owner';
+const COMPONENT_MINT_NAME = 'mint-name';
 
 //errors
 const ERR_INVALID = 300;
@@ -897,10 +906,12 @@ Clarinet.test({
             member.address
         );
 
-        assertEquals(
-            queue.result, 
-            `(ok [{member: ${member.address}, token-id: ${token_id}}])`
-        );
+        const tokens_list = queue.result.expectOk().expectList();
+        assertEquals(tokens_list.length, 1);
+
+        const token_tuple = tokens_list[0].expectTuple();
+        assertEquals(token_tuple["member"], member.address);
+        assertEquals(token_tuple["token-id"], token_id);
     },
 });
 
@@ -942,10 +953,12 @@ Clarinet.test({
             deployer.address
         );
 
-        assertEquals(
-            queue.result, 
-            `(ok [{member: ${deployer.address}, token-id: ${token_id}}])`
-        );
+        const tokens_list = queue.result.expectOk().expectList();
+        assertEquals(tokens_list.length, 1);
+
+        const token_tuple = tokens_list[0].expectTuple();
+        assertEquals(token_tuple["member"], deployer.address);
+        assertEquals(token_tuple["token-id"], token_id);
     },
 });
 
@@ -1007,10 +1020,8 @@ Clarinet.test({
             member.address
         );
 
-        // assertEquals(
-        //     queue.result, 
-        //     `(ok [{member: ${member.address}, token-id: ${token_id}}])`
-        // );
+        const tokens_list = queue.result.expectOk().expectList();
+        assertEquals(tokens_list.length, 2);
     },
 });
 
@@ -1071,8 +1082,8 @@ Clarinet.test({
             deployer.address
         );
 
-        // console.log(`queue `, queue);
-        //todo: get list from response
+        const tokens_list = queue.result.expectOk().expectList();
+        assertEquals(tokens_list.length, 2);
     }
 });
 
@@ -1133,13 +1144,10 @@ Clarinet.test({
             ],
             receiver.address
         );
-
-        //verify token was correctly added to queue
-        assertEquals(
-            queue_head.result,
-            `(ok (some {member: ${receiver.address}, token-id: ${token_id}}))`
-        );
-
+        
+        const token_tuple = queue_head.result.expectOk().expectSome().expectTuple();
+        assertEquals(token_tuple["member"], receiver.address);
+        assertEquals(token_tuple["token-id"], token_id);
     },
 });
 
@@ -1182,11 +1190,9 @@ Clarinet.test({
         );
 
         //verify token was correctly added to queue
-        assertEquals(
-            queue_head.result,
-            `(ok (some {member: ${deployer.address}, token-id: ${token_id}}))`
-        );
-
+        const token_tuple = queue_head.result.expectOk().expectSome().expectTuple();
+        assertEquals(token_tuple["member"], deployer.address);
+        assertEquals(token_tuple["token-id"], token_id);
     },
 });
 
@@ -1247,10 +1253,9 @@ Clarinet.test({
             member.address
         );
 
-        assertEquals(
-            queue_head.result,
-            `(ok (some {member: ${member.address}, token-id: ${token_id1}}))`
-        );
+        const token_tuple = queue_head.result.expectOk().expectSome().expectTuple();
+        assertEquals(token_tuple["member"], member.address);
+        assertEquals(token_tuple["token-id"], token_id1);
     },
 });
 
@@ -1310,10 +1315,9 @@ Clarinet.test({
             deployer.address
         );
 
-        assertEquals(
-            queue_head.result,
-            `(ok (some {member: ${deployer.address}, token-id: ${token_id1}}))`
-        );
+        const token_tuple = queue_head.result.expectOk().expectSome().expectTuple();
+        assertEquals(token_tuple["member"], deployer.address);
+        assertEquals(token_tuple["token-id"], token_id1);
     },
 });
 
@@ -4079,3 +4083,36 @@ Clarinet.test({
         assertEquals(queue_head.result, `(ok none)`);
     },
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//SWAP
+
+//is-swap-value-for-principal
+
+//add-swap-work-in-queue
+
+//get-swap-work-queue
+
+//get-swap-head-work-queue
+
+//pop-swap-work-queue
+
+//is-swap-first-element
+
+//swap-finalize
