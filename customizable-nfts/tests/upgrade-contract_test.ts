@@ -38,6 +38,17 @@ const HEAD_CONTRACT = 'heads';
 const COMPONENT_GET_OWNER = 'get-owner';
 const COMPONENT_MINT_NAME = 'mint-name';
 
+const DEGEN_URL = 'urlNiceDegen';
+const BACKGROUND_NAME = "DarkPurple";
+const CAR_NAME = "BentleyBlack";
+const RIM_NAME = "ClassyCream";
+const HEAD_NAME = "Miami_Syringe_Cigar";
+
+const BACKGROUND_TYPE = "background-type";
+const CAR_TYPE = "car-type";
+const RIM_TYPE = "rim-type";
+const HEAD_TYPE = "head-type";  
+
 //errors
 const ERR_INVALID = 300;
 const ERR_TOO_MANY_DISASSEMBLE = 200;
@@ -204,7 +215,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
-        const url = 'urlNiceDegen';
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -213,7 +223,7 @@ Clarinet.test({
                 DEGEN_MINT_URI,
                 [
                     types.principal(receiver.address),
-                    types.ascii(url)
+                    types.ascii(DEGEN_URL)
                 ],
                 deployer.address
             ),
@@ -232,14 +242,6 @@ Clarinet.test({
         // console.log(`eventsmint `, block.receipts[0].events);
         // console.log(`eventsadd `, block.receipts[1].events);
 
-        const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
-            GET_DISASSEMBLE_HEAD_WORK_QUEUE,
-            [
-            ],
-            deployer.address
-        );
-        
         const token_id = block.receipts[0].events[0]['nft_mint_event']['value'];
         
         //verify transaction was successful and correct
@@ -249,12 +251,6 @@ Clarinet.test({
         block.receipts[1].result.expectOk().expectBool(true);
         assertEquals(block.receipts[1].events[0]['stx_transfer_event']['amount'], '10000');
         assertEquals(block.receipts[1].events[1]['nft_burn_event']['value'], token_id);
-
-        //verify token was correctly added to queue
-        assertEquals(
-            queue_head.result,
-            `(ok (some {member: ${receiver.address}, token-id: ${token_id}}))`
-        );
     },
 });
 
@@ -262,7 +258,6 @@ Clarinet.test({
     name: "upgrade-contract_add-disassemble-work-in-queue_deployer_tokenOwned_ok",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
-        const url = 'urlNiceDegen';
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -271,7 +266,7 @@ Clarinet.test({
                 DEGEN_MINT_URI,
                 [
                     types.principal(deployer.address),
-                    types.ascii(url)
+                    types.ascii(DEGEN_URL)
                 ],
                 deployer.address
             ),
@@ -290,14 +285,6 @@ Clarinet.test({
         // console.log(`eventsmint `, block.receipts[0].events);
         // console.log(`eventsadd `, block.receipts[1].events);
 
-        const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
-            GET_DISASSEMBLE_HEAD_WORK_QUEUE,
-            [
-            ],
-            deployer.address
-        );
-
         const token_id = block.receipts[0].events[0]['nft_mint_event']['value'];
 
         //verify transaction was successful and correct
@@ -306,12 +293,6 @@ Clarinet.test({
         assertEquals(block.receipts.length, 2);
         block.receipts[1].result.expectOk().expectBool(true);
         assertEquals(block.receipts[1].events[0]['nft_burn_event']['value'], token_id);
-
-        //verify token was correctly added to queue
-        assertEquals(
-            queue_head.result,
-            `(ok (some {member: ${deployer.address}, token-id: ${token_id}}))`
-        );
     },
 });
 
@@ -321,7 +302,6 @@ Clarinet.test({
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
         const notOwner = accounts.get('wallet_2')!;
-        const url = 'urlNiceDegen';
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -330,7 +310,7 @@ Clarinet.test({
                 DEGEN_MINT_URI,
                 [
                     types.principal(receiver.address),
-                    types.ascii(url)
+                    types.ascii(DEGEN_URL)
                 ],
                 deployer.address
             ),
@@ -348,24 +328,11 @@ Clarinet.test({
         // console.log(`block `, block);
         // console.log(`eventsmint `, block.receipts[0].events);
         // console.log(`eventsadd `, block.receipts[1].events);
-
-        const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
-            GET_DISASSEMBLE_HEAD_WORK_QUEUE,
-            [],
-            deployer.address
-        );
                 
         //verify transaction was unsuccessful
         assertEquals(block.height, 2);
         assertEquals(block.receipts.length, 2);
         block.receipts[1].result.expectErr().expectUint(ERR_NOT_OWNER);
-
-        //verify token was not added to queue
-        assertEquals(
-            queue_head.result,
-            `(ok none)`
-        );
     },
 });
 
@@ -374,7 +341,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
-        const url = 'urlNiceDegen';
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -383,7 +349,7 @@ Clarinet.test({
                 DEGEN_MINT_URI,
                 [
                     types.principal(receiver.address),
-                    types.ascii(url)
+                    types.ascii(DEGEN_URL)
                 ],
                 deployer.address
             ),
@@ -402,23 +368,10 @@ Clarinet.test({
         // console.log(`eventsmint `, block.receipts[0].events);
         // console.log(`eventsadd `, block.receipts[1].events);
 
-        const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
-            GET_DISASSEMBLE_HEAD_WORK_QUEUE,
-            [],
-            deployer.address
-        );
-                
         //verify transaction was unsuccessful
         assertEquals(block.height, 2);
         assertEquals(block.receipts.length, 2);
         block.receipts[1].result.expectErr().expectUint(ERR_NOT_OWNER);
-
-        //verify token was not added to queue
-        assertEquals(
-            queue_head.result,
-            `(ok none)`
-        );
     },
 });
 
@@ -427,7 +380,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
-        const url = 'urlNiceDegen';
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -436,7 +388,7 @@ Clarinet.test({
                 DEGEN_MINT_URI,
                 [
                     types.principal(receiver.address),
-                    types.ascii(url)
+                    types.ascii(DEGEN_URL)
                 ],
                 deployer.address
             ),
@@ -462,14 +414,6 @@ Clarinet.test({
         // console.log(`block `, block);
         // console.log(`eventsmint `, block.receipts[0].events);
         // console.log(`eventsadd `, block.receipts[1].events);
-
-        const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
-            GET_DISASSEMBLE_HEAD_WORK_QUEUE,
-            [
-            ],
-            deployer.address
-        );
 
         const token_id = block.receipts[0].events[0]['nft_mint_event']['value'];
         
@@ -482,22 +426,6 @@ Clarinet.test({
 
         //verify second transaction unsuccessful
         block.receipts[2].result.expectErr().expectUint(ERR_NOT_OWNER);
-
-        //verify token was correctly added to queue
-        assertEquals(
-            queue_head.result,
-            `(ok (some {member: ${receiver.address}, token-id: ${token_id}}))`
-        );
-
-        // const queue = chain.callReadOnlyFn(
-        //     CONTRACT_NAME,
-        //     GET_DISASSEMBLE_WORK_QUEUE,
-        //     [
-        //     ],
-        //     deployer.address
-        // );
-
-        // console.log(`queue `, queue);
     },
 });
 
@@ -505,7 +433,6 @@ Clarinet.test({
     name: "upgrade-contract_add-disassemble-work-in-queue_deployer_tokenOwned_addedTwice_error",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
-        const url = 'urlNiceDegen';
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -514,7 +441,7 @@ Clarinet.test({
                 DEGEN_MINT_URI,
                 [
                     types.principal(deployer.address),
-                    types.ascii(url)
+                    types.ascii(DEGEN_URL)
                 ],
                 deployer.address
             ),
@@ -537,14 +464,6 @@ Clarinet.test({
             ),
         ]);
 
-        const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
-            GET_DISASSEMBLE_HEAD_WORK_QUEUE,
-            [
-            ],
-            deployer.address
-        );
-
         const token_id = block.receipts[0].events[0]['nft_mint_event']['value'];
         
         //verify first transaction was successful and correct
@@ -555,12 +474,6 @@ Clarinet.test({
 
         //verify second transaction unsuccessful
         block.receipts[2].result.expectErr().expectUint(ERR_NOT_OWNER);
-
-        //verify token was correctly added to queue
-        assertEquals(
-            queue_head.result,
-            `(ok (some {member: ${deployer.address}, token-id: ${token_id}}))`
-        );
     },
 });
 
@@ -872,7 +785,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const member = accounts.get('wallet_1')!;
-        const url = 'urlNiceDegen';
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -881,7 +793,7 @@ Clarinet.test({
                 DEGEN_MINT_URI,
                 [
                     types.principal(member.address),
-                    types.ascii(url)
+                    types.ascii(DEGEN_URL)
                 ],
                 deployer.address
             ),
@@ -919,7 +831,6 @@ Clarinet.test({
     name: "upgrade-contract_get-disassemble-work-queue_deployer_singleElement",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
-        const url = 'urlNiceDegen';
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -928,7 +839,7 @@ Clarinet.test({
                 DEGEN_MINT_URI,
                 [
                     types.principal(deployer.address),
-                    types.ascii(url)
+                    types.ascii(DEGEN_URL)
                 ],
                 deployer.address
             ),
@@ -1111,7 +1022,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
-        const url = 'urlNiceDegen';
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -1120,7 +1030,7 @@ Clarinet.test({
                 DEGEN_MINT_URI,
                 [
                     types.principal(receiver.address),
-                    types.ascii(url)
+                    types.ascii(DEGEN_URL)
                 ],
                 deployer.address
             ),
@@ -1155,7 +1065,6 @@ Clarinet.test({
     name: "upgrade-contract_get-disassemble-head-work-queue_deployer_singleElement",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
-        const url = 'urlNiceDegen';
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -1164,7 +1073,7 @@ Clarinet.test({
                 DEGEN_MINT_URI,
                 [
                     types.principal(deployer.address),
-                    types.ascii(url)
+                    types.ascii(DEGEN_URL)
                 ],
                 deployer.address
             ),
@@ -1483,7 +1392,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const member = accounts.get('wallet_1')!;
-        const degen1 = 'urlNiceDegen1';
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -1492,7 +1400,7 @@ Clarinet.test({
                 DEGEN_MINT_URI,
                 [
                     types.principal(member.address),
-                    types.ascii(degen1)
+                    types.ascii(DEGEN_URL)
                 ],
                 deployer.address
             ),
@@ -1528,7 +1436,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const member = accounts.get('wallet_1')!;
-        const degen1 = 'urlNiceDegen1';
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -1537,7 +1444,7 @@ Clarinet.test({
                 DEGEN_MINT_URI,
                 [
                     types.principal(member.address),
-                    types.ascii(degen1)
+                    types.ascii(DEGEN_URL)
                 ],
                 deployer.address
             ),
@@ -1663,11 +1570,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const member = accounts.get('wallet_1')!;
-        const url = 'urlNiceDegen';
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -1676,10 +1578,10 @@ Clarinet.test({
                 [
                     types.uint(1),
                     types.principal(member.address),
-                    types.ascii(background_name),
-                    types.ascii(car_name),
-                    types.ascii(rim_name),
-                    types.ascii(head_name)
+                    types.ascii(BACKGROUND_NAME),
+                    types.ascii(CAR_NAME),
+                    types.ascii(RIM_NAME),
+                    types.ascii(HEAD_NAME)
                 ],
                 member.address
             ),
@@ -1698,11 +1600,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const member = accounts.get('wallet_1')!;
-        const url = 'urlNiceDegen';
-        const background_name = "DarkPurple";
-        const body_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -1711,10 +1608,10 @@ Clarinet.test({
                 [
                     types.uint(1),
                     types.principal(member.address),
-                    types.ascii(background_name),
-                    types.ascii(body_name),
-                    types.ascii(rim_name),
-                    types.ascii(head_name)
+                    types.ascii(BACKGROUND_NAME),
+                    types.ascii(CAR_NAME),
+                    types.ascii(RIM_NAME),
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -1733,10 +1630,6 @@ Clarinet.test({
         const member = accounts.get('wallet_1')!;
         const degen1 = 'urlNiceDegen1';
         const degen2 = 'urlNiceDegen2';
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -1780,10 +1673,10 @@ Clarinet.test({
                 [
                     types.uint(1),
                     types.principal(member.address),
-                    types.ascii(background_name),
-                    types.ascii(car_name),
-                    types.ascii(rim_name),
-                    types.ascii(head_name)
+                    types.ascii(BACKGROUND_NAME),
+                    types.ascii(CAR_NAME),
+                    types.ascii(RIM_NAME),
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -1964,11 +1857,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
-        const url = 'urlNiceDegen';
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -1977,7 +1865,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -1986,7 +1874,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -1995,7 +1883,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -2004,7 +1892,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -2048,11 +1936,6 @@ Clarinet.test({
     name: "upgrade-contract_add-assemble-work-in-queue_deployer_allTokensOwned_ok",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
-        const url = 'urlNiceDegen';
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint tokens for address of deployer
@@ -2061,7 +1944,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -2070,7 +1953,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -2079,7 +1962,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -2088,7 +1971,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -2132,11 +2015,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
-        const url = 'urlNiceDegen';
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint tokens for address of receiver
@@ -2145,7 +2023,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -2154,7 +2032,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -2163,7 +2041,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -2172,7 +2050,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -2202,11 +2080,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
-        const url = 'urlNiceDegen';
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint tokens for address of receiver
@@ -2215,7 +2088,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -2224,7 +2097,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -2233,7 +2106,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -2242,7 +2115,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -2276,11 +2149,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
-        const url = 'urlNiceDegen';
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint tokens for address of receiver
@@ -2289,7 +2157,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -2298,7 +2166,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -2307,7 +2175,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -2316,7 +2184,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -2370,11 +2238,6 @@ Clarinet.test({
     name: "upgrade-contract_add-assemble-work-in-queue_deployer_allTokensOwned_addedTwice_error",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
-        const url = 'urlNiceDegen';
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint tokens for address of deployer
@@ -2383,7 +2246,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -2392,7 +2255,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -2401,7 +2264,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -2410,7 +2273,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -2483,11 +2346,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
-        const url = 'urlNiceDegen';
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -2496,7 +2354,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -2505,7 +2363,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -2514,7 +2372,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -2523,7 +2381,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -2574,11 +2432,6 @@ Clarinet.test({
     name: "upgrade-contract_get-assemble-work-queue_deployer_singleElement",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
-        const url = 'urlNiceDegen';
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -2587,7 +2440,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -2596,7 +2449,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -2605,7 +2458,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -2614,7 +2467,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -2662,11 +2515,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
-        const url = 'urlNiceDegen';
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -2675,7 +2523,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -2684,7 +2532,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -2693,7 +2541,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -2702,7 +2550,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -2727,7 +2575,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -2736,7 +2584,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -2745,7 +2593,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -2754,7 +2602,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -2801,11 +2649,6 @@ Clarinet.test({
     name: "upgrade-contract_get-assemble-work-queue_deployer_multipleElements",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
-        const url = 'urlNiceDegen';
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -2814,7 +2657,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -2823,7 +2666,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -2832,7 +2675,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -2841,7 +2684,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -2866,7 +2709,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -2875,7 +2718,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -2884,7 +2727,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -2893,7 +2736,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -2960,10 +2803,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -2972,7 +2811,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -2981,7 +2820,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -2990,7 +2829,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -2999,7 +2838,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -3047,10 +2886,6 @@ Clarinet.test({
     name: "upgrade-contract_get-assemble-head-work-queue_deployer_singleElement",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint tokens for address of receiver
@@ -3059,7 +2894,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -3068,7 +2903,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -3077,7 +2912,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -3086,7 +2921,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -3131,11 +2966,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const receiver = accounts.get('wallet_1')!;
-        const url = 'urlNiceDegen';
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -3144,7 +2974,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -3153,7 +2983,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -3162,7 +2992,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -3171,7 +3001,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -3201,7 +3031,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -3210,7 +3040,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -3219,7 +3049,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -3228,7 +3058,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(receiver.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -3267,11 +3097,6 @@ Clarinet.test({
     name: "upgrade-contract_get-assemble-head-work-queue_deployer_multipleElements",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
-        const url = 'urlNiceDegen';
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint degen for address of receiver
@@ -3280,7 +3105,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -3289,7 +3114,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -3298,7 +3123,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -3307,7 +3132,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -3337,7 +3162,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -3346,7 +3171,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -3355,7 +3180,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -3364,7 +3189,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(deployer.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -3431,10 +3256,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const member = accounts.get('wallet_1')!;
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint tokens for address of receiver
@@ -3443,7 +3264,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -3452,7 +3273,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -3461,7 +3282,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -3470,7 +3291,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -3515,10 +3336,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const member = accounts.get('wallet_1')!;
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint tokens for address of receiver
@@ -3527,7 +3344,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -3536,7 +3353,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -3545,7 +3362,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -3554,7 +3371,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -3579,7 +3396,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -3588,7 +3405,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -3597,7 +3414,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -3606,7 +3423,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -3687,10 +3504,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const member = accounts.get('wallet_1')!;
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint tokens for address of receiver
@@ -3699,7 +3512,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -3708,7 +3521,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -3717,7 +3530,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -3726,7 +3539,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -3789,10 +3602,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const member = accounts.get('wallet_1')!;
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             //mint tokens for address of receiver
@@ -3801,7 +3610,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -3810,7 +3619,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -3819,7 +3628,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -3828,7 +3637,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -3853,7 +3662,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -3862,7 +3671,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -3871,7 +3680,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -3880,7 +3689,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -3956,7 +3765,6 @@ Clarinet.test({
     name: "upgrade-contract_assemble-finalize_address_error",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const member = accounts.get('wallet_1')!;
-        const url = 'urlNiceDegen';
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -3964,7 +3772,7 @@ Clarinet.test({
                 ASSEMBLE_FINALIZE,
                 [
                     types.principal(member.address),
-                    types.ascii(url)
+                    types.ascii(DEGEN_URL)
                 ],
                 member.address
             ),
@@ -3983,11 +3791,6 @@ Clarinet.test({
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const member = accounts.get('wallet_1')!;
-        const degen1 = 'urlNiceDegen1';
-        const background_name = "DarkPurple";
-        const car_name = "BentleyBlack";
-        const rim_name = "ClassyCream";
-        const head_name = "Miami_Syringe_Cigar";
 
         let block = chain.mineBlock([
             Tx.contractCall(
@@ -3995,7 +3798,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(background_name)
+                    types.ascii(BACKGROUND_NAME)
                 ],
                 deployer.address
             ),
@@ -4004,7 +3807,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(car_name)
+                    types.ascii(CAR_NAME)
                 ],
                 deployer.address
             ),
@@ -4013,7 +3816,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(rim_name)
+                    types.ascii(RIM_NAME)
                 ],
                 deployer.address
             ),
@@ -4022,7 +3825,7 @@ Clarinet.test({
                 COMPONENT_MINT_NAME,
                 [
                     types.principal(member.address),
-                    types.ascii(head_name)
+                    types.ascii(HEAD_NAME)
                 ],
                 deployer.address
             ),
@@ -4043,7 +3846,7 @@ Clarinet.test({
                 ASSEMBLE_FINALIZE,
                 [
                     types.principal(member.address),
-                    types.ascii(degen1)
+                    types.ascii(DEGEN_URL)
                 ],
                 deployer.address
             ),
@@ -4104,15 +3907,2126 @@ Clarinet.test({
 //SWAP
 
 //is-swap-value-for-principal
+Clarinet.test({
+    name: "upgrade-contract_is-swap-value-for-principal_deployer_deployer_true",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                IS_SWAP_VALUE_FOR_PRINCIPAL,
+                [
+                    types.tuple({'degen-id': types.uint(1), 'component-id': types.uint(1), 'component-type': types.ascii(BACKGROUND_TYPE), 'member':types.principal(deployer.address)})
+                ],
+                deployer.address
+            ),
+        ]);
+
+        // console.log(`block `, block);
+        // console.log(`eventsd `, block.receipts[0].events);
+
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectOk().expectBool(true);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_is-swap-value-for-principal_deployer_address_false",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const member = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                IS_SWAP_VALUE_FOR_PRINCIPAL,
+                [
+                    types.tuple({'degen-id': types.uint(1), 'component-id': types.uint(1), 'component-type': types.ascii(BACKGROUND_TYPE), 'member':types.principal(member.address)})
+                ],
+                deployer.address
+            ),
+        ]);
+
+        // console.log(`block `, block);
+        // console.log(`eventsm `, block.receipts[0].events);
+
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectOk().expectBool(false);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_is-swap-value-for-principal_address_address_true",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const member = accounts.get('wallet_1')!;
+        
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                IS_SWAP_VALUE_FOR_PRINCIPAL,
+                [
+                    types.tuple({'degen-id': types.uint(1), 'component-id': types.uint(1), 'component-type': types.ascii(BACKGROUND_TYPE), 'member':types.principal(member.address)})
+                ],
+                member.address
+            ),
+        ]);
+
+        // console.log(`block `, block);
+        // console.log(`eventsa `, block.receipts[0].events);
+
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectOk().expectBool(true);
+    },
+});
+
 
 //add-swap-work-in-queue
+Clarinet.test({
+    name: "upgrade-contract_add-swap-work-in-queue_address_tokensOwned_ok",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                receiver.address
+            ),
+        ]);
+
+        // console.log(`block `, block);
+        // console.log(`eventsmint `, block.receipts[0].events);
+        // console.log(`eventsadd `, block.receipts[2].events);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+        
+        //verify transaction was successful and correct
+        //fees applied to user
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 3);
+        block.receipts[2].result.expectOk().expectBool(true);
+        assertEquals(block.receipts[2].events[0]['stx_transfer_event']['amount'], '10000');
+        assertEquals(block.receipts[2].events[1]['nft_burn_event']['value'], degen_id);
+        assertEquals(block.receipts[2].events[2]['nft_burn_event']['value'], car_id);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_add-swap-work-in-queue_deployer_tokenOwned_ok",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                deployer.address
+            ),
+        ]);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+        
+        //verify transaction was successful and correct
+        //no fees applied to deployer
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 3);
+        block.receipts[2].result.expectOk().expectBool(true);
+        assertEquals(block.receipts[2].events[0]['nft_burn_event']['value'], degen_id);
+        assertEquals(block.receipts[2].events[1]['nft_burn_event']['value'], car_id);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_add-swap-work-in-queue_address_degenNotOwned_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+        const notOwner = accounts.get('wallet_2')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(notOwner.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                notOwner.address
+            ),
+        ]);
+   
+        //verify transaction was unsuccessful
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 3);
+        block.receipts[2].result.expectErr().expectUint(ERR_NOT_OWNER);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_add-swap-work-in-queue_address_componentNotOwned_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+        const notOwner = accounts.get('wallet_2')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(notOwner.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                notOwner.address
+            ),
+        ]);
+   
+        //verify transaction was unsuccessful
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 3);
+        block.receipts[2].result.expectErr().expectUint(ERR_NOT_OWNER);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_add-swap-work-in-queue_address_componentTypeInvalid_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+        const invalid_component_type = 'random-type';
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(invalid_component_type),
+                ],
+                receiver.address
+            ),
+        ]);
+
+        //verify transaction was unsuccessful
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 3);
+        block.receipts[2].result.expectErr().expectUint(ERR_NOT_OWNER);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_add-swap-work-in-queue_deployer_degenNotOwned_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                deployer.address
+            ),
+        ]);
+                
+        //verify transaction was unsuccessful
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 3);
+        block.receipts[2].result.expectErr().expectUint(ERR_NOT_OWNER);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_add-swap-work-in-queue_deployer_componentNotOwned_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                deployer.address
+            ),
+        ]);
+                
+        //verify transaction was unsuccessful
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 3);
+        block.receipts[2].result.expectErr().expectUint(ERR_NOT_OWNER);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_add-swap-work-in-queue_deployer_componentTypeInvalid_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const invalid_component_type = 'random-type';
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(invalid_component_type),
+                ],
+                deployer.address
+            ),
+        ]);
+                
+        //verify transaction was unsuccessful
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 3);
+        block.receipts[2].result.expectErr().expectUint(ERR_NOT_OWNER);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_add-swap-work-in-queue_address_tokensOwned_addedTwice_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            //mint tokens for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                receiver.address
+            ),
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                receiver.address
+            ),
+        ]);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+        
+        //verify transaction was successful and correct
+        //fees applied to user
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 4);
+        block.receipts[2].result.expectOk().expectBool(true);
+        assertEquals(block.receipts[2].events[0]['stx_transfer_event']['amount'], '10000');
+        assertEquals(block.receipts[2].events[1]['nft_burn_event']['value'], degen_id);
+        assertEquals(block.receipts[2].events[2]['nft_burn_event']['value'], car_id);
+
+        //verify second transaction unsuccessful
+        block.receipts[3].result.expectErr().expectUint(ERR_NOT_OWNER);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_add-swap-work-in-queue_deployer_tokensOwned_addedTwice_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            //mint tokens for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                deployer.address
+            ),
+        ]);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+        
+        //verify transaction was successful and correct
+        //fees applied to user
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 4);
+        block.receipts[2].result.expectOk().expectBool(true);
+        assertEquals(block.receipts[2].events[0]['nft_burn_event']['value'], degen_id);
+        assertEquals(block.receipts[2].events[1]['nft_burn_event']['value'], car_id);
+
+        //verify second transaction unsuccessful
+        block.receipts[3].result.expectErr().expectUint(ERR_NOT_OWNER);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_add-swap-work-in-queue_address_add5Tokens_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+        const degen1 = 'urlNiceDegen1';
+        const degen2 = 'urlNiceDegen2';
+        const degen3 = 'urlNiceDegen3';
+        const degen4 = 'urlNiceDegen4';
+        const degen5 = 'urlNiceDegen5';
+        const degen6 = 'urlNiceDegen6';
+
+        let block_mint = chain.mineBlock([
+            //mint tokens for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(degen1)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(degen2)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(degen3)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(degen4)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(degen5)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(degen6)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                BACKGROUND_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(BACKGROUND_NAME)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                RIM_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(RIM_NAME)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                HEAD_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(HEAD_NAME)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                BACKGROUND_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(BACKGROUND_NAME)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+        ]);
+
+        let block_swap = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(BACKGROUND_TYPE),
+                ],
+                receiver.address
+            ),
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(2),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                receiver.address
+            ),
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(3),
+                    types.uint(1),
+                    types.ascii(RIM_TYPE),
+                ],
+                receiver.address
+            ),
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(4),
+                    types.uint(1),
+                    types.ascii(HEAD_TYPE),
+                ],
+                receiver.address
+            ),
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(5),
+                    types.uint(2),
+                    types.ascii(BACKGROUND_TYPE),
+                ],
+                receiver.address
+            ),
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(6),
+                    types.uint(2),
+                    types.ascii(CAR_TYPE),
+                ],
+                receiver.address
+            ),
+        ]);
+
+        // console.log(`block `, block_swap);
+        // console.log(`eventsadd `, block_swap.receipts);
+
+        const degen_id1 = block_mint.receipts[0].events[0]['nft_mint_event']['value'];
+        const degen_id5 = block_mint.receipts[4].events[0]['nft_mint_event']['value'];
+        const degen_id6 = block_mint.receipts[5].events[0]['nft_mint_event']['value'];
+        const component_id1 = block_mint.receipts[6].events[0]['nft_mint_event']['value'];
+        const component_id2 = block_mint.receipts[10].events[0]['nft_mint_event']['value'];
+        const component_id3 = block_mint.receipts[11].events[0]['nft_mint_event']['value'];
+
+        //verify transaction was successful and correct
+        assertEquals(block_swap.height, 3);
+        assertEquals(block_swap.receipts.length, 6);
+
+        block_swap.receipts[0].result.expectOk().expectBool(true);
+        assertEquals(block_swap.receipts[0].events[0]['stx_transfer_event']['amount'], '10000');
+        assertEquals(block_swap.receipts[0].events[1]['nft_burn_event']['value'], degen_id1);
+        assertEquals(block_swap.receipts[0].events[2]['nft_burn_event']['value'], component_id1);
+
+        block_swap.receipts[4].result.expectOk().expectBool(true);
+        assertEquals(block_swap.receipts[4].events[0]['stx_transfer_event']['amount'], '10000');
+        assertEquals(block_swap.receipts[4].events[1]['nft_burn_event']['value'], degen_id5);
+        assertEquals(block_swap.receipts[4].events[2]['nft_burn_event']['value'], component_id2);
+
+        //verify unsuccessful transaction
+        block_swap.receipts[5].result.expectErr().expectUint(ERR_TOO_MANY_DISASSEMBLE);
+    },
+});
 
 //get-swap-work-queue
+Clarinet.test({
+    name: "upgrade-contract_get-swap-work-queue_address_emptyQueue",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const member = accounts.get('wallet_1')!;
+
+        const queue = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_SWAP_WORK_QUEUE,
+            [
+            ],
+            member.address
+        );
+
+        assertEquals(queue.result, `(ok [])`);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_get-swap-work-queue_address_singleElement",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                receiver.address
+            ),
+        ]);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+
+        // console.log(`block `, block);
+        // console.log(`eventsmint `, block.receipts[0].events);
+        // console.log(`eventsadd `, block.receipts[2].events);
+
+        const queue = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_SWAP_WORK_QUEUE,
+            [
+            ],
+            receiver.address
+        );
+
+        // console.log('queue ', queue);
+
+        const tokens_list = queue.result.expectOk().expectList();
+        assertEquals(tokens_list.length, 1);
+
+        const token_tuple = tokens_list[0].expectTuple();
+
+        assertEquals(token_tuple["member"], receiver.address);
+        assertEquals(token_tuple["degen-id"], degen_id);
+        assertEquals(token_tuple["component-id"], car_id);
+        token_tuple["component-type"].expectAscii(CAR_TYPE);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_get-swap-work-queue_deployer_singleElement",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                deployer.address
+            ),
+        ]);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+
+        const queue = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_SWAP_WORK_QUEUE,
+            [
+            ],
+            deployer.address
+        );
+
+        const tokens_list = queue.result.expectOk().expectList();
+        assertEquals(tokens_list.length, 1);
+
+        const token_tuple = tokens_list[0].expectTuple();
+
+        assertEquals(token_tuple["member"], deployer.address);
+        assertEquals(token_tuple["degen-id"], degen_id);
+        assertEquals(token_tuple["component-id"], car_id);
+        token_tuple["component-type"].expectAscii(CAR_TYPE);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_get-swap-work-queue_address_multipleElements",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                receiver.address
+            ),
+        ]);
+
+        block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(2),
+                    types.uint(2),
+                    types.ascii(CAR_TYPE),
+                ],
+                receiver.address
+            ),
+        ]);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+
+        // console.log(`block `, block);
+        // console.log(`eventsmint `, block.receipts[0].events);
+        // console.log(`eventsadd `, block.receipts[2].events);
+
+        const queue = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_SWAP_WORK_QUEUE,
+            [
+            ],
+            receiver.address
+        );
+
+        const tokens_list = queue.result.expectOk().expectList();
+        assertEquals(tokens_list.length, 2);
+
+        const token_tuple = tokens_list[1].expectTuple();
+
+        assertEquals(token_tuple["member"], receiver.address);
+        assertEquals(token_tuple["degen-id"], degen_id);
+        assertEquals(token_tuple["component-id"], car_id);
+        token_tuple["component-type"].expectAscii(CAR_TYPE);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_get-swap-work-queue_deployer_multipleElements",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                deployer.address
+            ),
+        ]);
+
+        block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(2),
+                    types.uint(2),
+                    types.ascii(CAR_TYPE),
+                ],
+                deployer.address
+            ),
+        ]);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+
+        const queue = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_SWAP_WORK_QUEUE,
+            [
+            ],
+            deployer.address
+        );
+
+        const tokens_list = queue.result.expectOk().expectList();
+        assertEquals(tokens_list.length, 2);
+
+        const token_tuple = tokens_list[1].expectTuple();
+
+        assertEquals(token_tuple["member"], deployer.address);
+        assertEquals(token_tuple["degen-id"], degen_id);
+        assertEquals(token_tuple["component-id"], car_id);
+        token_tuple["component-type"].expectAscii(CAR_TYPE);
+    },
+});
+
 
 //get-swap-head-work-queue
+Clarinet.test({
+    name: "upgrade-contract_get-swap-head-work-queue_address_emptyQueue",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const member = accounts.get('wallet_1')!;
+
+        const queue = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_SWAP_HEAD_WORK_QUEUE,
+            [
+            ],
+            member.address
+        );
+
+        assertEquals(queue.result, `(ok none)`);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_get-swap-head-work-queue_address_singleElement",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                receiver.address
+            ),
+        ]);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+
+        const queue_head = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_SWAP_HEAD_WORK_QUEUE,
+            [
+            ],
+            receiver.address
+        );
+
+        const token_tuple = queue_head.result.expectOk().expectSome().expectTuple();
+
+        assertEquals(token_tuple["member"], receiver.address);
+        assertEquals(token_tuple["degen-id"], degen_id);
+        assertEquals(token_tuple["component-id"], car_id);
+        token_tuple["component-type"].expectAscii(CAR_TYPE);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_get-swap-head-work-queue_deployer_singleElement",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                deployer.address
+            ),
+        ]);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+
+        const queue_head = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_SWAP_HEAD_WORK_QUEUE,
+            [
+            ],
+            deployer.address
+        );
+        
+        const token_tuple = queue_head.result.expectOk().expectSome().expectTuple();
+
+        assertEquals(token_tuple["member"], deployer.address);
+        assertEquals(token_tuple["degen-id"], degen_id);
+        assertEquals(token_tuple["component-id"], car_id);
+        token_tuple["component-type"].expectAscii(CAR_TYPE);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_get-swap-head-work-queue_address_multipleElements",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                receiver.address
+            ),
+        ]);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+
+        block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(2),
+                    types.uint(2),
+                    types.ascii(CAR_TYPE),
+                ],
+                receiver.address
+            ),
+        ]);
+
+        const queue_head = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_SWAP_HEAD_WORK_QUEUE,
+            [
+            ],
+            receiver.address
+        );
+
+        const token_tuple = queue_head.result.expectOk().expectSome().expectTuple();
+
+        assertEquals(token_tuple["member"], receiver.address);
+        assertEquals(token_tuple["degen-id"], degen_id);
+        assertEquals(token_tuple["component-id"], car_id);
+        token_tuple["component-type"].expectAscii(CAR_TYPE);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_get-swap-head-work-queue_deployer_multipleElements",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                deployer.address
+            ),
+        ]);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+
+        block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(deployer.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(2),
+                    types.uint(2),
+                    types.ascii(CAR_TYPE),
+                ],
+                deployer.address
+            ),
+        ]);
+
+        const queue_head = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_SWAP_HEAD_WORK_QUEUE,
+            [
+            ],
+            deployer.address
+        );
+
+        const token_tuple = queue_head.result.expectOk().expectSome().expectTuple();
+
+        assertEquals(token_tuple["member"], deployer.address);
+        assertEquals(token_tuple["degen-id"], degen_id);
+        assertEquals(token_tuple["component-id"], car_id);
+        token_tuple["component-type"].expectAscii(CAR_TYPE);
+    },
+});
+
 
 //pop-swap-work-queue
+Clarinet.test({
+    name: "upgrade-contract_pop-swap-work-queue_deployer_emptyQueue_true",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                POP_SWAP_WORK_QUEUE,
+                [
+                ],
+                deployer.address
+            ),
+        ]);
+
+        //verify successful transaction
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectOk().expectBool(true);
+
+        const queue = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_ASSEMBLE_WORK_QUEUE,
+            [
+            ],
+            deployer.address
+        );
+
+        //verify queue is indeed empty
+        let tokens_list = queue.result.expectOk().expectList();
+        assertEquals(tokens_list.length, 0);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_pop-swap-work-queue_deployer_singleElement_true",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                receiver.address
+            ),
+        ]);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+
+        let queue = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_SWAP_WORK_QUEUE,
+            [
+            ],
+            deployer.address
+        );
+
+        let tokens_list = queue.result.expectOk().expectList();
+        assertEquals(tokens_list.length, 1);
+
+        block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                POP_SWAP_WORK_QUEUE,
+                [
+                ],
+                deployer.address
+            ),
+        ]);
+
+        //verify successful transaction
+        assertEquals(block.height, 3);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectOk().expectBool(true);
+
+        queue = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_SWAP_WORK_QUEUE,
+            [
+            ],
+            deployer.address
+        );
+
+        //verify queue remains empty
+        tokens_list = queue.result.expectOk().expectList();
+        assertEquals(tokens_list.length, 0);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_pop-swap-work-queue_deployer_multipleElements_true",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const receiver = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                receiver.address
+            ),
+        ]);
+
+        block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(receiver.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(2),
+                    types.uint(2),
+                    types.ascii(CAR_TYPE),
+                ],
+                receiver.address
+            ),
+        ]);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+
+        let queue = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_SWAP_WORK_QUEUE,
+            [
+            ],
+            deployer.address
+        );
+
+        let tokens_list = queue.result.expectOk().expectList();
+        assertEquals(tokens_list.length, 2);
+
+        block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                POP_SWAP_WORK_QUEUE,
+                [
+                ],
+                deployer.address
+            ),
+        ]);
+
+        //verify successful transaction
+        assertEquals(block.height, 4);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectOk().expectBool(true);
+
+        queue = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_SWAP_WORK_QUEUE,
+            [
+            ],
+            deployer.address
+        );
+
+        //verify queue remains only with second element
+        tokens_list = queue.result.expectOk().expectList();
+        assertEquals(tokens_list.length, 1);
+
+        const token_tuple = tokens_list[0].expectTuple();
+        assertEquals(token_tuple["member"], receiver.address);
+        assertEquals(token_tuple["degen-id"], degen_id);
+        assertEquals(token_tuple["component-id"], car_id);
+        token_tuple["component-type"].expectAscii(CAR_TYPE);
+    },
+});
+
 
 //is-swap-first-element
+Clarinet.test({
+    name: "upgrade-contract_is-swap-first-element_deployer_emptyQueue_true",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                IS_SWAP_FIRST_ELEMENT,
+                [
+                    types.tuple({'degen-id': types.uint(1), 'component-id': types.uint(1), 'component-type': types.ascii(BACKGROUND_TYPE), 'member':types.principal(deployer.address)})
+                ],
+                deployer.address
+            ),
+        ]);
+
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectOk().expectBool(true);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_is-swap-first-element_deployer_firstElement_false",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const member = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(member.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(member.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                member.address
+            ),
+        ]);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+
+        block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                IS_SWAP_FIRST_ELEMENT,
+                [
+                    types.tuple({'degen-id': degen_id, 'component-id': car_id, 'component-type': types.ascii(CAR_TYPE), 'member':types.principal(member.address)})
+                ],
+                deployer.address
+            ),
+        ]);
+
+        assertEquals(block.height, 3);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectOk().expectBool(false);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_is-swap-first-element_deployer_notFirstElement_true",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const member = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(member.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(member.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                member.address
+            ),
+        ]);
+
+        block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(member.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(member.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(2),
+                    types.uint(2),
+                    types.ascii(CAR_TYPE),
+                ],
+                member.address
+            ),
+        ]);
+
+        const degen_id = block.receipts[0].events[0]['nft_mint_event']['value'];
+        const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
+
+        block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                IS_SWAP_FIRST_ELEMENT,
+                [
+                    types.tuple({'degen-id': degen_id, 'component-id': car_id, 'component-type': types.ascii(CAR_TYPE), 'member':types.principal(member.address)})
+                ],
+                deployer.address
+            ),
+        ]);
+
+        assertEquals(block.height, 4);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectOk().expectBool(true);
+    },
+});
+
 
 //swap-finalize
+Clarinet.test({
+    name: "upgrade-contract_swap-finalize_address_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const member = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                CONTRACT_NAME,
+                SWAP_FINALIZE,
+                [
+                    types.uint(1),
+                    types.principal(member.address),
+                    types.ascii(DEGEN_URL),
+                    types.ascii(CAR_NAME),
+                    types.ascii(CAR_TYPE)
+                ],
+                member.address
+            ),
+        ]);
+
+        // console.log(`block `, block);
+
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectErr().expectUint(ERR_INVALID);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_swap-finalize_deployer_notHeadQueue_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const member = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(member.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(member.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                member.address
+            ),
+            Tx.contractCall(
+                CONTRACT_NAME,
+                SWAP_FINALIZE,
+                [
+                    types.uint(2),
+                    types.principal(member.address),
+                    types.ascii(DEGEN_URL),
+                    types.ascii(CAR_NAME),
+                    types.ascii(CAR_TYPE)
+                ],
+                deployer.address
+            ),
+        ]);
+
+        // console.log('block ', block);
+                
+        //verify transaction was unsuccessful
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 4);
+        block.receipts[3].result.expectErr().expectUint(ERR_INVALID);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_swap-finalize_deployer_componentTypeInvalid_error",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const member = accounts.get('wallet_1')!;
+        const invalid_component_type = 'random-type';
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(member.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(member.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                member.address
+            ),
+            Tx.contractCall(
+                CONTRACT_NAME,
+                SWAP_FINALIZE,
+                [
+                    types.uint(1),
+                    types.principal(member.address),
+                    types.ascii(DEGEN_URL),
+                    types.ascii(CAR_NAME),
+                    types.ascii(invalid_component_type)
+                ],
+                deployer.address
+            ),
+        ]);
+
+        // console.log('block ', block);
+                
+        //verify transaction was unsuccessful
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 4);
+        block.receipts[3].result.expectErr().expectUint(ERR_COMPONENT_TYPE_INVALID);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_swap-finalize_deployer_headQueue_ok",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const member = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            //mint degen for address of receiver
+            Tx.contractCall(
+                DEGEN_CONTRACT,
+                DEGEN_MINT_URI,
+                [
+                    types.principal(member.address),
+                    types.ascii(DEGEN_URL)
+                ],
+                deployer.address
+            ),
+            Tx.contractCall(
+                CAR_CONTRACT,
+                COMPONENT_MINT_NAME,
+                [
+                    types.principal(member.address),
+                    types.ascii(CAR_NAME)
+                ],
+                deployer.address
+            ),
+            //add token in queue for disassembling
+            Tx.contractCall(
+                CONTRACT_NAME,
+                ADD_SWAP_WORK_IN_QUEUE,
+                [
+                    types.uint(1),
+                    types.uint(1),
+                    types.ascii(CAR_TYPE),
+                ],
+                member.address
+            ),
+            Tx.contractCall(
+                CONTRACT_NAME,
+                SWAP_FINALIZE,
+                [
+                    types.uint(1),
+                    types.principal(member.address),
+                    types.ascii(DEGEN_URL),
+                    types.ascii(CAR_NAME),
+                    types.ascii(CAR_TYPE)
+                ],
+                deployer.address
+            ),
+        ]);
+
+        // console.log(`block `, block);
+        // console.log(`eventsmint `, block.receipts[0].events);
+        // console.log(`eventsadd `, block.receipts[2].events);
+        // console.log(`events-swap `, block.receipts[3].events);          
+
+        //verify transaction was unsuccessful
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 4);
+        block.receipts[3].result.expectOk().expectBool(true);
+
+        assertEquals(block.receipts[3].events[0]['nft_mint_event']['recipient'], member.address);
+        assertEquals(block.receipts[3].events[1]['nft_mint_event']['recipient'], member.address);
+
+        const degen_id = block.receipts[3].events[0]['nft_mint_event']['value'].split('u')[1];
+        const degen_owner = chain.callReadOnlyFn(
+            DEGEN_CONTRACT,
+            COMPONENT_GET_OWNER,
+            [
+                types.uint(degen_id)
+            ],
+            deployer.address
+        );
+        assertEquals(degen_owner.result, `(ok (some ${member.address}))`);
+
+        const queue_head = chain.callReadOnlyFn(
+            CONTRACT_NAME,
+            GET_SWAP_HEAD_WORK_QUEUE,
+            [
+            ],
+            deployer.address
+        );
+
+        //verfiy head of queue
+        assertEquals(queue_head.result, `(ok none)`);
+    },
+});

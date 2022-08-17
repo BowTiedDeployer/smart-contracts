@@ -613,9 +613,10 @@
 
 
 
-(define-public (swap-finalize (member principal) (metadata-uri-dgn (string-ascii 99)) (component-name (string-ascii 30)) (component-type (string-ascii 30)))
+(define-public (swap-finalize (degen-id uint) (member principal) (metadata-uri-dgn (string-ascii 99)) (component-name (string-ascii 30)) (component-type (string-ascii 30)))
   (begin
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
+    (asserts! (is-eq (some degen-id) (get degen-id (unwrap-panic (get-swap-head-work-queue)))) err-invalid)
     (unwrap-panic (contract-call? .degens mint-uri member metadata-uri-dgn))
     (if (is-eq false
           (if (is-eq component-type background-type) 
