@@ -3,7 +3,7 @@
 import { Clarinet, Tx, Chain, Account, types } from 'https://deno.land/x/clarinet@v0.31.0/index.ts';
 import { assertEquals } from 'https://deno.land/std@0.90.0/testing/asserts.ts';
 
-const CONTRACT_NAME = 'upgrade-contract';
+const UPGRADE_CONTRACT = 'upgrade-contract';
 const GET_DISASSEMBLE_WORK_QUEUE = 'get-disassemble-work-queue';
 const GET_DISASSEMBLE_HEAD_WORK_QUEUE = 'get-disassemble-head-work-queue';
 const POP_DISASSEMBLE_WORK_QUEUE = 'pop-disassemble-work-queue-public';
@@ -29,6 +29,15 @@ const IS_SWAP_VALUE_FOR_PRINCIPAL = 'is-swap-value-for-principal-public';
 const ADD_SWAP_WORK_IN_QUEUE = 'add-swap-work-in-queue';
 const SWAP_FINALIZE = 'swap-finalize';
 
+const GET_MERGE_WORK_QUEUE = 'get-merge-work-queue';
+const GET_MERGE_HEAD_WORK_QUEUE = 'get-merge-head-work-queue';
+const POP_MERGE_WORK_QUEUE = 'pop-merge-work-queue';
+const IS_MERGE_FIRST_ELEMENT = 'is-merge-first-element-public';
+const IS_MERGE_VALUE_FOR_PRINCIPAL = 'is-merge-value-for-principal-public';
+const ADD_MERGE_WORK_IN_QUEUE = 'add-merge-work-in-queue';
+const MERGE_FINALIZE = 'merge-finalize';
+const BURN_OLD_NFT = 'burn-old-nft-public';
+
 const DEGEN_CONTRACT = 'degens';
 const DEGEN_MINT_URI = 'mint-uri';
 const BACKGROUND_CONTRACT = 'backgrounds';
@@ -37,6 +46,9 @@ const RIM_CONTRACT = 'rims';
 const HEAD_CONTRACT = 'heads';
 const COMPONENT_GET_OWNER = 'get-owner';
 const COMPONENT_MINT_NAME = 'mint-name';
+const MIAMI_DEGEN_CONTRACT = 'miami-degens';
+const NYC_DEGEN_CONTRACT = 'nyc-degens';
+const OLD_DEGEN_CLAIM = 'claim';
 
 const DEGEN_URL = 'urlNiceDegen';
 const BACKGROUND_NAME = "DarkPurple";
@@ -47,7 +59,10 @@ const HEAD_NAME = "Miami_Syringe_Cigar";
 const BACKGROUND_TYPE = "background-type";
 const CAR_TYPE = "car-type";
 const RIM_TYPE = "rim-type";
-const HEAD_TYPE = "head-type";  
+const HEAD_TYPE = "head-type";
+
+const MIAMI_TYPE = 'miami';
+const NYC_TYPE = 'nyc';
 
 //errors
 const ERR_INVALID = 300;
@@ -87,7 +102,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_DISASSEMBLE_VALUE_FOR_PRINCIPAL,
                 [
                     types.tuple({'token-id':types.uint(1), 'member':types.principal(deployer.address)})
@@ -113,7 +128,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_DISASSEMBLE_VALUE_FOR_PRINCIPAL,
                 [
                     types.tuple({'token-id':types.uint(1), 'member':types.principal(member.address)})
@@ -138,7 +153,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_DISASSEMBLE_VALUE_FOR_PRINCIPAL,
                 [
                     types.tuple({'token-id':types.uint(1), 'member':types.principal(member.address)})
@@ -166,7 +181,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 FEE_PROCESSING,
                 [
                 ],
@@ -191,7 +206,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 FEE_PROCESSING,
                 [
                 ],
@@ -229,7 +244,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -272,7 +287,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -316,7 +331,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -355,7 +370,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -394,7 +409,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -402,7 +417,7 @@ Clarinet.test({
                 receiver.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -447,7 +462,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -455,7 +470,7 @@ Clarinet.test({
                 deployer.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -551,7 +566,7 @@ Clarinet.test({
         let block_disassemble = chain.mineBlock([
             //add tokens in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -559,7 +574,7 @@ Clarinet.test({
                 receiver.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(2)
@@ -567,7 +582,7 @@ Clarinet.test({
                 receiver.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(3)
@@ -575,7 +590,7 @@ Clarinet.test({
                 receiver.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(4)
@@ -583,7 +598,7 @@ Clarinet.test({
                 receiver.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(5)
@@ -591,7 +606,7 @@ Clarinet.test({
                 receiver.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(6)
@@ -694,7 +709,7 @@ Clarinet.test({
         let block_disassemble = chain.mineBlock([
             //add tokens in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -702,7 +717,7 @@ Clarinet.test({
                 deployer.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(2)
@@ -710,7 +725,7 @@ Clarinet.test({
                 deployer.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(3)
@@ -718,7 +733,7 @@ Clarinet.test({
                 deployer.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(4)
@@ -726,7 +741,7 @@ Clarinet.test({
                 deployer.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(5)
@@ -734,7 +749,7 @@ Clarinet.test({
                 deployer.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(6)
@@ -769,7 +784,7 @@ Clarinet.test({
         const member = accounts.get('wallet_1')!;
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_DISASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -799,7 +814,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -811,7 +826,7 @@ Clarinet.test({
         const token_id = block.receipts[0].events[0]['nft_mint_event']['value'];
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_DISASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -845,7 +860,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -857,7 +872,7 @@ Clarinet.test({
         const token_id = block.receipts[0].events[0]['nft_mint_event']['value'];
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_DISASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -903,7 +918,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -911,7 +926,7 @@ Clarinet.test({
                 member.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(2)
@@ -924,7 +939,7 @@ Clarinet.test({
         const token_id2 = block.receipts[1].events[0]['nft_mint_event']['value'];
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_DISASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -965,7 +980,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -973,7 +988,7 @@ Clarinet.test({
                 deployer.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(2)
@@ -986,7 +1001,7 @@ Clarinet.test({
         const token_id2 = block.receipts[1].events[0]['nft_mint_event']['value'];
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_DISASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -1006,7 +1021,7 @@ Clarinet.test({
         const member = accounts.get('wallet_1')!;
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_DISASSEMBLE_HEAD_WORK_QUEUE,
             [
             ],
@@ -1036,7 +1051,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -1048,7 +1063,7 @@ Clarinet.test({
         const token_id = block.receipts[0].events[0]['nft_mint_event']['value'];
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_DISASSEMBLE_HEAD_WORK_QUEUE,
             [
             ],
@@ -1079,7 +1094,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -1091,7 +1106,7 @@ Clarinet.test({
         const token_id = block.receipts[0].events[0]['nft_mint_event']['value'];
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_DISASSEMBLE_HEAD_WORK_QUEUE,
             [
             ],
@@ -1135,7 +1150,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -1143,7 +1158,7 @@ Clarinet.test({
                 member.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(2)
@@ -1155,7 +1170,7 @@ Clarinet.test({
         const token_id1 = block.receipts[0].events[0]['nft_mint_event']['value'];
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_DISASSEMBLE_HEAD_WORK_QUEUE,
             [
             ],
@@ -1197,7 +1212,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -1205,7 +1220,7 @@ Clarinet.test({
                 deployer.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(2)
@@ -1217,7 +1232,7 @@ Clarinet.test({
         const token_id1 = block.receipts[0].events[0]['nft_mint_event']['value'];
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_DISASSEMBLE_HEAD_WORK_QUEUE,
             [
             ],
@@ -1256,7 +1271,7 @@ Clarinet.test({
 
         block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_DISASSEMBLE_FIRST_ELEMENT,
                 [
                     types.tuple({'token-id':token_id, 'member':types.principal(member.address)})
@@ -1291,7 +1306,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -1304,7 +1319,7 @@ Clarinet.test({
 
         block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_DISASSEMBLE_FIRST_ELEMENT,
                 [
                     types.tuple({'token-id':token_id, 'member':types.principal(member.address)})
@@ -1349,7 +1364,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -1357,7 +1372,7 @@ Clarinet.test({
                 member.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(2)
@@ -1370,7 +1385,7 @@ Clarinet.test({
 
         block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_DISASSEMBLE_FIRST_ELEMENT,
                 [
                     types.tuple({'token-id':token_id2, 'member':types.principal(member.address)})
@@ -1405,7 +1420,7 @@ Clarinet.test({
                 deployer.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 POP_DISASSEMBLE_WORK_QUEUE,
                 [
                 ],
@@ -1419,7 +1434,7 @@ Clarinet.test({
         block.receipts[1].result.expectOk().expectBool(true);
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_DISASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -1449,7 +1464,7 @@ Clarinet.test({
                 deployer.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -1457,7 +1472,7 @@ Clarinet.test({
                 member.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 POP_DISASSEMBLE_WORK_QUEUE,
                 [
                 ],
@@ -1471,7 +1486,7 @@ Clarinet.test({
         block.receipts[2].result.expectOk().expectBool(true);
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_DISASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -1513,7 +1528,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -1521,7 +1536,7 @@ Clarinet.test({
                 member.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(2)
@@ -1534,7 +1549,7 @@ Clarinet.test({
 
         block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 POP_DISASSEMBLE_WORK_QUEUE,
                 [
                 ],
@@ -1548,7 +1563,7 @@ Clarinet.test({
         block.receipts[0].result.expectOk().expectBool(true);
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_DISASSEMBLE_HEAD_WORK_QUEUE,
             [
             ],
@@ -1573,7 +1588,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 DISASSEMBLE_FINALIZE,
                 [
                     types.uint(1),
@@ -1603,7 +1618,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 DISASSEMBLE_FINALIZE,
                 [
                     types.uint(1),
@@ -1652,7 +1667,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1)
@@ -1660,7 +1675,7 @@ Clarinet.test({
                 member.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_DISASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(2)
@@ -1668,7 +1683,7 @@ Clarinet.test({
                 member.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 DISASSEMBLE_FINALIZE,
                 [
                     types.uint(1),
@@ -1745,7 +1760,7 @@ Clarinet.test({
         assertEquals(head_owner.result, `(ok (some ${member.address}))`);
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_DISASSEMBLE_HEAD_WORK_QUEUE,
             [
             ],
@@ -1781,7 +1796,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_ASSEMBLE_VALUE_FOR_PRINCIPAL,
                 [
                     types.tuple({'background-id':types.uint(1), 'car-id':types.uint(1), 'rim-id':types.uint(1), 'head-id':types.uint(1), 'member':types.principal(deployer.address)})
@@ -1807,7 +1822,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_ASSEMBLE_VALUE_FOR_PRINCIPAL,
                 [
                     types.tuple({'background-id':types.uint(1), 'car-id':types.uint(1), 'rim-id':types.uint(1), 'head-id':types.uint(1), 'member':types.principal(member.address)})
@@ -1832,7 +1847,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_ASSEMBLE_VALUE_FOR_PRINCIPAL,
                 [
                     types.tuple({'background-id':types.uint(1), 'car-id':types.uint(1), 'rim-id':types.uint(1), 'head-id':types.uint(1), 'member':types.principal(member.address)})
@@ -1898,7 +1913,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -1977,7 +1992,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -2056,7 +2071,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(2),
@@ -2121,7 +2136,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -2190,7 +2205,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -2201,7 +2216,7 @@ Clarinet.test({
                 receiver.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -2279,7 +2294,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -2290,7 +2305,7 @@ Clarinet.test({
                 deployer.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -2330,7 +2345,7 @@ Clarinet.test({
         const member = accounts.get('wallet_1')!;
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -2387,7 +2402,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -2409,7 +2424,7 @@ Clarinet.test({
         const head_id = block.receipts[3].events[0]['nft_mint_event']['value'];
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -2473,7 +2488,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -2491,7 +2506,7 @@ Clarinet.test({
         const head_id = block.receipts[3].events[0]['nft_mint_event']['value'];
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -2556,7 +2571,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -2608,7 +2623,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(2),
@@ -2626,7 +2641,7 @@ Clarinet.test({
         const head_id = block.receipts[3].events[0]['nft_mint_event']['value'];
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -2690,7 +2705,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -2742,7 +2757,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(2),
@@ -2760,7 +2775,7 @@ Clarinet.test({
         const head_id = block.receipts[3].events[0]['nft_mint_event']['value'];
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -2787,7 +2802,7 @@ Clarinet.test({
         const member = accounts.get('wallet_1')!;
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_HEAD_WORK_QUEUE,
             [
             ],
@@ -2844,7 +2859,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -2866,7 +2881,7 @@ Clarinet.test({
         const head_id = block.receipts[3].events[0]['nft_mint_event']['value'];
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_HEAD_WORK_QUEUE,
             [
             ],
@@ -2927,7 +2942,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -2945,7 +2960,7 @@ Clarinet.test({
         const head_id = block.receipts[3].events[0]['nft_mint_event']['value'];
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_HEAD_WORK_QUEUE,
             [
             ],
@@ -3007,7 +3022,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -3064,7 +3079,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(2),
@@ -3077,7 +3092,7 @@ Clarinet.test({
         ]);
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_HEAD_WORK_QUEUE,
             [
             ],
@@ -3138,7 +3153,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -3195,7 +3210,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(2),
@@ -3208,7 +3223,7 @@ Clarinet.test({
         ]);
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_HEAD_WORK_QUEUE,
             [
             ],
@@ -3236,7 +3251,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_ASSEMBLE_FIRST_ELEMENT,
                 [
                     types.tuple({'background-id': types.uint(1), 'car-id': types.uint(1), 'rim-id': types.uint(1), 'head-id': types.uint(1), 'member':types.principal(member.address)})
@@ -3297,7 +3312,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -3316,7 +3331,7 @@ Clarinet.test({
 
         block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_ASSEMBLE_FIRST_ELEMENT,
                 [
                     types.tuple({'background-id': background_id, 'car-id': car_id, 'rim-id': rim_id, 'head-id': head_id, 'member':types.principal(member.address)})
@@ -3377,7 +3392,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -3429,7 +3444,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -3448,7 +3463,7 @@ Clarinet.test({
 
         block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_ASSEMBLE_FIRST_ELEMENT,
                 [
                     types.tuple({'background-id': background_id, 'car-id': car_id, 'rim-id': rim_id, 'head-id': head_id, 'member':types.principal(member.address)})
@@ -3472,7 +3487,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 POP_ASSEMBLE_WORK_QUEUE,
                 [
                 ],
@@ -3486,7 +3501,7 @@ Clarinet.test({
         block.receipts[0].result.expectOk().expectBool(true);
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -3545,7 +3560,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -3558,7 +3573,7 @@ Clarinet.test({
         ]);
 
         let queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -3570,7 +3585,7 @@ Clarinet.test({
 
         block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 POP_ASSEMBLE_WORK_QUEUE,
                 [
                 ],
@@ -3584,7 +3599,7 @@ Clarinet.test({
         block.receipts[0].result.expectOk().expectBool(true);
 
         queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -3643,7 +3658,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -3695,7 +3710,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(2),
@@ -3713,7 +3728,7 @@ Clarinet.test({
         const head_id = block.receipts[3].events[0]['nft_mint_event']['value'];
 
         let queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -3725,7 +3740,7 @@ Clarinet.test({
 
         block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 POP_ASSEMBLE_WORK_QUEUE,
                 [
                 ],
@@ -3739,7 +3754,7 @@ Clarinet.test({
         block.receipts[0].result.expectOk().expectBool(true);
 
         queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -3768,7 +3783,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ASSEMBLE_FINALIZE,
                 [
                     types.principal(member.address),
@@ -3831,7 +3846,7 @@ Clarinet.test({
             ),
             //add tokens in queue for assembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_ASSEMBLE_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -3842,7 +3857,7 @@ Clarinet.test({
                 member.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ASSEMBLE_FINALIZE,
                 [
                     types.principal(member.address),
@@ -3875,7 +3890,7 @@ Clarinet.test({
         assertEquals(degen_owner.result, `(ok (some ${member.address}))`);
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_HEAD_WORK_QUEUE,
             [
             ],
@@ -3914,7 +3929,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_SWAP_VALUE_FOR_PRINCIPAL,
                 [
                     types.tuple({'degen-id': types.uint(1), 'component-id': types.uint(1), 'component-type': types.ascii(BACKGROUND_TYPE), 'member':types.principal(deployer.address)})
@@ -3940,7 +3955,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_SWAP_VALUE_FOR_PRINCIPAL,
                 [
                     types.tuple({'degen-id': types.uint(1), 'component-id': types.uint(1), 'component-type': types.ascii(BACKGROUND_TYPE), 'member':types.principal(member.address)})
@@ -3965,7 +3980,7 @@ Clarinet.test({
         
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_SWAP_VALUE_FOR_PRINCIPAL,
                 [
                     types.tuple({'degen-id': types.uint(1), 'component-id': types.uint(1), 'component-type': types.ascii(BACKGROUND_TYPE), 'member':types.principal(member.address)})
@@ -4013,7 +4028,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4069,7 +4084,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4122,7 +4137,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4169,7 +4184,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4216,7 +4231,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4262,7 +4277,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4308,7 +4323,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4354,7 +4369,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4400,7 +4415,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4410,7 +4425,7 @@ Clarinet.test({
                 receiver.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4466,7 +4481,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4476,7 +4491,7 @@ Clarinet.test({
                 deployer.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4629,7 +4644,7 @@ Clarinet.test({
 
         let block_swap = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4639,7 +4654,7 @@ Clarinet.test({
                 receiver.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(2),
@@ -4649,7 +4664,7 @@ Clarinet.test({
                 receiver.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(3),
@@ -4659,7 +4674,7 @@ Clarinet.test({
                 receiver.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(4),
@@ -4669,7 +4684,7 @@ Clarinet.test({
                 receiver.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(5),
@@ -4679,7 +4694,7 @@ Clarinet.test({
                 receiver.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(6),
@@ -4726,7 +4741,7 @@ Clarinet.test({
         const member = accounts.get('wallet_1')!;
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_SWAP_WORK_QUEUE,
             [
             ],
@@ -4765,7 +4780,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4784,7 +4799,7 @@ Clarinet.test({
         // console.log(`eventsadd `, block.receipts[2].events);
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_SWAP_WORK_QUEUE,
             [
             ],
@@ -4832,7 +4847,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4847,7 +4862,7 @@ Clarinet.test({
         const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_SWAP_WORK_QUEUE,
             [
             ],
@@ -4894,7 +4909,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -4927,7 +4942,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(2),
@@ -4946,7 +4961,7 @@ Clarinet.test({
         // console.log(`eventsadd `, block.receipts[2].events);
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_SWAP_WORK_QUEUE,
             [
             ],
@@ -4992,7 +5007,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -5025,7 +5040,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(2),
@@ -5040,7 +5055,7 @@ Clarinet.test({
         const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_SWAP_WORK_QUEUE,
             [
             ],
@@ -5067,7 +5082,7 @@ Clarinet.test({
         const member = accounts.get('wallet_1')!;
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_SWAP_HEAD_WORK_QUEUE,
             [
             ],
@@ -5106,7 +5121,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -5121,7 +5136,7 @@ Clarinet.test({
         const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_SWAP_HEAD_WORK_QUEUE,
             [
             ],
@@ -5164,7 +5179,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -5179,7 +5194,7 @@ Clarinet.test({
         const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_SWAP_HEAD_WORK_QUEUE,
             [
             ],
@@ -5223,7 +5238,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -5259,7 +5274,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(2),
@@ -5271,7 +5286,7 @@ Clarinet.test({
         ]);
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_SWAP_HEAD_WORK_QUEUE,
             [
             ],
@@ -5314,7 +5329,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -5350,7 +5365,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(2),
@@ -5362,7 +5377,7 @@ Clarinet.test({
         ]);
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_SWAP_HEAD_WORK_QUEUE,
             [
             ],
@@ -5387,7 +5402,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 POP_SWAP_WORK_QUEUE,
                 [
                 ],
@@ -5401,7 +5416,7 @@ Clarinet.test({
         block.receipts[0].result.expectOk().expectBool(true);
 
         const queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_ASSEMBLE_WORK_QUEUE,
             [
             ],
@@ -5442,7 +5457,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -5457,7 +5472,7 @@ Clarinet.test({
         const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
 
         let queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_SWAP_WORK_QUEUE,
             [
             ],
@@ -5469,7 +5484,7 @@ Clarinet.test({
 
         block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 POP_SWAP_WORK_QUEUE,
                 [
                 ],
@@ -5483,7 +5498,7 @@ Clarinet.test({
         block.receipts[0].result.expectOk().expectBool(true);
 
         queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_SWAP_WORK_QUEUE,
             [
             ],
@@ -5524,7 +5539,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -5557,7 +5572,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(2),
@@ -5572,7 +5587,7 @@ Clarinet.test({
         const car_id = block.receipts[1].events[0]['nft_mint_event']['value'];
 
         let queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_SWAP_WORK_QUEUE,
             [
             ],
@@ -5584,7 +5599,7 @@ Clarinet.test({
 
         block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 POP_SWAP_WORK_QUEUE,
                 [
                 ],
@@ -5598,7 +5613,7 @@ Clarinet.test({
         block.receipts[0].result.expectOk().expectBool(true);
 
         queue = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_SWAP_WORK_QUEUE,
             [
             ],
@@ -5626,7 +5641,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_SWAP_FIRST_ELEMENT,
                 [
                     types.tuple({'degen-id': types.uint(1), 'component-id': types.uint(1), 'component-type': types.ascii(BACKGROUND_TYPE), 'member':types.principal(deployer.address)})
@@ -5669,7 +5684,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -5685,7 +5700,7 @@ Clarinet.test({
 
         block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_SWAP_FIRST_ELEMENT,
                 [
                     types.tuple({'degen-id': degen_id, 'component-id': car_id, 'component-type': types.ascii(CAR_TYPE), 'member':types.principal(member.address)})
@@ -5728,7 +5743,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -5761,7 +5776,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(2),
@@ -5777,7 +5792,7 @@ Clarinet.test({
 
         block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 IS_SWAP_FIRST_ELEMENT,
                 [
                     types.tuple({'degen-id': degen_id, 'component-id': car_id, 'component-type': types.ascii(CAR_TYPE), 'member':types.principal(member.address)})
@@ -5801,7 +5816,7 @@ Clarinet.test({
 
         let block = chain.mineBlock([
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 SWAP_FINALIZE,
                 [
                     types.uint(1),
@@ -5850,7 +5865,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -5860,7 +5875,7 @@ Clarinet.test({
                 member.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 SWAP_FINALIZE,
                 [
                     types.uint(2),
@@ -5911,7 +5926,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -5921,7 +5936,7 @@ Clarinet.test({
                 member.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 SWAP_FINALIZE,
                 [
                     types.uint(1),
@@ -5971,7 +5986,7 @@ Clarinet.test({
             ),
             //add token in queue for disassembling
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 ADD_SWAP_WORK_IN_QUEUE,
                 [
                     types.uint(1),
@@ -5981,7 +5996,7 @@ Clarinet.test({
                 member.address
             ),
             Tx.contractCall(
-                CONTRACT_NAME,
+                UPGRADE_CONTRACT,
                 SWAP_FINALIZE,
                 [
                     types.uint(1),
@@ -6019,7 +6034,7 @@ Clarinet.test({
         assertEquals(degen_owner.result, `(ok (some ${member.address}))`);
 
         const queue_head = chain.callReadOnlyFn(
-            CONTRACT_NAME,
+            UPGRADE_CONTRACT,
             GET_SWAP_HEAD_WORK_QUEUE,
             [
             ],
@@ -6030,3 +6045,145 @@ Clarinet.test({
         assertEquals(queue_head.result, `(ok none)`);
     },
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//MERGE
+//is-merge-value-for-principal
+Clarinet.test({
+    name: "upgrade-contract_is-merge-value-for-principal_deployer_deployer_true",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                UPGRADE_CONTRACT,
+                IS_MERGE_VALUE_FOR_PRINCIPAL,
+                [
+                    types.tuple({'degen-id':types.uint(1), 'degen-type':types.ascii(MIAMI_TYPE), 'member':types.principal(deployer.address)})
+                ],
+                deployer.address
+            ),
+        ]);
+
+        // console.log(`block `, block);
+        // console.log(`eventsd `, block.receipts[0].events);
+
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectOk().expectBool(true);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_is-merge-value-for-principal_deployer_address_false",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const deployer = accounts.get('deployer')!;
+        const member = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                UPGRADE_CONTRACT,
+                IS_MERGE_VALUE_FOR_PRINCIPAL,
+                [
+                    types.tuple({'degen-id':types.uint(1), 'degen-type':types.ascii(MIAMI_TYPE), 'member':types.principal(member.address)})
+                ],
+                deployer.address
+            ),
+        ]);
+
+        // console.log(`block `, block);
+        // console.log(`eventsm `, block.receipts[0].events);
+
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectOk().expectBool(false);
+    },
+});
+
+Clarinet.test({
+    name: "upgrade-contract_is-merge-value-for-principal_address_address_true",
+    async fn(chain: Chain, accounts: Map<string, Account>) {
+        const member = accounts.get('wallet_1')!;
+
+        let block = chain.mineBlock([
+            Tx.contractCall(
+                UPGRADE_CONTRACT,
+                IS_MERGE_VALUE_FOR_PRINCIPAL,
+                [
+                    types.tuple({'degen-id':types.uint(1), 'degen-type':types.ascii(MIAMI_TYPE), 'member':types.principal(member.address)})
+                ],
+                member.address
+            ),
+        ]);
+
+        // console.log(`block `, block);
+        // console.log(`eventsa `, block.receipts[0].events);
+
+        assertEquals(block.height, 2);
+        assertEquals(block.receipts.length, 1);
+        block.receipts[0].result.expectOk().expectBool(true);
+    },
+});
+
+
+//burn-old-nft
+
+//add-merge-work-in-queue
+// Clarinet.test({
+//     name: "upgrade-contract_add-merge-work-in-queue_address_address_true",
+//     async fn(chain: Chain, accounts: Map<string, Account>) {
+//         const deployer = accounts.get('deployer')!;
+//         const member = accounts.get('wallet_1')!;
+
+//         let block = chain.mineBlock([
+//             //mint tokens for address of receiver
+//             Tx.contractCall(
+//                 MIAMI_DEGEN_CONTRACT,
+//                 OLD_DEGEN_CLAIM,
+//                 [
+//                 ],
+//                 member.address
+//             ),
+//             Tx.contractCall(
+//                 UPGRADE_CONTRACT,
+//                 ADD_MERGE_WORK_IN_QUEUE,
+//                 [
+//                     types.uint(1),
+//                     types.ascii(MIAMI_TYPE)
+//                 ],
+//                 deployer.address
+//             ),
+//         ]);
+
+//         console.log(`block `, block);
+//         console.log(`eventsa `, block.receipts[0].events);
+//         console.log(`eventsb `, block.receipts[1].events);
+
+
+//     },
+// });
+
+//get-merge-work-queue
+
+//get-merge-head-work-queue
+
+//pop-merge-work-queue
+
+//is-merge-first-element
+
+//merge-finalize

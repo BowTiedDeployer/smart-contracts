@@ -813,56 +813,62 @@
 
 (define-public (add-merge-work-in-queue (degen-id uint) (degen-type (string-ascii 30)))
   (ok 
-    (let 
-      (
-        (work-queue-value (var-get merge-work-queue))
-        (value-to-add { 
-          member: tx-sender,
-          degen-id: degen-id,
-          degen-type: degen-type
-          })
-      )
-    
-      (var-set merge-work-queue
-        (begin
-          ;; check user has not already inserted this
-          (asserts! 
-            (is-none (index-of work-queue-value value-to-add))
-            err-invalid
+    (begin
+      ;; check user is owner of old Degen nft
+      (asserts! 
+        (is-eq (some tx-sender) 
+          (if (is-eq degen-type miami-type)
+            (unwrap-panic (contract-call? .miami-degens get-owner degen-id))
+            (if (is-eq degen-type nyc-type)
+              (unwrap-panic (contract-call? .nyc-degens get-owner degen-id))
+              none
+            )
           )
-          ;; check user is not abusing the queue
-          (asserts! 
-            (< (len (filter is-merge-value-for-principal work-queue-value)) u5)
-            err-too-many-disassemble
-          )
-          ;; check user is owner of old Degen nft
-          (asserts! 
-            (is-eq (some tx-sender) 
-              (if (is-eq degen-type miami-type)
-                (unwrap-panic (contract-call? .miami-degens get-owner degen-id))
-                (if (is-eq degen-type nyc-type)
-                  (unwrap-panic (contract-call? .nyc-degens get-owner degen-id))
-                  none
-                )
-              )
-            ) 
-            err-not-owner
-          )    
-          (if (is-eq tx-sender (var-get contract-owner)) true (try! (fee-processing)))
-          ;; (unwrap-panic (contract-call? .old-degens burn-token degen-id))
-          
-          (some (burn-old-nft degen-id degen-type))
+        ) 
+        err-not-owner
+      )    
+      (if (is-eq tx-sender (var-get contract-owner)) true (try! (fee-processing)))
+      (let 
+        (
+          (work-queue-value (var-get merge-work-queue))
+          (value-to-add { 
+            member: tx-sender,
+            degen-id: degen-id,
+            degen-type: degen-type
+            })
+        )
+        (var-set merge-work-queue
+          (begin
+            ;; already insured by the fact that the nft is burned
+            ;; ;; check user has not already inserted this
+            ;; (asserts! 
+            ;;   (is-none (index-of work-queue-value value-to-add))
+            ;;   err-invalid
+            ;; )
 
-          (append 
-            (unwrap-panic (as-max-len? work-queue-value u99)) 
-            value-to-add
+            ;; check user is not abusing the queue
+            (asserts! 
+              (< (len (filter is-merge-value-for-principal work-queue-value)) u5)
+              err-too-many-disassemble
+            )
+
+            ;; (unwrap-panic (contract-call? .old-degens burn-token degen-id))
+            
+            (some (burn-old-nft degen-id degen-type))
+
+            (append 
+              (unwrap-panic (as-max-len? work-queue-value u99)) 
+              value-to-add
+            )
           )
         )
       )
     )
+    
   )
 )
 
+;; should make this private?
 (define-public (pop-merge-work-queue)
   (ok 
     (let
@@ -876,6 +882,25 @@
           (filter is-merge-first-element work-queue-value)
         )
       )
+    )
+  )
+)
+
+
+(define-public (burn-old-nft-public (degen-id uint) (degen-type (string-ascii 30))) 
+  (begin 
+    (if (is-eq 
+          false
+          (if (is-eq degen-type miami-type)
+            (unwrap-panic (contract-call? .miami-degens transfer degen-id tx-sender burn-address))
+            (if (is-eq degen-type nyc-type)
+              (unwrap-panic (contract-call? .nyc-degens transfer degen-id tx-sender burn-address))
+              false  
+            )
+          )
+        )
+      err-component-type-invalid
+      (ok (some degen-id))
     )
   )
 )
@@ -896,9 +921,15 @@
   )
 )
 
+
 (define-private (is-merge-value-for-principal (value {degen-id: uint, degen-type: (string-ascii 30), member: principal}))
   (is-eq (get member value) tx-sender)
 )
+
+(define-public (is-merge-value-for-principal-public (value {degen-id: uint, degen-type: (string-ascii 30), member: principal}))
+  (ok (is-eq (get member value) tx-sender))
+)
+
 
 (define-private (is-merge-first-element (value {degen-id: uint, degen-type: (string-ascii 30), member: principal}))
   (let
@@ -912,6 +943,22 @@
     )
   )
 )
+
+(define-public (is-merge-first-element-public (value {degen-id: uint, degen-type: (string-ascii 30), member: principal}))
+  (ok
+    (let
+      ((first-element (element-at (var-get merge-work-queue) u0)))
+
+      (not 
+        (and
+          (is-some first-element)
+          (is-eq value (unwrap-panic first-element))
+        )
+      )
+    )
+  )
+)
+
 
 (define-public (merge-finalize (member principal) (metadata-uri-dgn (string-ascii 99)))
   (begin
