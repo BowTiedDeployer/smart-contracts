@@ -888,22 +888,21 @@
 
 
 (define-public (burn-old-nft-public (degen-id uint) (degen-type (string-ascii 30))) 
-  (begin 
-    (if (is-eq 
-          false
-          (if (is-eq degen-type miami-type)
-            (unwrap-panic (contract-call? .miami-degens transfer degen-id tx-sender burn-address))
-            (if (is-eq degen-type nyc-type)
-              (unwrap-panic (contract-call? .nyc-degens transfer degen-id tx-sender burn-address))
-              false  
-            )
+  (if (is-eq 
+        false
+        (if (is-eq degen-type miami-type)
+          (unwrap-panic (contract-call? .miami-degens transfer degen-id tx-sender burn-address))
+          (if (is-eq degen-type nyc-type)
+            (unwrap-panic (contract-call? .nyc-degens transfer degen-id tx-sender burn-address))
+            false  
           )
         )
-      err-component-type-invalid
-      (ok (some degen-id))
-    )
+      )
+    err-component-type-invalid
+    (ok (some degen-id))
   )
 )
+
 
 (define-private (burn-old-nft (degen-id uint) (degen-type (string-ascii 30))) 
   (if (is-eq 
@@ -960,9 +959,11 @@
 )
 
 
-(define-public (merge-finalize (member principal) (metadata-uri-dgn (string-ascii 99)))
+;; should verify if the metadata is for the token that is head of queue?
+(define-public (merge-finalize (degen-id uint) (member principal) (metadata-uri-dgn (string-ascii 99)))
   (begin
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
+    (asserts! (is-eq (some degen-id) (get degen-id (unwrap-panic (get-merge-head-work-queue)))) err-invalid)
     (unwrap-panic (contract-call? .degens mint-uri member metadata-uri-dgn))
     (pop-merge-work-queue)
   )
