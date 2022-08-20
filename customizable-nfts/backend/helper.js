@@ -145,7 +145,6 @@ export async function callSCFunctionWithNonceUser(networkInstance, contractAddre
 
 export async function callSCFunctionUser(networkInstance, contractAddress, contractName, functionName, args, nonce) {
   try {
-    console.log(stringToMap(process.env.USER_SECRET_KEY)[network]);
     let txOptions = {
       contractAddress: contractAddress,
       contractName: contractName,
