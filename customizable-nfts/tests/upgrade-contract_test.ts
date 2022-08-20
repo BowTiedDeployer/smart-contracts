@@ -31,7 +31,7 @@ const SWAP_FINALIZE = 'swap-finalize';
 
 const GET_MERGE_WORK_QUEUE = 'get-merge-work-queue';
 const GET_MERGE_HEAD_WORK_QUEUE = 'get-merge-head-work-queue';
-const POP_MERGE_WORK_QUEUE = 'pop-merge-work-queue';
+const POP_MERGE_WORK_QUEUE = 'pop-merge-work-queue-public';
 const IS_MERGE_FIRST_ELEMENT = 'is-merge-first-element-public';
 const IS_MERGE_VALUE_FOR_PRINCIPAL = 'is-merge-value-for-principal-public';
 const ADD_MERGE_WORK_IN_QUEUE = 'add-merge-work-in-queue';
@@ -6147,7 +6147,6 @@ Clarinet.test({
 Clarinet.test({
     name: "upgrade-contract_burn-old-nft_address_validTokenType_ok",
     async fn(chain: Chain, accounts: Map<string, Account>) {
-        const deployer = accounts.get('deployer')!;
         const member = accounts.get('wallet_1')!;
 
         let block = chain.mineBlock([
@@ -6176,7 +6175,7 @@ Clarinet.test({
 
         const token_id = block.receipts[0].events[3]['nft_mint_event']['value'];
         
-        //verify transaction was unsuccessful
+        //verify transaction was successful
         assertEquals(block.height, 2);
         assertEquals(block.receipts.length, 2);
         assertEquals(block.receipts[1].result.expectOk().expectSome(), token_id);
@@ -6189,12 +6188,11 @@ Clarinet.test({
     name: "upgrade-contract_burn-old-nft_deployer_validTokenType_ok",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
-        const member = accounts.get('wallet_1')!;
 
         let block = chain.mineBlock([
             //mint tokens for address of receiver
             Tx.contractCall(
-                MIAMI_DEGEN_CONTRACT,
+                NYC_DEGEN_CONTRACT,
                 OLD_DEGEN_CLAIM,
                 [
                 ],
@@ -6205,7 +6203,7 @@ Clarinet.test({
                 BURN_OLD_NFT,
                 [
                     types.uint(1),
-                    types.ascii(MIAMI_TYPE)
+                    types.ascii(NYC_TYPE)
                 ],
                 deployer.address
             ),
@@ -6213,7 +6211,7 @@ Clarinet.test({
 
         const token_id = block.receipts[0].events[0]['nft_mint_event']['value'];
         
-        //verify transaction was unsuccessful
+        //verify transaction was successful
         assertEquals(block.height, 2);
         assertEquals(block.receipts.length, 2);
         assertEquals(block.receipts[1].result.expectOk().expectSome(), token_id);
@@ -6223,7 +6221,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-    name: "upgrade-contract_burn-old-nft_address_invalidTokenType_ok",
+    name: "upgrade-contract_burn-old-nft_address_invalidTokenType_error",
     async fn(chain: Chain, accounts: Map<string, Account>) {
         const deployer = accounts.get('deployer')!;
         const member = accounts.get('wallet_1')!;

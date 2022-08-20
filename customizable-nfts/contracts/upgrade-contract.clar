@@ -868,19 +868,26 @@
   )
 )
 
-;; should make this private?
-(define-public (pop-merge-work-queue)
+
+(define-public (pop-merge-work-queue-public)
   (ok 
     (let
       ((work-queue-value (var-get merge-work-queue)))
-
       (var-set merge-work-queue
-        (begin
-          ;; Check that admin is calling this contract
-          (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
-          ;; Remove first element in list
-          (filter is-merge-first-element work-queue-value)
-        )
+        ;; Remove first element in list
+        (filter is-merge-first-element work-queue-value)
+      )
+    )
+  )
+)
+
+(define-private (pop-merge-work-queue)
+  (ok 
+    (let
+      ((work-queue-value (var-get merge-work-queue)))
+      (var-set merge-work-queue
+        ;; Remove first element in list
+        (filter is-merge-first-element work-queue-value)
       )
     )
   )
@@ -959,7 +966,6 @@
 )
 
 
-;; should verify if the metadata is for the token that is head of queue?
 (define-public (merge-finalize (degen-id uint) (member principal) (metadata-uri-dgn (string-ascii 99)))
   (begin
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
