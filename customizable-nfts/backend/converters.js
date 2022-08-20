@@ -74,9 +74,12 @@ export const convertArgsSCCall = (args) => {
     if (!isNaN(arg)) {
       // number
       convArgs.push(uintCV(arg));
+      console.log('is number: ' + arg);
     } else if (isPrincipal(arg)) {
+      console.log('is principal ' + arg);
       convArgs.push(standardPrincipalCV(arg));
     } else {
+      console.log('is string ' + arg);
       convArgs.push(stringAsciiCV(arg));
     }
   });

@@ -39,28 +39,28 @@ dotenv.config();
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
 
+const listOfTuplesResponseToList = (tupleResponse) => {
+  let idLists = [];
+  const tupleList = tupleResponse.value.value;
+  // console.log(tupleList);
+  tupleList.forEach((x) => {
+    idLists.push({ id: x.value['token-id'].value, address: x.value.member.value });
+  });
+  return idLists;
+};
+
 const getValuesFromQueue = async () => {
   // return a list having {address, id}
   const values = await readOnlySCJsonResponse(
     networkN,
-    wallets.admin,
-    contracts[network].degens.split('.')[0],
-    contracts[network].degens.split('.')[1],
+    wallets.admin[network],
+    contracts[network].customizable.split('.')[0],
+    contracts[network].customizable.split('.')[1],
     'get-disassemble-work-queue',
     []
   );
-  return values;
 
-  return [
-    {
-      id: 1,
-      address: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
-    },
-    // {
-    //   id: 2,
-    //   address: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
-    // },
-  ];
+  return listOfTuplesResponseToList(values);
 };
 
 const fetchJsonUrl = async (url) => {
@@ -72,34 +72,27 @@ const fetchJsonUrl = async (url) => {
 const urlNFT = jsonResponseToTokenUri(
   await readOnlySCJsonResponse(
     network,
-    'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
-    'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-    'degens',
+    wallets.user[network],
+    contracts[network].degens.split('.')[0],
+    contracts[network].degens.split('.')[1],
     'get-token-uri',
     [1]
   )
 );
 
-const jsonFetched = await fetchJsonUrl(urlNFT);
-
-// fetch url from this - get components from attributes
-console.log(getAttributesMapTraitValue(jsonFetched));
-
-// calls SC function to mint-uri
-// callSCFunctionWithNonce(networkN, 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM', 'degens', 'mint-uri', [
-//   'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
-//   'ipfs://will-be-here.json',
-// ]);
-
+// add in list values with pre-filler.js so this can be done
 const disassembleServerFlow = async () => {
   // for every work queue element
-  (await getValuesFromQueue()).forEach(async (x) => {
+  let valueToDisassemble = await getValuesFromQueue();
+  for await (const x of valueToDisassemble) {
+    // (await getValuesFromQueue()).forEach(async (x) => {
+    await new Promise((r) => setTimeout(r, 2000));
     // get the token uri
     console.log('x', x);
     const urlNFT = await jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
-        'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
+        wallets.user[network],
         contracts[network].degens.split('.')[0],
         contracts[network].degens.split('.')[1],
         'get-token-uri',
@@ -113,16 +106,15 @@ const disassembleServerFlow = async () => {
 
     // -> get the attributes
     const attributes = getAttributesMapTraitValue(jsonFetched);
-    // console.log(attributes.Background);
+    attributes.Type == 'Alien' ? (attributes.City = 'NYC') : (attributes.City = 'Miami');
 
     // -> mint them
     // (disassemble-finalize (token-id uint) (member principal) (background-name (string-ascii 30)) (body-name (string-ascii 30)) (rim-name (string-ascii 30)) (head-name (string-ascii 30)))
 
     callSCFunctionWithNonce(
-      // TODO: add in list values so this can be done
       networkN,
-      contracts[network].degens.split('.')[0],
-      contracts[network].degens.split('.')[1],
+      contracts[network].customizable.split('.')[0],
+      contracts[network].customizable.split('.')[1],
       'disassemble-finalize',
       [
         x.id,
@@ -130,10 +122,10 @@ const disassembleServerFlow = async () => {
         attributes.Background,
         attributes.Car,
         attributes.Rims,
-        `${attributes.Type}_${attributes.Head}_${attributes.Face}`,
+        `${attributes.City}_${attributes.Head}_${attributes.Face}`,
       ]
     );
-  });
+  }
 };
 
 await disassembleServerFlow();

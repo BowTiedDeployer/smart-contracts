@@ -28,10 +28,11 @@ await callSCFunctionWithNonce(
 // );
 
 // call add-work-disassemble
+// manual value
 callSCFunctionWithNonceUser(
   networkN,
   contracts[network].customizable.split('.')[0],
   contracts[network].customizable.split('.')[1],
   'add-disassemble-work-in-queue',
-  [7]
+  [8]
 );
