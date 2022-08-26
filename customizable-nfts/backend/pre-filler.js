@@ -1,38 +1,53 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
-import { contracts, network } from './consts.js';
-import { callSCFunctionWithNonce, callSCFunctionWithNonceUser } from './helper.js';
+import { contracts, network, wallets } from './consts.js';
+import { callSCFunctionWithNonce, callSCFunctionWithNonceUser, readOnlySCJsonResponse } from './helper.js';
 
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
 
 // // mint 2 degens
-await callSCFunctionWithNonce(
-  networkN,
-  contracts[network].degens.split('.')[0],
-  contracts[network].degens.split('.')[1],
-  'mint-uri',
-  [
-    'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
-    'https://stxnft.mypinata.cloud/ipfs/QmbX7UCSFLBvJa2yB4YxqZxhacrxiKUGbE6fHbQuYMhNhf',
-  ]
-);
-// await callSCFunctionWithNonce(
-//   networkN,
-//   contracts[network].degens.split('.')[0],
-//   contracts[network].degens.split('.')[1],
-//   'mint-uri',
-//   [
-//     'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
-//     'https://stxnft.mypinata.cloud/ipfs/QmbX7UCSFLBvJa2yB4YxqZxhacrxiKUGbE6fHbQuYMhNhf',
-//   ]
-// );
+export const mintDegen = async () => {
+  await callSCFunctionWithNonce(
+    networkN,
+    contracts[network].degens.split('.')[0],
+    contracts[network].degens.split('.')[1],
+    'mint-uri',
+    [wallets.user.mocknet, 'https://stxnft.mypinata.cloud/ipfs/QmbX7UCSFLBvJa2yB4YxqZxhacrxiKUGbE6fHbQuYMhNhf']
+  );
+};
 
-// call add-work-disassemble
-// manual value
-callSCFunctionWithNonceUser(
-  networkN,
-  contracts[network].customizable.split('.')[0],
-  contracts[network].customizable.split('.')[1],
-  'add-disassemble-work-in-queue',
-  [8]
-);
+export const disassembleToQueue = async () => {
+  // call add-work-disassemble
+  // manual value
+  await callSCFunctionWithNonceUser(
+    networkN,
+    contracts[network].customizable.split('.')[0],
+    contracts[network].customizable.split('.')[1],
+    'add-disassemble-work-in-queue',
+    [1]
+  );
+};
+
+// for components
+export const mintBackground = async () => {
+  await callSCFunctionWithNonce(
+    networkN,
+    contracts[network].backgrounds.split('.')[0],
+    contracts[network].backgrounds.split('.')[1],
+    'mint-name',
+    [wallets.user.mocknet, 'DarkPurple']
+  );
+};
+
+await mintBackground();
+await new Promise((r) => setTimeout(r, 2000));
+await mintBackground();
+await new Promise((r) => setTimeout(r, 2000));
+
+// callSCFunctionWithNonceUser(
+//   networkN,
+//   contracts[network].customizable.split('.')[0],
+//   contracts[network].customizable.split('.')[1],
+//   'add-disassemble-work-in-queue',
+//   [1]
+// );

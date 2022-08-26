@@ -46,30 +46,37 @@ FE <-> SC <-> BE
 ### Assemble
 
 - get value from queue (background_id, car_id, rims_id, head_id, member as owner)
-- call read-only get-token-uri for each of these 4 IDs
+- call read-only get-token-uri for each of these 4 IDs ( gets a json )
 - fetch json
-- get the attribute value from json
+- get the attribute's values & image (url) from json
   - background, rims & car direct the value
-  - head has 3 attributes -> create head "(Alien->NYC|Skull->Miami) + head_attribute + face_attribute"
-- create json with these attributes following the example here https://stxnft.mypinata.cloud/ipfs/QmbX7UCSFLBvJa2yB4YxqZxhacrxiKUGbE6fHbQuYMhNhf
-- create image from json
+  - head has 3 attributes -> create head [Alien|Skull, head_attribute, face_attribute] - for json
+- create image (background_url, rims_url, car_url, head_url)
+- save image locally to ('generated-degens')
 - Pinata upload image and get hash
-- change json to include img hash & name (Degen#id)
-- Pinata upload json and get hash
+- deployer: get id DB
+- create json (name#id, img hash, attributes, collection("DegenNFT"))
+- deployer: Pinata upload json and get hash ("ipfs://" + hash)
 - call assemble_finalize with (member as address, json_hash as uri)
-- DB increment id
+- deployer: DB increment id
 
 ### Swap
 
-- get value from queue ( degen id, component id, component type, member as owner)
+- get value from queue ( degen id, component id, component type, member as owner )
 - call read-only get-token-uri Degen ID
 - call read-only get-token-uri component ID from the specific type SC
 - keep aux value (component-name, component-type) from Degen that is replaced
-- create json like the old + overwrite component with the new value
-- create image form json
+- take all attributes from Degen json ( old + the new overwritten one )
+- for each attribute
+  - get name-url ( string call read only - deployer )
+  - fetch json
+  - get image ( url )
+- create image (background_url, rims_url, car_url, head_url)
+- save image locally to ('generated-degens')
 - Pinata upload image and get hash
-- change json to include img hash & name (Degen#id)
-- Pinata upload json and get hash
+- deployer: get id DB
+- create/update json (name#id, img hash, attributes, collection("DegenNFT"))
+- deployer: Pinata upload json and get hash ("ipfs://" + hash)
 - call swap_finalize with (member, json_hash as Dege uri, component-name, component-type)
 - DB increment id
 
@@ -88,10 +95,17 @@ FE <-> SC <-> BE
 
 ## Modular Operations
 
-- upload image
-- upload json
-- create image from json
+- upload image - change upload function to be specific for uploading degens
+- upload json -
+- create image from images urls
 - convert old degen json to new json
 - increment DB id
 - call read-only
+- call SC
 - overwrite attribute in json ( used for swap operations ) + for adding/overwriting image and name attributes
+- overwrite attribute in json by calling (create json ( old values, + new value ofr new type))
+
+deployer
+db
+upload json
+convert old degen json to new json

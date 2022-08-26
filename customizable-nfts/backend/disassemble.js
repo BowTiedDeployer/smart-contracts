@@ -59,7 +59,7 @@ const getValuesFromQueue = async () => {
     'get-disassemble-work-queue',
     []
   );
-
+  // console.log(values);
   return listOfTuplesResponseToList(values);
 };
 
