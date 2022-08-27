@@ -3,7 +3,7 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network/dist';
 import { contracts, network, wallets } from './consts';
 import { jsonResponseToTokenUri } from './converters';
-import { readOnlySCJsonResponse } from './helper.js';
+import { readOnlySCJsonResponse } from './helper-sc.js';
 
 // - needs nft id fetched from nfts owned combined with the nft metadata - gets it from the queue
 

@@ -30,7 +30,7 @@ import {
   callSCFunctionWithNonce,
   callSCFunctionWithNonceUser,
 } from './helper-sc.js';
-import { getAttributesMapTraitValue } from './merge_helper_functions.js';
+import { getAttributesMapTraitValue } from './helper-json.js';
 
 import dotenv from 'dotenv';
 import { jsonResponseToTokenUri, stringToMap, intToHexString } from './converters.js';
@@ -59,13 +59,8 @@ const getValuesFromQueue = async () => {
     'get-disassemble-work-queue',
     []
   );
-  // console.log(values);
+  console.log(values.value.value);
   return listOfTuplesResponseToList(values);
-};
-
-const fetchJsonUrl = async (url) => {
-  // todo: see if possible without async promise
-  return fetch(url).then((res) => res.json());
 };
 
 // const urlNFT = await getTokenUriNFT(

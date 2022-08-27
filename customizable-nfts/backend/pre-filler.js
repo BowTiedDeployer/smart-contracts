@@ -1,6 +1,6 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { contracts, network, wallets } from './consts.js';
-import { callSCFunctionWithNonce, callSCFunctionWithNonceUser, readOnlySCJsonResponse } from './helper.js';
+import { callSCFunctionWithNonce, callSCFunctionWithNonceUser, readOnlySCJsonResponse } from './helper-sc.js';
 
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
@@ -43,11 +43,18 @@ await mintBackground();
 await new Promise((r) => setTimeout(r, 2000));
 await mintBackground();
 await new Promise((r) => setTimeout(r, 2000));
+await mintDegen();
 
-// callSCFunctionWithNonceUser(
-//   networkN,
-//   contracts[network].customizable.split('.')[0],
-//   contracts[network].customizable.split('.')[1],
-//   'add-disassemble-work-in-queue',
-//   [1]
-// );
+await new Promise((r) => setTimeout(r, 2000));
+
+callSCFunctionWithNonceUser(
+  networkN,
+  contracts[network].customizable.split('.')[0],
+  contracts[network].customizable.split('.')[1],
+  'add-disassemble-work-in-queue',
+  [2]
+);
+
+// for merge
+// callSCFunctionWithNone( mint miami / nyc )
+// callSCFunctionWithNonceUser( add-merge-work-in-queue )
