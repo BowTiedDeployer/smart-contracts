@@ -8,11 +8,10 @@ const alienFace = prefix + 'AlienFace/';
 const alienHead = prefix + 'AlienHead/';
 const skullFace = prefix + 'SkullFace/';
 const skullHead = prefix + 'SkullHead/';
-const pathHeadsMapSC = "./generated/headsMap.txt";
+const pathHeadsMapSC = './generated/headsMap.txt';
 fs.writeFile(pathHeadsMapSC, '', function (err, result) {
   if (err) console.log('error', err);
 });
-
 
 // Generate all NYC Heads
 
@@ -71,4 +70,3 @@ function writeNewLine(newLine) {
     if (err) console.log('error', err);
   });
 }
-

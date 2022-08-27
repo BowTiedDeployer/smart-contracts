@@ -29,7 +29,7 @@ import {
   callSCFunction,
   callSCFunctionWithNonce,
   callSCFunctionWithNonceUser,
-} from './helper.js';
+} from './helper-sc.js';
 import { getAttributesMapTraitValue } from './merge_helper_functions.js';
 
 import dotenv from 'dotenv';
