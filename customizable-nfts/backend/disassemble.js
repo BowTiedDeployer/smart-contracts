@@ -50,7 +50,7 @@ const listOfTuplesResponseToList = (tupleResponse) => {
   return idLists;
 };
 
-const getValuesFromQueue = async () => {
+const getValuesFromQueueDisassemble = async () => {
   // return a list having {address, id}
   const values = await readOnlySCJsonResponse(
     networkN,
@@ -84,7 +84,7 @@ const urlNFT = jsonResponseToTokenUri(
 // add in list values with pre-filler.js so this can be done
 const disassembleServerFlow = async () => {
   // for every work queue element
-  let valueToDisassemble = await getValuesFromQueue();
+  let valueToDisassemble = await getValuesFromQueueDisassemble();
   for await (const x of valueToDisassemble) {
     // (await getValuesFromQueue()).forEach(async (x) => {
     await new Promise((r) => setTimeout(r, 2000));
