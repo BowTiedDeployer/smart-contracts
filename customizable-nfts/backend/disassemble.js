@@ -29,11 +29,12 @@ import {
   callSCFunction,
   callSCFunctionWithNonce,
   callSCFunctionWithNonceUser,
-} from './helper-sc.js';
-import { getAttributesMapTraitValue } from './merge_helper_functions.js';
+} from './helper_sc.js';
 
 import dotenv from 'dotenv';
 import { jsonResponseToTokenUri, stringToMap, intToHexString } from './converters.js';
+import { getAttributesMapTraitValue } from './helper_json.js';
+
 dotenv.config();
 
 let networkN =

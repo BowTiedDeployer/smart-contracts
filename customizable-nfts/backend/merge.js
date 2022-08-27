@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import { metadataOldDegensSrc } from './consts.js';
-import { getAttributesMapTraitValue } from './merge_helper_functions.js';
+import { getAttributesMapTraitValue } from './helper_json.js';
 
 // get value from queue
 const getMergeValueFromQueue = () => {

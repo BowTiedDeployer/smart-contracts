@@ -7,35 +7,36 @@ import { readOnlySCJsonResponse } from './helper.js';
 
 // - needs nft id fetched from nfts owned combined with the nft metadata - gets it from the queue
 
-// get value from queue
 
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
 
-const getValuesFromQueueAssemble = async () => {
-  return [
-    {
-      idBackground: 1,
-      idCar: 1,
-      idHead: 1,
-      idRims: 1,
-      address: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
-    },
-  ];
+// const getValuesFromQueueAssemble = async () => {
+//   return [
+//     {
+//       idBackground: 1,
+//       idCar: 1,
+//       idHead: 1,
+//       idRims: 1,
+//       address: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
+//     },
+//   ];
 
-  // return a list having {address, id}
-  const values = await readOnlySCJsonResponse(
-    networkN,
-    wallets.admin,
-    contracts[network].degens.split('.')[0],
-    contracts[network].degens.split('.')[1],
-    'get-assemble-work-queue',
-    []
-  );
-  return values;
-};
+//   // return a list having {address, id}
+//   const values = await readOnlySCJsonResponse(
+//     networkN,
+//     wallets.admin,
+//     contracts[network].degens.split('.')[0],
+//     contracts[network].degens.split('.')[1],
+//     'get-assemble-work-queue',
+//     []
+//   );
+//   return values;
+// };
 
-// take jsons ( background, rims, car, head - type: alien/ skull, face: absa, head: dads)
+const getValuesFromQueueAssemble = async() => {
+
+}
 
 readOnlySCJsonResponse(
   networkN,
@@ -45,24 +46,33 @@ readOnlySCJsonResponse(
   'get-token-uri',
   []
 );
-// const urlBackground = jsonResponseToTokenUri(await reat);
 
-// get the attribute value from each json
+const assembleServerFlow = async () => {
+  // get value from queue
 
-// background, rims & car direct
+  // take jsons ( background, rims, car, head - type: alien/ skull, face: absa, head: dads)
 
-// head gets 3 attributes
+  // const urlBackground = jsonResponseToTokenUri(await reat);
 
-// create json with those attributes
+  // get the attribute value from each json
 
-// create image from json
+  // background, rims & car direct
 
-// upload image and get hash
+  // head gets 3 attributes
 
-// update json with img + id
+  // create json with those attributes
 
-// upload json to pinata
+  // create image from json
 
-// call assemble_finalize with (value.member, json url)
+  // upload image and get hash
 
-// increment id
+  // update json with img + id
+
+  // upload json to pinata
+
+  // call assemble_finalize with (value.member, json url)
+
+  // increment id
+
+};
+
