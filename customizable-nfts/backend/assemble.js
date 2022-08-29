@@ -1,9 +1,9 @@
 // Assemble:
 
-import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network/dist';
-import { contracts, network, wallets } from './consts';
-import { jsonResponseToTokenUri } from './converters';
-import { readOnlySCJsonResponse } from './helper.js';
+import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
+import { contracts, network, wallets } from './consts.js';
+import { jsonResponseToTokenUri } from './converters.js';
+import { readOnlySCJsonResponse } from './helper_sc.js';
 
 // - needs nft id fetched from nfts owned combined with the nft metadata - gets it from the queue
 
@@ -35,20 +35,31 @@ let networkN =
 // };
 
 const getValuesFromQueueAssemble = async() => {
-
+  // return a list having {}
+  const values = await readOnlySCJsonResponse(
+    networkN,
+    wallets.admin[network],
+    contracts[network].customizable.split('.')[0],
+    contracts[network].customizable.split('.')[1],
+    'get-assemble-work-queue',
+    []
+  );
+  console.log(values);
+  // return listOfTuplesResponseToList(values);
 }
 
-readOnlySCJsonResponse(
-  networkN,
-  wallets.admin[network],
-  contracts[network].background.split('.')[0],
-  contracts[network].background.split('.')[1],
-  'get-token-uri',
-  []
-);
+// readOnlySCJsonResponse(
+//   networkN,
+//   wallets.admin[network],
+//   contracts[network].background.split('.')[0],
+//   contracts[network].background.split('.')[1],
+//   'get-token-uri',
+//   []
+// );
 
 const assembleServerFlow = async () => {
-  // get value from queue
+  // get values from queue
+  let valueToAssemble = await getValuesFromQueueAssemble();
 
   // take jsons ( background, rims, car, head - type: alien/ skull, face: absa, head: dads)
 
@@ -76,3 +87,4 @@ const assembleServerFlow = async () => {
 
 };
 
+await assembleServerFlow();

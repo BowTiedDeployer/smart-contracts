@@ -1,6 +1,6 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { contracts, network, wallets } from './consts.js';
-import { callSCFunctionWithNonce, callSCFunctionWithNonceUser, readOnlySCJsonResponse } from './helper.js';
+import { callSCFunctionWithNonce, callSCFunctionWithNonceUser, readOnlySCJsonResponse } from './helper_sc.js';
 
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
@@ -16,7 +16,7 @@ export const mintDegen = async () => {
   );
 };
 
-export const disassembleToQueue = async () => {
+export const addDisassembleToQueue = async () => {
   // call add-work-disassemble
   // manual value
   await callSCFunctionWithNonceUser(
@@ -39,10 +39,35 @@ export const mintBackground = async () => {
   );
 };
 
-await mintBackground();
-await new Promise((r) => setTimeout(r, 2000));
-await mintBackground();
-await new Promise((r) => setTimeout(r, 2000));
+export const mintCar = async () => {
+  await callSCFunctionWithNonce(
+    networkN,
+    contracts[network].cars.split('.')[0],
+    contracts[network].cars.split('.')[1],
+    'mint-name',
+    [wallets.user.mocknet, 'BentleyBlack']
+  );
+};
+
+export const mintHead = async () => {
+  await callSCFunctionWithNonce(
+    networkN,
+    contracts[network].heads.split('.')[0],
+    contracts[network].heads.split('.')[1],
+    'mint-name',
+    [wallets.user.mocknet, 'Miami_Sword_Sunglasses']
+  );
+};
+
+export const mintRims = async () => {
+  await callSCFunctionWithNonce(
+    networkN,
+    contracts[network].rims.split('.')[0],
+    contracts[network].rims.split('.')[1],
+    'mint-name',
+    [wallets.user.mocknet, 'ClassyDark']
+  );
+};
 
 // callSCFunctionWithNonceUser(
 //   networkN,
@@ -51,3 +76,26 @@ await new Promise((r) => setTimeout(r, 2000));
 //   'add-disassemble-work-in-queue',
 //   [1]
 // );
+
+const addAssembleToQueue = async () => {
+  // call add-work-assemble
+  // manual value
+  await callSCFunctionWithNonceUser(
+    networkN,
+    contracts[network].customizable.split('.')[0],
+    contracts[network].customizable.split('.')[1],
+    'add-assemble-work-in-queue',
+    [6,5,6,14]
+  );
+}
+
+// await mintBackground();
+// await new Promise((r) => setTimeout(r, 2000));
+// await mintCar();
+// await new Promise((r) => setTimeout(r, 2000));
+// await mintHead();
+// await new Promise((r) => setTimeout(r, 2000));
+// await mintRims();
+// await new Promise((r) => setTimeout(r, 2000));
+
+await addAssembleToQueue();
