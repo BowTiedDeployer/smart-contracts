@@ -48,6 +48,8 @@ const uploadFlowImg = async (imgName, imgContent) => {
   console.log(res.data);
 };
 
+// JsonDegen#nr
 uploadFlowJson('jsonGenerssNew', createJson());
 
+// ImgDegen#nr
 uploadFlowImg('imageNew', await imgContentCreate());

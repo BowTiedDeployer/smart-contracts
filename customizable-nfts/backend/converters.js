@@ -85,3 +85,13 @@ export const convertArgsSCCall = (args) => {
   });
   return convArgs;
 };
+
+export const replaceTokenCurrentId = (pinataUrl, currentId) => {
+  let returnedUrl = pinataUrl.replace('$TOKEN_ID', currentId);
+  return returnedUrl;
+};
+
+export const pinataToHTTPUrl = (pinataUrl) => {
+  let httpUrl = 'https://stxnft.mypinata.cloud/' + pinataUrl.slice(0, 4) + pinataUrl.slice(6);
+  return httpUrl;
+};

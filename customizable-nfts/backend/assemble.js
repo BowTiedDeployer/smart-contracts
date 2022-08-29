@@ -1,12 +1,10 @@
 // Assemble:
-
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { contracts, network, wallets } from './consts.js';
 import { jsonResponseToTokenUri } from './converters.js';
 import { readOnlySCJsonResponse } from './helper_sc.js';
 
 // - needs nft id fetched from nfts owned combined with the nft metadata - gets it from the queue
-
 
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
@@ -34,7 +32,7 @@ let networkN =
 //   return values;
 // };
 
-const getValuesFromQueueAssemble = async() => {
+const getValuesFromQueueAssemble = async () => {
   // return a list having {}
   const values = await readOnlySCJsonResponse(
     networkN,
@@ -46,7 +44,7 @@ const getValuesFromQueueAssemble = async() => {
   );
   console.log(values);
   // return listOfTuplesResponseToList(values);
-}
+};
 
 // readOnlySCJsonResponse(
 //   networkN,
@@ -84,7 +82,6 @@ const assembleServerFlow = async () => {
   // call assemble_finalize with (value.member, json url)
 
   // increment id
-
 };
 
 await assembleServerFlow();

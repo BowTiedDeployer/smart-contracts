@@ -82,14 +82,19 @@ FE <-> SC <-> BE
 
 ### Merge
 
-- get value from queue (old degen id, degen type)
+- get value from queue (old degen id, degen type, member as owner)
 - call read only get-token-uri for degen type SC with given ID
 - fetch json
-- map from json to new values ( it is a map that for an old attribute has a new coresponding one) TODO: check where this is written
-- create new image from new json
+- convert - map from json to new values ( it is a map that for an old attribute has a new coresponding one) TODO: check where this is written
+- for each component converted
+  - call car/background/head/rims get-name-url
+  - fetch json component
+  - get image attribute
+- create new image (background_url, car_url, head_url, rims_url)
 - Pinata upload image and get hash
-- change json to include img hash & name (Degen#id)
-- Pinata upload json and get hash
+- deployer: get id DB
+- create/update json (name#id, img hash, attributes, collection("DegenNFT"))
+- deployer: Pinata upload json and get hash ("ipfs://" + hash)
 - call merge_finalize(member as address, json_hash as Degen uri)
 - DB increment id
 

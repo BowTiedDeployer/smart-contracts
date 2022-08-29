@@ -85,17 +85,17 @@ const addAssembleToQueue = async () => {
     contracts[network].customizable.split('.')[0],
     contracts[network].customizable.split('.')[1],
     'add-assemble-work-in-queue',
-    [6,5,6,14]
+    [1, 1, 1, 1]
   );
-}
+};
 
-// await mintBackground();
-// await new Promise((r) => setTimeout(r, 2000));
-// await mintCar();
-// await new Promise((r) => setTimeout(r, 2000));
-// await mintHead();
-// await new Promise((r) => setTimeout(r, 2000));
-// await mintRims();
-// await new Promise((r) => setTimeout(r, 2000));
+await mintBackground();
+await new Promise((r) => setTimeout(r, 2000));
+await mintCar();
+await new Promise((r) => setTimeout(r, 2000));
+await mintHead();
+await new Promise((r) => setTimeout(r, 2000));
+await mintRims();
+await new Promise((r) => setTimeout(r, 2000));
 
 await addAssembleToQueue();

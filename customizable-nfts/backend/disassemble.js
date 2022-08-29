@@ -30,10 +30,9 @@ import {
   callSCFunctionWithNonce,
   callSCFunctionWithNonceUser,
 } from './helper_sc.js';
-
 import dotenv from 'dotenv';
 import { jsonResponseToTokenUri, stringToMap, intToHexString } from './converters.js';
-import { getAttributesMapTraitValue } from './helper_json.js';
+import { fetchJsonFromUrl, getAttributesMapTraitValue } from './helper_json.js';
 
 dotenv.config();
 
@@ -60,13 +59,9 @@ const getValuesFromQueueDisassemble = async () => {
     'get-disassemble-work-queue',
     []
   );
-  // console.log(values);
+  console.log(values.value.value);
+  //return [];
   return listOfTuplesResponseToList(values);
-};
-
-const fetchJsonUrl = async (url) => {
-  // todo: see if possible without async promise
-  return fetch(url).then((res) => res.json());
 };
 
 // const urlNFT = await getTokenUriNFT(
@@ -103,8 +98,8 @@ const disassembleServerFlow = async () => {
     console.log('y', x);
     console.log('urlNFT', urlNFT);
     // -> get the json
-    const jsonFetched = await fetchJsonUrl(urlNFT);
-
+    const jsonFetched = await fetchJsonFromUrl(urlNFT);
+    console.log('abc');
     // -> get the attributes
     const attributes = getAttributesMapTraitValue(jsonFetched);
     attributes.Type == 'Alien' ? (attributes.City = 'NYC') : (attributes.City = 'Miami');
