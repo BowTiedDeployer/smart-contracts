@@ -121,6 +121,10 @@ export function readOnlySCJsonResponse(
   }
 }
 
+export function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function callSCFunctionWithNonce(networkInstance, contractAddress, contractName, functionName, args) {
   try {
     const latestNonce = await getAccountNonce(wallets.admin[network]);

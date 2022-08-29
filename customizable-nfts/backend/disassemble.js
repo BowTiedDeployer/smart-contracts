@@ -30,7 +30,7 @@ import {
   callSCFunctionWithNonce,
   callSCFunctionWithNonceUser,
 } from './helper-sc.js';
-import { getAttributesMapTraitValue } from './helper-json.js';
+import { fetchJsonFromUrl, getAttributesMapTraitValue } from './helper-json.js';
 
 import dotenv from 'dotenv';
 import { jsonResponseToTokenUri, stringToMap, intToHexString } from './converters.js';
@@ -97,7 +97,7 @@ const disassembleServerFlow = async () => {
     console.log('y', x);
     console.log('urlNFT', urlNFT);
     // -> get the json
-    const jsonFetched = await fetchJsonUrl(urlNFT);
+    const jsonFetched = await fetchJsonFromUrl(urlNFT);
 
     // -> get the attributes
     const attributes = getAttributesMapTraitValue(jsonFetched);
