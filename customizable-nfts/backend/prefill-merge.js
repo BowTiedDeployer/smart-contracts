@@ -31,6 +31,6 @@ await mintMiami();
 await new Promise((r) => setTimeout(r, 2000));
 await mintMiami();
 await new Promise((r) => setTimeout(r, 2000));
-await mergeToQueue(3, 'miami');
+await mergeToQueue(1, 'miami');
 await new Promise((r) => setTimeout(r, 2000));
-await mergeToQueue(4, 'miami');
+await mergeToQueue(2, 'miami');

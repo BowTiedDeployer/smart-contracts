@@ -9,52 +9,16 @@ plan:
     - id: 0
       transactions:
         - contract-publish:
-            contract-name: nft-trait
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 4660
-            path: "contracts\\nft-trait.clar"
-            anchor-block-only: true
-        - contract-publish:
-            contract-name: cars
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 53340
-            path: "contracts\\cars.clar"
-            anchor-block-only: true
-        - contract-publish:
-            contract-name: degens
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 27390
-            path: "contracts\\degens.clar"
-            anchor-block-only: true
-        - contract-publish:
-            contract-name: nyc-degens
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 50060
-            path: "contracts\\nyc-degens.clar"
-            anchor-block-only: true
-        - contract-publish:
-            contract-name: miami-degens
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 50150
-            path: "contracts\\miami-degens.clar"
-            anchor-block-only: true
-        - contract-publish:
             contract-name: sip-010-trait-ft-standard
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 8390
             path: "contracts\\sip-010-trait-ft-standard.clar"
             anchor-block-only: true
         - contract-publish:
-            contract-name: token-metadata-update-notify
+            contract-name: nft-trait
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 8780
-            path: "contracts\\token-metadata-update-notify.clar"
-            anchor-block-only: true
-        - contract-publish:
-            contract-name: backgrounds
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 49270
-            path: "contracts\\backgrounds.clar"
+            cost: 4660
+            path: "contracts\\nft-trait.clar"
             anchor-block-only: true
         - contract-publish:
             contract-name: heads
@@ -63,10 +27,46 @@ plan:
             path: "contracts\\heads.clar"
             anchor-block-only: true
         - contract-publish:
+            contract-name: component-nft
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 1380
+            path: "contracts\\component-nft.clar"
+            anchor-block-only: true
+        - contract-publish:
             contract-name: rims
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 51930
             path: "contracts\\rims.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: degens
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 27390
+            path: "contracts\\degens.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: miami-degens
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 50150
+            path: "contracts\\miami-degens.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: backgrounds
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 49270
+            path: "contracts\\backgrounds.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: cars
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 53340
+            path: "contracts\\cars.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: nyc-degens
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 50060
+            path: "contracts\\nyc-degens.clar"
             anchor-block-only: true
         - contract-publish:
             contract-name: upgrade-contract
@@ -75,8 +75,8 @@ plan:
             path: "contracts\\upgrade-contract.clar"
             anchor-block-only: true
         - contract-publish:
-            contract-name: component-nft
+            contract-name: token-metadata-update-notify
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 1380
-            path: "contracts\\component-nft.clar"
+            cost: 8780
+            path: "contracts\\token-metadata-update-notify.clar"
             anchor-block-only: true

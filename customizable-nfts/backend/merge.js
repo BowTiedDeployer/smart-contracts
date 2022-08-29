@@ -30,6 +30,7 @@ import {
   replaceTokenCurrentId,
   pinataToHTTPUrl,
 } from './converters.js';
+import { miamiOldToNewComponentNames } from './mapOldNewComponentNames.js';
 dotenv.config();
 // take {id, principal} from queue
 // do this steps calling SC
@@ -91,8 +92,8 @@ const urlNFT = jsonResponseToTokenUri(
   await readOnlySCJsonResponse(
     network,
     wallets.user[network],
-    contracts[network].degens.split('.')[0],
-    contracts[network].degens.split('.')[1],
+    contracts[network].miami.split('.')[0],
+    contracts[network].miami.split('.')[1],
     'get-token-uri',
     [1]
   )
@@ -121,28 +122,70 @@ const mergeServerFlow = async () => {
     console.log('urlNFT', pinataToHTTPUrl(replaceTokenCurrentId(urlNFT, x.degenId)));
     // -> get the json
     const jsonFetched = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlNFT, x.degenId)));
-
+    console.log(jsonFetched)
     // -> get the attributes
     const attributes = getAttributesMapTraitValue(jsonFetched);
-    attributes.Type == 'Alien' ? (attributes.City = 'NYC') : (attributes.City = 'Miami');
-
+    console.log(attributes)
+    const backgroundNewName = miamiOldToNewComponentNames.background[attributes.Background];
+    const carNewName = miamiOldToNewComponentNames.car[attributes.Car];
+    const headNewName = miamiOldToNewComponentNames.head[attributes.Head];
+    const faceNewName = miamiOldToNewComponentNames.face[attributes.Face];
+    const rimsNewName = miamiOldToNewComponentNames.rims[attributes.Rims];
+    
+    const urlBackgroundJSON = 'ipfs://Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP/Purple.json';/*jsonResponseToTokenUri(
+      await readOnlySCJsonResponse(
+        network,
+        wallets.user[network],
+        contracts[network].backgrounds.split('.')[0],
+        contracts[network].backgrounds.split('.')[1],
+        'get-name-url',
+        [backgroundNewName]
+      )
+    );*/
+    const urlCarJSON = 'ipfs://Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP/LamboGrey.json';/*jsonResponseToTokenUri(
+      await readOnlySCJsonResponse(
+        network,
+        wallets.user[network],
+        contracts[network].backgrounds.split('.')[0],
+        contracts[network].backgrounds.split('.')[1],
+        'get-name-url',
+        [carNewName]
+      )
+    );*/
+    const urlRimsJSON = 'ipfs://Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP/SportyGold.json';/*jsonResponseToTokenUri(
+      await readOnlySCJsonResponse(
+        network,
+        wallets.user[network],
+        contracts[network].backgrounds.split('.')[0],
+        contracts[network].backgrounds.split('.')[1],
+        'get-name-url',
+        [rimsNewName]
+      )
+    );*/
+    console.log('urlBg',pinataToHTTPUrl(replaceTokenCurrentId(urlBackgroundJSON)))
+    const backgroundImgUrl= await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlBackgroundJSON)));
+    const carImgUrl= await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlCarJSON)));
+    const rimsImgUrl= await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlBackgroundJSON)));
+    //const backgroundImgUrl= await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlBackgroundJSON)));
+    console.log(backgroundImgUrl.image);
     // -> mint them
-    // (disassemble-finalize (token-id uint) (member principal) (background-name (string-ascii 30)) (body-name (string-ascii 30)) (rim-name (string-ascii 30)) (head-name (string-ascii 30)))
+    //(define-public (merge-finalize (degen-id uint) (member principal) (metadata-uri-dgn (string-ascii 99)))
 
-    callSCFunctionWithNonce(
-      networkN,
-      contracts[network].customizable.split('.')[0],
-      contracts[network].customizable.split('.')[1],
-      'merge-finalize',
-      [
-        x.id,
-        x.address,
-        attributes.Background,
-        attributes.Car,
-        attributes.Rims,
-        `${attributes.City}_${attributes.Head}_${attributes.Face}`,
-      ]
-    );
+
+    // callSCFunctionWithNonce(
+    //   networkN,
+    //   contracts[network].customizable.split('.')[0],
+    //   contracts[network].customizable.split('.')[1],
+    //   'merge-finalize',
+    //   [
+    //     x.id,
+    //     x.address,
+    //     attributes.Background,
+    //     attributes.Car,
+    //     attributes.Rims,
+    //     `${attributes.City}_${attributes.Head}_${attributes.Face}`,
+    //   ]
+    // );
   }
 };
 
