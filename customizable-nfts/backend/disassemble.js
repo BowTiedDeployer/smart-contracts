@@ -60,6 +60,7 @@ const getValuesFromQueue = async () => {
     []
   );
   console.log(values.value.value);
+  //return [];
   return listOfTuplesResponseToList(values);
 };
 
@@ -98,7 +99,7 @@ const disassembleServerFlow = async () => {
     console.log('urlNFT', urlNFT);
     // -> get the json
     const jsonFetched = await fetchJsonUrl(urlNFT);
-
+    console.log('abc');
     // -> get the attributes
     const attributes = getAttributesMapTraitValue(jsonFetched);
     attributes.Type == 'Alien' ? (attributes.City = 'NYC') : (attributes.City = 'Miami');
