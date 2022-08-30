@@ -6,6 +6,10 @@ export const getAttributesMapTraitValue = (json) => {
   return attr;
 };
 
+export const getImgUrlFromJson = async (json) => {
+  return json.image;
+};
+
 export const fetchJsonFromUrl = async (jsonUrl) => {
   //example https://stxnft.mypinata.cloud/ipfs/QmbX7UCSFLBvJa2yB4YxqZxhacrxiKUGbE6fHbQuYMhNhf
   return fetch(jsonUrl).then((res) => res.json());

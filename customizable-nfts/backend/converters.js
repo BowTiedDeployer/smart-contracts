@@ -1,6 +1,5 @@
 import {
   broadcastTransaction,
-  bufferCVFromString,
   cvToHex,
   cvToJSON,
   hexToCV,

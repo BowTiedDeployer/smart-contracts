@@ -89,13 +89,13 @@ const addAssembleToQueue = async () => {
   );
 };
 
-await mintBackground();
-await new Promise((r) => setTimeout(r, 2000));
-await mintCar();
-await new Promise((r) => setTimeout(r, 2000));
-await mintHead();
-await new Promise((r) => setTimeout(r, 2000));
-await mintRims();
-await new Promise((r) => setTimeout(r, 2000));
+// await mintBackground();
+// await new Promise((r) => setTimeout(r, 2000));
+// await mintCar();
+// await new Promise((r) => setTimeout(r, 2000));
+// await mintHead();
+// await new Promise((r) => setTimeout(r, 2000));
+// await mintRims();
+// await new Promise((r) => setTimeout(r, 2000));
 
 await addAssembleToQueue();
