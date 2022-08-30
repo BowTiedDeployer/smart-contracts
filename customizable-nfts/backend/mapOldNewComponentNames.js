@@ -1,83 +1,85 @@
-export const nycOldToNewComponentNames = {
-    background:{
-        'Goldie' : 'Goldie'  , 
-        'Emeraldie' : 'Emerald' , 
-        'Purplie' : 'DarkPurple' ,
+export const oldToNewComponentNames = {
+  miami: {
+    background: {
+      'Luna purple': 'Purple',
+      'Lost orange': 'Orange',
+      'Sunset mist': 'Sunset',
     },
-    car:{
-        'Grey' : 'BentleyGrey' , 
-        'White' : 'BentleyWhite' , 
-        'Black' : 'BentleyBlack' , 
-        'Gold' : 'BentleyGold' , 
-        'Purple' : 'BentleyPurple' , 
-        'Midnight' : 'BentleyMidnight' , 
-        'Blood' : 'BentleyBlood' ,
+    car: {
+      Grey: 'LamboGrey',
+      Blue: 'LamboBlue',
+      Red: 'LamboRed',
+      Gold: 'LamboGold',
+      Emrald: 'LamboEmerald',
+      Pearlescent: 'LamboPearlescent',
     },
-    face:{
-        'Kaonashi' : 'Kaonashi' , 
-        'Lips' : 'Lips' , 
-        'Big-Smile' : 'BigSmile' , 
-        'Memeglass' : 'MemeGlasses' , 
-        'White-eyes' : 'WhiteEyes' ,
-        'Elf' : 'Elf' , 
-        'Cuban' : 'Cuban' , 
-        'Nose-Pierceing' : 'NosePiercing' , 
-        'Vampire' : 'Vampire' ,
+    face: {
+      None: 'None',
+      Cigar: 'Cigar',
+      'Gold-teeth': 'GoldTeeth',
+      Bandana: 'Bandana',
+      'Flame-eyes': 'FlameEyes',
+      Sunglasses: 'Sunglasses',
     },
-    head:{       
-        'Tomahwak' : 'Tomahawk' , 
-        'Great-Hair' : 'GreatHair' , 
-        'PUBG' : 'PUBG' , 
-        'Bitcoin-police' : 'BitcoinPolice' , 
-        'Samurai' : 'Samurai' , 
-        'CowBoy' : 'Cowboy' , 
-        'Antenna' : 'Antenna' , 
-        'Openminded' : 'OpenMinded' ,
+    head: {
+      None: 'None',
+      Sword: 'Sword',
+      Party: 'Party',
+      Bullet: 'Bullet',
+      Crown: 'Crown',
+      Pfizer: 'Syringe',
     },
-    rims:{         
-        'Silver' :  'ClassySilver' , 
-        'Dark' : 'ClassyDark' , 
-        'Cream' : 'ClassyCream' , 
-        'Gold' : 'ClassyGold' , 
-        'White' : 'ClassyWhite' ,
-    }
-}
-export const miamiOldToNewComponentNames = {
-    background:{
-        'Luna purple' : 'Purple',
-        'Lost orange' : 'Orange',
-        'Sunset mist' : 'Sunset'
+    rims: {
+      Grey: 'SportyGrey',
+      Black: 'SportyBlack',
+      Blue: 'SportyBlue',
+      Gold: 'SportyGold',
+      Lime: 'SportyLime',
+      Pearlescent: 'SportyPearlescent',
     },
-    car:{
-        'Grey' : 'LamboGrey' ,  
-        'Blue' : 'LamboBlue' , 
-        'Red' : 'LamboRed' , 
-        'Gold' : 'LamboGold' , 
-        'Emrald' : 'LamboEmerald' ,  
-        'Pearlescent' : 'LamboPearlescent'
+  },
+  nyc: {
+    background: {
+      Goldie: 'Goldie',
+      Emeraldie: 'Emerald',
+      Purplie: 'DarkPurple',
     },
-    face:{
-        'None' : 'None' , 
-        'Cigar' : 'Cigar' , 
-        'Gold-teeth' :'GoldTeeth'  ,  
-        'Bandana' : 'Bandana'   , 
-        'Flame-eyes' : 'FlameEyes' , 
-        'Sunglasses' : 'Sunglasses' ,
+    car: {
+      Grey: 'BentleyGrey',
+      White: 'BentleyWhite',
+      Black: 'BentleyBlack',
+      Gold: 'BentleyGold',
+      Purple: 'BentleyPurple',
+      Midnight: 'BentleyMidnight',
+      Blood: 'BentleyBlood',
     },
-    head:{
-        'None' : 'None' ,
-        'Sword' : 'Sword' , 
-        'Party' : 'Party' , 
-        'Bullet' : 'Bullet' , 
-        'Crown' : 'Crown' , 
-        'Pfizer' : 'Syringe' ,
+    face: {
+      Kaonashi: 'Kaonashi',
+      Lips: 'Lips',
+      'Big-Smile': 'BigSmile',
+      Memeglass: 'MemeGlasses',
+      'White-eyes': 'WhiteEyes',
+      Elf: 'Elf',
+      Cuban: 'Cuban',
+      'Nose-Pierceing': 'NosePiercing',
+      Vampire: 'Vampire',
     },
-    rims:{
-        'Grey' : 'SportyGrey' , 
-        'Black' : 'SportyBlack' , 
-        'Blue' : 'SportyBlue' ,      
-        'Gold' : 'SportyGold' , 
-        'Lime' : 'SportyLime' , 
-        'Pearlescent' : 'SportyPearlescent' ,
-    }
-}
+    head: {
+      Tomahwak: 'Tomahawk',
+      'Great-Hair': 'GreatHair',
+      PUBG: 'PUBG',
+      'Bitcoin-police': 'BitcoinPolice',
+      Samurai: 'Samurai',
+      CowBoy: 'Cowboy',
+      Antenna: 'Antenna',
+      Openminded: 'OpenMinded',
+    },
+    rims: {
+      Silver: 'ClassySilver',
+      Dark: 'ClassyDark',
+      Cream: 'ClassyCream',
+      Gold: 'ClassyGold',
+      White: 'ClassyWhite',
+    },
+  },
+};

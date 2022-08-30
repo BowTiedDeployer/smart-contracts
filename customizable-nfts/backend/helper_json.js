@@ -49,3 +49,33 @@ export const createJson = () => {
 }
 `;
 };
+
+const createJsonAttributes = (attributes) => {
+  let jsonAttributes = '';
+  attributes.forEach((attribute) => {
+    jsonAttributes += `
+    {
+      "trait_type": "${attribute.trait_type}", 
+      "value": "${attribute.value}"
+    },`;
+  });
+
+  // removes last trailling comma for complience with JSON standard
+  return jsonAttributes.slice(0, -1);
+};
+
+export const composeJSON = (name, image, attributes, collection) => {
+  const jsonAttributes = createJsonAttributes(attributes);
+
+  let metadata = `{
+  "sip": 16,
+  "name": "${name}",
+  "image": "${image}",
+  "attributes": [${jsonAttributes}
+  ],
+  "properties": {    
+    "collection": "${collection}"
+  }
+}`;
+  return metadata;
+};

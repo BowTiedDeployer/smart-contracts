@@ -3,9 +3,9 @@ import FormData from 'form-data';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { imgContentCreate, saveFile } from './helper-files';
+import { deleteFile, imgContentCreate, saveFile } from './helper_files.js';
 import fs from 'fs';
-import { createJson } from './helper-json.js';
+import { createJson } from './helper_json.js';
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -30,26 +30,20 @@ const uploadToPinata = (filePath, fileNamePinata) => {
   return { config: config, data: data };
 };
 
-const uploadFlowJson = async (jsonName, jsonContent) => {
+export const uploadFlowJson = async (jsonName, jsonContent) => {
   const jsonPath = jsonName + '.json';
   saveFile(jsonPath, jsonContent);
   let { config, data } = uploadToPinata(jsonPath, jsonName);
   const res = await axios(config);
-  // delete funciton here file locally
-  console.log(res.data);
+  deleteFile(jsonPath);
+  return res.data.IpfsHash;
 };
 
-const uploadFlowImg = async (imgName, imgContent) => {
+export const uploadFlowImg = async (imgName, imgContent) => {
   const imgPath = imgName + '.png';
   saveFile(imgPath, imgContent);
   let { config, data } = uploadToPinata(imgPath, imgName);
   const res = await axios(config);
-  // same delete file locally
-  console.log(res.data);
+  deleteFile(imgPath);
+  return res.data.IpfsHash;
 };
-
-// JsonDegen#nr
-uploadFlowJson('jsonGenerssNew', createJson());
-
-// ImgDegen#nr
-uploadFlowImg('imageNew', await imgContentCreate());

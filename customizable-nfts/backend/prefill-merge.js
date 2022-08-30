@@ -15,6 +15,16 @@ export const mintMiami = async () => {
   );
 };
 
+export const mintNYC = async () => {
+  await callSCFunctionWithNonceUser(
+    networkN,
+    contracts[network].nyc.split('.')[0], //degens-->nyc
+    contracts[network].nyc.split('.')[1],
+    'claim',
+    []
+  );
+};
+
 export const mergeToQueue = async (id, type) => {
   // call add-work-disassemble
   // manual value
@@ -27,10 +37,10 @@ export const mergeToQueue = async (id, type) => {
   );
 };
 
-await mintMiami();
+await mintNYC();
 await new Promise((r) => setTimeout(r, 2000));
 await mintMiami();
+await new Promise((r) => setTimeout(r, 2000));
+await mergeToQueue(1, 'nyc');
 await new Promise((r) => setTimeout(r, 2000));
 await mergeToQueue(1, 'miami');
-await new Promise((r) => setTimeout(r, 2000));
-await mergeToQueue(2, 'miami');
