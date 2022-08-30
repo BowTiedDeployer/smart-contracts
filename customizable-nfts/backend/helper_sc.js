@@ -169,3 +169,19 @@ export async function callSCFunctionUser(networkInstance, contractAddress, contr
     console.log(`${contractAddress}.${functionName} User SC public function call ERROR: ${error}`);
   }
 }
+
+export function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export async function checkNonceUpdate(checkIt = 1, availableNonce, lastUsedNonce) {
+  if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
+
+  if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
+  else {
+    await sleep(checkIt * 1000);
+    availableNonce = await getAccountNonce(wallets.admin.wallet);
+
+    return await checkNonceUpdate(++checkIt, availableNonce, lastUsedNonce);
+  }
+}

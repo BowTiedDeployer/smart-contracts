@@ -20,6 +20,7 @@ import {
   callSCFunction,
   callSCFunctionWithNonce,
   callSCFunctionWithNonceUser,
+  checkNonceUpdate,
 } from './helper_sc.js';
 import { composeJSON, fetchJsonFromUrl, getAttributesMapTraitValue } from './helper_json.js';
 import dotenv from 'dotenv';
@@ -108,7 +109,12 @@ const mergeServerFlow = async () => {
   let valueToDisassemble = await getValuesFromQueue();
   for await (const x of valueToDisassemble) {
     // (await getValuesFromQueue()).forEach(async (x) => {
-    await new Promise((r) => setTimeout(r, 2000));
+
+    // await new Promise((r) => setTimeout(r, 2000));
+    let availableNonce = await getAccountNonce(wallets.admin.wallet);
+    let lastUsedNonce = availableNonce - 1;
+    checkNonceUpdate(1, availableNonce, lastUsedNonce);
+
     // get the token uri
     console.log('x', x);
     let contractType = '';
