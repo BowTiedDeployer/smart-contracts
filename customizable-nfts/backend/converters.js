@@ -1,5 +1,6 @@
 import {
   broadcastTransaction,
+  cvToHex,
   cvToJSON,
   hexToCV,
   makeContractCall,
@@ -29,7 +30,8 @@ export const intToHexString = (number) => {
 };
 
 const convertIntToArgReadOnly = (number) => {
-  return '010000000000000000' + intToHexString(number);
+  // return '010000000000000000' + intToHexString(number);
+  return cvToHex(uintCV(number));
 };
 
 const convertStringToArgReadOnly = (str) => {

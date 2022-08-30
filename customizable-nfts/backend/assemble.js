@@ -1,7 +1,8 @@
 // Assemble:
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { contracts, network, wallets } from './consts.js';
-import { jsonResponseToTokenUri } from './converters.js';
+import { jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
+import { fetchJsonFromUrl, getAttributesMapTraitValue, getImgUrlFromJson } from './helper_json.js';
 import { readOnlySCJsonResponse } from './helper_sc.js';
 
 // - needs nft id fetched from nfts owned combined with the nft metadata - gets it from the queue
@@ -9,28 +10,22 @@ import { readOnlySCJsonResponse } from './helper_sc.js';
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
 
-// const getValuesFromQueueAssemble = async () => {
-//   return [
-//     {
-//       idBackground: 1,
-//       idCar: 1,
-//       idHead: 1,
-//       idRims: 1,
-//       address: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
-//     },
-//   ];
-
-//   // return a list having {address, id}
-//   const values = await readOnlySCJsonResponse(
-//     networkN,
-//     wallets.admin,
-//     contracts[network].degens.split('.')[0],
-//     contracts[network].degens.split('.')[1],
-//     'get-assemble-work-queue',
-//     []
-//   );
-//   return values;
-// };
+const listOfTuplesResponseToList = (tupleResponse) => {
+  let idLists = [];
+  const tupleList = tupleResponse.value.value;
+  // console.log(tupleList);
+  tupleList.forEach((x) => {
+    idLists.push({ 
+      address: x.value.member.value,
+      backgroundId: x.value['background-id'].value,
+      carId: x.value['car-id'].value,
+      rimId: x.value['rim-id'].value,
+      headId: x.value['head-id'].value
+    });
+  });
+  // console.log(idLists);
+  return idLists;
+};
 
 const getValuesFromQueueAssemble = async () => {
   // return a list having {}
@@ -42,32 +37,94 @@ const getValuesFromQueueAssemble = async () => {
     'get-assemble-work-queue',
     []
   );
-  console.log(values);
-  // return listOfTuplesResponseToList(values);
+  // console.log(values);
+  return listOfTuplesResponseToList(values);
 };
 
-// readOnlySCJsonResponse(
-//   networkN,
-//   wallets.admin[network],
-//   contracts[network].background.split('.')[0],
-//   contracts[network].background.split('.')[1],
-//   'get-token-uri',
-//   []
-// );
 
 const assembleServerFlow = async () => {
   // get values from queue
-  let valueToAssemble = await getValuesFromQueueAssemble();
+  let valuesToAssemble = await getValuesFromQueueAssemble();
+  console.log(valuesToAssemble);
 
-  // take jsons ( background, rims, car, head - type: alien/ skull, face: absa, head: dads)
+  for await (const tuple of valuesToAssemble) {
+    await new Promise((r) => setTimeout(r, 2000));
+    let attributes = {};
 
-  // const urlBackground = jsonResponseToTokenUri(await reat);
+    // take jsons ( background, rims, car, head - type: alien/ skull, face: absa, head: dads)
+    const urlJsonBackground = await jsonResponseToTokenUri(
+      await readOnlySCJsonResponse(
+        network,
+        wallets.user[network],
+        contracts[network].backgrounds.split('.')[0],
+        contracts[network].backgrounds.split('.')[1],
+        'get-token-uri',
+        [tuple.backgroundId]
+      )
+    );
+    
+    const urlJsonCar = await jsonResponseToTokenUri(
+      await readOnlySCJsonResponse(
+        network,
+        wallets.user[network],
+        contracts[network].cars.split('.')[0],
+        contracts[network].cars.split('.')[1],
+        'get-token-uri',
+        [tuple.carId]
+      )
+    );
 
-  // get the attribute value from each json
+    const urlJsonHead = await jsonResponseToTokenUri(
+      await readOnlySCJsonResponse(
+        network,
+        wallets.user[network],
+        contracts[network].heads.split('.')[0],
+        contracts[network].heads.split('.')[1],
+        'get-token-uri',
+        [tuple.headId]
+      )
+    );
+    
+    const urlJsonRims = await jsonResponseToTokenUri(
+      await readOnlySCJsonResponse(
+        network,
+        wallets.user[network],
+        contracts[network].rims.split('.')[0],
+        contracts[network].rims.split('.')[1],
+        'get-token-uri',
+        [tuple.rimId]
+      )
+    );
 
-  // background, rims & car direct
+    // get the attribute value & imgUrl from each json
+    const jsonBackground = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonBackground));
+    const urlImgBackground = getImgUrlFromJson(jsonBackground);
+    let attributeBackground = getAttributesMapTraitValue(jsonBackground);
+    
+    const jsonCar = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonCar));
+    const urlImgCar = getImgUrlFromJson(jsonCar);
+    let attributeCar = getAttributesMapTraitValue(jsonCar);
+    
+    const jsonHead = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonHead));
+    console.log('jsonHead: ', jsonHead);
+    const urlImgHead = getImgUrlFromJson(jsonHead);
+    let attributeHead = getAttributesMapTraitValue(jsonHead);
 
-  // head gets 3 attributes
+    const jsonRims = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonRims));
+    // console.log('jsonRims', jsonRims);
+    const urlImgRims = getImgUrlFromJson(jsonRims);
+    let attributeRims = getAttributesMapTraitValue(jsonRims);
+
+    attributes = {...attributeBackground, ...attributeCar, ...attributeHead, ...attributeRims};
+
+    //optional convert Race -> Type
+    // const typeAttributes = {Type: attributeHead.Race};
+    // attributes = {...attributes, ...typeAttributes}
+    // console.log('attributes ', attributes);
+
+    // const {Race, ...otherAttributes} = attributes;
+    // console.log('other attributes ', otherAttributes); 
+  }
 
   // create json with those attributes
 
