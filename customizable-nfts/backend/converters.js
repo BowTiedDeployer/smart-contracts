@@ -1,7 +1,10 @@
 import {
   broadcastTransaction,
+  bufferCVFromString,
+  cvToHex,
   cvToJSON,
   hexToCV,
+  intCV,
   makeContractCall,
   PostConditionMode,
   standardPrincipalCV,
@@ -11,6 +14,8 @@ import {
 import { contracts, network, urlApis } from './consts.js';
 
 import dotenv from 'dotenv';
+import { stringCV } from '@stacks/transactions/dist/clarity/types/stringCV.js';
+import { principalCV } from '@stacks/transactions/dist/clarity/types/principalCV.js';
 dotenv.config();
 
 // format: "{'keyA':'valueA', 'keyB':'valueB', keyC':'valueC'}",
@@ -29,17 +34,15 @@ export const intToHexString = (number) => {
 };
 
 const convertIntToArgReadOnly = (number) => {
-  return '010000000000000000' + intToHexString(number);
+  return cvToHex(uintCV(number));
 };
 
 const convertStringToArgReadOnly = (str) => {
-  // TODO: convvert string to arg CV style
-  return str;
+  return cvToHex(stringCV(str, 'ascii'));
 };
 
 const convertPrincipalToArgReadOnly = (principal) => {
-  // TODO: convvert string to arg CV style
-  return isPrincipal(principal);
+  return cvToHex(principalCV(principal));
 };
 
 const isPrincipal = (str) => {
@@ -66,6 +69,10 @@ export const convertArgsReadOnly = (args) => {
 
 export const jsonResponseToTokenUri = (json) => {
   return json.value.value.value;
+};
+
+export const jsonResponseToTokenName = (json) => {
+  return json.value.value.url.value;
 };
 
 export const convertArgsSCCall = (args) => {
