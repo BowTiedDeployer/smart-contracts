@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { deleteFile, imgContentCreate, saveFile } from './helper_files.js';
 import fs from 'fs';
-import { createJson } from './helper_json.js';
+import { jsonContentCreate } from './helper_json.js';
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);

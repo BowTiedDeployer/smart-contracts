@@ -35,7 +35,7 @@ export const mintBackground = async () => {
     contracts[network].backgrounds.split('.')[0],
     contracts[network].backgrounds.split('.')[1],
     'mint-name',
-    [wallets.user.mocknet, 'DarkPurple']
+    [wallets.user.mocknet, 'Sunset']
   );
 };
 
@@ -45,7 +45,7 @@ export const mintCar = async () => {
     contracts[network].cars.split('.')[0],
     contracts[network].cars.split('.')[1],
     'mint-name',
-    [wallets.user.mocknet, 'BentleyBlack']
+    [wallets.user.mocknet, 'BentleyGrey']
   );
 };
 
@@ -55,7 +55,7 @@ export const mintHead = async () => {
     contracts[network].heads.split('.')[0],
     contracts[network].heads.split('.')[1],
     'mint-name',
-    [wallets.user.mocknet, 'Miami_Sword_Sunglasses']
+    [wallets.user.mocknet, 'Miami_Party_Sunglasses']
   );
 };
 
@@ -65,7 +65,7 @@ export const mintRims = async () => {
     contracts[network].rims.split('.')[0],
     contracts[network].rims.split('.')[1],
     'mint-name',
-    [wallets.user.mocknet, 'ClassyDark']
+    [wallets.user.mocknet, 'SportyPearlescent']
   );
 };
 

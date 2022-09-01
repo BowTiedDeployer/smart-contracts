@@ -6,7 +6,7 @@ export const getAttributesMapTraitValue = (json) => {
   return attr;
 };
 
-export const getImgUrlFromJson = async (json) => {
+export const getImgUrlFromJson = (json) => {
   return json.image;
 };
 
@@ -15,44 +15,57 @@ export const fetchJsonFromUrl = async (jsonUrl) => {
   return fetch(jsonUrl).then((res) => res.json());
 };
 
-export const createJson = () => {
-  return `
-{
-  "sip": 16,
-  "name": "Degen#2",
-  "image": "ipfs://QmaSjpJBMSDJ8x8FfL2Kcf2n7eNpDagqXtUhfNTAym5CwR",
-  "attributes": [
-    {
-      "trait_type": "Background",
-      "value": "BlueOpaque"
-    },
-    {
-      "trait_type": "Car",
-      "value": "LamboBlue"
-    },
-    {
-      "trait_type": "Rims",
-      "value": "ClassyGold"
-    },
-    {
-      "trait_type": "Type",
-      "value": "Alien"
-    },
-    {
-      "trait_type": "Head",
-      "value": "Samurai"
-    },
-    {
-      "trait_type": "Face",
-      "value": "Cuban"
-    }
-  ],
-  "properties": {
-    "collection": "DegenNFT"
-  }
-}
-`;
+export const jsonContentCreate = (name, image, attributes, collection) => {
+  let attributesList = [
+    { trait_type: 'Background', value: attributes.Background },
+    { trait_type: 'Car', value: attributes.Car },
+    { trait_type: 'Rims', value: attributes.Rims },
+    { trait_type: 'Type', value: attributes.Type },
+    { trait_type: 'Head', value: attributes.Head },
+    { trait_type: 'Face', value: attributes.Face },
+  ];
+  // console.log('attributesList ', attributesList);
+  return composeJSON(name, image, attributesList, collection);
 };
+
+// export const createJson = () => {
+//   return `
+// {
+//   "sip": 16,
+//   "name": "Degen#2",
+//   "image": "ipfs://QmaSjpJBMSDJ8x8FfL2Kcf2n7eNpDagqXtUhfNTAym5CwR",
+//   "attributes": [
+//     {
+//       "trait_type": "Background",
+//       "value": "BlueOpaque"
+//     },
+//     {
+//       "trait_type": "Car",
+//       "value": "LamboBlue"
+//     },
+//     {
+//       "trait_type": "Rims",
+//       "value": "ClassyGold"
+//     },
+//     {
+//       "trait_type": "Type",
+//       "value": "Alien"
+//     },
+//     {
+//       "trait_type": "Head",
+//       "value": "Samurai"
+//     },
+//     {
+//       "trait_type": "Face",
+//       "value": "Cuban"
+//     }
+//   ],
+//   "properties": {
+//     "collection": "DegenNFT"
+//   }
+// }
+// `;
+// };
 
 const createJsonAttributes = (attributes) => {
   let jsonAttributes = '';

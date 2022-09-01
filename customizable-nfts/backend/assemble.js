@@ -1,9 +1,12 @@
 // Assemble:
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { contracts, network, wallets } from './consts.js';
-import { jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
-import { fetchJsonFromUrl, getAttributesMapTraitValue, getImgUrlFromJson } from './helper_json.js';
+import { hashToPinataUrl, jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
+import { dbReadCurrentId } from './helper_db.js';
+import { imgContentCreate } from './helper_files.js';
+import { jsonContentCreate, fetchJsonFromUrl, getAttributesMapTraitValue, getImgUrlFromJson } from './helper_json.js';
 import { readOnlySCJsonResponse } from './helper_sc.js';
+import { uploadFlowImg, uploadFlowJson } from './uploads.js';
 
 // - needs nft id fetched from nfts owned combined with the nft metadata - gets it from the queue
 
@@ -13,7 +16,6 @@ let networkN =
 const listOfTuplesResponseToList = (tupleResponse) => {
   let idLists = [];
   const tupleList = tupleResponse.value.value;
-  // console.log(tupleList);
   tupleList.forEach((x) => {
     idLists.push({ 
       address: x.value.member.value,
@@ -23,7 +25,6 @@ const listOfTuplesResponseToList = (tupleResponse) => {
       headId: x.value['head-id'].value
     });
   });
-  // console.log(idLists);
   return idLists;
 };
 
@@ -37,7 +38,6 @@ const getValuesFromQueueAssemble = async () => {
     'get-assemble-work-queue',
     []
   );
-  // console.log(values);
   return listOfTuplesResponseToList(values);
 };
 
@@ -106,39 +106,50 @@ const assembleServerFlow = async () => {
     let attributeCar = getAttributesMapTraitValue(jsonCar);
     
     const jsonHead = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonHead));
-    console.log('jsonHead: ', jsonHead);
+    // console.log('jsonHead: ', jsonHead);
     const urlImgHead = getImgUrlFromJson(jsonHead);
     let attributeHead = getAttributesMapTraitValue(jsonHead);
 
     const jsonRims = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonRims));
-    // console.log('jsonRims', jsonRims);
     const urlImgRims = getImgUrlFromJson(jsonRims);
+    // console.log('urlImgRims', urlImgRims);
     let attributeRims = getAttributesMapTraitValue(jsonRims);
 
     attributes = {...attributeBackground, ...attributeCar, ...attributeHead, ...attributeRims};
 
-    //optional convert Race -> Type
-    // const typeAttributes = {Type: attributeHead.Race};
-    // attributes = {...attributes, ...typeAttributes}
+    //convert Race -> Type
+    attributes.Type = attributes.Race;
+    const {Race, ...otherAttributes} = attributes;
+    attributes = otherAttributes;
     // console.log('attributes ', attributes);
+  
+    // create image from component img urls (background_url, rims_url, car_url, head_url)
+    const degenImg = await imgContentCreate(
+      pinataToHTTPUrl(urlImgBackground),
+      pinataToHTTPUrl(urlImgCar),
+      pinataToHTTPUrl(urlImgHead),
+      pinataToHTTPUrl(urlImgRims)
+    );
 
-    // const {Race, ...otherAttributes} = attributes;
-    // console.log('other attributes ', otherAttributes); 
+    // upload image and get hash
+    const currentDbId = await dbReadCurrentId();
+    const degenName = `BadDegen#${currentDbId}`;
+
+    const degenImgHash = await uploadFlowImg(degenName, degenImg);
+
+    // create json with component attributes (name#id, img hash, attributes, collection("DegenNFT"))
+    const degenJson = jsonContentCreate(degenName, hashToPinataUrl(degenImgHash), attributes, 'DegenNFT');
+    console.log(degenJson);
+
+
+    // upload json and get hash
+    const degenJsonHash = await uploadFlowJson(degenName, degenJson);
+    console.log(degenJsonHash);
+
+    // call assemble_finalize (member as address, json_hash as uri)
+
+    // increment id
   }
-
-  // create json with those attributes
-
-  // create image from json
-
-  // upload image and get hash
-
-  // update json with img + id
-
-  // upload json to pinata
-
-  // call assemble_finalize with (value.member, json url)
-
-  // increment id
 };
 
 await assembleServerFlow();
