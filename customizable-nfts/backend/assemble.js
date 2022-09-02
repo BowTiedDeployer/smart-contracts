@@ -2,10 +2,10 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { contracts, network, wallets } from './consts.js';
 import { hashToPinataUrl, jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
-import { dbReadCurrentId } from './helper_db.js';
+import { dbIncremendId, dbReadCurrentId } from './helper_db.js';
 import { imgContentCreate } from './helper_files.js';
 import { jsonContentCreate, fetchJsonFromUrl, getAttributesMapTraitValue, getImgUrlFromJson } from './helper_json.js';
-import { readOnlySCJsonResponse } from './helper_sc.js';
+import { callSCFunctionWithNonce, checkNonceUpdate, getAccountNonce, readOnlySCJsonResponse } from './helper_sc.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
 
 // - needs nft id fetched from nfts owned combined with the nft metadata - gets it from the queue
@@ -45,13 +45,17 @@ const getValuesFromQueueAssemble = async () => {
 const assembleServerFlow = async () => {
   // get values from queue
   let valuesToAssemble = await getValuesFromQueueAssemble();
-  console.log(valuesToAssemble);
+  // console.log(valuesToAssemble);
 
   for await (const tuple of valuesToAssemble) {
-    await new Promise((r) => setTimeout(r, 2000));
+    // verify available nonce
+    let availableNonce = await getAccountNonce(wallets.admin[network]);
+    let lastUsedNonce = availableNonce - 1;
+    checkNonceUpdate(1, availableNonce, lastUsedNonce);
+
     let attributes = {};
 
-    // take jsons ( background, rims, car, head - type: alien/ skull, face: absa, head: dads)
+    // take jsons (background, rims, car, head - type: alien/skull, face, head)
     const urlJsonBackground = await jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
@@ -121,7 +125,6 @@ const assembleServerFlow = async () => {
     attributes.Type = attributes.Race;
     const {Race, ...otherAttributes} = attributes;
     attributes = otherAttributes;
-    // console.log('attributes ', attributes);
   
     // create image from component img urls (background_url, rims_url, car_url, head_url)
     const degenImg = await imgContentCreate(
@@ -139,16 +142,23 @@ const assembleServerFlow = async () => {
 
     // create json with component attributes (name#id, img hash, attributes, collection("DegenNFT"))
     const degenJson = jsonContentCreate(degenName, hashToPinataUrl(degenImgHash), attributes, 'DegenNFT');
-    console.log(degenJson);
-
+    // console.log(degenJson);
 
     // upload json and get hash
     const degenJsonHash = await uploadFlowJson(degenName, degenJson);
-    console.log(degenJsonHash);
+    // console.log(degenJsonHash);
 
     // call assemble_finalize (member as address, json_hash as uri)
+    callSCFunctionWithNonce(
+      networkN,
+      contracts[network].customizable.split('.')[0],
+      contracts[network].customizable.split('.')[1],
+      'assemble-finalize',
+      [tuple.address, degenJsonHash]
+    );
 
     // increment id
+    dbIncremendId(currentDbId);
   }
 };
 
