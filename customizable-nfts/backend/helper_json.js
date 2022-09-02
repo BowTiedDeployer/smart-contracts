@@ -6,7 +6,7 @@ export const getAttributesMapTraitValue = (json) => {
   return attr;
 };
 
-export const getImgUrlFromJson = async (json) => {
+export const getImgUrlFromJson = (json) => {
   return json.image;
 };
 
@@ -15,48 +15,57 @@ export const fetchJsonFromUrl = async (jsonUrl) => {
   return fetch(jsonUrl).then((res) => res.json());
 };
 
-export const createJson = () => {
-  return `
-{
-  "sip": 16,
-  "name": "Degen#2",
-  "image": "ipfs://QmaSjpJBMSDJ8x8FfL2Kcf2n7eNpDagqXtUhfNTAym5CwR",
-  "attributes": [
-    {
-      "trait_type": "Background",
-      "value": "BlueOpaque"
-    },
-    {
-      "trait_type": "Car",
-      "value": "LamboBlue"
-    },
-    {
-      "trait_type": "Rims",
-      "value": "ClassyGold"
-    },
-    {
-      "trait_type": "Type",
-      "value": "Alien"
-    },
-    {
-      "trait_type": "Head",
-      "value": "Samurai"
-    },
-    {
-      "trait_type": "Face",
-      "value": "Cuban"
-    }
-  ],
-  "properties": {
-    "collection": "DegenNFT"
-  }
-}
-`;
-};
+// export const createJson = () => {
+//   return `
+// {
+//   "sip": 16,
+//   "name": "Degen#2",
+//   "image": "ipfs://QmaSjpJBMSDJ8x8FfL2Kcf2n7eNpDagqXtUhfNTAym5CwR",
+//   "attributes": [
+//     {
+//       "trait_type": "Background",
+//       "value": "BlueOpaque"
+//     },
+//     {
+//       "trait_type": "Car",
+//       "value": "LamboBlue"
+//     },
+//     {
+//       "trait_type": "Rims",
+//       "value": "ClassyGold"
+//     },
+//     {
+//       "trait_type": "Type",
+//       "value": "Alien"
+//     },
+//     {
+//       "trait_type": "Head",
+//       "value": "Samurai"
+//     },
+//     {
+//       "trait_type": "Face",
+//       "value": "Cuban"
+//     }
+//   ],
+//   "properties": {
+//     "collection": "DegenNFT"
+//   }
+// }
+// `;
+// };
 
 const createJsonAttributes = (attributes) => {
+  let attributesList = [
+    { trait_type: 'Background', value: attributes.Background },
+    { trait_type: 'Car', value: attributes.Car },
+    { trait_type: 'Rims', value: attributes.Rims },
+    { trait_type: 'Type', value: attributes.Type },
+    { trait_type: 'Head', value: attributes.Head },
+    { trait_type: 'Face', value: attributes.Face },
+  ];
+
   let jsonAttributes = '';
-  attributes.forEach((attribute) => {
+  attributesList.forEach((attribute) => {
     jsonAttributes += `
     {
       "trait_type": "${attribute.trait_type}", 
@@ -68,18 +77,18 @@ const createJsonAttributes = (attributes) => {
   return jsonAttributes.slice(0, -1);
 };
 
-export const composeJSON = (name, image, attributes, collection) => {
+export const jsonContentCreate = (name, image, attributes, collection) => {
   const jsonAttributes = createJsonAttributes(attributes);
 
   let metadata = `{
-  "sip": 16,
-  "name": "${name}",
-  "image": "${image}",
-  "attributes": [${jsonAttributes}
-  ],
-  "properties": {    
-    "collection": "${collection}"
-  }
-}`;
+    "sip": 16,
+    "name": "${name}",
+    "image": "${image}",
+    "attributes": [${jsonAttributes}
+    ],
+    "properties": {    
+      "collection": "${collection}"
+    }
+  }`;
   return metadata;
 };

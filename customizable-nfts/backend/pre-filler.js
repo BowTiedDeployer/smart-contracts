@@ -12,7 +12,7 @@ export const mintDegen = async () => {
     contracts[network].degens.split('.')[0],
     contracts[network].degens.split('.')[1],
     'mint-uri',
-    [wallets.user.mocknet, 'https://stxnft.mypinata.cloud/ipfs/QmbX7UCSFLBvJa2yB4YxqZxhacrxiKUGbE6fHbQuYMhNhf']
+    [wallets.user[network], 'ipfs://bafkreid6tlh7unqztsbizijke3fu25aap2xg3ox5twzvndxaod2e5xon2m']
   );
 };
 
@@ -35,7 +35,7 @@ export const mintBackground = async () => {
     contracts[network].backgrounds.split('.')[0],
     contracts[network].backgrounds.split('.')[1],
     'mint-name',
-    [wallets.user.mocknet, 'DarkPurple']
+    [wallets.user[network], 'Sunset']
   );
 };
 
@@ -45,7 +45,7 @@ export const mintCar = async () => {
     contracts[network].cars.split('.')[0],
     contracts[network].cars.split('.')[1],
     'mint-name',
-    [wallets.user.mocknet, 'BentleyBlack']
+    [wallets.user[network], 'BentleyGrey']
   );
 };
 
@@ -55,7 +55,7 @@ export const mintHead = async () => {
     contracts[network].heads.split('.')[0],
     contracts[network].heads.split('.')[1],
     'mint-name',
-    [wallets.user.mocknet, 'Miami_Sword_Sunglasses']
+    [wallets.user[network], 'Miami_Party_Sunglasses']
   );
 };
 
@@ -65,7 +65,7 @@ export const mintRims = async () => {
     contracts[network].rims.split('.')[0],
     contracts[network].rims.split('.')[1],
     'mint-name',
-    [wallets.user.mocknet, 'ClassyDark']
+    [wallets.user[network], 'SportyPearlescent']
   );
 };
 
@@ -85,7 +85,7 @@ const addAssembleToQueue = async () => {
     contracts[network].customizable.split('.')[0],
     contracts[network].customizable.split('.')[1],
     'add-assemble-work-in-queue',
-    [1, 1, 1, 1]
+    [2, 2, 2, 2]
   );
 };
 
@@ -98,4 +98,9 @@ const addAssembleToQueue = async () => {
 // await mintRims();
 // await new Promise((r) => setTimeout(r, 2000));
 
-await addAssembleToQueue();
+// await addAssembleToQueue();
+
+// await mintDegen();
+// await new Promise((r) => setTimeout(r, 2000));
+
+await addDisassembleToQueue();

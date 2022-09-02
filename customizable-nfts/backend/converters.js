@@ -101,3 +101,7 @@ export const pinataToHTTPUrl = (pinataUrl) => {
   let httpUrl = 'https://stxnft.mypinata.cloud/' + pinataUrl.slice(0, 4) + pinataUrl.slice(6);
   return httpUrl;
 };
+
+export const hashToPinataUrl = (hash) => {
+  return 'ipfs://' + hash;
+};
