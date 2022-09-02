@@ -226,6 +226,7 @@ const mergeServerFlow = async () => {
     const imgHash = await uploadFlowImg(`imgDegen#${currDBId}`, imgContent);
     dbIncremendId(currDBId);
 
+    // todo: should pass attribute dictionary instead of list -> function jsonContentCreate
     const composedJSON = composeJSON(
       `imgDegen#${currDBId}`,
       `ipfs://${imgHash}`,
@@ -244,6 +245,7 @@ const mergeServerFlow = async () => {
     // -> mint them
     //(define-public (merge-finalize (degen-id uint) (member principal) (metadata-uri-dgn (string-ascii 99)))
 
+    // todo: should pass ipfs://jsonHash instead of jsonHash -> function hashToPinataUrl
     callSCFunctionWithNonce(
       networkN,
       contracts[network].customizable.split('.')[0],

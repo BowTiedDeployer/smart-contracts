@@ -17,12 +17,12 @@ const listOfTuplesResponseToList = (tupleResponse) => {
   let idLists = [];
   const tupleList = tupleResponse.value.value;
   tupleList.forEach((x) => {
-    idLists.push({ 
+    idLists.push({
       address: x.value.member.value,
       backgroundId: x.value['background-id'].value,
       carId: x.value['car-id'].value,
       rimId: x.value['rim-id'].value,
-      headId: x.value['head-id'].value
+      headId: x.value['head-id'].value,
     });
   });
   return idLists;
@@ -40,7 +40,6 @@ const getValuesFromQueueAssemble = async () => {
   );
   return listOfTuplesResponseToList(values);
 };
-
 
 const assembleServerFlow = async () => {
   // get values from queue
@@ -66,7 +65,7 @@ const assembleServerFlow = async () => {
         [tuple.backgroundId]
       )
     );
-    
+
     const urlJsonCar = await jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
@@ -88,7 +87,7 @@ const assembleServerFlow = async () => {
         [tuple.headId]
       )
     );
-    
+
     const urlJsonRims = await jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
@@ -104,11 +103,11 @@ const assembleServerFlow = async () => {
     const jsonBackground = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonBackground));
     const urlImgBackground = getImgUrlFromJson(jsonBackground);
     let attributeBackground = getAttributesMapTraitValue(jsonBackground);
-    
+
     const jsonCar = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonCar));
     const urlImgCar = getImgUrlFromJson(jsonCar);
     let attributeCar = getAttributesMapTraitValue(jsonCar);
-    
+
     const jsonHead = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonHead));
     // console.log('jsonHead: ', jsonHead);
     const urlImgHead = getImgUrlFromJson(jsonHead);
@@ -119,13 +118,18 @@ const assembleServerFlow = async () => {
     // console.log('urlImgRims', urlImgRims);
     let attributeRims = getAttributesMapTraitValue(jsonRims);
 
-    attributes = {...attributeBackground, ...attributeCar, ...attributeHead, ...attributeRims};
+    attributes = { ...attributeBackground, ...attributeCar, ...attributeHead, ...attributeRims };
 
     //convert Race -> Type
     attributes.Type = attributes.Race;
-    const {Race, ...otherAttributes} = attributes;
+    const { Race, ...otherAttributes } = attributes;
     attributes = otherAttributes;
-  
+
+    const currentDbId = await dbReadCurrentId();
+    const degenName = `BadDegen#${currentDbId}`;
+    const degenImgName = `BadImgDegen#${currentDbId}`;
+    const degenJsonName = `BadJsonDegen#${currentDbId}`;
+
     // create image from component img urls (background_url, rims_url, car_url, head_url)
     const degenImg = await imgContentCreate(
       pinataToHTTPUrl(urlImgBackground),
@@ -135,17 +139,14 @@ const assembleServerFlow = async () => {
     );
 
     // upload image and get hash
-    const currentDbId = await dbReadCurrentId();
-    const degenName = `BadDegen#${currentDbId}`;
-
-    const degenImgHash = await uploadFlowImg(degenName, degenImg);
+    const degenImgHash = await uploadFlowImg(degenImgName, degenImg);
 
     // create json with component attributes (name#id, img hash, attributes, collection("DegenNFT"))
     const degenJson = jsonContentCreate(degenName, hashToPinataUrl(degenImgHash), attributes, 'DegenNFT');
     // console.log(degenJson);
 
     // upload json and get hash
-    const degenJsonHash = await uploadFlowJson(degenName, degenJson);
+    const degenJsonHash = await uploadFlowJson(degenJsonName, degenJson);
     // console.log(degenJsonHash);
 
     // call assemble_finalize (member as address, json_hash as uri)
@@ -154,7 +155,7 @@ const assembleServerFlow = async () => {
       contracts[network].customizable.split('.')[0],
       contracts[network].customizable.split('.')[1],
       'assemble-finalize',
-      [tuple.address, degenJsonHash]
+      [tuple.address, hashToPinataUrl(degenImgHash)]
     );
 
     // increment id

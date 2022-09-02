@@ -15,19 +15,6 @@ export const fetchJsonFromUrl = async (jsonUrl) => {
   return fetch(jsonUrl).then((res) => res.json());
 };
 
-export const jsonContentCreate = (name, image, attributes, collection) => {
-  let attributesList = [
-    { trait_type: 'Background', value: attributes.Background },
-    { trait_type: 'Car', value: attributes.Car },
-    { trait_type: 'Rims', value: attributes.Rims },
-    { trait_type: 'Type', value: attributes.Type },
-    { trait_type: 'Head', value: attributes.Head },
-    { trait_type: 'Face', value: attributes.Face },
-  ];
-  // console.log('attributesList ', attributesList);
-  return composeJSON(name, image, attributesList, collection);
-};
-
 // export const createJson = () => {
 //   return `
 // {
@@ -68,8 +55,17 @@ export const jsonContentCreate = (name, image, attributes, collection) => {
 // };
 
 const createJsonAttributes = (attributes) => {
+  let attributesList = [
+    { trait_type: 'Background', value: attributes.Background },
+    { trait_type: 'Car', value: attributes.Car },
+    { trait_type: 'Rims', value: attributes.Rims },
+    { trait_type: 'Type', value: attributes.Type },
+    { trait_type: 'Head', value: attributes.Head },
+    { trait_type: 'Face', value: attributes.Face },
+  ];
+
   let jsonAttributes = '';
-  attributes.forEach((attribute) => {
+  attributesList.forEach((attribute) => {
     jsonAttributes += `
     {
       "trait_type": "${attribute.trait_type}", 
@@ -81,18 +77,18 @@ const createJsonAttributes = (attributes) => {
   return jsonAttributes.slice(0, -1);
 };
 
-export const composeJSON = (name, image, attributes, collection) => {
+export const jsonContentCreate = (name, image, attributes, collection) => {
   const jsonAttributes = createJsonAttributes(attributes);
 
   let metadata = `{
-  "sip": 16,
-  "name": "${name}",
-  "image": "${image}",
-  "attributes": [${jsonAttributes}
-  ],
-  "properties": {    
-    "collection": "${collection}"
-  }
-}`;
+    "sip": 16,
+    "name": "${name}",
+    "image": "${image}",
+    "attributes": [${jsonAttributes}
+    ],
+    "properties": {    
+      "collection": "${collection}"
+    }
+  }`;
   return metadata;
 };

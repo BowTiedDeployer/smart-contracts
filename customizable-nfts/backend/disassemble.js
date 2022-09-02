@@ -29,9 +29,10 @@ import {
   callSCFunction,
   callSCFunctionWithNonce,
   callSCFunctionWithNonceUser,
+  checkNonceUpdate,
 } from './helper_sc.js';
 import dotenv from 'dotenv';
-import { jsonResponseToTokenUri, stringToMap, intToHexString } from './converters.js';
+import { jsonResponseToTokenUri, stringToMap, intToHexString, pinataToHTTPUrl } from './converters.js';
 import { fetchJsonFromUrl, getAttributesMapTraitValue } from './helper_json.js';
 
 dotenv.config();
@@ -82,7 +83,11 @@ const disassembleServerFlow = async () => {
   let valueToDisassemble = await getValuesFromQueueDisassemble();
   for await (const x of valueToDisassemble) {
     // (await getValuesFromQueue()).forEach(async (x) => {
-    await new Promise((r) => setTimeout(r, 2000));
+    // verify available nonce
+    let availableNonce = await getAccountNonce(wallets.admin[network]);
+    let lastUsedNonce = availableNonce - 1;
+    checkNonceUpdate(1, availableNonce, lastUsedNonce);
+
     // get the token uri
     console.log('x', x);
     const urlNFT = await jsonResponseToTokenUri(
@@ -98,7 +103,7 @@ const disassembleServerFlow = async () => {
     console.log('y', x);
     console.log('urlNFT', urlNFT);
     // -> get the json
-    const jsonFetched = await fetchJsonFromUrl(urlNFT);
+    const jsonFetched = await fetchJsonFromUrl(pinataToHTTPUrl(urlNFT));
     console.log('abc');
     // -> get the attributes
     const attributes = getAttributesMapTraitValue(jsonFetched);
