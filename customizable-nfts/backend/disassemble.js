@@ -9,31 +9,21 @@
 // (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract disassemble-finalize u1 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "DarkPurple" "BentleyBlack" "ClassyCream" "Miami_Syringe_Cigar")
 // (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.body-kits get-token-uri u1)
 // (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.body-kits get-owner u1)
-import {
-  standardPrincipalCV,
-  cvToHex,
-  hexToCV,
-  cvToJSON,
-  PostConditionMode,
-  makeContractCall,
-  broadcastTransaction,
-  stringAsciiCV,
-} from '@stacks/transactions';
-import BigNum from 'bn.js';
+
 import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
-import { network, contracts, wallets } from './consts.js';
+import { network, contracts, wallets, operationType } from './consts.js';
 import {
   getAccountNonce,
-  getNormalizedFee,
   readOnlySCJsonResponse,
-  callSCFunction,
   callSCFunctionWithNonce,
-  callSCFunctionWithNonceUser,
-  checkNonceUpdate,
+  chainGetTxIdStatus,
+  sleep,
+  getTokenUri,
 } from './helper_sc.js';
 import dotenv from 'dotenv';
-import { jsonResponseToTokenUri, stringToMap, intToHexString, pinataToHTTPUrl } from './converters.js';
+import { jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
 import { fetchJsonFromUrl, getAttributesMapTraitValue } from './helper_json.js';
+import { dbGetTxId, dbUpdateTxId } from './helper_db.js';
 
 dotenv.config();
 
@@ -60,59 +50,82 @@ const getValuesFromQueueDisassemble = async () => {
     'get-disassemble-work-queue',
     []
   );
-  console.log(values.value.value);
+  // console.log(values.value.value);
   //return [];
   return listOfTuplesResponseToList(values);
 };
 
-// const urlNFT = await getTokenUriNFT(
-const urlNFT = jsonResponseToTokenUri(
-  await readOnlySCJsonResponse(
-    network,
-    wallets.user[network],
-    contracts[network].degens.split('.')[0],
-    contracts[network].degens.split('.')[1],
-    'get-token-uri',
-    [1]
-  )
-);
+const checkToStartFlow = async () => {
+  const txId = await dbGetTxId(operationType.disassemble); //readFromDB
+  // fetchJSONResponse(txId)
+  // general call
+  const status = await chainGetTxIdStatus(txId);
 
-// add in list values with pre-filler.js so this can be done
+  if (status === 'success') {
+    await disassembleServerFlow();
+    console.log('--------------flow can start-----------');
+  } else if (status === 'abort_by_response') {
+    // todo: alert if problem case happen (as long as the SC has stx it will not happen)
+    // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxx----------------------------aborted-----------xxxxxxx');
+    console.error(`error: failed tx ${txId} with status: ${status}`);
+  } else if (status === 'pending') {
+    // do nothing
+    console.log('----------pending----------');
+  } else {
+    console.error(`invalid status "${status}" txid: ${txId}`);
+  }
+};
+
 const disassembleServerFlow = async () => {
   // for every work queue element
   let valueToDisassemble = await getValuesFromQueueDisassemble();
-  for await (const x of valueToDisassemble) {
+  console.log(valueToDisassemble);
+  // maximum 25 transactions done in a block by the same account
+  let upperLimit = valueToDisassemble.length > 25 ? 25 : valueToDisassemble.length;
+  let availableNonce = await getAccountNonce(wallets.admin[network]);
+  let lastUsedNonce = availableNonce - 1;
+
+  async function checkNonceUpdate(checkIt = 1) {
+    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
+
+    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
+    else {
+      await sleep(checkIt * 1000);
+      availableNonce = await getAccountNonce(wallets.admin[network]);
+
+      return await checkNonceUpdate(++checkIt);
+    }
+  }
+
+  let lastTxId = null;
+  for (let i = 0; i < upperLimit; i++) {
     // (await getValuesFromQueue()).forEach(async (x) => {
     // verify available nonce
-    let availableNonce = await getAccountNonce(wallets.admin[network]);
-    let lastUsedNonce = availableNonce - 1;
-    checkNonceUpdate(1, availableNonce, lastUsedNonce);
+    await checkNonceUpdate();
 
+    const x = valueToDisassemble[i];
     // get the token uri
     console.log('x', x);
-    const urlNFT = await jsonResponseToTokenUri(
-      await readOnlySCJsonResponse(
-        network,
-        wallets.user[network],
-        contracts[network].degens.split('.')[0],
-        contracts[network].degens.split('.')[1],
-        'get-token-uri',
-        [x.id]
-      )
+    const urlNFT = await getTokenUri(
+      network,
+      wallets.user[network],
+      contracts[network].degens.split('.')[0],
+      contracts[network].degens.split('.')[1],
+      'get-token-uri',
+      [x.id]
     );
-    console.log('y', x);
+
     console.log('urlNFT', urlNFT);
     // -> get the json
     const jsonFetched = await fetchJsonFromUrl(pinataToHTTPUrl(urlNFT));
-    console.log('abc');
+
     // -> get the attributes
     const attributes = getAttributesMapTraitValue(jsonFetched);
     attributes.Type == 'Alien' ? (attributes.City = 'NYC') : (attributes.City = 'Miami');
 
     // -> mint them
     // (disassemble-finalize (token-id uint) (member principal) (background-name (string-ascii 30)) (body-name (string-ascii 30)) (rim-name (string-ascii 30)) (head-name (string-ascii 30)))
-
-    callSCFunctionWithNonce(
+    lastTxId = await callSCFunctionWithNonce(
       networkN,
       contracts[network].customizable.split('.')[0],
       contracts[network].customizable.split('.')[1],
@@ -127,6 +140,10 @@ const disassembleServerFlow = async () => {
       ]
     );
   }
+  console.log('lastTxId', lastTxId);
+
+  dbUpdateTxId('disassemble', lastTxId);
 };
 
-await disassembleServerFlow();
+// await disassembleServerFlow();
+await checkToStartFlow();

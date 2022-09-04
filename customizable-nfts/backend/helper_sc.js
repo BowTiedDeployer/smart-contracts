@@ -12,7 +12,7 @@ import { network, urlApis, wallets } from './consts.js';
 import { serializePayload } from '@stacks/transactions/dist/payload.js';
 import BigNum from 'bn.js';
 import axios from 'axios';
-import { convertArgsReadOnly, convertArgsSCCall, stringToMap } from './converters.js';
+import { convertArgsReadOnly, convertArgsSCCall, jsonResponseToTokenUri, stringToMap } from './converters.js';
 
 // helper functions
 export const maxStacksTxFee = 750000;
@@ -87,6 +87,7 @@ export async function callSCFunction(networkInstance, contractAddress, contractN
     transaction = await makeContractCall(txOptions);
     const tx = await broadcastTransaction(transaction, networkInstance);
     console.log(`${contractAddress}.${functionName} Admin SC public function call broadcasted tx: ${tx.txid}`);
+    return tx.txid.toString();
   } catch (error) {
     console.log(`${contractAddress}.${functionName} Admin SC public function call ERROR: ${error}`);
   }
@@ -124,8 +125,7 @@ export function readOnlySCJsonResponse(
 export async function callSCFunctionWithNonce(networkInstance, contractAddress, contractName, functionName, args) {
   try {
     const latestNonce = await getAccountNonce(wallets.admin[network]);
-    await callSCFunction(networkInstance, contractAddress, contractName, functionName, args, latestNonce);
-
+    return await callSCFunction(networkInstance, contractAddress, contractName, functionName, args, latestNonce);
     // await mintNameUrl(address, url, latestNonce);
   } catch (error) {
     console.log(error);
@@ -177,7 +177,7 @@ export function sleep(ms) {
 export async function checkNonceUpdate(checkIt = 1, availableNonce, lastUsedNonce) {
   if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
 
-  if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
+  if (availableNonce > lastUsedNonce) return { availableNonce, lastUsedNonce };
   else {
     await sleep(checkIt * 1000);
     availableNonce = await getAccountNonce(wallets.admin.wallet);
@@ -185,3 +185,18 @@ export async function checkNonceUpdate(checkIt = 1, availableNonce, lastUsedNonc
     return await checkNonceUpdate(++checkIt, availableNonce, lastUsedNonce);
   }
 }
+
+// tx_status: "success" | "pending" | "abort_by_response"
+// or "abort_by_post_conditions" - not the case
+export async function chainGetTxIdStatus(txId) {
+  const response = await fetch(`${urlApis.transaction(network, txId)}`);
+  const contract = await response.json();
+  let tx_status = contract['tx_status'];
+  return tx_status;
+}
+
+export const getTokenUri = async (network, wallet, contractAddress, contractName, contractFunction, args) => {
+  return await jsonResponseToTokenUri(
+    await readOnlySCJsonResponse(network, wallet, contractAddress, contractName, contractFunction, args)
+  );
+};

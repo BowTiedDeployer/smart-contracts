@@ -1,6 +1,13 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { contracts, network, wallets } from './consts.js';
-import { callSCFunctionWithNonce, callSCFunctionWithNonceUser, readOnlySCJsonResponse } from './helper_sc.js';
+import {
+  callSCFunctionWithNonce,
+  callSCFunctionWithNonceUser,
+  checkNonceUpdate,
+  getAccountNonce,
+  readOnlySCJsonResponse,
+  sleep,
+} from './helper_sc.js';
 
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
@@ -16,7 +23,22 @@ export const mintDegen = async () => {
   );
 };
 
-export const addDisassembleToQueue = async () => {
+const notWorkingMintNDegens = async (n) => {
+  let i = 0;
+  let availableNonce = await getAccountNonce(wallets.admin[network]);
+  let lastUsedNonce = availableNonce - 1;
+  while (i < n) {
+    const response = await checkNonceUpdate(1, availableNonce, lastUsedNonce);
+    availableNonce = response.availableNonce;
+    lastUsedNonce = response.lastUsedNonce;
+    console.log('availableNonce, lastUsedNonce', availableNonce, lastUsedNonce);
+    await mintDegen();
+    i++;
+    console.log('------------------------', i);
+  }
+};
+
+export const addDisassembleToQueue = async (degenId) => {
   // call add-work-disassemble
   // manual value
   await callSCFunctionWithNonceUser(
@@ -24,7 +46,7 @@ export const addDisassembleToQueue = async () => {
     contracts[network].customizable.split('.')[0],
     contracts[network].customizable.split('.')[1],
     'add-disassemble-work-in-queue',
-    [1]
+    [degenId]
   );
 };
 
@@ -69,23 +91,15 @@ export const mintRims = async () => {
   );
 };
 
-// callSCFunctionWithNonceUser(
-//   networkN,
-//   contracts[network].customizable.split('.')[0],
-//   contracts[network].customizable.split('.')[1],
-//   'add-disassemble-work-in-queue',
-//   [1]
-// );
-
-const addAssembleToQueue = async () => {
+//(background-id uint) (car-id uint) (rim-id uint) (head-id uint))
+export const addAssembleToQueue = async (backgroundId, carId, rimId, headId) => {
   // call add-work-assemble
-  // manual value
   await callSCFunctionWithNonceUser(
     networkN,
     contracts[network].customizable.split('.')[0],
     contracts[network].customizable.split('.')[1],
     'add-assemble-work-in-queue',
-    [2, 2, 2, 2]
+    [backgroundId, carId, rimId, headId]
   );
 };
 
@@ -103,4 +117,4 @@ const addAssembleToQueue = async () => {
 // await mintDegen();
 // await new Promise((r) => setTimeout(r, 2000));
 
-await addDisassembleToQueue();
+// await addDisassembleToQueue();
