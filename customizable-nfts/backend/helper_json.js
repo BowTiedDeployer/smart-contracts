@@ -7,7 +7,11 @@ export const getAttributesMapTraitValue = (json) => {
 };
 
 export const getImgUrlFromJson = (json) => {
-  return json.image;
+  return json.properties.image_component;
+};
+
+export const getGameTextureFromJson = (json) => {
+  return json.properties.game_texture;
 };
 
 export const fetchJsonFromUrl = async (jsonUrl) => {
@@ -77,7 +81,7 @@ const createJsonAttributes = (attributes) => {
   return jsonAttributes.slice(0, -1);
 };
 
-export const jsonContentCreate = (name, image, attributes, collection) => {
+export const jsonContentCreate = (name, image, imageComponent, imageInGame, attributes, collection) => {
   const jsonAttributes = createJsonAttributes(attributes);
 
   let metadata = `{
@@ -87,6 +91,8 @@ export const jsonContentCreate = (name, image, attributes, collection) => {
     "attributes": [${jsonAttributes}
     ],
     "properties": {    
+      "image_component": "${imageComponent}",
+      "image_in-game": "${imageInGame}",
       "collection": "${collection}"
     }
   }`;

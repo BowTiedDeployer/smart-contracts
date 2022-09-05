@@ -52,7 +52,9 @@ FE <-> SC <-> BE
   - background, rims & car direct the value
   - head has 3 attributes -> create head [Alien|Skull, head_attribute, face_attribute] - for json
 - create image (background_url, rims_url, car_url, head_url)
-- save image locally to ('generated-degens')
+- save the 2 images locally to ('generated-degens')
+  - from properties.image_component and from properties.game_texture
+  - the resulted image has image and properties.game_texture ( does not have propeties.image )
 - Pinata upload image and get hash
 - deployer: get id DB
 - create json (name#id, img hash, attributes, collection("DegenNFT"))
@@ -71,8 +73,9 @@ FE <-> SC <-> BE
   - get name-url ( string call read only - deployer )
   - fetch json
   - get image ( url )
-- create image (background_url, rims_url, car_url, head_url)
-- save image locally to ('generated-degens')
+- save the 2 images locally to ('generated-degens')
+  - from properties.image_component and from properties.game_texture (background_url, rims_url, car_url, head_url)
+  - the resulted image has image and properties.game_texture ( does not have propeties.image )
 - Pinata upload image and get hash
 - deployer: get id DB
 - create/update json (name#id, img hash, attributes, collection("DegenNFT"))
@@ -90,7 +93,9 @@ FE <-> SC <-> BE
   - call car/background/head/rims get-name-url
   - fetch json component
   - get image attribute
-- create new image (background_url, car_url, head_url, rims_url)
+- save the 2 images locally to ('generated-degens')
+  - from properties.image_component and from properties.game_texture (background_url, car_url, head_url, rims_url)
+  - the resulted image has image and properties.game_texture ( does not have propeties.image )
 - Pinata upload image and get hash
 - deployer: get id DB
 - create/update json (name#id, img hash, attributes, collection("DegenNFT"))

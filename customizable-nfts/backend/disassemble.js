@@ -21,7 +21,7 @@ import {
   getTokenUri,
 } from './helper_sc.js';
 import dotenv from 'dotenv';
-import { jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
+import { pinataToHTTPUrl } from './converters.js';
 import { fetchJsonFromUrl, getAttributesMapTraitValue } from './helper_json.js';
 import { dbGetTxId, dbUpdateTxId } from './helper_db.js';
 
