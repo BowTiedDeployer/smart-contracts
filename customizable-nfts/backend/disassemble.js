@@ -142,7 +142,7 @@ const disassembleServerFlow = async () => {
   }
   console.log('lastTxId', lastTxId);
 
-  dbUpdateTxId('disassemble', lastTxId);
+  dbUpdateTxId(operationType.disassemble, lastTxId);
 };
 
 // await disassembleServerFlow();

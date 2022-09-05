@@ -6,7 +6,11 @@ export const getAttributesMapTraitValue = (json) => {
   return attr;
 };
 
-export const getImgUrlFromJson = (json) => {
+export const getImageUrlFromJson = (json) => {
+  return json.image;
+};
+
+export const getImgComponentUrlFromJson = (json) => {
   return json.properties.image_component;
 };
 
@@ -81,8 +85,14 @@ const createJsonAttributes = (attributes) => {
   return jsonAttributes.slice(0, -1);
 };
 
+// degen - imageComponent == ""
+// rims, background - imageInGame == ""
 export const jsonContentCreate = (name, image, imageComponent, imageInGame, attributes, collection) => {
   const jsonAttributes = createJsonAttributes(attributes);
+
+  let properties = '';
+  if (imageComponent != '') properties += `  "image_component": "${imageComponent}",`;
+  if (imageInGame != '') properties += `  "image_game": "${imageInGame}",`;
 
   let metadata = `{
     "sip": 16,
@@ -90,9 +100,8 @@ export const jsonContentCreate = (name, image, imageComponent, imageInGame, attr
     "image": "${image}",
     "attributes": [${jsonAttributes}
     ],
-    "properties": {    
-      "image_component": "${imageComponent}",
-      "image_in-game": "${imageInGame}",
+    "properties": {
+      ${properties}
       "collection": "${collection}"
     }
   }`;

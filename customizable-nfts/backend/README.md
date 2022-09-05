@@ -53,8 +53,8 @@ FE <-> SC <-> BE
   - head has 3 attributes -> create head [Alien|Skull, head_attribute, face_attribute] - for json
 - create image (background_url, rims_url, car_url, head_url)
 - save the 2 images locally to ('generated-degens')
-  - from properties.image_component and from properties.game_texture
-  - the resulted image has image and properties.game_texture ( does not have propeties.image )
+  - from properties.image_component and from properties.image_game
+  - the resulted image has image and properties.image_game ( does not have propeties.image )
 - Pinata upload image and get hash
 - deployer: get id DB
 - create json (name#id, img hash, attributes, collection("DegenNFT"))
@@ -74,8 +74,8 @@ FE <-> SC <-> BE
   - fetch json
   - get image ( url )
 - save the 2 images locally to ('generated-degens')
-  - from properties.image_component and from properties.game_texture (background_url, rims_url, car_url, head_url)
-  - the resulted image has image and properties.game_texture ( does not have propeties.image )
+  - from properties.image_component and from properties.image_game (background_url, rims_url, car_url, head_url)
+  - the resulted image has image and properties.image_game ( does not have propeties.image )
 - Pinata upload image and get hash
 - deployer: get id DB
 - create/update json (name#id, img hash, attributes, collection("DegenNFT"))
@@ -94,8 +94,8 @@ FE <-> SC <-> BE
   - fetch json component
   - get image attribute
 - save the 2 images locally to ('generated-degens')
-  - from properties.image_component and from properties.game_texture (background_url, car_url, head_url, rims_url)
-  - the resulted image has image and properties.game_texture ( does not have propeties.image )
+  - from properties.image_component and from properties.image_game (background_url, car_url, head_url, rims_url)
+  - the resulted image has image and properties.image_game ( does not have propeties.image )
 - Pinata upload image and get hash
 - deployer: get id DB
 - create/update json (name#id, img hash, attributes, collection("DegenNFT"))
@@ -119,3 +119,29 @@ deployer
 db
 upload json
 convert old degen json to new json
+
+# Pinata Hashes
+
+### Background
+
+image-component: https://stxnft.mypinata.cloud/ipfs/QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria  
+image-in-game: 🚫  
+json: https://stxnft.mypinata.cloud/ipfs/Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP
+
+### Car
+
+image-component: https://stxnft.mypinata.cloud/ipfs/QmY6NmxfHYRvW4q2jvkUbYqJto6boQG8RScwUkuie3gbjD  
+image-in-game: ⚠️   
+json: https://stxnft.mypinata.cloud/ipfs/QmPL5NH6RbVQMxD98rr5xUPwH4Gy2qvHm6t5q1axyCGaNV
+
+### Rims
+
+image-component: https://stxnft.mypinata.cloud/ipfs/QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31  
+image-in-game: 🚫  
+json: https://stxnft.mypinata.cloud/ipfs/QmNcUDPbAcprADckejKLu7ucA8uhJvhtR1sFme4fHCQztX
+
+### Head
+
+image-component: https://stxnft.mypinata.cloud/ipfs/QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK  
+image-in-game: ⚠️  
+json: https://stxnft.mypinata.cloud/ipfs/QmY549kDdJDSR89yWLF3PrkoPjs1ZWboRMkaqmVmTVgsH7
