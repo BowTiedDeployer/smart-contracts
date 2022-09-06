@@ -22,7 +22,7 @@ export const dbReadCurrentId = async () => {
   }
 };
 
-console.log(await dbReadCurrentId());
+// console.log(await dbReadCurrentId());
 
 export const dbIncremendId = async (currId) => {
   try {
@@ -103,3 +103,15 @@ export const dbUpdateTxId = async (operation, txId) => {
 // console.log(operationType.disassemble, await dbGetTxId(operationType.disassemble));
 // console.log(operationType.merge, await dbGetTxId(operationType.merge));
 // console.log(operationType.swap, await dbGetTxId(operationType.swap));
+
+// let currentDbId = await dbReadCurrentId();
+// console.log('currentDbId', currentDbId);
+// await dbIncremendId(currentDbId);
+// currentDbId = await dbReadCurrentId();
+// console.log('currentDbId', currentDbId);
+
+// let txIdAssemble = await dbGetTxId(operationType.assemble);
+// console.log('txIdAssemble', txIdAssemble);
+// await dbUpdateTxId(operationType.assemble, '2assemble45432');
+// let txIdAssemble = await dbGetTxId(operationType.assemble);
+// console.log('txIdAssemble', txIdAssemble);
