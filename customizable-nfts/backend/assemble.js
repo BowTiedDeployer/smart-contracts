@@ -3,7 +3,7 @@ import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { contracts, network, wallets } from './consts.js';
 import { hashToPinataUrl, jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
 import { dbIncremendId, dbReadCurrentId } from './helper_db.js';
-import { imgContentCreate } from './helper_files.js';
+import { imgProfileContentCreate } from './helper_files.js';
 import { jsonContentCreate, fetchJsonFromUrl, getAttributesMapTraitValue, getImgUrlFromJson } from './helper_json.js';
 import { callSCFunctionWithNonce, checkNonceUpdate, getAccountNonce, readOnlySCJsonResponse } from './helper_sc.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
@@ -131,7 +131,7 @@ const assembleServerFlow = async () => {
     const degenJsonName = `BadJsonDegen#${currentDbId}`;
 
     // create image from component img urls (background_url, rims_url, car_url, head_url)
-    const degenImg = await imgContentCreate(
+    const degenImg = await imgProfileContentCreate(
       pinataToHTTPUrl(urlImgBackground),
       pinataToHTTPUrl(urlImgCar),
       pinataToHTTPUrl(urlImgHead),

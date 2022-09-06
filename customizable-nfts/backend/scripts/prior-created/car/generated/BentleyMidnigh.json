@@ -1,0 +1,16 @@
+{
+    "sip": 16,
+    "name": "BentleyMidnigh",
+    "image": "ipfs://QmY6NmxfHYRvW4q2jvkUbYqJto6boQG8RScwUkuie3gbjD/BentleyMidnigh.png",
+    "attributes": [
+    {
+      "trait_type": "Car", 
+      "value": "BentleyMidnigh"
+    }
+    ],
+    "properties": {
+      "image_component": "ipfs://QmY6NmxfHYRvW4q2jvkUbYqJto6boQG8RScwUkuie3gbjD/BentleyMidnigh.png",
+      "image_game": "ipfs://QmXivFXDKXgnECXN7ckPf8KHXn6mogvHwLsdT1rAfCCU72/BentleyMidnigh.png",
+      "collection": "DegenCars"
+    }
+  }

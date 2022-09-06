@@ -5,8 +5,6 @@ import {
   callSCFunctionWithNonceUser,
   checkNonceUpdate,
   getAccountNonce,
-  readOnlySCJsonResponse,
-  sleep,
 } from './helper_sc.js';
 
 let networkN =
@@ -20,6 +18,26 @@ export const mintDegen = async () => {
     contracts[network].degens.split('.')[1],
     'mint-uri',
     [wallets.user[network], 'ipfs://bafkreid6tlh7unqztsbizijke3fu25aap2xg3ox5twzvndxaod2e5xon2m']
+  );
+};
+
+export const mintMiamiDegen = async () => {
+  await callSCFunctionWithNonce(
+    networkN,
+    contracts[network].degens.split('.')[0],
+    contracts[network].degens.split('.')[1],
+    'mint',
+    [wallets.user[network]]
+  );
+};
+
+export const mintNYCDegen = async () => {
+  await callSCFunctionWithNonce(
+    networkN,
+    contracts[network].degens.split('.')[0],
+    contracts[network].degens.split('.')[1],
+    'mint',
+    [wallets.user[network]]
   );
 };
 

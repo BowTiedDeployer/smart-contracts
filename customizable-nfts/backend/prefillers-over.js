@@ -1,7 +1,6 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { network, wallets } from './consts.js';
-import { sleep } from './helper_sc.js';
-import { getAccountNonce } from './helper_sc.js';
+import { sleep, getAccountNonce } from './helper_sc.js';
 import {
   addAssembleToQueue,
   addDisassembleToQueue,

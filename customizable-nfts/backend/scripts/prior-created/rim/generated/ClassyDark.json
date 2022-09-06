@@ -1,0 +1,15 @@
+{
+    "sip": 16,
+    "name": "ClassyDark",
+    "image": "ipfs://QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31/ClassyDark.png",
+    "attributes": [
+    {
+      "trait_type": "Rims", 
+      "value": "ClassyDark"
+    }
+    ],
+    "properties": {
+      "image_component": "ipfs://QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31/ClassyDark.png",
+      "collection": "DegenRims"
+    }
+  }

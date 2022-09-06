@@ -1,0 +1,15 @@
+{
+    "sip": 16,
+    "name": "ClassyWhite",
+    "image": "ipfs://QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31/ClassyWhite.png",
+    "attributes": [
+    {
+      "trait_type": "Rims", 
+      "value": "ClassyWhite"
+    }
+    ],
+    "properties": {
+      "image_component": "ipfs://QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31/ClassyWhite.png",
+      "collection": "DegenRims"
+    }
+  }
