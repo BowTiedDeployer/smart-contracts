@@ -133,9 +133,12 @@ export const addNDisassembleToQueue = async (start, n) => {
 
 // has to be less than 25 transactions by same account into a block
 
-// await mintNComponentSets(4);
-await addNAssembleToQueue(1, 5);
+// await mintNComponentSets(2);
+// await addNAssembleToQueue(1, 5);
 
 // there is a limit of 5 disassembles from same user
-// await mintNDegens(5);
-// await addNDisassembleToQueue(21, 5);
+// await mintNDegens(1);
+// await addNDisassembleToQueue(2, 0);
+
+// await mintComponentSet();
+await addNAssembleToQueue(4, 1);

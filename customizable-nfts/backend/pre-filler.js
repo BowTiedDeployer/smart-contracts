@@ -112,7 +112,7 @@ export const addAssembleToQueue = async (backgroundId, carId, rimId, headId) => 
 // await mintRims();
 // await new Promise((r) => setTimeout(r, 2000));
 
-// await addAssembleToQueue();
+// await addAssembleToQueue(1, 1, 1, 1);
 
 // await mintDegen();
 // await new Promise((r) => setTimeout(r, 2000));

@@ -1,11 +1,25 @@
 // Assemble:
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
-import { contracts, network, wallets } from './consts.js';
+import { contracts, network, operationType, wallets } from './consts.js';
 import { hashToPinataUrl, jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
-import { dbIncremendId, dbReadCurrentId } from './helper_db.js';
-import { imgContentCreate } from './helper_files.js';
-import { jsonContentCreate, fetchJsonFromUrl, getAttributesMapTraitValue, getImgUrlFromJson } from './helper_json.js';
-import { callSCFunctionWithNonce, checkNonceUpdate, getAccountNonce, readOnlySCJsonResponse } from './helper_sc.js';
+import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateTxId } from './helper_db.js';
+import { imgInGameContentCreate, imgProfileContentCreate } from './helper_files.js';
+import {
+  jsonContentCreate,
+  fetchJsonFromUrl,
+  getAttributesMapTraitValue,
+  getImageUrlFromJson,
+  getImgGameUrlFromJson,
+  getImgComponentUrlFromJson,
+} from './helper_json.js';
+import {
+  callSCFunctionWithNonce,
+  chainGetTxIdStatus,
+  checkNonceUpdate,
+  getAccountNonce,
+  readOnlySCJsonResponse,
+  sleep,
+} from './helper_sc.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
 
 // - needs nft id fetched from nfts owned combined with the nft metadata - gets it from the queue
@@ -46,12 +60,29 @@ const assembleServerFlow = async () => {
   let valuesToAssemble = await getValuesFromQueueAssemble();
   // console.log(valuesToAssemble);
 
-  for await (const tuple of valuesToAssemble) {
-    // verify available nonce
-    let availableNonce = await getAccountNonce(wallets.admin[network]);
-    let lastUsedNonce = availableNonce - 1;
-    checkNonceUpdate(1, availableNonce, lastUsedNonce);
+  // maximum 25 transactions done in a block by the same account
+  let upperLimit = valuesToAssemble.length > 25 ? 25 : valuesToAssemble.length;
+  let availableNonce = await getAccountNonce(wallets.admin[network]);
+  let lastUsedNonce = availableNonce - 1;
 
+  async function checkNonceUpdate(checkIt = 1) {
+    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
+
+    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
+    else {
+      await sleep(checkIt * 1000);
+      availableNonce = await getAccountNonce(wallets.admin[network]);
+
+      return await checkNonceUpdate(++checkIt);
+    }
+  }
+
+  let lastTxId = null;
+  for (let i = 0; i < upperLimit; i++) {
+    // verify available nonce
+    await checkNonceUpdate();
+
+    const tuple = valuesToAssemble[i];
     let attributes = {};
 
     // take jsons (background, rims, car, head - type: alien/skull, face, head)
@@ -101,66 +132,107 @@ const assembleServerFlow = async () => {
 
     // get the attribute value & imgUrl from each json
     const jsonBackground = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonBackground));
-    const urlImgBackground = getImgUrlFromJson(jsonBackground);
+    const urlImgBackground = getImageUrlFromJson(jsonBackground);
+    // const urlImgComponentBackground = getImgComponentUrlFromJson(jsonBackground);
     let attributeBackground = getAttributesMapTraitValue(jsonBackground);
 
     const jsonCar = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonCar));
-    const urlImgCar = getImgUrlFromJson(jsonCar);
+    const urlImgCar = getImageUrlFromJson(jsonCar);
+    // const urlImgGameCar = getImgGameUrlFromJson(jsonCar);
+    // const urlImgComponentCar = getImgComponentUrlFromJson(jsonCar);
     let attributeCar = getAttributesMapTraitValue(jsonCar);
 
     const jsonHead = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonHead));
     // console.log('jsonHead: ', jsonHead);
-    const urlImgHead = getImgUrlFromJson(jsonHead);
+    const urlImgHead = getImageUrlFromJson(jsonHead);
+    // const urlImgGameHead = getImgGameUrlFromJson(jsonHead);
+    // const urlImgComponentHead = getImgComponentUrlFromJson(jsonHead);
     let attributeHead = getAttributesMapTraitValue(jsonHead);
 
     const jsonRims = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonRims));
-    const urlImgRims = getImgUrlFromJson(jsonRims);
+    const urlImgRims = getImageUrlFromJson(jsonRims);
+    // const urlImgComponentRims = getImgComponentUrlFromJson(jsonRims);
     // console.log('urlImgRims', urlImgRims);
     let attributeRims = getAttributesMapTraitValue(jsonRims);
 
     attributes = { ...attributeBackground, ...attributeCar, ...attributeHead, ...attributeRims };
 
     //convert Race -> Type
-    attributes.Type = attributes.Race;
+    attributes = { ...attributes, Type: attributes.Race };
     const { Race, ...otherAttributes } = attributes;
     attributes = otherAttributes;
+    console.log('attributes', attributes);
 
     const currentDbId = await dbReadCurrentId();
     const degenName = `BadDegen#${currentDbId}`;
     const degenImgName = `BadImgDegen#${currentDbId}`;
+    // const degenImgGameName = `BadImgGameDegen#${currentDbId}`;
     const degenJsonName = `BadJsonDegen#${currentDbId}`;
 
     // create image from component img urls (background_url, rims_url, car_url, head_url)
-    const degenImg = await imgContentCreate(
+    const degenImg = await imgProfileContentCreate(
       pinataToHTTPUrl(urlImgBackground),
       pinataToHTTPUrl(urlImgCar),
       pinataToHTTPUrl(urlImgHead),
       pinataToHTTPUrl(urlImgRims)
     );
 
+    // const degenImgGame = await imgInGameContentCreate(
+    //   pinataToHTTPUrl(urlImgGameCar),
+    //   pinataToHTTPUrl(urlImgGameHead)
+    // );
+
     // upload image and get hash
     const degenImgHash = await uploadFlowImg(degenImgName, degenImg);
+    // const degenImgGameHash = await uploadFlowImg(degenImgGameName, degenImgName);
 
     // create json with component attributes (name#id, img hash, attributes, collection("DegenNFT"))
-    const degenJson = jsonContentCreate(degenName, hashToPinataUrl(degenImgHash), attributes, 'DegenNFT');
+    const degenJson = jsonContentCreate(degenName, hashToPinataUrl(degenImgHash), '', '', attributes, 'DegenNFT');
+    // const degenJson = jsonContentCreate(degenName, hashToPinataUrl(degenImgHash), '', hashToPinataUrl(degenImgGameHash), attributes, 'DegenNFT');
     // console.log(degenJson);
 
     // upload json and get hash
     const degenJsonHash = await uploadFlowJson(degenJsonName, degenJson);
-    // console.log(degenJsonHash);
+    console.log('jsonHash', degenJsonHash);
 
     // call assemble_finalize (member as address, json_hash as uri)
-    callSCFunctionWithNonce(
+    lastTxId = await callSCFunctionWithNonce(
       networkN,
       contracts[network].customizable.split('.')[0],
       contracts[network].customizable.split('.')[1],
       'assemble-finalize',
-      [tuple.address, hashToPinataUrl(degenImgHash)]
+      [tuple.address, hashToPinataUrl(degenJsonHash)]
     );
 
     // increment id
-    dbIncremendId(currentDbId);
+    await dbIncremendId(currentDbId);
+
+    console.log('lastTxId', lastTxId);
+    await dbUpdateTxId(operationType.assemble, lastTxId);
   }
 };
 
-await assembleServerFlow();
+const checkToStartFlow = async () => {
+  const txId = await dbGetTxId(operationType.assemble); //readFromDB
+  // fetchJSONResponse(txId)
+  // general call
+  const status = await chainGetTxIdStatus(txId);
+
+  if (status === 'success') {
+    console.log('--------------flow can start-----------');
+    await assembleServerFlow();
+  } else if (status === 'abort_by_response') {
+    // todo: alert if problem case happen (as long as the SC has stx it will not happen)
+    // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxx----------------------------aborted-----------xxxxxxx');
+    console.error(`error: failed tx ${txId} with status: ${status}`);
+  } else if (status === 'pending') {
+    // do nothing
+    console.log('----------pending----------');
+  } else {
+    console.error(`invalid status "${status}" txid: ${txId}`);
+  }
+};
+
+await checkToStartFlow();
+
+// await assembleServerFlow();

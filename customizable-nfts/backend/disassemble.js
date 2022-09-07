@@ -62,8 +62,8 @@ const checkToStartFlow = async () => {
   const status = await chainGetTxIdStatus(txId);
 
   if (status === 'success') {
-    await disassembleServerFlow();
     console.log('--------------flow can start-----------');
+    await disassembleServerFlow();
   } else if (status === 'abort_by_response') {
     // todo: alert if problem case happen (as long as the SC has stx it will not happen)
     // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxx----------------------------aborted-----------xxxxxxx');
@@ -142,7 +142,7 @@ const disassembleServerFlow = async () => {
   }
   console.log('lastTxId', lastTxId);
 
-  dbUpdateTxId(operationType.disassemble, lastTxId);
+  await dbUpdateTxId(operationType.disassemble, lastTxId);
 };
 
 // await disassembleServerFlow();
