@@ -122,26 +122,30 @@ convert old degen json to new json
 
 # Pinata Hashes
 
-### Background
+### Background ✅
 
+marketplace: https://stxnft.mypinata.cloud/ipfs/QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria  
 image-component: https://stxnft.mypinata.cloud/ipfs/QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria  
 image-in-game: 🚫  
-json: https://stxnft.mypinata.cloud/ipfs/Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP
+json: https://stxnft.mypinata.cloud/ipfs/QmXtbVRd3iqL46arTjnNHS9c8W68zrUUYTpMc1dDrj82iL
 
 ### Car
 
+marketplace: [old]
 image-component: https://stxnft.mypinata.cloud/ipfs/QmY6NmxfHYRvW4q2jvkUbYqJto6boQG8RScwUkuie3gbjD  
-image-in-game: ⚠️   
-json: https://stxnft.mypinata.cloud/ipfs/QmPL5NH6RbVQMxD98rr5xUPwH4Gy2qvHm6t5q1axyCGaNV
+image-in-game: https://stxnft.mypinata.cloud/ipfs/QmXivFXDKXgnECXN7ckPf8KHXn6mogvHwLsdT1rAfCCU72  
+json: [old] https://stxnft.mypinata.cloud/ipfs/QmPL5NH6RbVQMxD98rr5xUPwH4Gy2qvHm6t5q1axyCGaNV
 
 ### Rims
 
+marketplace: [old]
 image-component: https://stxnft.mypinata.cloud/ipfs/QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31  
 image-in-game: 🚫  
-json: https://stxnft.mypinata.cloud/ipfs/QmNcUDPbAcprADckejKLu7ucA8uhJvhtR1sFme4fHCQztX
+json: [old] https://stxnft.mypinata.cloud/ipfs/QmNcUDPbAcprADckejKLu7ucA8uhJvhtR1sFme4fHCQztX
 
 ### Head
 
+marketplace: [old]  
 image-component: https://stxnft.mypinata.cloud/ipfs/QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK  
 image-in-game: ⚠️  
-json: https://stxnft.mypinata.cloud/ipfs/QmY549kDdJDSR89yWLF3PrkoPjs1ZWboRMkaqmVmTVgsH7
+json: [old] https://stxnft.mypinata.cloud/ipfs/QmY549kDdJDSR89yWLF3PrkoPjs1ZWboRMkaqmVmTVgsH7
