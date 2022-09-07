@@ -28,6 +28,7 @@
 (map-set name-url  {name: "BentleyGold"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/BentleyGold.json"})
 (map-set name-url  {name: "BentleyGrey"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/BentleyGrey.json"})
 (map-set name-url  {name: "BentleyMidnigh"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/BentleyMidnigh.json"})
+(map-set name-url  {name: "BentleyPurple"} {url: "ipfs://QmPL5NH6RbVQMxD98rr5xUPwH4Gy2qvHm6t5q1axyCGaNV/BentleyPurple.json"})
 (map-set name-url  {name: "BentleyWhite"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/BentleyWhite.json"})
 (map-set name-url  {name: "LamboBlue"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/LamboBlue.json"})
 (map-set name-url  {name: "LamboEmerald"} {url: "ipfs://QmQS3yUWMQUvKhd6HUNHroQniW8KWC26yHaNcJAErFRD5B/LamboEmerald.json"})

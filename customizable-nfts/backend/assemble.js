@@ -218,7 +218,7 @@ const checkToStartFlow = async () => {
   // general call
   const status = await chainGetTxIdStatus(txId);
 
-  if (status === 'success') {
+  if (status === 'success' || txId !== undefined) {
     console.log('--------------flow can start-----------');
     await assembleServerFlow();
   } else if (status === 'abort_by_response') {
