@@ -55,3 +55,22 @@ export const operationType = {
   disassemble: 'disassemble',
   swap: 'swap',
 };
+
+export const componentType = {
+  background: {
+    contract: contracts[network].backgrounds,
+    type: 'background',
+  },
+  car: {
+    contract: contracts[network].cars,
+    type: 'car',
+  },
+  head: {
+    contract: contracts[network].heads,
+    type: 'head',
+  },
+  rims: {
+    contract: contracts[network].rims,
+    type: 'rims',
+  },
+};
