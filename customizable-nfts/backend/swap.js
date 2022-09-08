@@ -1,6 +1,6 @@
 // Assemble:
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
-import { contracts, network, operationType, wallets } from './consts.js';
+import { componentType, contracts, network, operationType, wallets } from './consts.js';
 import { hashToPinataUrl, jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
 import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateTxId } from './helper_db.js';
 import { imgInGameContentCreate, imgProfileContentCreate } from './helper_files.js';
@@ -17,6 +17,7 @@ import {
   chainGetTxIdStatus,
   checkNonceUpdate,
   getAccountNonce,
+  getTokenUri,
   readOnlySCJsonResponse,
   sleep,
 } from './helper_sc.js';
@@ -57,7 +58,6 @@ const getValuesFromQueueSwap = async () => {
 const swapServerFlow = async () => {
   // get values from queue
   let valuesToSwap = await getValuesFromQueueSwap();
-  console.log(valuesToSwap);
 
   // maximum 25 transactions done in a block by the same account
   let upperLimit = valuesToSwap.length > 25 ? 25 : valuesToSwap.length;
@@ -82,12 +82,73 @@ const swapServerFlow = async () => {
     await checkNonceUpdate();
 
     const tuple = valuesToSwap[i];
-    console.log('tuple', tuple);
     let attributes = {};
 
-    // take jsons (background, rims, car, head - type: alien/skull, face, head)
+    let swapComponent =
+      tuple.componentType === 'background-type'
+        ? componentType['background'].type
+        : tuple.componentType === 'car-type'
+        ? componentType['car'].type
+        : tuple.componentType === 'head-type'
+        ? componentType['head'].type
+        : componentType['rims'].type;
 
-    // get the attribute value & imgUrl from each json
+    // take jsons (degen, component)
+    const urlJsonDegen = await getTokenUri(
+      network,
+      wallets.user[network],
+      contracts[network].degens.split('.')[0],
+      contracts[network].degens.split('.')[1],
+      'get-token-uri',
+      [tuple.degenId]
+    );
+    const jsonDegen = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonDegen));
+
+    const urlJsonComponent = await getTokenUri(
+      network,
+      wallets.user[network],
+      componentType[swapComponent].contract.split('.')[0],
+      componentType[swapComponent].contract.split('.')[1],
+      'get-token-uri',
+      [tuple.componentId]
+    );
+    const jsonComponent = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonComponent));
+
+    // take all attributes from Degen json ( old + the new overwritten one )
+    attributes = getAttributesMapTraitValue(jsonDegen);
+
+    // get attributes from the component, the name-url and imgUrl
+    let componentAttributes = getAttributesMapTraitValue(jsonComponent);
+    console.log('componentAttributes', componentAttributes);
+
+    let oldComponentName = '';
+    switch (swapComponent) {
+      case componentType['background'].type:
+        oldComponentName = attributes.Background;
+        attributes.Background = componentAttributes.Background;
+        break;
+      case componentType['car'].type:
+        oldComponentName = attributes.Car;
+        attributes.Car = componentAttributes.Car;
+        break;
+      case componentType['head'].type:
+        let attributeCity = attributes.Type == 'Alien' ? 'NYC' : 'Skull' ? 'Miami' : '';
+        oldComponentName = `${attributeCity}_${attributes.Head}_${attributes.Face}`;
+        attributes.Type = componentAttributes.Race;
+        attributes.Head = componentAttributes.Head;
+        attributes.Face = componentAttributes.Face;
+        break;
+      case componentType['rims'].type:
+        oldComponentName = attributes.Rims;
+        attributes.Rims = componentAttributes.Rims;
+        break;
+      default:
+        break;
+    }
+    // console.log('oldComponentName', oldComponentName);
+    // console.log('attributes', attributes);
+
+    // for each attribute get name-url, fetch json, get imgUrl
 
     // create image from component img urls (background_url, rims_url, car_url, head_url)
 
@@ -97,7 +158,7 @@ const swapServerFlow = async () => {
 
     // upload json and get hash
 
-    // call assemble_finalize (member as address, json_hash as uri)
+    // call assemble_finalize (member as address, json_hash as uri, old component-name, component-type)
 
     // increment id
   }
