@@ -1,16 +1,16 @@
 {
-    "sip": 16,
-    "name": "LamboGold",
-    "image": "ipfs://QmY6NmxfHYRvW4q2jvkUbYqJto6boQG8RScwUkuie3gbjD/LamboGold.png",
-    "attributes": [
+  "sip": 16,
+  "name": "LamboGold",
+  "image": "ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/LamboGold.png",
+  "attributes": [
     {
       "trait_type": "Car", 
       "value": "LamboGold"
     }
-    ],
-    "properties": {
-      "image_component": "ipfs://QmY6NmxfHYRvW4q2jvkUbYqJto6boQG8RScwUkuie3gbjD/LamboGold.png",
-      "image_game": "ipfs://QmXivFXDKXgnECXN7ckPf8KHXn6mogvHwLsdT1rAfCCU72/LamboGold.png",
-      "collection": "DegenCars"
-    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmeCL653FLxAfdT8wGkHxhwHSdEfPBH4WF8h9Hz6XDbi4u/LamboGold.png",
+    "image_game": "ipfs://QmXivFXDKXgnECXN7ckPf8KHXn6mogvHwLsdT1rAfCCU72/LamboGold.png",
+    "collection": "DegenCars"
   }
+}

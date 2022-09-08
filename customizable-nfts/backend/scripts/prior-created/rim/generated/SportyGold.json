@@ -1,15 +1,15 @@
 {
-    "sip": 16,
-    "name": "SportyGold",
-    "image": "ipfs://QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31/SportyGold.png",
-    "attributes": [
+  "sip": 16,
+  "name": "SportyGold",
+  "image": "ipfs://QmUAeq2AoLPPednjPxmZzstG3yDHR7fqs7mK3q8oQg2qRV/SportyGold.png",
+  "attributes": [
     {
       "trait_type": "Rims", 
       "value": "SportyGold"
     }
-    ],
-    "properties": {
-      "image_component": "ipfs://QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31/SportyGold.png",
+  ],
+  "properties": {
+    "image_component": "ipfs://QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31/SportyGold.png",
       "collection": "DegenRims"
-    }
   }
+}

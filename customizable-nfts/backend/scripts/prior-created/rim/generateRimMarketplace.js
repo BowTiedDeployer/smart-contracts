@@ -12,9 +12,9 @@ async function generateRim(rim) {
   console.log(rimPath);
 
   // x: -124, y: -455
-  const img = await mergeImages([{ src: rimPath, x: -74, y: -400 }], {
-    width: 240,
-    height: 240,
+  const img = await mergeImages([{ src: rimPath, x: -99, y: -419 }], {
+    width: 180,
+    height: 180,
     Canvas: Canvas,
     Image: Image,
   }).then((b64) => {
@@ -28,7 +28,7 @@ async function generateRim(rim) {
   });
 }
 
-// Goes through all NYC heads and faces
+// Goes through all rims
 fs.readdir(rims, (err, rims) => {
   rims.forEach((rim) => {
     generateRim(rim);
