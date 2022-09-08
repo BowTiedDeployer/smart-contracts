@@ -135,10 +135,10 @@ export const mintComponentSet = async () => {
     }
   }
 
-  const backgroundName = 'Sunset';
-  const carName = 'BentleyGrey';
-  const rimsName = 'SportyPearlescent';
-  const headName = 'Miami_Party_Sunglasses';
+  const backgroundName = 'Emerald';
+  const carName = 'LamboBlue';
+  const rimsName = 'ClassyGold';
+  const headName = 'NYC_OpenMinded_Lips';
 
   await checkNonceUpdate();
   await mintBackground(backgroundName);
@@ -230,5 +230,7 @@ export const addNDisassembleToQueue = async (start, n) => {
 
 // await mintComponentSet();
 
+// await mintDegen('ipfs://bafkreidezqputo6mzxgiqivj52vctrugiflckkwfoyj6cdjhiege2s7jma');
 // await mintCar('LamboBlue');
-await addSwapToQueue(1, 8, 'car-type');
+// await mintComponentSet();
+await addSwapToQueue(7, 3, 'background-type');

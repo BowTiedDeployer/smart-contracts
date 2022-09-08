@@ -119,7 +119,9 @@
 )
 
 (define-read-only (get-name-url (name (string-ascii 30)))
-  (map-get? name-url {name: name})
+  (let ((token-urr (get url (map-get? name-url {name: name})))) 
+    (ok token-urr)
+  )
 )
 
 (define-public (set-name-url (name (string-ascii 30)) (url (string-ascii 30))) 

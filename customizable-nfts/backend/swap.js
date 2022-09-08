@@ -119,7 +119,7 @@ const swapServerFlow = async () => {
 
     // get attributes from the component, the name-url and imgUrl
     let componentAttributes = getAttributesMapTraitValue(jsonComponent);
-    console.log('componentAttributes', componentAttributes);
+    // console.log('componentAttributes', componentAttributes);
 
     let oldComponentName = '';
     switch (swapComponent) {
@@ -149,23 +149,123 @@ const swapServerFlow = async () => {
     // console.log('attributes', attributes);
 
     // for each attribute get name-url, fetch json, get imgUrl
+    const urlJsonBackground = await jsonResponseToTokenUri(
+      await readOnlySCJsonResponse(
+        network,
+        wallets.user[network],
+        contracts[network].backgrounds.split('.')[0],
+        contracts[network].backgrounds.split('.')[1],
+        'get-name-url',
+        [attributes.Background]
+      )
+    );
+
+    const urlJsonCar = await jsonResponseToTokenUri(
+      await readOnlySCJsonResponse(
+        network,
+        wallets.user[network],
+        contracts[network].cars.split('.')[0],
+        contracts[network].cars.split('.')[1],
+        'get-name-url',
+        [attributes.Car]
+      )
+    );
+
+    let attributeCity = attributes.Type == 'Alien' ? 'NYC' : 'Skull' ? 'Miami' : '';
+    const urlJsonHead = await jsonResponseToTokenUri(
+      await readOnlySCJsonResponse(
+        network,
+        wallets.user[network],
+        contracts[network].heads.split('.')[0],
+        contracts[network].heads.split('.')[1],
+        'get-name-url',
+        [`${attributeCity}_${attributes.Head}_${attributes.Face}`]
+      )
+    );
+
+    const urlJsonRims = await jsonResponseToTokenUri(
+      await readOnlySCJsonResponse(
+        network,
+        wallets.user[network],
+        contracts[network].rims.split('.')[0],
+        contracts[network].rims.split('.')[1],
+        'get-name-url',
+        [attributes.Rims]
+      )
+    );
+
+    const jsonBackground = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonBackground));
+    const urlImgBackground = getImageUrlFromJson(jsonBackground);
+    // const urlImgComponentBackground = getImgComponentUrlFromJson(jsonBackground);
+
+    const jsonCar = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonCar));
+    const urlImgCar = getImageUrlFromJson(jsonCar);
+    // const urlImgGameCar = getImgGameUrlFromJson(jsonCar);
+    // const urlImgComponentCar = getImgComponentUrlFromJson(jsonCar);
+
+    const jsonHead = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonHead));
+    // console.log('jsonHead: ', jsonHead);
+    const urlImgHead = getImageUrlFromJson(jsonHead);
+    // const urlImgGameHead = getImgGameUrlFromJson(jsonHead);
+    // const urlImgComponentHead = getImgComponentUrlFromJson(jsonHead);
+
+    const jsonRims = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonRims));
+    const urlImgRims = getImageUrlFromJson(jsonRims);
+    // const urlImgComponentRims = getImgComponentUrlFromJson(jsonRims);
+    // console.log('urlImgRims', urlImgRims);
+
+    const currentDbId = await dbReadCurrentId();
+    const degenName = `BadDegen#${currentDbId}`;
+    const degenImgName = `BadImgDegen#${currentDbId}`;
+    // const degenImgGameName = `BadImgGameDegen#${currentDbId}`;
+    const degenJsonName = `BadJsonDegen#${currentDbId}`;
 
     // create image from component img urls (background_url, rims_url, car_url, head_url)
+    const degenImg = await imgProfileContentCreate(
+      pinataToHTTPUrl(urlImgBackground),
+      pinataToHTTPUrl(urlImgCar),
+      pinataToHTTPUrl(urlImgHead),
+      pinataToHTTPUrl(urlImgRims)
+    );
+
+    // const degenImgGame = await imgInGameContentCreate(
+    //   pinataToHTTPUrl(urlImgGameCar),
+    //   pinataToHTTPUrl(urlImgGameHead)
+    // );
 
     // upload image and get hash
+    const degenImgHash = await uploadFlowImg(degenImgName, degenImg);
+    // const degenImgGameHash = await uploadFlowImg(degenImgGameName, degenImgName);
 
     // create json with component attributes (name#id, img hash, attributes, collection("DegenNFT"))
+    const degenJson = jsonContentCreate(degenName, hashToPinataUrl(degenImgHash), '', '', attributes, 'DegenNFT');
+    // const degenJson = jsonContentCreate(degenName, hashToPinataUrl(degenImgHash), '', hashToPinataUrl(degenImgGameHash), attributes, 'DegenNFT');
+    // console.log(degenJson);
 
     // upload json and get hash
+    // todo: check before production - case upload json 0 bytes
+    const degenJsonHash = await uploadFlowJson(degenJsonName, degenJson);
+    console.log('jsonHash', degenJsonHash);
 
     // call assemble_finalize (member as address, json_hash as uri, old component-name, component-type)
+    lastTxId = await callSCFunctionWithNonce(
+      networkN,
+      contracts[network].customizable.split('.')[0],
+      contracts[network].customizable.split('.')[1],
+      'swap-finalize',
+      [tuple.degenId, tuple.address, hashToPinataUrl(degenJsonHash), oldComponentName, tuple.componentType]
+    );
 
     // increment id
+    await dbIncremendId(currentDbId);
+
+    console.log('lastTxId', lastTxId);
+    await dbUpdateTxId(operationType.swap, lastTxId);
   }
 };
 
 const checkToStartFlow = async () => {
-  const txId = await dbGetTxId(operationType.assemble); //readFromDB
+  const txId = await dbGetTxId(operationType.swap); //readFromDB
   // fetchJSONResponse(txId)
   // general call
   const status = await chainGetTxIdStatus(txId);
@@ -185,6 +285,6 @@ const checkToStartFlow = async () => {
   }
 };
 
-// await checkToStartFlow();
+await checkToStartFlow();
 
-await swapServerFlow();
+// await swapServerFlow();
