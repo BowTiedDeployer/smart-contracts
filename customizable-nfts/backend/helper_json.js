@@ -63,15 +63,14 @@ export const fetchJsonFromUrl = async (jsonUrl) => {
 // };
 
 const createJsonAttributes = (attributes) => {
-  let attributesList = [];
-
-  attributes.Background ? attributesList.push({ trait_type: 'Background', value: attributes.Background }) : null;
-  attributes.Car ? attributesList.push({ trait_type: 'Car', value: attributes.Car }) : null;
-  attributes.Rims ? attributesList.push({ trait_type: 'Rims', value: attributes.Rims }) : null;
-  attributes.Type ? attributesList.push({ trait_type: 'Type', value: attributes.Type }) : null;
-  attributes.Race ? attributesList.push({ trait_type: 'Race', value: attributes.Race }) : null;
-  attributes.Head ? attributesList.push({ trait_type: 'Head', value: attributes.Head }) : null;
-  attributes.Face ? attributesList.push({ trait_type: 'Face', value: attributes.Face }) : null;
+  let attributesList = [
+    { trait_type: 'Background', value: attributes.Background },
+    { trait_type: 'Car', value: attributes.Car },
+    { trait_type: 'Rims', value: attributes.Rims },
+    { trait_type: 'Type', value: attributes.Type },
+    { trait_type: 'Head', value: attributes.Head },
+    { trait_type: 'Face', value: attributes.Face },
+  ];
 
   let jsonAttributes = '';
   attributesList.forEach((attribute) => {
@@ -92,12 +91,8 @@ export const jsonContentCreate = (name, image, imageComponent, imageInGame, attr
   const jsonAttributes = createJsonAttributes(attributes);
 
   let properties = '';
-  if (imageComponent != '')
-    properties += `"image_component": "${imageComponent}",
-      `;
-  if (imageInGame != '')
-    properties += `"image_game": "${imageInGame}",
-      `;
+  if (imageComponent != '') properties += `  "image_component": "${imageComponent}",`;
+  if (imageInGame != '') properties += `  "image_game": "${imageInGame}",`;
 
   let metadata = `{
     "sip": 16,
@@ -106,7 +101,8 @@ export const jsonContentCreate = (name, image, imageComponent, imageInGame, attr
     "attributes": [${jsonAttributes}
     ],
     "properties": {
-      ${properties}"collection": "${collection}"
+      ${properties}
+      "collection": "${collection}"
     }
   }`;
   return metadata;
