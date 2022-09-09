@@ -143,12 +143,12 @@ image-component: https://stxnft.mypinata.cloud/ipfs/QmWBHgQFLKpXW8EnU6LeRXcU2iZR
 image-in-game: 🚫  
 json: https://stxnft.mypinata.cloud/ipfs/QmXiDFRaq1CS4nQJfcCdFAYLixfAc9XUikjfWTCFYL4vJC
 
-### Head ⚠️
+### Head ✅
 
 marketplace: https://stxnft.mypinata.cloud/ipfs/QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst  
 image-component: https://stxnft.mypinata.cloud/ipfs/QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK  
-image-in-game: ⚠️  
-json: [old] ⚠️ https://stxnft.mypinata.cloud/ipfs/QmY549kDdJDSR89yWLF3PrkoPjs1ZWboRMkaqmVmTVgsH7
+image-in-game: https://stxnft.mypinata.cloud/ipfs/QmTNDjMQYxsuQhgbCAYi77f34TfdDonyCDe9Y8Ez1tddoA
+json: https://stxnft.mypinata.cloud/ipfs/QmNbot8qQirJ2hBffQjm3Bf5tSJdxwnWSdDx8ydf1FMPfe
 
 # Positions for marketplace picture:
 

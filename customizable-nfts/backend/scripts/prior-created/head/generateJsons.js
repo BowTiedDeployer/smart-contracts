@@ -1,9 +1,57 @@
 import fs from 'fs';
-import { jsonContentCreate } from '../../../helper_json.js';
 
 // Heads
-// extra step
 
+const createJsonAttributes = (attributes) => {
+  let attributesList = [];
+
+  attributes.Background ? attributesList.push({ trait_type: 'Background', value: attributes.Background }) : null;
+  attributes.Car ? attributesList.push({ trait_type: 'Car', value: attributes.Car }) : null;
+  attributes.Rims ? attributesList.push({ trait_type: 'Rims', value: attributes.Rims }) : null;
+  attributes.Type ? attributesList.push({ trait_type: 'Type', value: attributes.Type }) : null;
+  attributes.Race ? attributesList.push({ trait_type: 'Race', value: attributes.Race }) : null;
+  attributes.Head ? attributesList.push({ trait_type: 'Head', value: attributes.Head }) : null;
+  attributes.Face ? attributesList.push({ trait_type: 'Face', value: attributes.Face }) : null;
+
+  let jsonAttributes = '';
+  attributesList.forEach((attribute) => {
+    jsonAttributes += `
+    {
+      "trait_type": "${attribute.trait_type}", 
+      "value": "${attribute.value}"
+    },`;
+  });
+
+  // removes last trailling comma for complience with JSON standard
+  return jsonAttributes.slice(0, -1);
+};
+
+// degen - imageComponent == ""
+// rims, background - imageInGame == ""
+export const jsonContentCreate = (name, image, imageComponent, imageInGame, attributes, collection) => {
+  const jsonAttributes = createJsonAttributes(attributes);
+
+  let properties = '';
+  if (imageComponent != '')
+    properties += `"image_component": "${imageComponent}",
+    `;
+  if (imageInGame != '')
+    properties += `"image_game": "${imageInGame}",
+    `;
+
+  let metadata = `{
+  "sip": 16,
+  "name": "${name}",
+  "image": "${image}",
+  "attributes": [${jsonAttributes}
+  ],
+  "properties": {
+    ${properties}"collection": "${collection}"
+  }
+}
+`;
+  return metadata;
+};
 const pathHeadGenerated = './generated/jsons/';
 const pathHeadNYCImg = './AlienHead/';
 const pathFaceNYCImg = './AlienFace/';
@@ -26,9 +74,9 @@ fs.readdir(pathHeadNYCImg, (err, heads) => {
 
         const metadata = jsonContentCreate(
           'NYC_' + headName + '_' + faceName,
-          `ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/NYC_${headName}_${faceName}.png`, // marketplace - to be done
-          `ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/NYC_${headName}_${faceName}.png`, // for assemble
-          `ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/Alien.png`, // in game - to be done
+          `ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/NYC_${headName}_${faceName}.png`, // marketplace
+          `ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/NYC_${headName}_${faceName}.png`, // component
+          `ipfs://QmTNDjMQYxsuQhgbCAYi77f34TfdDonyCDe9Y8Ez1tddoA/NYC_${headName}_${faceName}.png`, // in-game
           { Race: 'Alien', Head: headName, Face: faceName },
           'DegenHeads'
         );
@@ -53,9 +101,9 @@ fs.readdir(pathHeadMiamiImg, (err, heads) => {
 
         const metadata = jsonContentCreate(
           'Miami_' + headName + '_' + faceName,
-          `ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/Miami_${headName}_${faceName}.png`, // marketplace - to be done
-          `ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/Miami_${headName}_${faceName}.png`, // for assemble
-          `ipfs://QmdorTWEvWbAyDB7vybjxcyET69SCyJjEjGdfhZDC5aaTq/Skull.png`, // in game - to be done
+          `ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/Miami_${headName}_${faceName}.png`, // marketplace
+          `ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/Miami_${headName}_${faceName}.png`, // component
+          `ipfs://QmTNDjMQYxsuQhgbCAYi77f34TfdDonyCDe9Y8Ez1tddoA/Miami_${headName}_${faceName}.png`, // in-game
           { Race: 'Skull', Head: headName, Face: faceName },
           'DegenHeads'
         );
