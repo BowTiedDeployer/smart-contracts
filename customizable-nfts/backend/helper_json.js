@@ -14,8 +14,8 @@ export const getImgComponentUrlFromJson = (json) => {
   return json.properties.image_component;
 };
 
-export const getGameTextureFromJson = (json) => {
-  return json.properties.game_texture;
+export const getImgGameUrlFromJson = (json) => {
+  return json.properties.image_game;
 };
 
 export const fetchJsonFromUrl = async (jsonUrl) => {
