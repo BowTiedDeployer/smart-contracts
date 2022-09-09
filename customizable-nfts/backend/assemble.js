@@ -227,7 +227,7 @@ const checkToStartFlow = async () => {
     console.error(`error: failed tx ${txId} with status: ${status}`);
   } else if (status === 'pending') {
     // do nothing
-    console.log('----------pending----------');
+    console.log(`----------pending---------- ${txId}`);
   } else {
     console.error(`invalid status "${status}" txid: ${txId}`);
   }

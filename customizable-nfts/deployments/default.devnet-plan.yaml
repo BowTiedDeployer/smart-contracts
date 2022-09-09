@@ -2,25 +2,26 @@
 id: 0
 name: Devnet deployment
 network: devnet
-stacks-node: "http://localhost:20443"
-bitcoin-node: "http://devnet:devnet@localhost:18443"
+stacks-node: 'http://localhost:20443'
+bitcoin-node: 'http://devnet:devnet@localhost:18443'
 plan:
   batches:
     - id: 0
       transactions:
         - contract-publish:
-            contract-name: nft-trait
+            contract-name: sip-010-trait-ft-standard
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 4660
             path: contracts/nft-trait.clar
         - contract-publish:
-            contract-name: sip-010-trait-ft-standard
+            contract-name: rims
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 8390
             path: contracts/sip-010-trait-ft-standard.clar
         - contract-publish:
-            contract-name: token-metadata-update-notify
+            contract-name: miami-degens
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+
             cost: 8780
             path: contracts/token-metadata-update-notify.clar
         - contract-publish:
@@ -39,7 +40,7 @@ plan:
             cost: 49270
             path: contracts/backgrounds.clar
         - contract-publish:
-            contract-name: miami-degens
+            contract-name: degens
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 50150
             path: contracts/miami-degens.clar

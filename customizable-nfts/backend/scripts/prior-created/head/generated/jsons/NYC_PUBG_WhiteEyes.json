@@ -1,0 +1,24 @@
+{
+  "sip": 16,
+  "name": "NYC_PUBG_WhiteEyes",
+  "image": "ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/NYC_PUBG_WhiteEyes.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Alien"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "PUBG"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "WhiteEyes"
+    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/NYC_PUBG_WhiteEyes.png",
+    "image_game": "ipfs://QmTNDjMQYxsuQhgbCAYi77f34TfdDonyCDe9Y8Ez1tddoA/NYC_PUBG_WhiteEyes.png",
+    "collection": "DegenHeads"
+  }
+}

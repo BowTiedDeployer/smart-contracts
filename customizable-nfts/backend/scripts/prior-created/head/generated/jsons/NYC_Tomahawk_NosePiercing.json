@@ -1,0 +1,24 @@
+{
+  "sip": 16,
+  "name": "NYC_Tomahawk_NosePiercing",
+  "image": "ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/NYC_Tomahawk_NosePiercing.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Alien"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "Tomahawk"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "NosePiercing"
+    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/NYC_Tomahawk_NosePiercing.png",
+    "image_game": "ipfs://QmTNDjMQYxsuQhgbCAYi77f34TfdDonyCDe9Y8Ez1tddoA/NYC_Tomahawk_NosePiercing.png",
+    "collection": "DegenHeads"
+  }
+}

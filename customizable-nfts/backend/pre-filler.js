@@ -1,7 +1,12 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { contracts, network, wallets } from './consts.js';
-import { callSCFunctionWithNonce, callSCFunctionWithNonceUser, checkNonceUpdate, sleep } from './helper_sc.js';
-import { getAccountNonce } from './helper_sc.js';
+import {
+  callSCFunctionWithNonce,
+  callSCFunctionWithNonceUser,
+  checkNonceUpdate,
+  getAccountNonce,
+  sleep,
+} from './helper_sc.js';
 
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
