@@ -23,17 +23,17 @@
 ;; eg. purple rims -> ipfs://dasd..
 (define-map name-url { name: (string-ascii 30)} { url: (string-ascii 256) })
 
-(map-set name-url  {name: "ClassyCream"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/ClassyCream.json"})
-(map-set name-url  {name: "ClassyDark"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/ClassyDark.json"})
-(map-set name-url  {name: "ClassyGold"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/ClassyGold.json"})
-(map-set name-url  {name: "ClassySilver"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/ClassySilver.json"})
-(map-set name-url  {name: "ClassyWhite"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/ClassyWhite.json"})
-(map-set name-url  {name: "SportyBlack"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/SportyBlack.json"})
-(map-set name-url  {name: "SportyBlue"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/SportyBlue.json"})
-(map-set name-url  {name: "SportyGold"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/SportyGold.json"})
-(map-set name-url  {name: "SportyGrey"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/SportyGrey.json"})
-(map-set name-url  {name: "SportyLime"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/SportyLime.json"})
-(map-set name-url  {name: "SportyPearlescent"} {url: "ipfs://QmUh73UmNY297dg7h5kEQbWZD5rKZgDNzc1dCRGXswLoFM/SportyPearlescent.json"})
+(map-set name-url  {name: "ClassyCream"} {url: "ipfs://QmXiDFRaq1CS4nQJfcCdFAYLixfAc9XUikjfWTCFYL4vJC/ClassyCream.json"})
+(map-set name-url  {name: "ClassyDark"} {url: "ipfs://QmXiDFRaq1CS4nQJfcCdFAYLixfAc9XUikjfWTCFYL4vJC/ClassyDark.json"})
+(map-set name-url  {name: "ClassyGold"} {url: "ipfs://QmXiDFRaq1CS4nQJfcCdFAYLixfAc9XUikjfWTCFYL4vJC/ClassyGold.json"})
+(map-set name-url  {name: "ClassySilver"} {url: "ipfs://QmXiDFRaq1CS4nQJfcCdFAYLixfAc9XUikjfWTCFYL4vJC/ClassySilver.json"})
+(map-set name-url  {name: "ClassyWhite"} {url: "ipfs://QmXiDFRaq1CS4nQJfcCdFAYLixfAc9XUikjfWTCFYL4vJC/ClassyWhite.json"})
+(map-set name-url  {name: "SportyBlack"} {url: "ipfs://QmXiDFRaq1CS4nQJfcCdFAYLixfAc9XUikjfWTCFYL4vJC/SportyBlack.json"})
+(map-set name-url  {name: "SportyBlue"} {url: "ipfs://QmXiDFRaq1CS4nQJfcCdFAYLixfAc9XUikjfWTCFYL4vJC/SportyBlue.json"})
+(map-set name-url  {name: "SportyGold"} {url: "ipfs://QmXiDFRaq1CS4nQJfcCdFAYLixfAc9XUikjfWTCFYL4vJC/SportyGold.json"})
+(map-set name-url  {name: "SportyGrey"} {url: "ipfs://QmXiDFRaq1CS4nQJfcCdFAYLixfAc9XUikjfWTCFYL4vJC/SportyGrey.json"})
+(map-set name-url  {name: "SportyLime"} {url: "ipfs://QmXiDFRaq1CS4nQJfcCdFAYLixfAc9XUikjfWTCFYL4vJC/SportyLime.json"})
+(map-set name-url  {name: "SportyPearlescent"} {url: "ipfs://QmXiDFRaq1CS4nQJfcCdFAYLixfAc9XUikjfWTCFYL4vJC/SportyPearlescent.json"})
 
 ;; Owner
 (define-data-var contract-owner principal tx-sender)
