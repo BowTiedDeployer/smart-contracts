@@ -16,6 +16,26 @@ export const mintDegen = async (url) => {
   );
 };
 
+export const mintMiami = async () => {
+  await callSCFunctionWithNonceUser(
+    networkN,
+    contracts[network].miami.split('.')[0], //degens-->miami
+    contracts[network].miami.split('.')[1],
+    'claim',
+    []
+  );
+};
+
+export const mintNYC = async () => {
+  await callSCFunctionWithNonceUser(
+    networkN,
+    contracts[network].nyc.split('.')[0], //degens-->nyc
+    contracts[network].nyc.split('.')[1],
+    'claim',
+    []
+  );
+};
+
 // for components
 export const mintBackground = async (name) => {
   await callSCFunctionWithNonce(
@@ -93,6 +113,18 @@ export const addSwapToQueue = async (degenId, componentId, componentType) => {
     contracts[network].customizable.split('.')[1],
     'add-swap-work-in-queue',
     [degenId, componentId, componentType]
+  );
+};
+
+export const addMergeToQueue = async (id, type) => {
+  // call add-work-merge
+  // manual value
+  await callSCFunctionWithNonceUser(
+    networkN,
+    contracts[network].customizable.split('.')[0],
+    contracts[network].customizable.split('.')[1],
+    'add-merge-work-in-queue',
+    [id, type]
   );
 };
 
@@ -190,7 +222,7 @@ export const addNAssembleToQueue = async (start, n) => {
   }
 
   for (let i = start; i < start + n; i++) {
-    await checkNonceUpdate();
+    //await checkNonceUpdate();
     await addAssembleToQueue(i, i, i, i);
   }
 };
@@ -233,4 +265,11 @@ export const addNDisassembleToQueue = async (start, n) => {
 // await mintDegen('ipfs://bafkreidezqputo6mzxgiqivj52vctrugiflckkwfoyj6cdjhiege2s7jma');
 // await mintCar('LamboBlue');
 // await mintComponentSet();
-await addSwapToQueue(7, 3, 'background-type');
+//await addSwapToQueue(7, 3, 'background-type');
+//await mintNYC();
+//await new Promise((r) => setTimeout(r, 2000));
+//await mintMiami();
+//await new Promise((r) => setTimeout(r, 2000));
+// await mergeToQueue(1, 'nyc');
+// await new Promise((r) => setTimeout(r, 2000));
+// await mergeToQueue(1, 'miami');
