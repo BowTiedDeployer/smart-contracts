@@ -19,7 +19,7 @@ export const mintDegen = async (url) => {
 export const mintMiami = async () => {
   await callSCFunctionWithNonceUser(
     networkN,
-    contracts[network].miami.split('.')[0], //degens-->miami
+    contracts[network].miami.split('.')[0],
     contracts[network].miami.split('.')[1],
     'claim',
     []
@@ -29,7 +29,7 @@ export const mintMiami = async () => {
 export const mintNYC = async () => {
   await callSCFunctionWithNonceUser(
     networkN,
-    contracts[network].nyc.split('.')[0], //degens-->nyc
+    contracts[network].nyc.split('.')[0],
     contracts[network].nyc.split('.')[1],
     'claim',
     []
@@ -128,6 +128,7 @@ export const addMergeToQueue = async (id, type) => {
   );
 };
 
+// for multiple mints
 export const mintNDegens = async (n) => {
   let availableNonce = await getAccountNonce(wallets.admin[network]);
   let lastUsedNonce = availableNonce - 1;
@@ -222,7 +223,7 @@ export const addNAssembleToQueue = async (start, n) => {
   }
 
   for (let i = start; i < start + n; i++) {
-    //await checkNonceUpdate();
+    await checkNonceUpdate();
     await addAssembleToQueue(i, i, i, i);
   }
 };
@@ -266,10 +267,10 @@ export const addNDisassembleToQueue = async (start, n) => {
 // await mintCar('LamboBlue');
 // await mintComponentSet();
 //await addSwapToQueue(7, 3, 'background-type');
-//await mintNYC();
-//await new Promise((r) => setTimeout(r, 2000));
-//await mintMiami();
-//await new Promise((r) => setTimeout(r, 2000));
-// await mergeToQueue(1, 'nyc');
-// await new Promise((r) => setTimeout(r, 2000));
-// await mergeToQueue(1, 'miami');
+await mintNYC();
+await new Promise((r) => setTimeout(r, 2000));
+await mintMiami();
+await new Promise((r) => setTimeout(r, 2000));
+await addMergeToQueue(1, 'nyc');
+await new Promise((r) => setTimeout(r, 2000));
+await addMergeToQueue(1, 'miami');

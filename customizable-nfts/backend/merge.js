@@ -1,47 +1,27 @@
-import fetch from 'node-fetch';
-import { metadataOldDegensSrc, operationType } from './consts.js';
-import {
-  standardPrincipalCV,
-  cvToHex,
-  hexToCV,
-  cvToJSON,
-  PostConditionMode,
-  makeContractCall,
-  broadcastTransaction,
-  stringAsciiCV,
-} from '@stacks/transactions';
-import BigNum from 'bn.js';
+import { operationType } from './consts.js';
 import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
 import { network, contracts, wallets } from './consts.js';
 import {
   getAccountNonce,
-  getNormalizedFee,
   readOnlySCJsonResponse,
-  callSCFunction,
   callSCFunctionWithNonce,
-  callSCFunctionWithNonceUser,
-  checkNonceUpdate,
   chainGetTxIdStatus,
   sleep,
 } from './helper_sc.js';
-import { fetchJsonFromUrl, getAttributesMapTraitValue, jsonContentCreate } from './helper_json.js';
-import dotenv from 'dotenv';
 import {
-  jsonResponseToTokenUri,
-  stringToMap,
-  intToHexString,
-  replaceTokenCurrentId,
-  pinataToHTTPUrl,
-  jsonResponseToTokenName,
-  hashToPinataUrl,
-} from './converters.js';
+  fetchJsonFromUrl,
+  getAttributesMapTraitValue,
+  getImgComponentUrlFromJson,
+  getImgGameUrlFromJson,
+  jsonContentCreate,
+} from './helper_json.js';
+import { jsonResponseToTokenUri, replaceTokenCurrentId, pinataToHTTPUrl, hashToPinataUrl } from './converters.js';
 import { oldToNewComponentNames } from './mapOldNewComponentNames.js';
-import { imgProfileContentCreate } from './helper_files.js';
+import { imgInGameContentCreate, imgProfileContentCreate } from './helper_files.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
 import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateTxId } from './helper_db.js';
 
 let networkN =
-  // @ts-ignore
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
 
 const listOfTuplesResponseToList = (tupleResponse) => {
@@ -58,7 +38,6 @@ const listOfTuplesResponseToList = (tupleResponse) => {
 };
 
 const getValuesFromQueueMerge = async () => {
-  // return a list having {address, id}
   const values = await readOnlySCJsonResponse(
     networkN,
     wallets.admin[network],
@@ -67,7 +46,6 @@ const getValuesFromQueueMerge = async () => {
     'get-merge-work-queue',
     []
   );
-  //return [];
   return listOfTuplesResponseToList(values);
 };
 
@@ -99,13 +77,13 @@ const mergeServerFlow = async () => {
     await checkNonceUpdate();
 
     const tuple = valuesToMerge[i];
-    console.log(tuple);
     let attributes = {};
 
     // get the token uri
     let contractType = '';
     if (tuple.degenType == 'miami') contractType = 'miami';
     else contractType = 'nyc';
+    console.log(contractType);
     const urlJsonDegen = await jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
@@ -138,8 +116,7 @@ const mergeServerFlow = async () => {
       headNewName = `NYC_${headPartialNewName}_${facePartialNewName}`;
     }
 
-    //console.log('urlheadJSON', urlHeadJSON);
-    const urlBackgroundJSON = jsonResponseToTokenName(
+    const urlBackgroundJSON = jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
         wallets.user[network],
@@ -150,7 +127,7 @@ const mergeServerFlow = async () => {
       )
     );
 
-    const urlCarJSON = jsonResponseToTokenName(
+    const urlCarJSON = jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
         wallets.user[network],
@@ -160,7 +137,7 @@ const mergeServerFlow = async () => {
         [carNewName]
       )
     );
-    const urlRimsJSON = jsonResponseToTokenName(
+    const urlRimsJSON = jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
         wallets.user[network],
@@ -170,7 +147,7 @@ const mergeServerFlow = async () => {
         [rimsNewName]
       )
     );
-    const urlHeadJSON = jsonResponseToTokenName(
+    const urlHeadJSON = jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
         wallets.user[network],
@@ -180,47 +157,60 @@ const mergeServerFlow = async () => {
         [headNewName]
       )
     );
+
     const backgroundJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlBackgroundJSON)));
     const carJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlCarJSON)));
     const rimsJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlRimsJSON)));
     const headJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlHeadJSON)));
 
-    const urlImgBackground = backgroundJSONResponse.image;
-    const urlImgCar = carJSONResponse.image;
-    const urlImgRims = rimsJSONResponse.image;
-    const urlImgHead = headJSONResponse.image;
+    const urlImgComponentBackground = getImgComponentUrlFromJson(backgroundJSONResponse);
+    const urlImgGameCar = getImgGameUrlFromJson(carJSONResponse);
+    const urlImgComponentCar = getImgComponentUrlFromJson(carJSONResponse);
+    const urlImgComponentRims = getImgComponentUrlFromJson(rimsJSONResponse);
+    const urlImgGameHead = getImgGameUrlFromJson(headJSONResponse);
+    const urlImgComponentHead = getImgComponentUrlFromJson(headJSONResponse);
 
     let attributeBackground = getAttributesMapTraitValue(backgroundJSONResponse);
     let attributeCar = getAttributesMapTraitValue(carJSONResponse);
     let attributeRims = getAttributesMapTraitValue(rimsJSONResponse);
     let attributeHead = getAttributesMapTraitValue(headJSONResponse);
 
-    //const backgroundImgUrl= await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlBackgroundJSON)));
-    console.log('imgHeadURL', pinataToHTTPUrl(replaceTokenCurrentId(urlHeadJSON)));
-
     const imgContent = await imgProfileContentCreate(
-      pinataToHTTPUrl(urlImgBackground),
-      pinataToHTTPUrl(urlImgCar),
-      pinataToHTTPUrl(urlImgRims),
-      pinataToHTTPUrl(urlImgHead)
+      pinataToHTTPUrl(urlImgComponentBackground),
+      pinataToHTTPUrl(urlImgComponentCar),
+      pinataToHTTPUrl(urlImgComponentRims),
+      pinataToHTTPUrl(urlImgComponentHead)
     );
+
     let currentDbId = await dbReadCurrentId();
+
     const degenName = `BadDegen#${currentDbId}`;
     const degenImgName = `BadImgDegen#${currentDbId}`;
+    const degenImgGameName = `BadImgGameDegen#${currentDbId}`;
+    const degenJsonName = `BadJsonDegen#${currentDbId}`;
 
     attributes = { ...attributeBackground, ...attributeCar, ...attributeHead, ...attributeRims };
     attributes = { ...attributesDegen, Type: attributes.Race };
     const { Race, ...otherAttributes } = attributes;
     attributes = otherAttributes;
 
-    const degenImgHash = await uploadFlowImg(degenImgName, imgContent);
-    // todo: should pass attribute dictionary instead of list -> function jsonContentCreate
-    const degenJson = jsonContentCreate(degenName, hashToPinataUrl(degenImgHash), '', '', attributes, `DegenNFT`);
-    const degenJsonHash = await uploadFlowJson(`JSONDegen#${currentDbId}`, degenJson);
-    // -> mint them
-    //(define-public (merge-finalize (degen-id uint) (member principal) (metadata-uri-dgn (string-ascii 99)))
+    const degenImgGame = await imgInGameContentCreate(pinataToHTTPUrl(urlImgGameCar), pinataToHTTPUrl(urlImgGameHead));
 
-    // todo: should pass ipfs://jsonHash instead of jsonHash -> function hashToPinataUrl
+    const degenImgHash = await uploadFlowImg(degenImgName, imgContent);
+    const degenImgGameHash = await uploadFlowImg(degenImgGameName, degenImgGame);
+
+    const degenJson = jsonContentCreate(
+      degenName,
+      hashToPinataUrl(degenImgHash),
+      '',
+      hashToPinataUrl(degenImgGameHash),
+      attributes,
+      `DegenNFT`
+    );
+
+    const degenJsonHash = await uploadFlowJson(degenJsonName, degenJson);
+    // -> mint them
+
     lastTxId = await callSCFunctionWithNonce(
       networkN,
       contracts[network].customizable.split('.')[0],
