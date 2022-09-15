@@ -12,7 +12,7 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const uploadToPinata = (filePath, fileNamePinata) => {
+const uploadToPinata = async (filePath, fileNamePinata) => {
   // contain .json /.png in filePath
   let data = new FormData();
   data.append('file', fs.createReadStream(path.join(__dirname, `/${filePath}`)));
@@ -34,7 +34,7 @@ const uploadToPinata = (filePath, fileNamePinata) => {
 export const uploadFlowJson = async (jsonName, jsonContent) => {
   const jsonPath = jsonName + '.json';
   saveFile(jsonPath, jsonContent);
-  let { config, data } = uploadToPinata(jsonPath, jsonName);
+  let { config, data } = await uploadToPinata(jsonPath, jsonName);
   const res = await axios(config);
   deleteFile(jsonPath);
   return res.data.IpfsHash;
@@ -43,7 +43,7 @@ export const uploadFlowJson = async (jsonName, jsonContent) => {
 export const uploadFlowImg = async (imgName, imgContent) => {
   const imgPath = imgName + '.png';
   saveFile(imgPath, imgContent);
-  let { config, data } = uploadToPinata(imgPath, imgName);
+  let { config, data } = await uploadToPinata(imgPath, imgName);
   const res = await axios(config);
   deleteFile(imgPath);
   return res.data.IpfsHash;
