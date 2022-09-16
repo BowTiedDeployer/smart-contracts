@@ -21,6 +21,26 @@ export const mintDegen = async (url) => {
   );
 };
 
+export const mintMiami = async () => {
+  await callSCFunctionWithNonceUser(
+    networkN,
+    contracts[network].miami.split('.')[0],
+    contracts[network].miami.split('.')[1],
+    'claim',
+    []
+  );
+};
+
+export const mintNYC = async () => {
+  await callSCFunctionWithNonceUser(
+    networkN,
+    contracts[network].nyc.split('.')[0],
+    contracts[network].nyc.split('.')[1],
+    'claim',
+    []
+  );
+};
+
 // for components
 export const mintBackground = async (name) => {
   await callSCFunctionWithNonce(
@@ -101,6 +121,19 @@ export const addSwapToQueue = async (degenId, componentId, componentType) => {
   );
 };
 
+export const addMergeToQueue = async (id, type) => {
+  // call add-work-merge
+  // manual value
+  await callSCFunctionWithNonceUser(
+    networkN,
+    contracts[network].customizable.split('.')[0],
+    contracts[network].customizable.split('.')[1],
+    'add-merge-work-in-queue',
+    [id, type]
+  );
+};
+
+// for multiple mints
 export const mintNDegens = async (n) => {
   let availableNonce = await getAccountNonce(wallets.admin[network]);
   let lastUsedNonce = availableNonce - 1;
@@ -237,6 +270,14 @@ export const addNDisassembleToQueue = async (start, n) => {
 
 // await mintDegen('ipfs://bafkreidezqputo6mzxgiqivj52vctrugiflckkwfoyj6cdjhiege2s7jma');
 // await mintCar('LamboBlue');
-await mintRims('ClassyDark');
+// await mintRims('ClassyDark');
 // await mintComponentSet();
+// await addSwapToQueue(7, 3, 'background-type');
+// await mintNYC();
+// await new Promise((r) => setTimeout(r, 2000));
+// await mintMiami();
+// await new Promise((r) => setTimeout(r, 2000));
+// await addMergeToQueue(1, 'nyc');
+// await new Promise((r) => setTimeout(r, 2000));
+// await addMergeToQueue(1, 'miami');
 // await addSwapToQueue(1, 2, 'car-type');
