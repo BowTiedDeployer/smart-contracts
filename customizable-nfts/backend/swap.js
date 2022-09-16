@@ -119,7 +119,6 @@ const swapServerFlow = async () => {
 
     // get attributes from the component, the name-url and imgUrl
     let componentAttributes = getAttributesMapTraitValue(jsonComponent);
-    // console.log('componentAttributes', componentAttributes);
 
     let oldComponentName = '';
     switch (swapComponent) {
@@ -145,8 +144,6 @@ const swapServerFlow = async () => {
       default:
         break;
     }
-    // console.log('oldComponentName', oldComponentName);
-    // console.log('attributes', attributes);
 
     // for each attribute get name-url, fetch json, get imgUrl
     const urlJsonBackground = await jsonResponseToTokenUri(
@@ -195,52 +192,52 @@ const swapServerFlow = async () => {
     );
 
     const jsonBackground = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonBackground));
-    const urlImgBackground = getImageUrlFromJson(jsonBackground);
-    // const urlImgComponentBackground = getImgComponentUrlFromJson(jsonBackground);
+    const urlImgComponentBackground = getImgComponentUrlFromJson(jsonBackground);
 
     const jsonCar = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonCar));
-    const urlImgCar = getImageUrlFromJson(jsonCar);
-    // const urlImgGameCar = getImgGameUrlFromJson(jsonCar);
-    // const urlImgComponentCar = getImgComponentUrlFromJson(jsonCar);
+    const urlImgGameCar = getImgGameUrlFromJson(jsonCar);
+    const urlImgComponentCar = getImgComponentUrlFromJson(jsonCar);
 
     const jsonHead = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonHead));
     // console.log('jsonHead: ', jsonHead);
-    const urlImgHead = getImageUrlFromJson(jsonHead);
-    // const urlImgGameHead = getImgGameUrlFromJson(jsonHead);
-    // const urlImgComponentHead = getImgComponentUrlFromJson(jsonHead);
+    const urlImgGameHead = getImgGameUrlFromJson(jsonHead);
+    const urlImgComponentHead = getImgComponentUrlFromJson(jsonHead);
 
     const jsonRims = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonRims));
-    const urlImgRims = getImageUrlFromJson(jsonRims);
-    // const urlImgComponentRims = getImgComponentUrlFromJson(jsonRims);
+    const urlImgComponentRims = getImgComponentUrlFromJson(jsonRims);
     // console.log('urlImgRims', urlImgRims);
 
     const currentDbId = await dbReadCurrentId();
     const degenName = `BadDegen#${currentDbId}`;
     const degenImgName = `BadImgDegen#${currentDbId}`;
-    // const degenImgGameName = `BadImgGameDegen#${currentDbId}`;
+    const degenImgGameName = `BadImgGameDegen#${currentDbId}`;
     const degenJsonName = `BadJsonDegen#${currentDbId}`;
 
     // create image from component img urls (background_url, rims_url, car_url, head_url)
     const degenImg = await imgProfileContentCreate(
-      pinataToHTTPUrl(urlImgBackground),
-      pinataToHTTPUrl(urlImgCar),
-      pinataToHTTPUrl(urlImgHead),
-      pinataToHTTPUrl(urlImgRims)
+      pinataToHTTPUrl(urlImgComponentBackground),
+      pinataToHTTPUrl(urlImgComponentCar),
+      pinataToHTTPUrl(urlImgComponentHead),
+      pinataToHTTPUrl(urlImgComponentRims)
     );
 
-    // const degenImgGame = await imgInGameContentCreate(
-    //   pinataToHTTPUrl(urlImgGameCar),
-    //   pinataToHTTPUrl(urlImgGameHead)
-    // );
+    const degenImgGame = await imgInGameContentCreate(pinataToHTTPUrl(urlImgGameCar), pinataToHTTPUrl(urlImgGameHead));
 
+    // todo: check before production - upload to pinata 0 bytes
     // upload image and get hash
     const degenImgHash = await uploadFlowImg(degenImgName, degenImg);
-    // const degenImgGameHash = await uploadFlowImg(degenImgGameName, degenImgName);
+    const degenImgGameHash = await uploadFlowImg(degenImgGameName, degenImgGame);
 
     // create json with component attributes (name#id, img hash, attributes, collection("DegenNFT"))
-    const degenJson = jsonContentCreate(degenName, hashToPinataUrl(degenImgHash), '', '', attributes, 'DegenNFT');
-    // const degenJson = jsonContentCreate(degenName, hashToPinataUrl(degenImgHash), '', hashToPinataUrl(degenImgGameHash), attributes, 'DegenNFT');
-    // console.log(degenJson);
+    const degenJson = jsonContentCreate(
+      degenName,
+      hashToPinataUrl(degenImgHash),
+      '',
+      hashToPinataUrl(degenImgGameHash),
+      attributes,
+      'DegenNFT'
+    );
+    console.log(degenJson);
 
     // upload json and get hash
     // todo: check before production - case upload json 0 bytes
@@ -285,6 +282,6 @@ const checkToStartFlow = async () => {
   }
 };
 
-await checkToStartFlow();
+// await checkToStartFlow();
 
-// await swapServerFlow();
+await swapServerFlow();

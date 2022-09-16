@@ -122,26 +122,44 @@ convert old degen json to new json
 
 # Pinata Hashes
 
-### Background
+### Background ✅
 
+marketplace: https://stxnft.mypinata.cloud/ipfs/QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria  
 image-component: https://stxnft.mypinata.cloud/ipfs/QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria  
 image-in-game: 🚫  
-json: https://stxnft.mypinata.cloud/ipfs/Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP
+json: https://stxnft.mypinata.cloud/ipfs/QmSUD8LoZL4ChE1LRmhcACsP1FJCaHuWpW8FXEtedD1rPo
 
-### Car
+### Car ✅
 
-image-component: https://stxnft.mypinata.cloud/ipfs/QmY6NmxfHYRvW4q2jvkUbYqJto6boQG8RScwUkuie3gbjD  
-image-in-game: ⚠️   
-json: https://stxnft.mypinata.cloud/ipfs/QmPL5NH6RbVQMxD98rr5xUPwH4Gy2qvHm6t5q1axyCGaNV
+marketplace: https://stxnft.mypinata.cloud/ipfs/QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1  
+image-component: https://stxnft.mypinata.cloud/ipfs/QmeCL653FLxAfdT8wGkHxhwHSdEfPBH4WF8h9Hz6XDbi4u  
+image-in-game: https://stxnft.mypinata.cloud/ipfs/QmXivFXDKXgnECXN7ckPf8KHXn6mogvHwLsdT1rAfCCU72  
+json: https://stxnft.mypinata.cloud/ipfs/QmWuEAHbgtHQpT82PtVb8W2uXF3dPc92XCRKsCwRaet5BE
 
-### Rims
+### Rims ✅
 
+marketplace: https://stxnft.mypinata.cloud/ipfs/QmUAeq2AoLPPednjPxmZzstG3yDHR7fqs7mK3q8oQg2qRV  
 image-component: https://stxnft.mypinata.cloud/ipfs/QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31  
 image-in-game: 🚫  
-json: https://stxnft.mypinata.cloud/ipfs/QmNcUDPbAcprADckejKLu7ucA8uhJvhtR1sFme4fHCQztX
+json: https://stxnft.mypinata.cloud/ipfs/QmXiDFRaq1CS4nQJfcCdFAYLixfAc9XUikjfWTCFYL4vJC
 
-### Head
+### Head ✅
 
+marketplace: https://stxnft.mypinata.cloud/ipfs/QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst  
 image-component: https://stxnft.mypinata.cloud/ipfs/QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK  
-image-in-game: ⚠️  
-json: https://stxnft.mypinata.cloud/ipfs/QmY549kDdJDSR89yWLF3PrkoPjs1ZWboRMkaqmVmTVgsH7
+image-in-game: https://stxnft.mypinata.cloud/ipfs/QmTNDjMQYxsuQhgbCAYi77f34TfdDonyCDe9Y8Ez1tddoA
+json: https://stxnft.mypinata.cloud/ipfs/QmNbot8qQirJ2hBffQjm3Bf5tSJdxwnWSdDx8ydf1FMPfe
+
+# Positions for marketplace picture:
+
+### Rim finals:
+
+x: 99 | y: 419 | width: 180 | height: 180
+
+### Head finals:
+
+x: 165 | y: 80 | width: 500 | height: 580
+
+### Car finals:
+
+x: 40 | y: 110 | width: 730 | height: 730

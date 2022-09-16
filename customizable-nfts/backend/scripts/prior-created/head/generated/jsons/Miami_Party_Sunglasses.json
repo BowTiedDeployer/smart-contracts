@@ -1,0 +1,24 @@
+{
+  "sip": 16,
+  "name": "Miami_Party_Sunglasses",
+  "image": "ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/Miami_Party_Sunglasses.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Skull"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "Party"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "Sunglasses"
+    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/Miami_Party_Sunglasses.png",
+    "image_game": "ipfs://QmTNDjMQYxsuQhgbCAYi77f34TfdDonyCDe9Y8Ez1tddoA/Miami_Party_Sunglasses.png",
+    "collection": "DegenHeads"
+  }
+}

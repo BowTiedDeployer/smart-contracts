@@ -1,0 +1,24 @@
+{
+  "sip": 16,
+  "name": "Miami_Bullet_None",
+  "image": "ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/Miami_Bullet_None.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Skull"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "Bullet"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "None"
+    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/Miami_Bullet_None.png",
+    "image_game": "ipfs://QmTNDjMQYxsuQhgbCAYi77f34TfdDonyCDe9Y8Ez1tddoA/Miami_Bullet_None.png",
+    "collection": "DegenHeads"
+  }
+}

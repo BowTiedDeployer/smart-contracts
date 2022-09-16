@@ -1,0 +1,24 @@
+{
+  "sip": 16,
+  "name": "Miami_Syringe_Sunglasses",
+  "image": "ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/Miami_Syringe_Sunglasses.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Skull"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "Syringe"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "Sunglasses"
+    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/Miami_Syringe_Sunglasses.png",
+    "image_game": "ipfs://QmTNDjMQYxsuQhgbCAYi77f34TfdDonyCDe9Y8Ez1tddoA/Miami_Syringe_Sunglasses.png",
+    "collection": "DegenHeads"
+  }
+}

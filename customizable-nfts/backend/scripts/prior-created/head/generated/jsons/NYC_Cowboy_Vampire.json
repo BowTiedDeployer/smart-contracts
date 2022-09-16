@@ -1,0 +1,24 @@
+{
+  "sip": 16,
+  "name": "NYC_Cowboy_Vampire",
+  "image": "ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/NYC_Cowboy_Vampire.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Alien"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "Cowboy"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "Vampire"
+    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/NYC_Cowboy_Vampire.png",
+    "image_game": "ipfs://QmTNDjMQYxsuQhgbCAYi77f34TfdDonyCDe9Y8Ez1tddoA/NYC_Cowboy_Vampire.png",
+    "collection": "DegenHeads"
+  }
+}

@@ -1,7 +1,12 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { contracts, network, wallets } from './consts.js';
-import { callSCFunctionWithNonce, callSCFunctionWithNonceUser, checkNonceUpdate, sleep } from './helper_sc.js';
-import { getAccountNonce } from './helper_sc.js';
+import {
+  callSCFunctionWithNonce,
+  callSCFunctionWithNonceUser,
+  checkNonceUpdate,
+  getAccountNonce,
+  sleep,
+} from './helper_sc.js';
 
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
@@ -168,10 +173,10 @@ export const mintComponentSet = async () => {
     }
   }
 
-  const backgroundName = 'Emerald';
-  const carName = 'LamboBlue';
-  const rimsName = 'ClassyGold';
-  const headName = 'NYC_OpenMinded_Lips';
+  const backgroundName = 'Sunset';
+  const carName = 'BentleyGrey';
+  const rimsName = 'SportyPearlescent';
+  const headName = 'Miami_Party_Sunglasses';
 
   await checkNonceUpdate();
   await mintBackground(backgroundName);
@@ -259,18 +264,20 @@ export const addNDisassembleToQueue = async (start, n) => {
 
 // await mintComponentSet();
 // await mintNComponentSets(2);
-// await addNAssembleToQueue(1, 2);
+// await addNAssembleToQueue(1, 1);
 
 // await mintComponentSet();
 
 // await mintDegen('ipfs://bafkreidezqputo6mzxgiqivj52vctrugiflckkwfoyj6cdjhiege2s7jma');
 // await mintCar('LamboBlue');
+// await mintRims('ClassyDark');
 // await mintComponentSet();
-//await addSwapToQueue(7, 3, 'background-type');
-await mintNYC();
-await new Promise((r) => setTimeout(r, 2000));
-await mintMiami();
-await new Promise((r) => setTimeout(r, 2000));
-await addMergeToQueue(1, 'nyc');
-await new Promise((r) => setTimeout(r, 2000));
-await addMergeToQueue(1, 'miami');
+// await addSwapToQueue(7, 3, 'background-type');
+// await mintNYC();
+// await new Promise((r) => setTimeout(r, 2000));
+// await mintMiami();
+// await new Promise((r) => setTimeout(r, 2000));
+// await addMergeToQueue(1, 'nyc');
+// await new Promise((r) => setTimeout(r, 2000));
+// await addMergeToQueue(1, 'miami');
+// await addSwapToQueue(1, 2, 'car-type');

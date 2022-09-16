@@ -58,7 +58,6 @@ const getValuesFromQueueAssemble = async () => {
 const assembleServerFlow = async () => {
   // get values from queue
   let valuesToAssemble = await getValuesFromQueueAssemble();
-  // console.log(valuesToAssemble);
 
   // maximum 25 transactions done in a block by the same account
   let upperLimit = valuesToAssemble.length > 25 ? 25 : valuesToAssemble.length;
@@ -132,27 +131,23 @@ const assembleServerFlow = async () => {
 
     // get the attribute value & imgUrl from each json
     const jsonBackground = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonBackground));
-    const urlImgBackground = getImageUrlFromJson(jsonBackground);
-    // const urlImgComponentBackground = getImgComponentUrlFromJson(jsonBackground);
+    const urlImgComponentBackground = getImgComponentUrlFromJson(jsonBackground);
     let attributeBackground = getAttributesMapTraitValue(jsonBackground);
 
     const jsonCar = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonCar));
-    const urlImgCar = getImageUrlFromJson(jsonCar);
-    // const urlImgGameCar = getImgGameUrlFromJson(jsonCar);
-    // const urlImgComponentCar = getImgComponentUrlFromJson(jsonCar);
+    const urlImgGameCar = getImgGameUrlFromJson(jsonCar);
+    const urlImgComponentCar = getImgComponentUrlFromJson(jsonCar);
     let attributeCar = getAttributesMapTraitValue(jsonCar);
 
     const jsonHead = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonHead));
     // console.log('jsonHead: ', jsonHead);
-    const urlImgHead = getImageUrlFromJson(jsonHead);
-    // const urlImgGameHead = getImgGameUrlFromJson(jsonHead);
-    // const urlImgComponentHead = getImgComponentUrlFromJson(jsonHead);
+    const urlImgGameHead = getImgGameUrlFromJson(jsonHead);
+    const urlImgComponentHead = getImgComponentUrlFromJson(jsonHead);
     let attributeHead = getAttributesMapTraitValue(jsonHead);
 
     const jsonRims = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonRims));
-    const urlImgRims = getImageUrlFromJson(jsonRims);
-    // const urlImgComponentRims = getImgComponentUrlFromJson(jsonRims);
-    // console.log('urlImgRims', urlImgRims);
+    const urlImgComponentRims = getImgComponentUrlFromJson(jsonRims);
+    // console.log('urlImgComponentRims', urlImgComponentRims);
     let attributeRims = getAttributesMapTraitValue(jsonRims);
 
     attributes = { ...attributeBackground, ...attributeCar, ...attributeHead, ...attributeRims };
@@ -166,30 +161,33 @@ const assembleServerFlow = async () => {
     const currentDbId = await dbReadCurrentId();
     const degenName = `BadDegen#${currentDbId}`;
     const degenImgName = `BadImgDegen#${currentDbId}`;
-    // const degenImgGameName = `BadImgGameDegen#${currentDbId}`;
+    const degenImgGameName = `BadImgGameDegen#${currentDbId}`;
     const degenJsonName = `BadJsonDegen#${currentDbId}`;
 
     // create image from component img urls (background_url, rims_url, car_url, head_url)
     const degenImg = await imgProfileContentCreate(
-      pinataToHTTPUrl(urlImgBackground),
-      pinataToHTTPUrl(urlImgCar),
-      pinataToHTTPUrl(urlImgHead),
-      pinataToHTTPUrl(urlImgRims)
+      pinataToHTTPUrl(urlImgComponentBackground),
+      pinataToHTTPUrl(urlImgComponentCar),
+      pinataToHTTPUrl(urlImgComponentHead),
+      pinataToHTTPUrl(urlImgComponentRims)
     );
 
-    // const degenImgGame = await imgInGameContentCreate(
-    //   pinataToHTTPUrl(urlImgGameCar),
-    //   pinataToHTTPUrl(urlImgGameHead)
-    // );
+    const degenImgGame = await imgInGameContentCreate(pinataToHTTPUrl(urlImgGameCar), pinataToHTTPUrl(urlImgGameHead));
 
     // upload image and get hash
     const degenImgHash = await uploadFlowImg(degenImgName, degenImg);
-    // const degenImgGameHash = await uploadFlowImg(degenImgGameName, degenImgName);
+    const degenImgGameHash = await uploadFlowImg(degenImgGameName, degenImgGame);
 
-    // create json with component attributes (name#id, img hash, attributes, collection("DegenNFT"))
-    const degenJson = jsonContentCreate(degenName, hashToPinataUrl(degenImgHash), '', '', attributes, 'DegenNFT');
-    // const degenJson = jsonContentCreate(degenName, hashToPinataUrl(degenImgHash), '', hashToPinataUrl(degenImgGameHash), attributes, 'DegenNFT');
-    // console.log(degenJson);
+    // create json with component attributes (name#id, img hash, img comp hash, img game hash, attributes, collection("DegenNFT"))
+    const degenJson = jsonContentCreate(
+      degenName,
+      hashToPinataUrl(degenImgHash),
+      '',
+      hashToPinataUrl(degenImgGameHash),
+      attributes,
+      'DegenNFT'
+    );
+    console.log(degenJson);
 
     // upload json and get hash
     const degenJsonHash = await uploadFlowJson(degenJsonName, degenJson);
@@ -218,7 +216,7 @@ const checkToStartFlow = async () => {
   // general call
   const status = await chainGetTxIdStatus(txId);
 
-  if (status === 'success' || txId !== undefined) {
+  if (status === 'success') {
     console.log('--------------flow can start-----------');
     await assembleServerFlow();
   } else if (status === 'abort_by_response') {
@@ -227,12 +225,12 @@ const checkToStartFlow = async () => {
     console.error(`error: failed tx ${txId} with status: ${status}`);
   } else if (status === 'pending') {
     // do nothing
-    console.log('----------pending----------');
+    console.log(`----------pending---------- ${txId}`);
   } else {
     console.error(`invalid status "${status}" txid: ${txId}`);
   }
 };
 
-await checkToStartFlow();
+// await checkToStartFlow();
 
-// await assembleServerFlow();
+await assembleServerFlow();

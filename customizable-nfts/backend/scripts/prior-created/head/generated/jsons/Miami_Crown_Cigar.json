@@ -1,0 +1,24 @@
+{
+  "sip": 16,
+  "name": "Miami_Crown_Cigar",
+  "image": "ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/Miami_Crown_Cigar.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Skull"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "Crown"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "Cigar"
+    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/Miami_Crown_Cigar.png",
+    "image_game": "ipfs://QmTNDjMQYxsuQhgbCAYi77f34TfdDonyCDe9Y8Ez1tddoA/Miami_Crown_Cigar.png",
+    "collection": "DegenHeads"
+  }
+}

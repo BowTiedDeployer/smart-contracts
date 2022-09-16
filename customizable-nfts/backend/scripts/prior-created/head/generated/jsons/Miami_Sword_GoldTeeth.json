@@ -1,0 +1,24 @@
+{
+  "sip": 16,
+  "name": "Miami_Sword_GoldTeeth",
+  "image": "ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/Miami_Sword_GoldTeeth.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Skull"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "Sword"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "GoldTeeth"
+    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/Miami_Sword_GoldTeeth.png",
+    "image_game": "ipfs://QmTNDjMQYxsuQhgbCAYi77f34TfdDonyCDe9Y8Ez1tddoA/Miami_Sword_GoldTeeth.png",
+    "collection": "DegenHeads"
+  }
+}
