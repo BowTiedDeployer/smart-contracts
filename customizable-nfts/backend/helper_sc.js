@@ -143,6 +143,40 @@ export async function callSCFunctionWithNonceUser(networkInstance, contractAddre
   }
 }
 
+export async function callSCFunctionWithNonceWallet(
+  networkInstance,
+  contractAddress,
+  contractName,
+  functionName,
+  args,
+  walletAddress
+) {
+  try {
+    const latestNonce = await getAccountNonce(wallets[walletAddress][network]);
+    await callSCFunctionWallet(
+      networkInstance,
+      contractAddress,
+      contractName,
+      functionName,
+      args,
+      walletAddress,
+      latestNonce
+    );
+    console.log(
+      'options',
+      latestNonce,
+      wallets[walletAddress][network],
+      contractAddress,
+      contractName,
+      functionName,
+      args
+    );
+    // await mintNameUrl(address, url, latestNonce);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function callSCFunctionUser(networkInstance, contractAddress, contractName, functionName, args, nonce) {
   try {
     let txOptions = {
@@ -151,6 +185,41 @@ export async function callSCFunctionUser(networkInstance, contractAddress, contr
       functionName: functionName,
       functionArgs: convertArgsSCCall(args),
       senderKey: stringToMap(process.env.USER_SECRET_KEY)[network],
+      network: networkInstance,
+      postConditionMode: PostConditionMode.Allow,
+      fee: new BigNum(100000),
+      nonce: nonce,
+    };
+    // calculate fee
+    let transaction = await makeContractCall(txOptions);
+    const normalizedFee = await getNormalizedFee(transaction);
+
+    // set fee
+    txOptions.fee = new BigNum(normalizedFee);
+    transaction = await makeContractCall(txOptions);
+    const tx = await broadcastTransaction(transaction, networkInstance);
+    console.log(`${contractAddress}.${functionName} User SC public function call broadcasted tx: ${tx.txid}`);
+  } catch (error) {
+    console.log(`${contractAddress}.${functionName} User SC public function call ERROR: ${error}`);
+  }
+}
+
+export async function callSCFunctionWallet(
+  networkInstance,
+  contractAddress,
+  contractName,
+  functionName,
+  args,
+  walletAddress,
+  nonce
+) {
+  try {
+    let txOptions = {
+      contractAddress: contractAddress,
+      contractName: contractName,
+      functionName: functionName,
+      functionArgs: convertArgsSCCall(args),
+      senderKey: stringToMap(process.env[walletAddress])[network],
       network: networkInstance,
       postConditionMode: PostConditionMode.Allow,
       fee: new BigNum(100000),
