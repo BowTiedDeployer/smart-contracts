@@ -2,7 +2,7 @@ import mergeImages from 'merge-images';
 import { Canvas, Image } from 'canvas';
 import fs from 'fs';
 
-export const saveFile = (filePath, fileContent) => {
+export const saveFile = async (filePath, fileContent) => {
   fs.writeFile(filePath, fileContent, function (err) {
     if (err) console.log('error', err);
   });

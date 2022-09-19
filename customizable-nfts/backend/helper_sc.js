@@ -200,3 +200,9 @@ export const getTokenUri = async (network, wallet, contractAddress, contractName
     await readOnlySCJsonResponse(network, wallet, contractAddress, contractName, contractFunction, args)
   );
 };
+
+export const getMempoolTransactionCount = async (address) => {
+  const accountMempoolUrl = urlApis.accountMempool(network, address);
+  const accountMempoolResponse = await fetch(accountMempoolUrl).then((res) => res.json());
+  return accountMempoolResponse.total;
+};

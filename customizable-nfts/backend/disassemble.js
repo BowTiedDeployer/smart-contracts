@@ -19,11 +19,12 @@ import {
   chainGetTxIdStatus,
   sleep,
   getTokenUri,
+  getMempoolTransactionCount,
 } from './helper_sc.js';
 import dotenv from 'dotenv';
 import { pinataToHTTPUrl } from './converters.js';
 import { fetchJsonFromUrl, getAttributesMapTraitValue } from './helper_json.js';
-import { dbGetTxId, dbUpdateTxId } from './helper_db.js';
+import { dbGetTxId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
 
 dotenv.config();
 
@@ -55,15 +56,20 @@ const getValuesFromQueueDisassemble = async () => {
   return listOfTuplesResponseToList(values);
 };
 
-const checkToStartFlow = async () => {
+export const checkToStartFlowDisassemble = async () => {
   const txId = await dbGetTxId(operationType.disassemble); //readFromDB
   // fetchJSONResponse(txId)
   // general call
   const status = await chainGetTxIdStatus(txId);
+  const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
+  const operationLimit = 25 - transactionCount;
+  console.log('operationLimit', operationLimit);
 
   if (status === 'success') {
     console.log('--------------flow can start-----------');
-    await disassembleServerFlow();
+    await disassembleServerFlow(operationLimit);
+    console.log('--------------db update-----------');
+    await dbUpdateLastDone('disassemble');
   } else if (status === 'abort_by_response') {
     // todo: alert if problem case happen (as long as the SC has stx it will not happen)
     // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxx----------------------------aborted-----------xxxxxxx');
@@ -76,12 +82,12 @@ const checkToStartFlow = async () => {
   }
 };
 
-const disassembleServerFlow = async () => {
+const disassembleServerFlow = async (operationLimit) => {
   // for every work queue element
-  let valueToDisassemble = await getValuesFromQueueDisassemble();
-  console.log(valueToDisassemble);
+  let valuesToDisassemble = await getValuesFromQueueDisassemble();
+  console.log(valuesToDisassemble);
   // maximum 25 transactions done in a block by the same account
-  let upperLimit = valueToDisassemble.length > 25 ? 25 : valueToDisassemble.length;
+  let upperLimit = valuesToDisassemble.length < operationLimit ? valuesToDisassemble.length : operationLimit;
   let availableNonce = await getAccountNonce(wallets.admin[network]);
   let lastUsedNonce = availableNonce - 1;
 
@@ -103,16 +109,16 @@ const disassembleServerFlow = async () => {
     // verify available nonce
     await checkNonceUpdate();
 
-    const x = valueToDisassemble[i];
+    const tuple = valuesToDisassemble[i];
     // get the token uri
-    console.log('x', x);
+    console.log('tuple', tuple);
     const urlNFT = await getTokenUri(
       network,
       wallets.user[network],
       contracts[network].degens.split('.')[0],
       contracts[network].degens.split('.')[1],
       'get-token-uri',
-      [x.id]
+      [tuple.id]
     );
 
     console.log('urlNFT', urlNFT);
@@ -131,8 +137,8 @@ const disassembleServerFlow = async () => {
       contracts[network].customizable.split('.')[1],
       'disassemble-finalize',
       [
-        x.id,
-        x.address,
+        tuple.id,
+        tuple.address,
         attributes.Background,
         attributes.Car,
         attributes.Rims,
@@ -146,4 +152,4 @@ const disassembleServerFlow = async () => {
 };
 
 // await disassembleServerFlow();
-await checkToStartFlow();
+// await checkToStartFlowDisassemble();
