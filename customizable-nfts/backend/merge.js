@@ -163,7 +163,6 @@ const mergeServerFlow = async () => {
     const rimsJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlRimsJSON)));
     const headJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlHeadJSON)));
 
-
     const urlImgComponentBackground = getImgComponentUrlFromJson(backgroundJSONResponse);
     const urlImgGameCar = getImgGameUrlFromJson(carJSONResponse);
     const urlImgComponentCar = getImgComponentUrlFromJson(carJSONResponse);
