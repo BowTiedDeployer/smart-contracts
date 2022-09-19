@@ -230,13 +230,13 @@ export const addNDisassembleToQueue = async (start, n) => {
 // await addNDisassembleToQueue(2, 0);
 
 // await mintComponentSet();
-// await mintNComponentSets(2);
-// await addNAssembleToQueue(1, 1);
+await mintNComponentSets(5);
+// await addNAssembleToQueue(8, 1);
 
 // await mintComponentSet();
 
 // await mintDegen('ipfs://bafkreidezqputo6mzxgiqivj52vctrugiflckkwfoyj6cdjhiege2s7jma');
 // await mintCar('LamboBlue');
-await mintRims('ClassyDark');
+// await mintRims('ClassyDark');
 // await mintComponentSet();
 // await addSwapToQueue(1, 2, 'car-type');

@@ -2,7 +2,7 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { contracts, network, operationType, wallets } from './consts.js';
 import { hashToPinataUrl, jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
-import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateTxId } from './helper_db.js';
+import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
 import { imgInGameContentCreate, imgProfileContentCreate } from './helper_files.js';
 import {
   jsonContentCreate,
@@ -17,6 +17,7 @@ import {
   chainGetTxIdStatus,
   checkNonceUpdate,
   getAccountNonce,
+  getMempoolTransactionCount,
   readOnlySCJsonResponse,
   sleep,
 } from './helper_sc.js';
@@ -55,14 +56,18 @@ const getValuesFromQueueAssemble = async () => {
   return listOfTuplesResponseToList(values);
 };
 
-const assembleServerFlow = async () => {
+const assembleServerFlow = async (operationLimit) => {
   // get values from queue
   let valuesToAssemble = await getValuesFromQueueAssemble();
+  console.log('valuesToAssemble: ', valuesToAssemble);
+  console.log('valuesToAssemble.length: ', valuesToAssemble.length);
 
-  // maximum 25 transactions done in a block by the same account
-  let upperLimit = valuesToAssemble.length > 25 ? 25 : valuesToAssemble.length;
+  // min( operationLimit, values.length )
+  let upperLimit = valuesToAssemble.length < operationLimit ? valuesToAssemble.length : operationLimit;
   let availableNonce = await getAccountNonce(wallets.admin[network]);
   let lastUsedNonce = availableNonce - 1;
+
+  console.log('upperLimit', upperLimit);
 
   async function checkNonceUpdate(checkIt = 1) {
     if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
@@ -82,6 +87,7 @@ const assembleServerFlow = async () => {
     await checkNonceUpdate();
 
     const tuple = valuesToAssemble[i];
+    console.log('tuple', tuple);
     let attributes = {};
 
     // take jsons (background, rims, car, head - type: alien/skull, face, head)
@@ -187,7 +193,7 @@ const assembleServerFlow = async () => {
       attributes,
       'DegenNFT'
     );
-    console.log(degenJson);
+    // console.log(degenJson);
 
     // upload json and get hash
     const degenJsonHash = await uploadFlowJson(degenJsonName, degenJson);
@@ -210,15 +216,20 @@ const assembleServerFlow = async () => {
   }
 };
 
-const checkToStartFlow = async () => {
+export const checkToStartFlowAssemble = async () => {
   const txId = await dbGetTxId(operationType.assemble); //readFromDB
   // fetchJSONResponse(txId)
   // general call
   const status = await chainGetTxIdStatus(txId);
+  const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
+  const operationLimit = 25 - transactionCount;
+  console.log('operationLimit', operationLimit);
 
-  if (status === 'success') {
+  if ((status === 'success' || status === undefined) && operationLimit > 0) {
     console.log('--------------flow can start-----------');
-    await assembleServerFlow();
+    await assembleServerFlow(operationLimit);
+    console.log('--------------db update-----------');
+    await dbUpdateLastDone('assemble');
   } else if (status === 'abort_by_response') {
     // todo: alert if problem case happen (as long as the SC has stx it will not happen)
     // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxx----------------------------aborted-----------xxxxxxx');
@@ -231,6 +242,6 @@ const checkToStartFlow = async () => {
   }
 };
 
-// await checkToStartFlow();
+// await checkToStartFlowAssemble();
 
-await assembleServerFlow();
+// await assembleServerFlow();

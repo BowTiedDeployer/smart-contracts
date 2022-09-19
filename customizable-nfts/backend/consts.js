@@ -19,6 +19,7 @@ export const urlApis = {
   feeCalc: (network) => `${coreApiUrl[network]}/v2/fees/transaction`,
   accountNonce: (network, address) => `${coreApiUrl[network]}/extended/v1/address/${address}/nonces?unanchored=true`,
   accountDetails: (network, address) => `${coreApiUrl[network]}/v2/accounts/${address}`,
+  accountMempool: (network, address) => `${coreApiUrl[network]}/extended/v1/address/${address}/mempool`,
 };
 
 export const contracts = {

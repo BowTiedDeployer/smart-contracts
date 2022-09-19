@@ -33,7 +33,7 @@ const uploadToPinata = async (filePath, fileNamePinata) => {
 
 export const uploadFlowJson = async (jsonName, jsonContent) => {
   const jsonPath = jsonName + '.json';
-  saveFile(jsonPath, jsonContent);
+  await saveFile(jsonPath, jsonContent);
   let { config, data } = await uploadToPinata(jsonPath, jsonName);
   const res = await axios(config);
   deleteFile(jsonPath);
@@ -42,7 +42,7 @@ export const uploadFlowJson = async (jsonName, jsonContent) => {
 
 export const uploadFlowImg = async (imgName, imgContent) => {
   const imgPath = imgName + '.png';
-  saveFile(imgPath, imgContent);
+  await saveFile(imgPath, imgContent);
   let { config, data } = await uploadToPinata(imgPath, imgName);
   const res = await axios(config);
   deleteFile(imgPath);

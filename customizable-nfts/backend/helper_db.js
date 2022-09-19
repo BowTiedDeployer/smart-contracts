@@ -93,6 +93,59 @@ export const dbUpdateTxId = async (operation, txId) => {
   }
 };
 
+export const dbReadLastDone = async () => {
+  try {
+    await client.connect();
+    return (await client.db().collection(collectionId[network]).findOne())?.lastDone;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    client.close();
+  }
+};
+
+export const dbUpdateLastDone = async (nowDone) => {
+  try {
+    await client.connect();
+    const currentIdDb = client.db().collection(collectionId[network]);
+    // await currentIdDb.updateOne({}, { $set: { lastDone: nowDone } });
+
+    let matchedCount = 0;
+    switch (nowDone) {
+      case operationType.assemble:
+        const resultAssemble = await currentIdDb.updateOne({ lastDone: 'swap' }, { $set: { lastDone: nowDone } });
+        matchedCount = resultAssemble.matchedCount;
+        break;
+      case operationType.disassemble:
+        const resultDisassemble = await currentIdDb.updateOne(
+          { lastDone: 'assemble' },
+          { $set: { lastDone: nowDone } }
+        );
+        matchedCount = resultDisassemble.matchedCount;
+        break;
+      case operationType.merge:
+        const resultMerge = await currentIdDb.updateOne({ lastDone: 'disassemble' }, { $set: { lastDone: nowDone } });
+        matchedCount = resultMerge.matchedCount;
+        break;
+      case operationType.swap:
+        const resultSwap = await currentIdDb.updateOne({ lastDone: 'merge' }, { $set: { lastDone: nowDone } });
+        matchedCount = resultSwap.matchedCount;
+        break;
+      default:
+        console.error(`invalid operation ${nowDone}`);
+        return null;
+    }
+
+    if (matchedCount === 0) {
+      console.error(`cannot update to ${nowDone}`);
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    client.close();
+  }
+};
+
 // await dbIncremendId(3);
 // console.log(operationType.assemble, await dbUpdateTxId(operationType.assembledsa, '1assemble132sda'));
 // console.log(operationType.disassemble, await dbUpdateTxId(operationType.disassemble, '1disassemble132sda'));
@@ -115,3 +168,10 @@ export const dbUpdateTxId = async (operation, txId) => {
 // await dbUpdateTxId(operationType.assemble, '2assemble45432');
 // let txIdAssemble = await dbGetTxId(operationType.assemble);
 // console.log('txIdAssemble', txIdAssemble);
+
+let lastDone = await dbReadLastDone();
+console.log('lastDone', lastDone);
+
+// await dbUpdateLastDone('merge');
+// lastDone = await dbReadLastDone();
+// console.log('lastDone', lastDone);

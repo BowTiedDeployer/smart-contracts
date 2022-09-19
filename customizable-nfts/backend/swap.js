@@ -2,7 +2,7 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { componentType, contracts, network, operationType, wallets } from './consts.js';
 import { hashToPinataUrl, jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
-import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateTxId } from './helper_db.js';
+import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
 import { imgInGameContentCreate, imgProfileContentCreate } from './helper_files.js';
 import {
   jsonContentCreate,
@@ -17,6 +17,7 @@ import {
   chainGetTxIdStatus,
   checkNonceUpdate,
   getAccountNonce,
+  getMempoolTransactionCount,
   getTokenUri,
   readOnlySCJsonResponse,
   sleep,
@@ -55,12 +56,12 @@ const getValuesFromQueueSwap = async () => {
   return listOfTuplesResponseToList(values);
 };
 
-const swapServerFlow = async () => {
+const swapServerFlow = async (operationLimit) => {
   // get values from queue
   let valuesToSwap = await getValuesFromQueueSwap();
 
   // maximum 25 transactions done in a block by the same account
-  let upperLimit = valuesToSwap.length > 25 ? 25 : valuesToSwap.length;
+  let upperLimit = valuesToSwap.length < operationLimit ? valuesToSwap.length : operationLimit;
   let availableNonce = await getAccountNonce(wallets.admin[network]);
   let lastUsedNonce = availableNonce - 1;
 
@@ -261,15 +262,20 @@ const swapServerFlow = async () => {
   }
 };
 
-const checkToStartFlow = async () => {
+export const checkToStartFlowSwap = async () => {
   const txId = await dbGetTxId(operationType.swap); //readFromDB
   // fetchJSONResponse(txId)
   // general call
   const status = await chainGetTxIdStatus(txId);
+  const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
+  const operationLimit = 25 - transactionCount;
+  console.log('operationLimit', operationLimit);
 
   if (status === 'success') {
     console.log('--------------flow can start-----------');
-    await swapServerFlow();
+    await swapServerFlow(operationLimit);
+    console.log('--------------db update-----------');
+    await dbUpdateLastDone('swap');
   } else if (status === 'abort_by_response') {
     // todo: alert if problem case happen (as long as the SC has stx it will not happen)
     // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxx----------------------------aborted-----------xxxxxxx');
@@ -282,6 +288,6 @@ const checkToStartFlow = async () => {
   }
 };
 
-// await checkToStartFlow();
+// await checkToStartFlowSwap();
 
-await swapServerFlow();
+// await swapServerFlow();

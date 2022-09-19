@@ -22,7 +22,7 @@ import {
   callSCFunctionWithNonceUser,
   checkNonceUpdate,
 } from './helper_sc.js';
-import { composeJSON, fetchJsonFromUrl, getAttributesMapTraitValue } from './helper_json.js';
+import { fetchJsonFromUrl, getAttributesMapTraitValue, jsonContentCreate } from './helper_json.js';
 import dotenv from 'dotenv';
 import {
   jsonResponseToTokenUri,
@@ -33,7 +33,7 @@ import {
   jsonResponseToTokenName,
 } from './converters.js';
 import { oldToNewComponentNames } from './mapOldNewComponentNames.js';
-import { imgContentCreate } from './helper_files.js';
+import { imgProfileContentCreate } from './helper_files.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
 import { dbIncremendId, dbReadCurrentId } from './helper_db.js';
 dotenv.config();
@@ -216,7 +216,7 @@ const mergeServerFlow = async () => {
     //const backgroundImgUrl= await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlBackgroundJSON)));
     console.log('imgHeadURL', pinataToHTTPUrl(replaceTokenCurrentId(urlHeadJSON)));
 
-    const imgContent = await imgContentCreate(
+    const imgContent = await imgProfileContentCreate(
       pinataToHTTPUrl(backgroundJSONResponse.image),
       pinataToHTTPUrl(carJSONResponse.image),
       pinataToHTTPUrl(rimsJSONResponse.image),
@@ -227,9 +227,11 @@ const mergeServerFlow = async () => {
     dbIncremendId(currDBId);
 
     // todo: should pass attribute dictionary instead of list -> function jsonContentCreate
-    const composedJSON = composeJSON(
+    const composedJSON = jsonContentCreate(
       `imgDegen#${currDBId}`,
       `ipfs://${imgHash}`,
+      '',
+      '',
       [
         { trait_type: 'Background', value: backgroundNewName },
         { trait_type: 'Car', value: carNewName },
@@ -256,4 +258,6 @@ const mergeServerFlow = async () => {
   }
 };
 
-await mergeServerFlow();
+export const checkToStartFlowMerge = async () => {};
+
+// await mergeServerFlow();
