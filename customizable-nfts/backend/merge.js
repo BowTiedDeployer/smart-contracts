@@ -1,64 +1,25 @@
-import fetch from 'node-fetch';
-import { metadataOldDegensSrc } from './consts.js';
-import {
-  standardPrincipalCV,
-  cvToHex,
-  hexToCV,
-  cvToJSON,
-  PostConditionMode,
-  makeContractCall,
-  broadcastTransaction,
-  stringAsciiCV,
-} from '@stacks/transactions';
-import BigNum from 'bn.js';
+import { operationType } from './consts.js';
 import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
 import { network, contracts, wallets } from './consts.js';
 import {
   getAccountNonce,
-  getNormalizedFee,
   readOnlySCJsonResponse,
-  callSCFunction,
   callSCFunctionWithNonce,
-  callSCFunctionWithNonceUser,
-  checkNonceUpdate,
+  chainGetTxIdStatus,
+  sleep,
 } from './helper_sc.js';
-import { fetchJsonFromUrl, getAttributesMapTraitValue, jsonContentCreate } from './helper_json.js';
-import dotenv from 'dotenv';
 import {
-  jsonResponseToTokenUri,
-  stringToMap,
-  intToHexString,
-  replaceTokenCurrentId,
-  pinataToHTTPUrl,
-  jsonResponseToTokenName,
-} from './converters.js';
+  fetchJsonFromUrl,
+  getAttributesMapTraitValue,
+  getImgComponentUrlFromJson,
+  getImgGameUrlFromJson,
+  jsonContentCreate,
+} from './helper_json.js';
+import { jsonResponseToTokenUri, replaceTokenCurrentId, pinataToHTTPUrl, hashToPinataUrl } from './converters.js';
 import { oldToNewComponentNames } from './mapOldNewComponentNames.js';
-import { imgProfileContentCreate } from './helper_files.js';
+import { imgInGameContentCreate, imgProfileContentCreate } from './helper_files.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
-import { dbIncremendId, dbReadCurrentId } from './helper_db.js';
-dotenv.config();
-// take {id, principal} from queue
-// do this steps calling SC
-// (contract-call? .degens mint-uri 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "uriNiceDegen")
-// ::set_tx_sender STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6
-// (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-disassemble-work-in-queue u1)
-// ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-// (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract disassemble-finalize u1 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "DarkPurple" "BentleyBlack" "ClassyCream" "Miami_Syringe_Cigar")
-// (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.body-kits get-token-uri u1)
-// (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.body-kits get-owner u1)
-
-// to convert ${TokenId with current ID}
-
-//   export const pinataToHTTPUrl = (pinataUrl) => {
-//     let httpUrl = 'https://stxnft.mypinata.cloud/' + pinataUrl.slice(0, 4) + pinataUrl.slice(6);
-//     return httpUrl;
-// };
-
-// const fetchNFTFromJSON = async (jsonSrc) => {
-//     const res = await fetch(jsonSrc);
-//     console.log(res)
-//     return await res.json();
-//   };
+import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateTxId } from './helper_db.js';
 
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
@@ -66,7 +27,6 @@ let networkN =
 const listOfTuplesResponseToList = (tupleResponse) => {
   let idLists = [];
   const tupleList = tupleResponse.value.value;
-  // console.log(tupleList);
   tupleList.forEach((x) => {
     idLists.push({
       degenId: x.value['degen-id'].value,
@@ -77,8 +37,7 @@ const listOfTuplesResponseToList = (tupleResponse) => {
   return idLists;
 };
 
-const getValuesFromQueue = async () => {
-  // return a list having {address, id}
+const getValuesFromQueueMerge = async () => {
   const values = await readOnlySCJsonResponse(
     networkN,
     wallets.admin[network],
@@ -87,82 +46,77 @@ const getValuesFromQueue = async () => {
     'get-merge-work-queue',
     []
   );
-  //return [];
   return listOfTuplesResponseToList(values);
 };
-
-// const urlNFT = await getTokenUriNFT(
-const urlNFT = jsonResponseToTokenUri(
-  await readOnlySCJsonResponse(
-    network,
-    wallets.user[network],
-    contracts[network].miami.split('.')[0],
-    contracts[network].miami.split('.')[1],
-    'get-token-uri',
-    [1]
-  )
-);
 
 // add in list values with pre-filler.js so this can be done
 const mergeServerFlow = async () => {
   // for every work queue element
-  let valueToDisassemble = await getValuesFromQueue();
-  for await (const x of valueToDisassemble) {
-    // (await getValuesFromQueue()).forEach(async (x) => {
+  let valuesToMerge = await getValuesFromQueueMerge();
 
-    // await new Promise((r) => setTimeout(r, 2000));
-    let availableNonce = await getAccountNonce(wallets.admin.wallet);
-    let lastUsedNonce = availableNonce - 1;
-    checkNonceUpdate(1, availableNonce, lastUsedNonce);
+  // maximum 25 transactions done in a block by the same account
+  let upperLimit = valuesToMerge.length > 25 ? 25 : valuesToMerge.length;
+  let availableNonce = await getAccountNonce(wallets.admin[network]);
+  let lastUsedNonce = availableNonce - 1;
+
+  async function checkNonceUpdate(checkIt = 1) {
+    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
+
+    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
+    else {
+      await sleep(checkIt * 1000);
+      availableNonce = await getAccountNonce(wallets.admin[network]);
+
+      return await checkNonceUpdate(++checkIt);
+    }
+  }
+
+  let lastTxId = null;
+  for (let i = 0; i < upperLimit; i++) {
+    //verify available nonce
+    await checkNonceUpdate();
+
+    const tuple = valuesToMerge[i];
+    let attributes = {};
 
     // get the token uri
-    console.log('x', x);
     let contractType = '';
-    if (x.degenType == 'miami') contractType = 'miami';
+    if (tuple.degenType == 'miami') contractType = 'miami';
     else contractType = 'nyc';
-    const urlNFT = await jsonResponseToTokenUri(
+    console.log(contractType);
+    const urlJsonDegen = await jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
         wallets.user[network],
         contracts[network][contractType].split('.')[0],
         contracts[network][contractType].split('.')[1],
         'get-token-uri',
-        [x.degenId]
+        [tuple.degenId]
       )
     );
-    console.log('y', x);
-    //console.log('urlNFT', pinataToHTTPUrl(replaceTokenCurrentId(urlNFT, x.degenId)));
     // -> get the json
-    const jsonFetched = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlNFT, x.degenId)));
-    //console.log(jsonFetched)
+    const jsonDegen = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlJsonDegen, tuple.degenId)));
     // -> get the attributes
-    const attributes = getAttributesMapTraitValue(jsonFetched);
-    console.log('attributes', attributes);
-    console.log(contractType);
-    const backgroundNewName = oldToNewComponentNames[contractType].background[attributes.Background];
-    console.log(backgroundNewName);
+    let attributesDegen = getAttributesMapTraitValue(jsonDegen);
+    const backgroundNewName = oldToNewComponentNames[contractType].background[attributesDegen.Background];
     const carNewName =
       contractType == 'miami'
-        ? oldToNewComponentNames[contractType].car[attributes.Car]
-        : oldToNewComponentNames[contractType].car[attributes.Colors];
-    console.log(carNewName);
-    const headPartialNewName = oldToNewComponentNames[contractType].head[attributes.Head];
-    console.log(headPartialNewName);
-    const facePartialNewName = oldToNewComponentNames[contractType].face[attributes.Face];
-    console.log(facePartialNewName);
-    const rimsNewName = oldToNewComponentNames[contractType].rims[attributes.Rims];
+        ? oldToNewComponentNames[contractType].car[attributesDegen.Car]
+        : oldToNewComponentNames[contractType].car[attributesDegen.Colors];
+    const headPartialNewName = oldToNewComponentNames[contractType].head[attributesDegen.Head];
+    const facePartialNewName = oldToNewComponentNames[contractType].face[attributesDegen.Face];
+    const rimsNewName = oldToNewComponentNames[contractType].rims[attributesDegen.Rims];
     let headNewName = '';
     let typeNewName = '';
-    if (x.degenType == 'miami') {
+    if (tuple.degenType == 'miami') {
       typeNewName = 'Skull';
       headNewName = `Miami_${headPartialNewName}_${facePartialNewName}`;
-    } else if (x.degenType == 'nyc') {
+    } else if (tuple.degenType == 'nyc') {
       typeNewName = 'Alien';
       headNewName = `NYC_${headPartialNewName}_${facePartialNewName}`;
     }
 
-    //console.log('urlheadJSON', urlHeadJSON);
-    const urlBackgroundJSON = jsonResponseToTokenName(
+    const urlBackgroundJSON = jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
         wallets.user[network],
@@ -173,7 +127,7 @@ const mergeServerFlow = async () => {
       )
     );
 
-    const urlCarJSON = jsonResponseToTokenName(
+    const urlCarJSON = jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
         wallets.user[network],
@@ -183,7 +137,7 @@ const mergeServerFlow = async () => {
         [carNewName]
       )
     );
-    const urlRimsJSON = jsonResponseToTokenName(
+    const urlRimsJSON = jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
         wallets.user[network],
@@ -193,7 +147,7 @@ const mergeServerFlow = async () => {
         [rimsNewName]
       )
     );
-    const urlHeadJSON = jsonResponseToTokenName(
+    const urlHeadJSON = jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
         wallets.user[network],
@@ -203,61 +157,92 @@ const mergeServerFlow = async () => {
         [headNewName]
       )
     );
-    console.log('urlBg', pinataToHTTPUrl(replaceTokenCurrentId(urlBackgroundJSON)));
-    const backgroundJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlBackgroundJSON)));
-    console.log(backgroundJSONResponse);
-    const carJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlCarJSON)));
-    console.log('carIMG', carJSONResponse.image);
-    const rimsJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlRimsJSON)));
-    console.log('rimsIMG', rimsJSONResponse.image);
 
+    const backgroundJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlBackgroundJSON)));
+    const carJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlCarJSON)));
+    const rimsJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlRimsJSON)));
     const headJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlHeadJSON)));
 
-    //const backgroundImgUrl= await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlBackgroundJSON)));
-    console.log('imgHeadURL', pinataToHTTPUrl(replaceTokenCurrentId(urlHeadJSON)));
+
+    const urlImgComponentBackground = getImgComponentUrlFromJson(backgroundJSONResponse);
+    const urlImgGameCar = getImgGameUrlFromJson(carJSONResponse);
+    const urlImgComponentCar = getImgComponentUrlFromJson(carJSONResponse);
+    const urlImgComponentRims = getImgComponentUrlFromJson(rimsJSONResponse);
+    const urlImgGameHead = getImgGameUrlFromJson(headJSONResponse);
+    const urlImgComponentHead = getImgComponentUrlFromJson(headJSONResponse);
+
+    let attributeBackground = getAttributesMapTraitValue(backgroundJSONResponse);
+    let attributeCar = getAttributesMapTraitValue(carJSONResponse);
+    let attributeRims = getAttributesMapTraitValue(rimsJSONResponse);
+    let attributeHead = getAttributesMapTraitValue(headJSONResponse);
 
     const imgContent = await imgProfileContentCreate(
-      pinataToHTTPUrl(backgroundJSONResponse.image),
-      pinataToHTTPUrl(carJSONResponse.image),
-      pinataToHTTPUrl(rimsJSONResponse.image),
-      pinataToHTTPUrl(headJSONResponse.image)
+      pinataToHTTPUrl(urlImgComponentBackground),
+      pinataToHTTPUrl(urlImgComponentCar),
+      pinataToHTTPUrl(urlImgComponentRims),
+      pinataToHTTPUrl(urlImgComponentHead)
     );
-    let currDBId = await dbReadCurrentId();
-    const imgHash = await uploadFlowImg(`imgDegen#${currDBId}`, imgContent);
-    dbIncremendId(currDBId);
 
-    // todo: should pass attribute dictionary instead of list -> function jsonContentCreate
-    const composedJSON = jsonContentCreate(
-      `imgDegen#${currDBId}`,
-      `ipfs://${imgHash}`,
+    let currentDbId = await dbReadCurrentId();
+
+    const degenName = `BadDegen#${currentDbId}`;
+    const degenImgName = `BadImgDegen#${currentDbId}`;
+    const degenImgGameName = `BadImgGameDegen#${currentDbId}`;
+    const degenJsonName = `BadJsonDegen#${currentDbId}`;
+
+    attributes = { ...attributeBackground, ...attributeCar, ...attributeHead, ...attributeRims };
+    attributes = { ...attributesDegen, Type: attributes.Race };
+    const { Race, ...otherAttributes } = attributes;
+    attributes = otherAttributes;
+
+    const degenImgGame = await imgInGameContentCreate(pinataToHTTPUrl(urlImgGameCar), pinataToHTTPUrl(urlImgGameHead));
+
+    const degenImgHash = await uploadFlowImg(degenImgName, imgContent);
+    const degenImgGameHash = await uploadFlowImg(degenImgGameName, degenImgGame);
+
+    const degenJson = jsonContentCreate(
+      degenName,
+      hashToPinataUrl(degenImgHash),
       '',
-      '',
-      [
-        { trait_type: 'Background', value: backgroundNewName },
-        { trait_type: 'Car', value: carNewName },
-        { trait_type: 'Rims', value: rimsNewName },
-        { trait_type: 'Type', value: typeNewName },
-        { trait_type: 'Head', value: headPartialNewName },
-        { trait_type: 'Face', value: facePartialNewName },
-      ],
+      hashToPinataUrl(degenImgGameHash),
+      attributes,
       `DegenNFT`
     );
-    console.log(composedJSON);
-    const jsonHash = await uploadFlowJson(`JSONDegen#${currDBId}`, composedJSON);
-    // -> mint them
-    //(define-public (merge-finalize (degen-id uint) (member principal) (metadata-uri-dgn (string-ascii 99)))
 
-    // todo: should pass ipfs://jsonHash instead of jsonHash -> function hashToPinataUrl
-    callSCFunctionWithNonce(
+    const degenJsonHash = await uploadFlowJson(degenJsonName, degenJson);
+    // -> mint them
+
+    lastTxId = await callSCFunctionWithNonce(
       networkN,
       contracts[network].customizable.split('.')[0],
       contracts[network].customizable.split('.')[1],
       'merge-finalize',
-      [x.degenId, x.address, jsonHash]
+      [tuple.degenId, tuple.address, degenJsonHash]
     );
+    await dbIncremendId(currentDbId);
+    await dbUpdateTxId(operationType.merge, lastTxId);
   }
 };
 
-export const checkToStartFlowMerge = async () => {};
+const checkToStartFlow = async () => {
+  const txId = await dbGetTxId(operationType.merge); //readFromDB
+  // fetchJSONResponse(txId)
+  // general call
+  const status = await chainGetTxIdStatus(txId);
 
-// await mergeServerFlow();
+  if (status === 'success') {
+    await mergeServerFlow();
+    console.log('--------------flow can start-----------');
+  } else if (status === 'abort_by_response') {
+    // todo: alert if problem case happen (as long as the SC has stx it will not happen)
+    // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxx----------------------------aborted-----------xxxxxxx');
+    console.error(`error: failed tx ${txId} with status: ${status}`);
+  } else if (status === 'pending') {
+    // do nothing
+    console.log('----------pending----------');
+  } else {
+    console.error(`invalid status "${status}" txid: ${txId}`);
+  }
+};
+
+await checkToStartFlow();
