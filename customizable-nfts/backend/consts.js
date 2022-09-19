@@ -23,7 +23,7 @@ export const urlApis = {
 
 export const contracts = {
   mainnet: {},
-  network: {},
+  testnet: {},
   mocknet: {
     backgrounds: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.backgrounds',
     cars: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.cars',
@@ -39,13 +39,38 @@ export const contracts = {
 export const wallets = {
   admin: {
     mainnet: {},
-    network: {},
+    testnet: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
     mocknet: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
   },
   user: {
     mainnet: {},
-    network: {},
+    testnet: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
     mocknet: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
+  },
+  wallet2: {
+    mainnet: {},
+    testnet: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG',
+    mocknet: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG',
+  },
+  wallet3: {
+    mainnet: {},
+    testnet: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC',
+    mocknet: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC',
+  },
+  wallet4: {
+    mainnet: {},
+    testnet: 'ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND',
+    mocknet: 'ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND',
+  },
+  wallet5: {
+    mainnet: {},
+    testnet: 'ST2REHHS5J3CERCRBEPMGH7921Q6PYKAADT7JP2VB',
+    mocknet: 'ST2REHHS5J3CERCRBEPMGH7921Q6PYKAADT7JP2VB',
+  },
+  wallet6: {
+    mainnet: {},
+    testnet: 'ST3AM1A56AK2C1XAFJ4115ZSV26EB49BVQ10MGCS0',
+    mocknet: 'ST3AM1A56AK2C1XAFJ4115ZSV26EB49BVQ10MGCS0',
   },
 };
 
