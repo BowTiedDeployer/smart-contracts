@@ -223,7 +223,7 @@ const mergeServerFlow = async () => {
   }
 };
 
-const checkToStartFlow = async () => {
+export const checkToStartFlowMerge = async () => {
   const txId = await dbGetTxId(operationType.merge); //readFromDB
   // fetchJSONResponse(txId)
   // general call
@@ -244,4 +244,4 @@ const checkToStartFlow = async () => {
   }
 };
 
-await checkToStartFlow();
+// await checkToStartFlowMerge();
