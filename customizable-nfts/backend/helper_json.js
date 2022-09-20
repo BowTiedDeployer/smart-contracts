@@ -73,13 +73,13 @@ const createJsonAttributes = (attributes) => {
   ];
 
   let jsonAttributes = '';
-  attributesList.forEach((attribute) => {
+  for (const attribute of attributesList) {
     jsonAttributes += `
     {
       "trait_type": "${attribute.trait_type}", 
       "value": "${attribute.value}"
     },`;
-  });
+  }
 
   // removes last trailling comma for complience with JSON standard
   return jsonAttributes.slice(0, -1);

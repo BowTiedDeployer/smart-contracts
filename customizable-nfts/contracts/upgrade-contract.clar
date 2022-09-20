@@ -40,7 +40,7 @@
 
 
 ;; Queue for work
-(define-data-var disassemble-work-queue (list 500 {member: principal, token-id: uint}) (list))
+(define-data-var disassemble-work-queue (list 100 {member: principal, token-id: uint}) (list))
 
 (define-public (disassemble-finalize (token-id uint) (member principal) (background-name (string-ascii 30)) (car-name (string-ascii 30)) (rim-name (string-ascii 30)) (head-name (string-ascii 30))) 
 	(begin     
@@ -99,7 +99,7 @@
             )
             (unwrap-panic (contract-call? .degens burn-token token-id))
             (append 
-              (unwrap-panic (as-max-len? work-queue-value u499)) 
+              (unwrap-panic (as-max-len? work-queue-value u99)) 
               value-to-add
             )
           )
@@ -182,7 +182,7 @@
 ;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
 ;; (contract-call? .upgrade-contract assemble-finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "uri-custom")
 
-(define-data-var assemble-work-queue (list 500 {member: principal, background-id: uint, car-id: uint, rim-id: uint, head-id: uint}) (list))
+(define-data-var assemble-work-queue (list 100 {member: principal, background-id: uint, car-id: uint, rim-id: uint, head-id: uint}) (list))
 
 (define-public (assemble-finalize (member principal) (metadata-uri (string-ascii 99))) 
 	(begin     
@@ -255,7 +255,7 @@
             (unwrap-panic (contract-call? .heads burn-token head-id))
 
             (append 
-              (unwrap-panic (as-max-len? work-queue-value u499)) 
+              (unwrap-panic (as-max-len? work-queue-value u99)) 
               value-to-add
             )
           )
@@ -339,7 +339,7 @@
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degens get-token-uri u4)
 
 
-(define-data-var swap-work-queue (list 500 {member: principal, degen-id: uint, component-id: uint, component-type: (string-ascii 30)}) (list))
+(define-data-var swap-work-queue (list 100 {member: principal, degen-id: uint, component-id: uint, component-type: (string-ascii 30)}) (list))
 
 (define-public (swap-finalize (degen-id uint) (member principal) (metadata-uri-dgn (string-ascii 99)) (component-name (string-ascii 30)) (component-type (string-ascii 30)))
   (begin
@@ -446,7 +446,7 @@
               )
             )            
             (append 
-              (unwrap-panic (as-max-len? work-queue-value u499)) 
+              (unwrap-panic (as-max-len? work-queue-value u99)) 
               value-to-add
             )
           )
@@ -528,7 +528,7 @@
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract merge-finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "nice-new-nft")
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degens get-token-uri u1)
 
-(define-data-var merge-work-queue (list 500 {member: principal, degen-id: uint, degen-type: (string-ascii 30)}) (list))
+(define-data-var merge-work-queue (list 100 {member: principal, degen-id: uint, degen-type: (string-ascii 30)}) (list))
 
 (define-public (merge-finalize (degen-id uint) (member principal) (metadata-uri-dgn (string-ascii 99)))
   (begin
@@ -599,7 +599,7 @@
             (some (burn-old-nft degen-id degen-type))
 
             (append 
-              (unwrap-panic (as-max-len? work-queue-value u499)) 
+              (unwrap-panic (as-max-len? work-queue-value u99)) 
               value-to-add
             )
           )

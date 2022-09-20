@@ -7,6 +7,7 @@ import { deleteFile, saveFile } from './helper_files.js';
 import { hashToPinataUrl, jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
 import fs from 'fs';
 import { jsonContentCreate } from './helper_json.js';
+import { sleep } from './helper_sc.js';
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -28,23 +29,25 @@ const uploadToPinata = async (filePath, fileNamePinata) => {
     },
     data: data,
   };
-  return { config: config, data: data };
+  return config;
 };
 
 export const uploadFlowJson = async (jsonName, jsonContent) => {
   const jsonPath = jsonName + '.json';
   await saveFile(jsonPath, jsonContent);
-  let { config, data } = await uploadToPinata(jsonPath, jsonName);
+  await sleep(3000);
+  let config = await uploadToPinata(jsonPath, jsonName);
   const res = await axios(config);
-  deleteFile(jsonPath);
+  // await deleteFile(jsonPath);
   return res.data.IpfsHash;
 };
 
 export const uploadFlowImg = async (imgName, imgContent) => {
   const imgPath = imgName + '.png';
   await saveFile(imgPath, imgContent);
-  let { config, data } = await uploadToPinata(imgPath, imgName);
+  await sleep(3000);
+  let config = await uploadToPinata(imgPath, imgName);
   const res = await axios(config);
-  deleteFile(imgPath);
+  // await deleteFile(imgPath);
   return res.data.IpfsHash;
 };

@@ -59,7 +59,6 @@ const getValuesFromQueueAssemble = async () => {
 const assembleServerFlow = async (operationLimit) => {
   // get values from queue
   let valuesToAssemble = await getValuesFromQueueAssemble();
-  console.log('valuesToAssemble: ', valuesToAssemble);
   console.log('valuesToAssemble.length: ', valuesToAssemble.length);
 
   // min( operationLimit, values.length )
@@ -244,4 +243,6 @@ export const checkToStartFlowAssemble = async () => {
 
 // await checkToStartFlowAssemble();
 
-// await assembleServerFlow();
+// console.log('tx mempool', await getMempoolTransactionCount(wallets.admin[network]));
+
+// await assembleServerFlow(25);
