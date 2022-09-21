@@ -506,13 +506,13 @@ const runPrefillers = async () => {
 
   // max 25 tx per block, else server call throws error
 
-  // await prefillNSwap(degenUrlsSwap, componentSet2, n, walletUser); // %4 == 0
-  // await sleep(3000);
-  // await prefillNAssemble(componentSet1, n / 4 + 1, n, walletUser); // /4 + 1
-  // await sleep(3000);
-  await prefillNDisassemble(degenUrlsDisassemble, 2 * n + 1, 1, walletUser);
-  // await sleep(3000);
-  // await prefillNMerge('miami', 1, n, walletUser);
+  await prefillNSwap(degenUrlsSwap, componentSet2, n, walletUser); // %4 == 0
+  await sleep(3000);
+  await prefillNAssemble(componentSet1, n / 4 + 1, n, walletUser); // /4 + 1
+  await sleep(3000);
+  await prefillNDisassemble(degenUrlsDisassemble, n + 1, n, walletUser);
+  await sleep(3000);
+  await prefillNMerge('miami', 1, n, walletUser);
 };
 
 const testPrefillers = async () => {
