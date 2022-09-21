@@ -178,6 +178,17 @@ export async function callSCFunctionWithNonceWallet(
     console.log(error);
   }
 }
+export const waitTillMempoolClears = async () => {
+  getMempoolTransactionCount(wallets.admin[network]).then((x) => console.log(`Mempool TX Number: ${x}`));
+  let iterator = 1;
+  while (iterator < 10) {
+    const x = await getMempoolTransactionCount(wallets.admin[network]);
+    if (x < 25) break;
+    iterator += 1;
+    await sleep(1000 * iterator);
+    console.log(`MAX MEMPOOL ${x}`);
+  }
+};
 
 export async function callSCFunctionUser(networkInstance, contractAddress, contractName, functionName, args, nonce) {
   try {

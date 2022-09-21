@@ -1,12 +1,14 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
-import { contracts, network, wallets } from './consts.js';
+import { componentType, contracts, network, wallets } from './consts.js';
 import { stringToMap } from './converters.js';
 import {
   callSCFunctionWithNonce,
   callSCFunctionWithNonceWallet,
   checkNonceUpdate,
   getAccountNonce,
+  getMempoolTransactionCount,
   sleep,
+  waitTillMempoolClears,
 } from './helper_sc.js';
 
 let networkN =
@@ -223,14 +225,35 @@ export const mintComponentSet = async (componentNames, walletAddress) => {
     }
   }
 
-  await checkNonceUpdate();
-  await mintBackground(componentNames.Background, walletAddress);
-  await checkNonceUpdate();
-  await mintCar(componentNames.Car, walletAddress);
-  await checkNonceUpdate();
-  await mintRims(componentNames.Rims, walletAddress);
-  await checkNonceUpdate();
-  await mintHead(componentNames.Head, walletAddress);
+  // console.log(`Mempool TX Number: ${await getMempoolTransactionCount(wallets.admin[network])}`);
+  await getMempoolTransactionCount(wallets.admin[network]).then((x) => console.log(`Mempool TX Number: ${x}`));
+  await checkNonceUpdate()
+    .then(() => mintBackground(componentNames.Background, walletAddress))
+    .then(() => {
+      sleep(10000);
+      // waitTillMempoolClears();
+    })
+    .then(() => checkNonceUpdate())
+    .then(() => {
+      sleep(10000);
+      // waitTillMempoolClears();
+      // getMempoolTransactionCount(wallets.admin[network]).then((x) => console.log(`Mempool TX Number: ${x}`));
+    })
+    .then(() => mintCar(componentNames.Car, walletAddress))
+    .then(() => checkNonceUpdate())
+    .then(() => {
+      sleep(10000);
+      // waitTillMempoolClears();
+      // getMempoolTransactionCount(wallets.admin[network]).then((x) => console.log(`Mempool TX Number: ${x}`));
+    })
+    .then(() => mintRims(componentNames.Rims, walletAddress))
+    .then(() => checkNonceUpdate())
+    .then(() => {
+      sleep(10000);
+      // waitTillMempoolClears();
+      // getMempoolTransactionCount(wallets.admin[network]).then((x) => console.log(`Mempool TX Number: ${x}`));
+    })
+    .then(() => mintHead(componentNames.Head, walletAddress));
 };
 
 export const mintNComponentSets = async (componentNames, n, walletAddress) => {
@@ -362,9 +385,9 @@ const prefillNAssemble = async (componentNames, start, n, walletAddress) => {
 };
 
 const prefillNDisassemble = async (degenUrls, start, n, walletAddress) => {
-  await mintNDegens(degenUrls, n, walletAddress);
-  await sleep(2000);
-  await addNDisassembleToQueue(start, n, walletAddress);
+  await mintNDegens(degenUrls, n, walletAddress)
+    .then((x) => sleep(2000))
+    .then((x) => addNDisassembleToQueue(start, n, walletAddress));
 };
 
 const prefillNSwap = async (degenUrls, componentNames, n, walletAddress) => {
@@ -374,21 +397,22 @@ const prefillNSwap = async (degenUrls, componentNames, n, walletAddress) => {
   for (let i = 0; i < n; i++) {
     await checkNonceUpdate();
     if (i % 4 === 0) {
-      await mintBackground(componentNames.Background, walletAddress);
-      await sleep(2000);
-      await addSwapToQueue(i, componentId, 'background-type');
+      await mintBackground(componentNames.Background, walletAddress)
+        .then((x) => sleep(2000))
+        .then((x) => addSwapToQueue(i, componentId, 'background-type'));
     } else if (i % 4 === 1) {
-      await mintCar(componentNames.Car, walletAddress);
-      await sleep(2000);
-      await addSwapToQueue(i, componentId, 'car-type');
+      await mintCar(componentNames.Car, walletAddress)
+        .then((x) => sleep(2000))
+        .then((x) => addSwapToQueue(i, componentId, 'car-type'));
     } else if (i % 4 === 2) {
-      await mintRims(componentNames.Rims, walletAddress);
-      await sleep(2000);
-      await addSwapToQueue(i, componentId, 'rim-type');
+      await mintRims(componentNames.Rims, walletAddress)
+        .then((x) => sleep(2000))
+        .then((x) => addSwapToQueue(i, componentId, 'rim-type'));
     } else {
-      await mintHead(componentNames.Head, walletAddress);
-      await sleep(2000);
-      await addSwapToQueue(i, componentId, 'head-type');
+      await mintHead(componentNames.Head, walletAddress)
+        .then((x) => sleep(2000))
+        .then((x) => addSwapToQueue(i, componentId, 'head-type'));
+      // .then((x) => (componentId += 1));
       componentId += 1;
     }
   }
@@ -396,13 +420,13 @@ const prefillNSwap = async (degenUrls, componentNames, n, walletAddress) => {
 
 const prefillNMerge = async (type, start, n, walletAddress) => {
   if (type === 'miami') {
-    await mintNMiami(n, walletAddress);
-    await sleep(2000);
-    await addNMergeToQueue(start, start + n - 1, 'miami', walletAddress);
+    await mintNMiami(n, walletAddress)
+      .then((x) => sleep(2000))
+      .then((x) => addNMergeToQueue(start, n, 'miami', walletAddress));
   } else if (type === 'nyc') {
-    await mintNNYC(n, walletAddress);
-    await sleep(2000);
-    await addNMergeToQueue(start, start + n - 1, 'nyc', walletAddress);
+    await mintNNYC(n, walletAddress)
+      .then((x) => sleep(2000))
+      .then((x) => addNMergeToQueue(start, n, 'nyc', walletAddress));
   }
 };
 
@@ -429,11 +453,11 @@ const runPrefillers = async () => {
   };
 
   let degenUrlsDisassemble = [
-    'ipfs://bafkreibilyogaifciaegxnaqyto256cmhu3lik6pgipyw47jtcq73ktp5m',
-    'ipfs://bafkreihzsxv2y2mty46so6ea2o4l54wz3jldthjmqc6m6n356jkaoz6qgi',
-    'ipfs://bafkreidexn3rykez2ah7byc4jz35nhxq7rtiwibewebm7jrb24eivtel2i',
-    'ipfs://bafkreicb7iccunsigfygvlbvozjtcvvmyqscfqvzxjwraj23dxulbp7igm',
-    'ipfs://bafkreid6claos4jpimrje62wbb4rkb6dfkukxakom53mz4ssskvstvh4ia',
+    'ipfs://bafkreiffq5gzls75gvoflxv5jawzig6nnasganyrdkvypfdj6maazv3ioa',
+    'ipfs://bafkreiagqvmso2xtgvnxy6hiius3bq7lq7kkraua43w2s6ijd4rb64b3di',
+    'ipfs://bafkreia3yegwahw4w27cindmbz3wp5vbexdjyouttwjp5wiy75stqe67c4',
+    'ipfs://bafkreic7uucxypcfsdatbojzn3yd6aoeywfws6yh7cxwcqvhqpalq3ggzi',
+    'ipfs://bafkreifovceyfttkdsn4rv3uf4oc6gzgkuh3tw3uhcnihysz2rogcktscu',
   ];
 
   let degenUrlsSwap = [
@@ -450,11 +474,12 @@ const runPrefillers = async () => {
 
   const n = 5;
 
+  // max 25 tx per block, else server call throws error
   // await prefillNSwap(degenUrlsSwap, componentSet2, n, walletAddress);
   await prefillNAssemble(componentSet1, 1, n, walletUser);
-  await sleep(6000);
+  await sleep(3000);
   await prefillNAssemble(componentSet2, n + 1, n, wallet2);
-  await sleep(6000);
+  await sleep(3000);
   await prefillNAssemble(componentSet3, 2 * n + 1, n, wallet3);
 
   // await mintNComponentSets(componentSet1, 4, walletUser);
