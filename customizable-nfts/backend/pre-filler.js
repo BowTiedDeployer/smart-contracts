@@ -392,7 +392,6 @@ const prefillNAssemble = async (componentNames, start, n, walletAddress) => {
   await mintNComponentSets(componentNames, n, walletAddress)
     .then(() => sleep(2000))
     .then(() => addNAssembleToQueue(start, n, walletAddress));
-
 };
 
 const prefillNDisassemble = async (degenUrls, start, n, walletAddress) => {
@@ -402,30 +401,39 @@ const prefillNDisassemble = async (degenUrls, start, n, walletAddress) => {
 };
 
 const prefillNSwap = async (degenUrls, componentNames, n, walletAddress) => {
+  let availableNonce = await getAccountNonce(wallets[walletAddress][network]);
+  let lastUsedNonce = availableNonce - 1;
+  async function checkNonceUpdate(checkIt = 1) {
+    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
+
+    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
+    else {
+      await sleep(checkIt * 1000);
+      availableNonce = await getAccountNonce(wallets[walletAddress][network]);
+
+      return await checkNonceUpdate(++checkIt);
+    }
+  }
+
   await mintNDegens(degenUrls, n, walletAddress);
+  await mintNComponentSets(componentNames, n / 4, walletAddress);
 
   let componentId = 1;
-  for (let i = 0; i < n; i++) {
+  let degenId = 1;
+  for (let i = 1; i <= n / 4; i++) {
     await checkNonceUpdate();
-    if (i % 4 === 0) {
-      await mintBackground(componentNames.Background, walletAddress)
-        .then(() => sleep(2000))
-        .then(() => addSwapToQueue(i, componentId, 'background-type'));
-    } else if (i % 4 === 1) {
-      await mintCar(componentNames.Car, walletAddress)
-        .then(() => sleep(2000))
-        .then(() => addSwapToQueue(i, componentId, 'car-type'));
-    } else if (i % 4 === 2) {
-      await mintRims(componentNames.Rims, walletAddress)
-        .then(() => sleep(2000))
-        .then(() => addSwapToQueue(i, componentId, 'rim-type'));
-    } else {
-      await mintHead(componentNames.Head, walletAddress)
-        .then(() => sleep(2000))
-        .then(() => addSwapToQueue(i, componentId, 'head-type'));
-      // .then(() => (componentId += 1));
-      componentId += 1;
-    }
+    addSwapToQueue(degenId, componentId, 'background-type', walletAddress);
+    degenId += 1;
+    await checkNonceUpdate();
+    addSwapToQueue(degenId, componentId, 'car-type', walletAddress);
+    degenId += 1;
+    await checkNonceUpdate();
+    addSwapToQueue(degenId, componentId, 'rim-type', walletAddress);
+    degenId += 1;
+    await checkNonceUpdate();
+    addSwapToQueue(degenId, componentId, 'head-type', walletAddress);
+    degenId += 1;
+    componentId += 1;
   }
 };
 
@@ -483,25 +491,32 @@ const runPrefillers = async () => {
   const wallet2 = 'wallet2';
   const wallet3 = 'wallet3';
 
-  const n = 5;
+  const n = 4;
 
   // max 25 tx per block, else server call throws error
 
-  // await prefillNSwap(degenUrlsSwap, componentSet2, n, walletUser); // %4 == 0
-  await prefillNAssemble(componentSet1, 1, n, walletUser) // /4 + 1
-    .then(() => sleep(3000))
-    .then(() => prefillNAssemble(componentSet2, n + 1, n, wallet2))
-    .then(() => sleep(3000))
-    .then(() => prefillNAssemble(componentSet3, 2 * n + 1, n, wallet3));
+  await prefillNSwap(degenUrlsSwap, componentSet2, n, walletUser); // %4 == 0
+  await sleep(3000);
+  await prefillNAssemble(componentSet1, n / 4 + 1, n, walletUser); // /4 + 1
+  await sleep(3000);
+  await prefillNDisassemble(degenUrlsDisassemble, n + 1, n, walletUser);
+  await sleep(3000);
+  await prefillNMerge('miami', 1, n, walletUser);
+};
 
+const testPrefillers = async () => {
+  // await prefillNSwap(degenUrlsSwap, componentSet2, n, walletUser); // %4 == 0
+  // await prefillNAssemble(componentSet1, n + 1, n, walletUser); // /4 + 1
+  //   .then(() => sleep(3000))
+  //   .then(() => prefillNAssemble(componentSet2, n + 1, n, wallet2))
+  //   .then(() => sleep(3000))
+  //   .then(() => prefillNAssemble(componentSet3, 2 * n + 1, n, wallet3));
   // await prefillNAssemble(componentSet1, 3 * n + 1, n, walletUser)
   //   .then(() => sleep(3000))
   //   .then(() => prefillNAssemble(componentSet2, 4 * n + 1, n, wallet2))
   //   .then(() => sleep(3000))
   //   .then(() => prefillNAssemble(componentSet3, 5 * n + 1, n, wallet3));
-
   // await mintNComponentSets(componentSet1, 4, walletUser);
-
   // prefillNMerge('miami', 1, 6, walletUser);
   // prefillNMerge('nyc', 1, 6, walletUser);
 };
@@ -511,10 +526,3 @@ await runPrefillers();
 const walletUser = 'user';
 const wallet2 = 'wallet2';
 const wallet3 = 'wallet3';
-// await sleep(6000);
-
-// await addNAssembleToQueue(31, 5, walletUser);
-// await sleep(2000);
-// await addNAssembleToQueue(36, 5, wallet2);
-// await sleep(2000);
-// await addNAssembleToQueue(41, 5, wallet3);
