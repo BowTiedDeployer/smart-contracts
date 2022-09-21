@@ -20,7 +20,7 @@ export const getImgGameUrlFromJson = (json) => {
 
 export const fetchJsonFromUrl = async (jsonUrl) => {
   //example https://stxnft.mypinata.cloud/ipfs/QmbX7UCSFLBvJa2yB4YxqZxhacrxiKUGbE6fHbQuYMhNhf
-  return fetch(jsonUrl).then((res) => res.json());
+  return await fetch(jsonUrl).then((res) => res.json());
 };
 
 // export const createJson = () => {

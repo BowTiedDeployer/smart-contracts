@@ -32,7 +32,7 @@ const uploadToPinata = async (filePath, fileNamePinata) => {
   return config;
 };
 
-export const uploadFlowJson = async (jsonName, jsonContent) => {
+export const uploadFlowJsonOld = async (jsonName, jsonContent) => {
   const jsonPath = jsonName + '.json';
   await saveFile(jsonPath, jsonContent);
   await sleep(3000);
@@ -42,7 +42,7 @@ export const uploadFlowJson = async (jsonName, jsonContent) => {
   return res.data.IpfsHash;
 };
 
-export const uploadFlowImg = async (imgName, imgContent) => {
+export const uploadFlowImgOld = async (imgName, imgContent) => {
   const imgPath = imgName + '.png';
   await saveFile(imgPath, imgContent);
   await sleep(3000);
@@ -50,4 +50,34 @@ export const uploadFlowImg = async (imgName, imgContent) => {
   const res = await axios(config);
   // await deleteFile(imgPath);
   return res.data.IpfsHash;
+};
+
+export const uploadFlowImg = async (imgName, imgContent) => {
+  const imgPath = imgName + '.png';
+  let resFinal = await saveFile(imgPath, imgContent)
+    .then(() => uploadToPinata(imgPath, imgName))
+    // .catch((err) =>console.error(`ERROR: ${err}`))
+    .then((config) => axios(config))
+    // .catch((err) =>console.error(`ERROR: ${err}`))
+    .then((res) => {
+      deleteFile(imgPath);
+      // fs.promises.unlink(imgPath);
+      return res;
+    });
+  return resFinal.data.IpfsHash;
+};
+
+export const uploadFlowJson = async (jsonName, jsonContent) => {
+  const jsonPath = jsonName + '.json';
+  let resFinal = await fs.promises
+    .writeFile(jsonPath, jsonContent)
+    .then(() => uploadToPinata(jsonPath, jsonName))
+    // .catch((err) =>console.error(`ERROR: ${err}`))
+    .then((config) => axios(config))
+    // .catch((err) =>console.error(`ERROR: ${err}`))
+    .then((res) => {
+      fs.promises.unlink(jsonPath);
+      return res;
+    });
+  return resFinal.data.IpfsHash;
 };
