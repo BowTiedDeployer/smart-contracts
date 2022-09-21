@@ -180,15 +180,19 @@ const assembleServerFlow = async (operationLimit) => {
       pinataToHTTPUrl(urlImgComponentHead),
       pinataToHTTPUrl(urlImgComponentRims)
     );
+    // ).then((degenImg) => uploadFlowImg(degenImgName, degenImg));
 
     const degenImgGame = await imgInGameContentCreate(pinataToHTTPUrl(urlImgGameCar), pinataToHTTPUrl(urlImgGameHead));
+    // ).then((degenImgGame) => uploadFlowImg(degenImgGameName, degenImgGame));
 
     // upload image and get hash
+
     const degenImgHash = await uploadFlowImg(degenImgName, degenImg);
     const degenImgGameHash = await uploadFlowImg(degenImgGameName, degenImgGame);
 
     // create json with component attributes (name#id, img hash, img comp hash, img game hash, attributes, collection("DegenNFT"))
-    const degenJson = jsonContentCreate(
+
+    const degenJson = await jsonContentCreate(
       degenName,
       hashToPinataUrl(degenImgHash),
       '',
@@ -196,9 +200,35 @@ const assembleServerFlow = async (operationLimit) => {
       attributes,
       'DegenNFT'
     );
+
+    // const lastTxId = await new Promise(() => {
+    //   console.log('at content creation');
+    //   return jsonContentCreate(
+    //     degenName,
+    //     hashToPinataUrl(degenImgHash),
+    //     '',
+    //     hashToPinataUrl(degenImgGameHash),
+    //     attributes,
+    //     'DegenNFT'
+    //   );
+    // })
+    //   .then((degenJson) => {
+    //     console.log('at uploadFlow');
+    //     return uploadFlowJson(degenJsonName, degenJson);
+    //   })
+    //   .then((degenJsonHash) => {
+    //     console.log('at sc call');
+    //     callSCFunctionWithNonce(
+    //       networkN,
+    //       contracts[network].customizable.split('.')[0],
+    //       contracts[network].customizable.split('.')[1],
+    //       'assemble-finalize',
+    //       [tuple.address, hashToPinataUrl(degenJsonHash)]
+    //     );
+    //   });
     // console.log(degenJson);
 
-    // upload json and get hash
+    //// upload json and get hash
     const degenJsonHash = await uploadFlowJson(degenJsonName, degenJson);
     console.log('jsonHash', degenJsonHash);
 

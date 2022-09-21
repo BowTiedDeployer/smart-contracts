@@ -28,37 +28,37 @@ const uploadToPinata = async (filePath, fileNamePinata) => {
     },
     data: data,
   };
-  return { config: config, data: data };
+  return config;
 };
 
 export const uploadFlowJsonOld = async (jsonName, jsonContent) => {
   const jsonPath = jsonName + '.json';
   await saveFile(jsonPath, jsonContent);
-  let { config, data } = await uploadToPinata(jsonPath, jsonName);
+  let config = await uploadToPinata(jsonPath, jsonName);
   const res = await axios(config);
-  deleteFile(jsonPath);
+  await deleteFile(jsonPath);
   return res.data.IpfsHash;
 };
 
 export const uploadFlowImgOld = async (imgName, imgContent) => {
   const imgPath = imgName + '.png';
   await saveFile(imgPath, imgContent);
-  let { config, data } = await uploadToPinata(imgPath, imgName);
+  let config = await uploadToPinata(imgPath, imgName);
   const res = await axios(config);
-  deleteFile(imgPath);
+  await deleteFile(imgPath);
   return res.data.IpfsHash;
 };
 
 export const uploadFlowImg = async (imgName, imgContent) => {
   const imgPath = imgName + '.png';
-  let resFinal = await fs.promises
-    .writeFile(imgPath, imgContent)
-    .then((res) => uploadToPinata(imgPath, imgContent))
+  let resFinal = await saveFile(imgPath, imgContent)
+    .then(() => uploadToPinata(imgPath, imgName))
     // .catch((err) =>console.error(`ERROR: ${err}`))
     .then((config) => axios(config))
     // .catch((err) =>console.error(`ERROR: ${err}`))
     .then((res) => {
-      fs.promises.unlink(imgPath);
+      deleteFile(imgPath);
+      // fs.promises.unlink(imgPath);
       return res;
     });
   return resFinal.data.IpfsHash;
@@ -68,7 +68,7 @@ export const uploadFlowJson = async (jsonName, jsonContent) => {
   const jsonPath = jsonName + '.json';
   let resFinal = await fs.promises
     .writeFile(jsonPath, jsonContent)
-    .then((res) => uploadToPinata(jsonPath, jsonName))
+    .then(() => uploadToPinata(jsonPath, jsonName))
     // .catch((err) =>console.error(`ERROR: ${err}`))
     .then((config) => axios(config))
     // .catch((err) =>console.error(`ERROR: ${err}`))

@@ -230,26 +230,26 @@ export const mintComponentSet = async (componentNames, walletAddress) => {
   await checkNonceUpdate()
     .then(() => mintBackground(componentNames.Background, walletAddress))
     .then(() => {
-      sleep(10000);
+      sleep(1000);
       // waitTillMempoolClears();
     })
     .then(() => checkNonceUpdate())
     .then(() => {
-      sleep(10000);
+      sleep(1000);
       // waitTillMempoolClears();
       // getMempoolTransactionCount(wallets.admin[network]).then((x) => console.log(`Mempool TX Number: ${x}`));
     })
     .then(() => mintCar(componentNames.Car, walletAddress))
     .then(() => checkNonceUpdate())
     .then(() => {
-      sleep(10000);
+      sleep(1000);
       // waitTillMempoolClears();
       // getMempoolTransactionCount(wallets.admin[network]).then((x) => console.log(`Mempool TX Number: ${x}`));
     })
     .then(() => mintRims(componentNames.Rims, walletAddress))
     .then(() => checkNonceUpdate())
     .then(() => {
-      sleep(10000);
+      sleep(1000);
       // waitTillMempoolClears();
       // getMempoolTransactionCount(wallets.admin[network]).then((x) => console.log(`Mempool TX Number: ${x}`));
     })
@@ -380,14 +380,14 @@ export const addNMergeToQueue = async (start, n, type, walletAddress) => {
 
 const prefillNAssemble = async (componentNames, start, n, walletAddress) => {
   await mintNComponentSets(componentNames, n, walletAddress)
-    .then((x) => sleep(2000))
-    .then((x) => addNAssembleToQueue(start, n, walletAddress));
+    .then(() => sleep(2000))
+    .then(() => addNAssembleToQueue(start, n, walletAddress));
 };
 
 const prefillNDisassemble = async (degenUrls, start, n, walletAddress) => {
   await mintNDegens(degenUrls, n, walletAddress)
-    .then((x) => sleep(2000))
-    .then((x) => addNDisassembleToQueue(start, n, walletAddress));
+    .then(() => sleep(2000))
+    .then(() => addNDisassembleToQueue(start, n, walletAddress));
 };
 
 const prefillNSwap = async (degenUrls, componentNames, n, walletAddress) => {
@@ -398,21 +398,21 @@ const prefillNSwap = async (degenUrls, componentNames, n, walletAddress) => {
     await checkNonceUpdate();
     if (i % 4 === 0) {
       await mintBackground(componentNames.Background, walletAddress)
-        .then((x) => sleep(2000))
-        .then((x) => addSwapToQueue(i, componentId, 'background-type'));
+        .then(() => sleep(2000))
+        .then(() => addSwapToQueue(i, componentId, 'background-type'));
     } else if (i % 4 === 1) {
       await mintCar(componentNames.Car, walletAddress)
-        .then((x) => sleep(2000))
-        .then((x) => addSwapToQueue(i, componentId, 'car-type'));
+        .then(() => sleep(2000))
+        .then(() => addSwapToQueue(i, componentId, 'car-type'));
     } else if (i % 4 === 2) {
       await mintRims(componentNames.Rims, walletAddress)
-        .then((x) => sleep(2000))
-        .then((x) => addSwapToQueue(i, componentId, 'rim-type'));
+        .then(() => sleep(2000))
+        .then(() => addSwapToQueue(i, componentId, 'rim-type'));
     } else {
       await mintHead(componentNames.Head, walletAddress)
-        .then((x) => sleep(2000))
-        .then((x) => addSwapToQueue(i, componentId, 'head-type'));
-      // .then((x) => (componentId += 1));
+        .then(() => sleep(2000))
+        .then(() => addSwapToQueue(i, componentId, 'head-type'));
+      // .then(() => (componentId += 1));
       componentId += 1;
     }
   }
@@ -453,19 +453,19 @@ const runPrefillers = async () => {
   };
 
   let degenUrlsDisassemble = [
+    'ipfs://bafkreicdvhveureq6el4nlckmtiicbqliis2okrmqsxiixk5tuu2qwvowu',
+    'ipfs://bafkreidsdf4ecaoyx6kmukoown3ki5dr5smyjyb4bbfuu5hgxplnvz6uvu',
+    'ipfs://bafkreigy75l6wwn76almtkrznnskzgrpkmde7wrjsjfvr566gpnezq2vmu',
+    'ipfs://bafkreie5ztt34skvfvmkaalkzzdj6fq6247obkbtuywo63ch3vlipqdee4',
+    'ipfs://bafkreifo3cbn7qnrneuxcoqxb2i7tskz5hg6fhdrmzmoigsoc5c67tlsou',
+  ];
+
+  let degenUrlsSwap = [
     'ipfs://bafkreiffq5gzls75gvoflxv5jawzig6nnasganyrdkvypfdj6maazv3ioa',
     'ipfs://bafkreiagqvmso2xtgvnxy6hiius3bq7lq7kkraua43w2s6ijd4rb64b3di',
     'ipfs://bafkreia3yegwahw4w27cindmbz3wp5vbexdjyouttwjp5wiy75stqe67c4',
     'ipfs://bafkreic7uucxypcfsdatbojzn3yd6aoeywfws6yh7cxwcqvhqpalq3ggzi',
     'ipfs://bafkreifovceyfttkdsn4rv3uf4oc6gzgkuh3tw3uhcnihysz2rogcktscu',
-  ];
-
-  let degenUrlsSwap = [
-    'ipfs://bafkreidpztx6sjsnk3kpjkqpsgkcpaqa2doj7m7zbeftr5tpoy4lspqspy',
-    'ipfs://bafkreihdpsqxsdu37fowkuhnoknejodqg2z2vs7dgnpum763xz4uyzk5mu',
-    'ipfs://bafkreigkqbk55b7jznrfndqh7kl3jfiuhssgxv3pj2t7u5ypieeu6j5ghu',
-    'ipfs://bafkreib6kyq4fejlcy64r2zapl4s4ktk7bfw2zlomwxehcttohg3l2fhee',
-    'ipfs://bafkreibmrourvcalqtosoykdwmzjrrgfbdxmasd7bawmoc73e7pphfkuxy',
   ];
 
   const walletUser = 'user';
@@ -475,14 +475,24 @@ const runPrefillers = async () => {
   const n = 5;
 
   // max 25 tx per block, else server call throws error
-  // await prefillNSwap(degenUrlsSwap, componentSet2, n, walletAddress);
-  await prefillNAssemble(componentSet1, 1, n, walletUser);
-  await sleep(3000);
-  await prefillNAssemble(componentSet2, n + 1, n, wallet2);
-  await sleep(3000);
-  await prefillNAssemble(componentSet3, 2 * n + 1, n, wallet3);
+
+  // await prefillNSwap(degenUrlsSwap, componentSet2, n, walletUser); // %4 == 0
+  await prefillNAssemble(componentSet1, 1, n, walletUser) // /4 + 1
+    .then(() => sleep(3000))
+    .then(() => prefillNAssemble(componentSet2, n + 1, n, wallet2))
+    .then(() => sleep(3000))
+    .then(() => prefillNAssemble(componentSet3, 2 * n + 1, n, wallet3));
+
+  // await prefillNAssemble(componentSet1, 3 * n + 1, n, walletUser)
+  //   .then(() => sleep(3000))
+  //   .then(() => prefillNAssemble(componentSet2, 4 * n + 1, n, wallet2))
+  //   .then(() => sleep(3000))
+  //   .then(() => prefillNAssemble(componentSet3, 5 * n + 1, n, wallet3));
 
   // await mintNComponentSets(componentSet1, 4, walletUser);
+
+  // prefillNMerge('miami', 1, 6, walletUser);
+  // prefillNMerge('nyc', 1, 6, walletUser);
 };
 
 await runPrefillers();
@@ -490,24 +500,10 @@ await runPrefillers();
 const walletUser = 'user';
 const wallet2 = 'wallet2';
 const wallet3 = 'wallet3';
-await sleep(6000);
+// await sleep(6000);
 
-await mintDegen('ipfs://bafkreiffq5gzls75gvoflxv5jawzig6nnasganyrdkvypfdj6maazv3ioa', walletUser);
-await sleep(2000);
-await mintDegen('ipfs://bafkreiagqvmso2xtgvnxy6hiius3bq7lq7kkraua43w2s6ijd4rb64b3di', walletUser);
-await sleep(2000);
-await mintDegen('ipfs://bafkreia3yegwahw4w27cindmbz3wp5vbexdjyouttwjp5wiy75stqe67c4', wallet2);
-await sleep(2000);
-await mintDegen('ipfs://bafkreic7uucxypcfsdatbojzn3yd6aoeywfws6yh7cxwcqvhqpalq3ggzi', wallet2);
-await sleep(2000);
-await mintDegen('ipfs://bafkreifovceyfttkdsn4rv3uf4oc6gzgkuh3tw3uhcnihysz2rogcktscu', wallet2);
-await sleep(2000);
-await mintDegen('ipfs://bafkreicdvhveureq6el4nlckmtiicbqliis2okrmqsxiixk5tuu2qwvowu', wallet2);
-await sleep(2000);
-await mintDegen('ipfs://bafkreidsdf4ecaoyx6kmukoown3ki5dr5smyjyb4bbfuu5hgxplnvz6uvu', walletUser);
-await sleep(2000);
-await mintDegen('ipfs://bafkreigy75l6wwn76almtkrznnskzgrpkmde7wrjsjfvr566gpnezq2vmu', wallet2);
-await sleep(2000);
-await mintDegen('ipfs://bafkreie5ztt34skvfvmkaalkzzdj6fq6247obkbtuywo63ch3vlipqdee4', walletUser);
-
-await mintNMiami(10, walletUser);
+// await addNAssembleToQueue(31, 5, walletUser);
+// await sleep(2000);
+// await addNAssembleToQueue(36, 5, wallet2);
+// await sleep(2000);
+// await addNAssembleToQueue(41, 5, wallet3);
