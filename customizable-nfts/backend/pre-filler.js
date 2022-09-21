@@ -14,6 +14,17 @@ import {
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
 
+export const popDisassembleQueue = async (walletAddress) => {
+  await callSCFunctionWithNonceWallet(
+    networkN,
+    contracts[network].customizable.split('.')[0],
+    contracts[network].customizable.split('.')[1],
+    'pop-disassemble-work-queue-public',
+    [],
+    walletAddress
+  );
+};
+
 export const mintDegen = async (url, walletAddress) => {
   await callSCFunctionWithNonce(
     networkN,
@@ -472,7 +483,7 @@ const runPrefillers = async () => {
   };
 
   let degenUrlsDisassemble = [
-    'ipfs://bafkreicdvhveureq6el4nlckmtiicbqliis2okrmqsxiixk5tuu2qwvowu',
+    'ipfs://bafkreigsavqryiu3tnampbfeip6bryrqybq27uy6zxgozir635tztpb4ve',
     'ipfs://bafkreidsdf4ecaoyx6kmukoown3ki5dr5smyjyb4bbfuu5hgxplnvz6uvu',
     'ipfs://bafkreigy75l6wwn76almtkrznnskzgrpkmde7wrjsjfvr566gpnezq2vmu',
     'ipfs://bafkreie5ztt34skvfvmkaalkzzdj6fq6247obkbtuywo63ch3vlipqdee4',
@@ -495,13 +506,13 @@ const runPrefillers = async () => {
 
   // max 25 tx per block, else server call throws error
 
-  await prefillNSwap(degenUrlsSwap, componentSet2, n, walletUser); // %4 == 0
-  await sleep(3000);
-  await prefillNAssemble(componentSet1, n / 4 + 1, n, walletUser); // /4 + 1
-  await sleep(3000);
-  await prefillNDisassemble(degenUrlsDisassemble, n + 1, n, walletUser);
-  await sleep(3000);
-  await prefillNMerge('miami', 1, n, walletUser);
+  // await prefillNSwap(degenUrlsSwap, componentSet2, n, walletUser); // %4 == 0
+  // await sleep(3000);
+  // await prefillNAssemble(componentSet1, n / 4 + 1, n, walletUser); // /4 + 1
+  // await sleep(3000);
+  await prefillNDisassemble(degenUrlsDisassemble, 2 * n + 1, 1, walletUser);
+  // await sleep(3000);
+  // await prefillNMerge('miami', 1, n, walletUser);
 };
 
 const testPrefillers = async () => {
@@ -526,3 +537,5 @@ await runPrefillers();
 const walletUser = 'user';
 const wallet2 = 'wallet2';
 const wallet3 = 'wallet3';
+
+// await popDisassembleQueue(walletUser);

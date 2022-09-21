@@ -59,6 +59,7 @@ const getValuesFromQueueSwap = async () => {
 const swapServerFlow = async (operationLimit) => {
   // get values from queue
   let valuesToSwap = await getValuesFromQueueSwap();
+  console.log('valuesToSwap', valuesToSwap);
 
   // maximum 25 transactions done in a block by the same account
   let upperLimit = valuesToSwap.length < operationLimit ? valuesToSwap.length : operationLimit;
@@ -238,7 +239,7 @@ const swapServerFlow = async (operationLimit) => {
       attributes,
       'DegenNFT'
     );
-    console.log(degenJson);
+    // console.log(degenJson);
 
     // upload json and get hash
     // todo: check before production - case upload json 0 bytes
@@ -271,7 +272,7 @@ export const checkToStartFlowSwap = async () => {
   const operationLimit = 25 - transactionCount;
   console.log('operationLimit', operationLimit);
 
-  if (status === 'success') {
+  if ((status === 'success' || status === undefined) && operationLimit > 0) {
     console.log('--------------flow can start-----------');
     await swapServerFlow(operationLimit);
     console.log('--------------db update-----------');

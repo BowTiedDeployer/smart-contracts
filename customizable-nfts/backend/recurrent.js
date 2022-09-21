@@ -8,7 +8,7 @@ import { checkToStartFlowMerge } from './merge.js';
 import { checkToStartFlowSwap } from './swap.js';
 
 const every_five_minutes = async () => {
-  const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
+  // const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
   let operationLimit = 4;
 
   while (operationLimit > 0) {
@@ -43,6 +43,6 @@ const every_five_minutes = async () => {
   }
 };
 
-cron.schedule('0-59/5 * * * *', () => {
+cron.schedule('*/5 * * * *', () => {
   every_five_minutes();
 });

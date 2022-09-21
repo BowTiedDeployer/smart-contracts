@@ -7,6 +7,7 @@ import {
   callSCFunctionWithNonce,
   chainGetTxIdStatus,
   sleep,
+  getMempoolTransactionCount,
 } from './helper_sc.js';
 import {
   fetchJsonFromUrl,
@@ -19,7 +20,7 @@ import { jsonResponseToTokenUri, replaceTokenCurrentId, pinataToHTTPUrl, hashToP
 import { oldToNewComponentNames } from './mapOldNewComponentNames.js';
 import { imgInGameContentCreate, imgProfileContentCreate } from './helper_files.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
-import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateTxId } from './helper_db.js';
+import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
 
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
@@ -50,12 +51,13 @@ const getValuesFromQueueMerge = async () => {
 };
 
 // add in list values with pre-filler.js so this can be done
-const mergeServerFlow = async () => {
+const mergeServerFlow = async (operationLimit) => {
   // for every work queue element
   let valuesToMerge = await getValuesFromQueueMerge();
+  console.log('valuesToMerge: ', valuesToMerge);
 
   // maximum 25 transactions done in a block by the same account
-  let upperLimit = valuesToMerge.length > 25 ? 25 : valuesToMerge.length;
+  let upperLimit = valuesToMerge.length < operationLimit ? valuesToMerge.length : operationLimit;
   let availableNonce = await getAccountNonce(wallets.admin[network]);
   let lastUsedNonce = availableNonce - 1;
 
@@ -216,7 +218,7 @@ const mergeServerFlow = async () => {
       contracts[network].customizable.split('.')[0],
       contracts[network].customizable.split('.')[1],
       'merge-finalize',
-      [tuple.degenId, tuple.address, degenJsonHash]
+      [tuple.degenId, tuple.address, hashToPinataUrl(degenJsonHash)]
     );
     await dbIncremendId(currentDbId);
     await dbUpdateTxId(operationType.merge, lastTxId);
@@ -228,10 +230,15 @@ export const checkToStartFlowMerge = async () => {
   // fetchJSONResponse(txId)
   // general call
   const status = await chainGetTxIdStatus(txId);
+  const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
+  const operationLimit = 25 - transactionCount;
+  console.log('operationLimit', operationLimit);
 
-  if (status === 'success') {
-    await mergeServerFlow();
+  if ((status === 'success' || status === undefined) && operationLimit > 0) {
     console.log('--------------flow can start-----------');
+    await mergeServerFlow(operationLimit);
+    console.log('--------------db update-----------');
+    await dbUpdateLastDone('merge');
   } else if (status === 'abort_by_response') {
     // todo: alert if problem case happen (as long as the SC has stx it will not happen)
     // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxx----------------------------aborted-----------xxxxxxx');

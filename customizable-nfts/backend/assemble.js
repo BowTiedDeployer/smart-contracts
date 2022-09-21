@@ -59,7 +59,7 @@ const getValuesFromQueueAssemble = async () => {
 const assembleServerFlow = async (operationLimit) => {
   // get values from queue
   let valuesToAssemble = await getValuesFromQueueAssemble();
-  console.log('valuesToAssemble.length: ', valuesToAssemble.length);
+  console.log('valuesToAssemble: ', valuesToAssemble);
 
   // min( operationLimit, values.length )
   let upperLimit = valuesToAssemble.length < operationLimit ? valuesToAssemble.length : operationLimit;
@@ -191,7 +191,7 @@ const assembleServerFlow = async (operationLimit) => {
 
     // create json with component attributes (name#id, img hash, img comp hash, img game hash, attributes, collection("DegenNFT"))
 
-    const degenJson = await jsonContentCreate(
+    const degenJson = jsonContentCreate(
       degenName,
       hashToPinataUrl(degenImgHash),
       '',

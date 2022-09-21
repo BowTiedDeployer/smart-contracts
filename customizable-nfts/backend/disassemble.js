@@ -56,36 +56,11 @@ const getValuesFromQueueDisassemble = async () => {
   return listOfTuplesResponseToList(values);
 };
 
-export const checkToStartFlowDisassemble = async () => {
-  const txId = await dbGetTxId(operationType.disassemble); //readFromDB
-  // fetchJSONResponse(txId)
-  // general call
-  const status = await chainGetTxIdStatus(txId);
-  const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
-  const operationLimit = 25 - transactionCount;
-  console.log('operationLimit', operationLimit);
-
-  if (status === 'success') {
-    console.log('--------------flow can start-----------');
-    await disassembleServerFlow(operationLimit);
-    console.log('--------------db update-----------');
-    await dbUpdateLastDone('disassemble');
-  } else if (status === 'abort_by_response') {
-    // todo: alert if problem case happen (as long as the SC has stx it will not happen)
-    // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxx----------------------------aborted-----------xxxxxxx');
-    console.error(`error: failed tx ${txId} with status: ${status}`);
-  } else if (status === 'pending') {
-    // do nothing
-    console.log('----------pending----------');
-  } else {
-    console.error(`invalid status "${status}" txid: ${txId}`);
-  }
-};
-
 const disassembleServerFlow = async (operationLimit) => {
   // for every work queue element
   let valuesToDisassemble = await getValuesFromQueueDisassemble();
-  console.log(valuesToDisassemble);
+  console.log('valuesToDisassemble: ', valuesToDisassemble);
+
   // maximum 25 transactions done in a block by the same account
   let upperLimit = valuesToDisassemble.length < operationLimit ? valuesToDisassemble.length : operationLimit;
   let availableNonce = await getAccountNonce(wallets.admin[network]);
@@ -149,6 +124,32 @@ const disassembleServerFlow = async (operationLimit) => {
   console.log('lastTxId', lastTxId);
 
   await dbUpdateTxId(operationType.disassemble, lastTxId);
+};
+
+export const checkToStartFlowDisassemble = async () => {
+  const txId = await dbGetTxId(operationType.disassemble); //readFromDB
+  // fetchJSONResponse(txId)
+  // general call
+  const status = await chainGetTxIdStatus(txId);
+  const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
+  const operationLimit = 25 - transactionCount;
+  console.log('operationLimit', operationLimit);
+
+  if ((status === 'success' || status === undefined) && operationLimit > 0) {
+    console.log('--------------flow can start-----------');
+    await disassembleServerFlow(operationLimit);
+    console.log('--------------db update-----------');
+    await dbUpdateLastDone('disassemble');
+  } else if (status === 'abort_by_response') {
+    // todo: alert if problem case happen (as long as the SC has stx it will not happen)
+    // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxx----------------------------aborted-----------xxxxxxx');
+    console.error(`error: failed tx ${txId} with status: ${status}`);
+  } else if (status === 'pending') {
+    // do nothing
+    console.log('----------pending----------');
+  } else {
+    console.error(`invalid status "${status}" txid: ${txId}`);
+  }
 };
 
 // await disassembleServerFlow();

@@ -54,14 +54,15 @@ export const uploadFlowImgOld = async (imgName, imgContent) => {
 
 export const uploadFlowImg = async (imgName, imgContent) => {
   const imgPath = imgName + '.png';
-  let resFinal = await saveFile(imgPath, imgContent)
+  let resFinal = await fs.promises
+    .writeFile(imgPath, imgContent)
     .then(() => uploadToPinata(imgPath, imgName))
     // .catch((err) =>console.error(`ERROR: ${err}`))
     .then((config) => axios(config))
     // .catch((err) =>console.error(`ERROR: ${err}`))
     .then((res) => {
-      deleteFile(imgPath);
-      // fs.promises.unlink(imgPath);
+      // deleteFile(imgPath);
+      fs.promises.unlink(imgPath);
       return res;
     });
   return resFinal.data.IpfsHash;
