@@ -324,6 +324,8 @@ export const addNDisassembleToQueue = async (start, n, walletAddress) => {
     await checkNonceUpdate();
     await addDisassembleToQueue(i, walletAddress);
   }
+
+  return null;
 };
 
 export const addNMergeToQueue = async (start, n, type, walletAddress) => {
@@ -346,6 +348,8 @@ export const addNMergeToQueue = async (start, n, type, walletAddress) => {
     await checkNonceUpdate();
     await addMergeToQueue(i, type, walletAddress);
   }
+
+  return null;
 };
 
 // START PREFILLS CALLS
@@ -378,10 +382,17 @@ export const addNMergeToQueue = async (start, n, type, walletAddress) => {
 
 // for calls with wallet - use as walletAddress parameter - 'user', 'wallet2', 'wallet3' etc.
 
+// const prefillNAssemble = async (componentNames, start, n, walletAddress) => {
+//   await mintNComponentSets(componentNames, n, walletAddress);
+//   await sleep(4000);
+//   await addNAssembleToQueue(start, n, walletAddress);
+// };
+
 const prefillNAssemble = async (componentNames, start, n, walletAddress) => {
   await mintNComponentSets(componentNames, n, walletAddress)
     .then(() => sleep(2000))
     .then(() => addNAssembleToQueue(start, n, walletAddress));
+
 };
 
 const prefillNDisassemble = async (degenUrls, start, n, walletAddress) => {
@@ -421,12 +432,12 @@ const prefillNSwap = async (degenUrls, componentNames, n, walletAddress) => {
 const prefillNMerge = async (type, start, n, walletAddress) => {
   if (type === 'miami') {
     await mintNMiami(n, walletAddress)
-      .then((x) => sleep(2000))
-      .then((x) => addNMergeToQueue(start, n, 'miami', walletAddress));
+      .then(() => sleep(2000))
+      .then(() => addNMergeToQueue(start, n, 'miami', walletAddress));
   } else if (type === 'nyc') {
     await mintNNYC(n, walletAddress)
-      .then((x) => sleep(2000))
-      .then((x) => addNMergeToQueue(start, n, 'nyc', walletAddress));
+      .then(() => sleep(2000))
+      .then(() => addNMergeToQueue(start, n, 'nyc', walletAddress));
   }
 };
 

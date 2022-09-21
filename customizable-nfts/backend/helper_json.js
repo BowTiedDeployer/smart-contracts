@@ -80,6 +80,7 @@ const createJsonAttributes = (attributes) => {
       "value": "${attribute.value}"
     },`;
   }
+
   // removes last trailling comma for complience with JSON standard
   return jsonAttributes.slice(0, -1);
 };

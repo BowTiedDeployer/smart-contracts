@@ -7,6 +7,7 @@ import { deleteFile, saveFile } from './helper_files.js';
 import { hashToPinataUrl, jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
 import fs from 'fs';
 import { jsonContentCreate } from './helper_json.js';
+import { sleep } from './helper_sc.js';
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -34,18 +35,20 @@ const uploadToPinata = async (filePath, fileNamePinata) => {
 export const uploadFlowJsonOld = async (jsonName, jsonContent) => {
   const jsonPath = jsonName + '.json';
   await saveFile(jsonPath, jsonContent);
+  await sleep(3000);
   let config = await uploadToPinata(jsonPath, jsonName);
   const res = await axios(config);
-  await deleteFile(jsonPath);
+  // await deleteFile(jsonPath);
   return res.data.IpfsHash;
 };
 
 export const uploadFlowImgOld = async (imgName, imgContent) => {
   const imgPath = imgName + '.png';
   await saveFile(imgPath, imgContent);
+  await sleep(3000);
   let config = await uploadToPinata(imgPath, imgName);
   const res = await axios(config);
-  await deleteFile(imgPath);
+  // await deleteFile(imgPath);
   return res.data.IpfsHash;
 };
 
