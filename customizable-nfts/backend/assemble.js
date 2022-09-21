@@ -90,6 +90,7 @@ const assembleServerFlow = async (operationLimit) => {
     console.log('tuple', tuple);
     let attributes = {};
 
+    // Promise all
     // take jsons (background, rims, car, head - type: alien/skull, face, head)
     const urlJsonBackground = await jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
@@ -135,23 +136,25 @@ const assembleServerFlow = async (operationLimit) => {
       )
     );
 
+    // Promise all
     // get the attribute value & imgUrl from each json
     const jsonBackground = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonBackground));
+    const jsonCar = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonCar));
+    const jsonHead = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonHead));
+    const jsonRims = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonRims));
+
     const urlImgComponentBackground = getImgComponentUrlFromJson(jsonBackground);
     let attributeBackground = getAttributesMapTraitValue(jsonBackground);
 
-    const jsonCar = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonCar));
     const urlImgGameCar = getImgGameUrlFromJson(jsonCar);
     const urlImgComponentCar = getImgComponentUrlFromJson(jsonCar);
     let attributeCar = getAttributesMapTraitValue(jsonCar);
 
-    const jsonHead = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonHead));
     // console.log('jsonHead: ', jsonHead);
     const urlImgGameHead = getImgGameUrlFromJson(jsonHead);
     const urlImgComponentHead = getImgComponentUrlFromJson(jsonHead);
     let attributeHead = getAttributesMapTraitValue(jsonHead);
 
-    const jsonRims = await fetchJsonFromUrl(pinataToHTTPUrl(urlJsonRims));
     const urlImgComponentRims = getImgComponentUrlFromJson(jsonRims);
     // console.log('urlImgComponentRims', urlImgComponentRims);
     let attributeRims = getAttributesMapTraitValue(jsonRims);
@@ -244,4 +247,4 @@ export const checkToStartFlowAssemble = async () => {
 
 // await checkToStartFlowAssemble();
 
-// await assembleServerFlow();
+await assembleServerFlow(25);

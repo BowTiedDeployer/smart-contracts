@@ -8,8 +8,12 @@ export const saveFile = async (filePath, fileContent) => {
   });
 };
 
-export const deleteFile = (filePath) => {
-  fs.unlinkSync(filePath);
+export const deleteFile = async (filePath) => {
+  // fs.unlinkSync(filePath);
+  fs.unlink(filePath, (err, data) => {
+    if (err) console.error('ERROR', err);
+    else console.log(`DELETED FILE ${filePath}`);
+  });
 };
 
 export const imgProfileContentCreate = async (backgroundPath, carPath, rimsPath, headPath) => {

@@ -86,14 +86,16 @@ export async function callSCFunction(networkInstance, contractAddress, contractN
     txOptions.fee = new BigNum(normalizedFee);
     transaction = await makeContractCall(txOptions);
     const tx = await broadcastTransaction(transaction, networkInstance);
-    console.log(`${contractAddress}.${functionName} Admin SC public function call broadcasted tx: ${tx.txid}`);
+    console.log(
+      `${contractAddress}.${contractName}.${functionName} Admin SC public function call broadcasted tx: ${tx.txid}`
+    );
     return tx.txid.toString();
   } catch (error) {
-    console.log(`${contractAddress}.${functionName} Admin SC public function call ERROR: ${error}`);
+    console.log(`${contractAddress}.${contractName}.${functionName} Admin SC public function call ERROR: ${error}`);
   }
 }
 
-export function readOnlySCJsonResponse(
+export async function readOnlySCJsonResponse(
   networkInstance,
   userAddress,
   contractAddress,
@@ -105,7 +107,7 @@ export function readOnlySCJsonResponse(
   // console.log(convertedArgs); // keep it before all converts are done
   try {
     const url = urlApis.readOnly(network, contractAddress, contractName, functionName);
-    const res = fetch(url, {
+    const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

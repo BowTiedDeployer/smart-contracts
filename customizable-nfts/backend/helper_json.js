@@ -20,7 +20,7 @@ export const getImgGameUrlFromJson = (json) => {
 
 export const fetchJsonFromUrl = async (jsonUrl) => {
   //example https://stxnft.mypinata.cloud/ipfs/QmbX7UCSFLBvJa2yB4YxqZxhacrxiKUGbE6fHbQuYMhNhf
-  return fetch(jsonUrl).then((res) => res.json());
+  return await fetch(jsonUrl).then((res) => res.json());
 };
 
 // export const createJson = () => {
@@ -73,14 +73,13 @@ const createJsonAttributes = (attributes) => {
   ];
 
   let jsonAttributes = '';
-  attributesList.forEach((attribute) => {
+  for (const attribute of attributesList) {
     jsonAttributes += `
     {
       "trait_type": "${attribute.trait_type}", 
       "value": "${attribute.value}"
     },`;
-  });
-
+  }
   // removes last trailling comma for complience with JSON standard
   return jsonAttributes.slice(0, -1);
 };

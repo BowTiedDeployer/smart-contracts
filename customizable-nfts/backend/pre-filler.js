@@ -212,7 +212,7 @@ export const mintComponentSet = async (componentNames, walletAddress) => {
   let lastUsedNonce = availableNonce - 1;
 
   async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 15) throw new Error("Nonce didn't update on the blockchain API.");
+    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
 
     if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
     else {
@@ -238,7 +238,7 @@ export const mintNComponentSets = async (componentNames, n, walletAddress) => {
   let lastUsedNonce = availableNonce - 1;
 
   async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 15) throw new Error("Nonce didn't update on the blockchain API.");
+    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
 
     if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
     else {
@@ -261,7 +261,7 @@ export const addNAssembleToQueue = async (start, n, walletAddress) => {
   let lastUsedNonce = availableNonce - 1;
 
   async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 15) throw new Error("Nonce didn't update on the blockchain API.");
+    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
 
     if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
     else {
@@ -276,6 +276,8 @@ export const addNAssembleToQueue = async (start, n, walletAddress) => {
     await checkNonceUpdate();
     await addAssembleToQueue(i, i, i, i, walletAddress);
   }
+
+  return null;
 };
 
 // disassemble n degens starting from degen-id start to degen-id start+n-1
@@ -354,9 +356,9 @@ export const addNMergeToQueue = async (start, n, type, walletAddress) => {
 // for calls with wallet - use as walletAddress parameter - 'user', 'wallet2', 'wallet3' etc.
 
 const prefillNAssemble = async (componentNames, start, n, walletAddress) => {
-  await mintNComponentSets(componentNames, n, walletAddress);
-  await sleep(2000);
-  await addNAssembleToQueue(start, n, walletAddress);
+  await mintNComponentSets(componentNames, n, walletAddress)
+    .then((x) => sleep(2000))
+    .then((x) => addNAssembleToQueue(start, n, walletAddress));
 };
 
 const prefillNDisassemble = async (degenUrls, start, n, walletAddress) => {
@@ -450,10 +452,37 @@ const runPrefillers = async () => {
 
   // await prefillNSwap(degenUrlsSwap, componentSet2, n, walletAddress);
   await prefillNAssemble(componentSet1, 1, n, walletUser);
-  await sleep(3000);
+  await sleep(6000);
   await prefillNAssemble(componentSet2, n + 1, n, wallet2);
-  await sleep(3000);
+  await sleep(6000);
   await prefillNAssemble(componentSet3, 2 * n + 1, n, wallet3);
+
+  // await mintNComponentSets(componentSet1, 4, walletUser);
 };
 
 await runPrefillers();
+
+const walletUser = 'user';
+const wallet2 = 'wallet2';
+const wallet3 = 'wallet3';
+await sleep(6000);
+
+await mintDegen('ipfs://bafkreiffq5gzls75gvoflxv5jawzig6nnasganyrdkvypfdj6maazv3ioa', walletUser);
+await sleep(2000);
+await mintDegen('ipfs://bafkreiagqvmso2xtgvnxy6hiius3bq7lq7kkraua43w2s6ijd4rb64b3di', walletUser);
+await sleep(2000);
+await mintDegen('ipfs://bafkreia3yegwahw4w27cindmbz3wp5vbexdjyouttwjp5wiy75stqe67c4', wallet2);
+await sleep(2000);
+await mintDegen('ipfs://bafkreic7uucxypcfsdatbojzn3yd6aoeywfws6yh7cxwcqvhqpalq3ggzi', wallet2);
+await sleep(2000);
+await mintDegen('ipfs://bafkreifovceyfttkdsn4rv3uf4oc6gzgkuh3tw3uhcnihysz2rogcktscu', wallet2);
+await sleep(2000);
+await mintDegen('ipfs://bafkreicdvhveureq6el4nlckmtiicbqliis2okrmqsxiixk5tuu2qwvowu', wallet2);
+await sleep(2000);
+await mintDegen('ipfs://bafkreidsdf4ecaoyx6kmukoown3ki5dr5smyjyb4bbfuu5hgxplnvz6uvu', walletUser);
+await sleep(2000);
+await mintDegen('ipfs://bafkreigy75l6wwn76almtkrznnskzgrpkmde7wrjsjfvr566gpnezq2vmu', wallet2);
+await sleep(2000);
+await mintDegen('ipfs://bafkreie5ztt34skvfvmkaalkzzdj6fq6247obkbtuywo63ch3vlipqdee4', walletUser);
+
+await mintNMiami(10, walletUser);
