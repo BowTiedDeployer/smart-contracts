@@ -7,7 +7,6 @@ import {
   makeContractCall,
   broadcastTransaction,
 } from '@stacks/transactions';
-import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
 import { network, urlApis, wallets } from './consts.js';
 import { serializePayload } from '@stacks/transactions/dist/payload.js';
 import BigNum from 'bn.js';

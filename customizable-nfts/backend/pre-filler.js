@@ -35,6 +35,17 @@ export const mintDegen = async (url, walletAddress) => {
   );
 };
 
+export const burnDegen = async (id, walletAddress) => {
+  await callSCFunctionWithNonceWallet(
+    networkN,
+    contracts[network].degens.split('.')[0],
+    contracts[network].degens.split('.')[1],
+    'burn-token',
+    [id],
+    walletAddress
+  );
+};
+
 export const mintMiami = async (walletAddress) => {
   await callSCFunctionWithNonceWallet(
     networkN,
@@ -289,6 +300,44 @@ export const mintNComponentSets = async (componentNames, n, walletAddress) => {
   }
 };
 
+export const mintComponentsListnames = async (componentNames, walletAddress, type) => {
+  let availableNonce = await getAccountNonce(wallets.admin[network]);
+  let lastUsedNonce = availableNonce - 1;
+
+  async function checkNonceUpdate(checkIt = 1) {
+    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
+
+    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
+    else {
+      await sleep(checkIt * 1000);
+      availableNonce = await getAccountNonce(wallets.admin[network]);
+
+      return await checkNonceUpdate(++checkIt);
+    }
+  }
+
+  if (type === 'background')
+    for (const component of componentNames) {
+      await sleep(60000).then(() => mintBackground(component, walletAddress));
+      // await checkNonceUpdate().then(() => mintBackground(component, walletAddress));
+    }
+  else if (type === 'car')
+    for (const component of componentNames) {
+      await sleep(60000).then(() => mintCar(component, walletAddress));
+      // await checkNonceUpdate().then(() => mintCar(component, walletAddress));
+    }
+  else if (type === 'rims')
+    for (const component of componentNames) {
+      await sleep(60000).then(() => mintRims(component, walletAddress));
+      // await checkNonceUpdate().then(() => mintRims(component, walletAddress));
+    }
+  else if (type === 'head')
+    for (const component of componentNames) {
+      await sleep(60000).then(() => mintHead(component, walletAddress));
+      // await checkNonceUpdate().then(() => mintHead(component, walletAddress));
+    }
+};
+
 // assemble n component sets starting from component-id start to component-id start+n-1
 export const addNAssembleToQueue = async (start, n, walletAddress) => {
   let availableNonce = await getAccountNonce(wallets[walletAddress][network]);
@@ -502,40 +551,89 @@ const runPrefillers = async () => {
   const wallet2 = 'wallet2';
   const wallet3 = 'wallet3';
 
-  const n = 4;
+  const n = 5;
+  let start = 1;
 
   // max 25 tx per block, else server call throws error
 
-  await prefillNSwap(degenUrlsSwap, componentSet2, n, walletUser); // %4 == 0
-  await sleep(3000);
-  await prefillNAssemble(componentSet1, n / 4 + 1, n, walletUser); // /4 + 1
-  await sleep(3000);
-  await prefillNDisassemble(degenUrlsDisassemble, n + 1, n, walletUser);
-  await sleep(3000);
-  await prefillNMerge('miami', 1, n, walletUser);
-};
+  // SWAP
+  //
+  // const swapNr = 4;
+  // await prefillNSwap(degenUrlsSwap, componentSet2, swapNr, walletUser); // %4 == 0
+  // start += swapNr /4;
 
-const testPrefillers = async () => {
-  // await prefillNSwap(degenUrlsSwap, componentSet2, n, walletUser); // %4 == 0
-  // await prefillNAssemble(componentSet1, n + 1, n, walletUser); // /4 + 1
+  // ASSEMBLE
+  //
+  await prefillNAssemble(componentSet1, start, n, walletUser) // /4 + 1
+    .then(() => sleep(3000))
+    .then(() => prefillNAssemble(componentSet2, n + start, n, wallet2))
+    .then(() => sleep(3000))
+    .then(() => prefillNAssemble(componentSet3, 2 * n + start, n, wallet3));
+  //
+  // can have only 5 per wallet - after first, call assemble and do the next
+  // await prefillNAssemble(componentSet1, 3 * n + start, n, walletUser)
   //   .then(() => sleep(3000))
-  //   .then(() => prefillNAssemble(componentSet2, n + 1, n, wallet2))
+  //   .then(() => prefillNAssemble(componentSet2, 4 * n + start, n, wallet2))
   //   .then(() => sleep(3000))
-  //   .then(() => prefillNAssemble(componentSet3, 2 * n + 1, n, wallet3));
-  // await prefillNAssemble(componentSet1, 3 * n + 1, n, walletUser)
-  //   .then(() => sleep(3000))
-  //   .then(() => prefillNAssemble(componentSet2, 4 * n + 1, n, wallet2))
-  //   .then(() => sleep(3000))
-  //   .then(() => prefillNAssemble(componentSet3, 5 * n + 1, n, wallet3));
+  //   .then(() => prefillNAssemble(componentSet3, 5 * n + start, n, wallet3));
+
   // await mintNComponentSets(componentSet1, 4, walletUser);
+
+  // DISASSEMBLE
+  //
+  // await prefillNDisassemble(degenUrlsDisassemble, n + start, n, walletUser);
+
+  // MERGE
+  //
   // prefillNMerge('miami', 1, 6, walletUser);
   // prefillNMerge('nyc', 1, 6, walletUser);
 };
 
-await runPrefillers();
+// await runPrefillers();
 
-const walletUser = 'user';
-const wallet2 = 'wallet2';
-const wallet3 = 'wallet3';
+const prefillWalletNFTs = async () => {
+  const walletUser = 'user';
+  const wallet2 = 'wallet2';
+  const wallet3 = 'wallet3';
+  const backgroundsMintedList = ['DarkPurple', 'Emerald', 'Goldie', 'Orange', 'Purple', 'Sunset'];
+  const rimsMintedList = ['SportyGold', 'ClassyWhite', 'SportyPearlescent'];
+  const carMintedList = ['LamboPearlescent', 'BentleyGold', 'BentleyWhite'];
+  const headMintedList = ['Miami_Party_Bandana'];
 
+  // DOESN'T WORK ON TESTNET BECAUSE OF NONCE
+  //
+  await mintComponentsListnames(backgroundsMintedList, walletUser, 'background');
+
+  // await mintBackground('DarkPurple', walletUser);
+  // await mintBackground('Emerald', walletUser);
+  // await mintBackground('Goldie', walletUser);
+  // await mintBackground('Orange', walletUser);
+  // await mintBackground('Purple', walletUser);
+  // await mintBackground('Sunset', walletUser);
+
+  // await mintComponentsListnames(rimsMintedList, walletUser, 'rims');
+  // // await mintRims('SportyGold', walletUser);
+  // // await mintRims('ClassyWhite', walletUser);
+  // // await mintRims('SportyPearlescent', walletUser);
+
+  // await mintComponentsListnames(carMintedList, walletUser, 'car');
+  // // await mintCar('LamboPearlescent', walletUser);
+  // // await mintCar('BentleyGold', walletUser);
+  // // await mintCar('BentleyWhite', walletUser);
+
+  // await mintComponentsListnames(headMintedList, walletUser, 'head');
+  // // await mintHead('Miami_Party_Bandana', walletUser);
+
+  // // await mintDegen('ipfs://bafkreidsdf4ecaoyx6kmukoown3ki5dr5smyjyb4bbfuu5hgxplnvz6uvu', walletUser);
+  // // await mintDegen('ipfs://bafkreigy75l6wwn76almtkrznnskzgrpkmde7wrjsjfvr566gpnezq2vmu', walletUser);
+  // // await mintDegen('ipfs://bafkreie5ztt34skvfvmkaalkzzdj6fq6247obkbtuywo63ch3vlipqdee4', walletUser);
+  // // await mintDegen('ipfs://bafkreifo3cbn7qnrneuxcoqxb2i7tskz5hg6fhdrmzmoigsoc5c67tlsou', walletUser);
+
+  // await mintNMiami(10, walletUser);
+  // await mintNNYC(10, walletUser);
+};
+
+await prefillWalletNFTs();
+
+// await burnDegen(id, walletUser);
 // await popDisassembleQueue(walletUser);
