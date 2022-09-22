@@ -236,8 +236,10 @@ export const mintComponentSet = async (componentNames, walletAddress) => {
   let lastUsedNonce = availableNonce - 1;
 
   async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
-
+    if (checkIt > 10) {
+      console.log('WTF: Nonce');
+      throw new Error("Nonce didn't update on the blockchain API.");
+    }
     if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
     else {
       await sleep(checkIt * 1000);
@@ -318,23 +320,23 @@ export const mintComponentsListnames = async (componentNames, walletAddress, typ
 
   if (type === 'background')
     for (const component of componentNames) {
-      await sleep(60000).then(() => mintBackground(component, walletAddress));
-      // await checkNonceUpdate().then(() => mintBackground(component, walletAddress));
+      // await sleep(60000).then(() => mintBackground(component, walletAddress));
+      await checkNonceUpdate().then(() => mintBackground(component, walletAddress));
     }
   else if (type === 'car')
     for (const component of componentNames) {
-      await sleep(60000).then(() => mintCar(component, walletAddress));
-      // await checkNonceUpdate().then(() => mintCar(component, walletAddress));
+      // await sleep(60000).then(() => mintCar(component, walletAddress));
+      await checkNonceUpdate().then(() => mintCar(component, walletAddress));
     }
   else if (type === 'rims')
     for (const component of componentNames) {
-      await sleep(60000).then(() => mintRims(component, walletAddress));
-      // await checkNonceUpdate().then(() => mintRims(component, walletAddress));
+      // await sleep(60000).then(() => mintRims(component, walletAddress));
+      await checkNonceUpdate().then(() => mintRims(component, walletAddress));
     }
   else if (type === 'head')
     for (const component of componentNames) {
-      await sleep(60000).then(() => mintHead(component, walletAddress));
-      // await checkNonceUpdate().then(() => mintHead(component, walletAddress));
+      // await sleep(60000).then(() => mintHead(component, walletAddress));
+      await checkNonceUpdate().then(() => mintHead(component, walletAddress));
     }
 };
 
@@ -449,9 +451,14 @@ export const addNMergeToQueue = async (start, n, type, walletAddress) => {
 // };
 
 const prefillNAssemble = async (componentNames, start, n, walletAddress) => {
-  await mintNComponentSets(componentNames, n, walletAddress)
-    .then(() => sleep(2000))
-    .then(() => addNAssembleToQueue(start, n, walletAddress));
+  await mintNComponentSets(componentNames, n, walletAddress);
+
+  console.log('Going to sleep');
+
+  await new Promise((r) => setTimeout(r, 2000));
+
+  console.log('Going to asemble');
+  await addNAssembleToQueue(start, n, walletAddress);
 };
 
 const prefillNDisassemble = async (degenUrls, start, n, walletAddress) => {
@@ -552,7 +559,7 @@ const runPrefillers = async () => {
   const wallet3 = 'wallet3';
 
   const n = 5;
-  let start = 1;
+  let start = 16;
 
   // max 25 tx per block, else server call throws error
 
@@ -588,8 +595,6 @@ const runPrefillers = async () => {
   // prefillNMerge('miami', 1, 6, walletUser);
   // prefillNMerge('nyc', 1, 6, walletUser);
 };
-
-// await runPrefillers();
 
 const prefillWalletNFTs = async () => {
   const walletUser = 'user';
@@ -633,7 +638,8 @@ const prefillWalletNFTs = async () => {
   // await mintNNYC(10, walletUser);
 };
 
-await prefillWalletNFTs();
+// await prefillWalletNFTs();
 
+await runPrefillers();
 // await burnDegen(id, walletUser);
 // await popDisassembleQueue(walletUser);

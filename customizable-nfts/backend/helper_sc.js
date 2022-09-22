@@ -50,7 +50,7 @@ export async function getAccountNonce(queryAddress) {
     const accountNonce = accresponse.data.nonce;
     let stacksNonce = response.data.possible_next_nonce;
     if (accountNonce > stacksNonce) stacksNonce = accountNonce;
-    console.log('init stacksNonce ', queryAddress, stacksNonce, response.data);
+    // console.log('init stacksNonce ', queryAddress, stacksNonce, response.data);
     if (response.data.detected_missing_nonces.length > 0) {
       // set nonce to min of missing nonces
       const min = Math.min(...response.data.detected_missing_nonces);
