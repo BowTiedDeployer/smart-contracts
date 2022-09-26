@@ -67,7 +67,7 @@ fs.readdir(pathCarImg, (err, cars) => {
       { Car: carName },
       'DegenCars'
     );
-    fs.writeFile(pathCarGenerated + carName + '.json', metadata, function (err, result) {
+    fs.writeFile(pathCarGenerated + carName + '.json', metadata, (err, result) => {
       if (err) console.log('error', err);
     });
   });

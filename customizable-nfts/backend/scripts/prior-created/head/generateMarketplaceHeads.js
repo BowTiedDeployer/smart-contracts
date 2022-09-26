@@ -10,7 +10,7 @@ const heads = './generated/images/';
 // width 665
 // height 580
 // Generate all Heads for marketplace
-async function generateHead(head) {
+const generateHead = async (head) => {
   const headPath = heads + head;
   console.log(headPath);
 
@@ -26,10 +26,10 @@ async function generateHead(head) {
 
   const data = img.replace(/^data:image\/\w+;base64,/, '');
   const buf = Buffer.from(data, 'base64');
-  fs.writeFile(pathHeadGen + head, buf, function (err, result) {
+  fs.writeFile(pathHeadGen + head, buf, (err, result) => {
     if (err) console.log('error', err);
   });
-}
+};
 
 // Goes through all NYC heads and faces
 fs.readdir(heads, (err, heads) => {

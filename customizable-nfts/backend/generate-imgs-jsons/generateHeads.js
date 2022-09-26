@@ -8,11 +8,10 @@ const alienFace = prefix + 'AlienFace/';
 const alienHead = prefix + 'AlienHead/';
 const skullFace = prefix + 'SkullFace/';
 const skullHead = prefix + 'SkullHead/';
-const pathHeadsMapSC = "./generated/headsMap.txt";
-fs.writeFile(pathHeadsMapSC, '', function (err, result) {
+const pathHeadsMapSC = './generated/headsMap.txt';
+fs.writeFile(pathHeadsMapSC, '', (err, result) => {
   if (err) console.log('error', err);
 });
-
 
 // Generate all NYC Heads
 
@@ -43,7 +42,7 @@ fs.readdir(skullHead, (err, heads) => {
   });
 });
 
-async function generateHead(city, head, face, headName, faceName) {
+const generateHead = async (city, head, face, headName, faceName) => {
   const headPath = city == 'NYC' ? alienHead + head : city == 'Miami' ? skullHead + head : '';
   const facePath = city == 'NYC' ? alienFace + face : city == 'Miami' ? skullFace + face : '';
   const race = city == 'NYC' ? prefix + 'Alien.png' : city == 'Miami' ? prefix + 'Skull.png' : '';
@@ -57,18 +56,17 @@ async function generateHead(city, head, face, headName, faceName) {
 
   const data = img.replace(/^data:image\/\w+;base64,/, '');
   const buf = Buffer.from(data, 'base64');
-  fs.writeFile(pathHeadsGen + city + '_' + headName + '_' + faceName + '.png', buf, function (err, result) {
+  fs.writeFile(pathHeadsGen + city + '_' + headName + '_' + faceName + '.png', buf, (err, result) => {
     if (err) console.log('error', err);
   });
-}
+};
 
-function convertCityHeadFaceToSCLine(city, head, face) {
+const convertCityHeadFaceToSCLine = (city, head, face) => {
   return `(map-set name-url {name: "${city}_${head}_${face}"} {url: "ipfs://QmY549kDdJDSR89yWLF3PrkoPjs1ZWboRMkaqmVmTVgsH7/${city}_${head}_${face}.json"})\n`;
-}
+};
 
-function writeNewLine(newLine) {
-  fs.appendFile(pathHeadsMapSC, newLine, function (err, result) {
+const writeNewLine = (newLine) => {
+  fs.appendFile(pathHeadsMapSC, newLine, (err, result) => {
     if (err) console.log('error', err);
   });
-}
-
+};

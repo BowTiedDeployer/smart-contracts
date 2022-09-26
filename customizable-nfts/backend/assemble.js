@@ -276,4 +276,4 @@ export const checkToStartFlowAssemble = async () => {
 
 // await checkToStartFlowAssemble();
 // console.log('tx mempool', await getMempoolTransactionCount(wallets.admin[network]));
-// await assembleServerFlow(25);
+await assembleServerFlow(25);

@@ -147,8 +147,8 @@ json: https://stxnft.mypinata.cloud/ipfs/QmXiDFRaq1CS4nQJfcCdFAYLixfAc9XUikjfWTC
 
 marketplace: https://stxnft.mypinata.cloud/ipfs/QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst  
 image-component: https://stxnft.mypinata.cloud/ipfs/QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK  
-image-in-game: https://stxnft.mypinata.cloud/ipfs/QmTNDjMQYxsuQhgbCAYi77f34TfdDonyCDe9Y8Ez1tddoA
-json: https://stxnft.mypinata.cloud/ipfs/QmNbot8qQirJ2hBffQjm3Bf5tSJdxwnWSdDx8ydf1FMPfe
+image-in-game: https://stxnft.mypinata.cloud/ipfs/QmbUFUAZfqN1AsDHNSLomFVnDXn7L8baEfRcJiv8jsYxAL
+json: https://stxnft.mypinata.cloud/ipfs/QmewAMgQ7UWhFkSMo2eNcZC3BgHFKFLkHUnqhnTDs2Viwh
 
 # Positions for marketplace picture:
 

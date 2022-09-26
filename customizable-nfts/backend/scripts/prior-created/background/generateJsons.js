@@ -68,7 +68,7 @@ fs.readdir(pathBgImg, (err, backgrounds) => {
       { Background: backgroundName },
       'DegenBackgrounds'
     );
-    fs.writeFile(pathBgGenerated + backgroundName + '.json', metadata, function (err, result) {
+    fs.writeFile(pathBgGenerated + backgroundName + '.json', metadata, (err, result) => {
       if (err) console.log('error', err);
     });
   });

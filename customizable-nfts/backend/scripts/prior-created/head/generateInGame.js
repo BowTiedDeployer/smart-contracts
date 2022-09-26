@@ -10,7 +10,7 @@ const skullFace = './SkullFaceGame/';
 const skullHead = './SkullHeadGame/';
 
 // Generate all NYC Heads
-async function generateHead(city, head, face, headName, faceName) {
+const generateHead = async (city, head, face, headName, faceName) => {
   const headPath = city == 'NYC' ? alienHead + head : city == 'Miami' ? skullHead + head : '';
   const facePath = city == 'NYC' ? alienFace + face : city == 'Miami' ? skullFace + face : '';
   const race = city == 'NYC' ? prefix + 'AlienGame.png' : city == 'Miami' ? prefix + 'SkullGame.png' : '';
@@ -24,10 +24,10 @@ async function generateHead(city, head, face, headName, faceName) {
 
   const data = img.replace(/^data:image\/\w+;base64,/, '');
   const buf = Buffer.from(data, 'base64');
-  fs.writeFile(pathHeadsGen + city + '_' + headName + '_' + faceName + '.png', buf, function (err, result) {
+  fs.writeFile(pathHeadsGen + city + '_' + headName + '_' + faceName + '.png', buf, (err, result) => {
     if (err) console.log('error', err);
   });
-}
+};
 
 // Goes through all NYC heads and faces
 fs.readdir(alienHead, (err, heads) => {

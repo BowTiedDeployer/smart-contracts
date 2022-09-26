@@ -7,7 +7,7 @@ const pathRimsGen = './generated-marketplace/';
 const rims = './images/';
 
 // Generate all Rims for marketplace
-async function generateRim(rim) {
+const generateRim = async (rim) => {
   const rimPath = rims + rim;
   console.log(rimPath);
 
@@ -23,10 +23,10 @@ async function generateRim(rim) {
 
   const data = img.replace(/^data:image\/\w+;base64,/, '');
   const buf = Buffer.from(data, 'base64');
-  fs.writeFile(pathRimsGen + rim, buf, function (err, result) {
+  fs.writeFile(pathRimsGen + rim, buf, (err, result) => {
     if (err) console.log('error', err);
   });
-}
+};
 
 // Goes through all rims
 fs.readdir(rims, (err, rims) => {

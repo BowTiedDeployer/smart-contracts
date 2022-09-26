@@ -1,417 +1,310 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
-import { componentType, contracts, network, wallets } from './consts.js';
-import { stringToMap } from './converters.js';
-import {
-  callSCFunctionWithNonce,
-  callSCFunctionWithNonceWallet,
-  checkNonceUpdate,
-  getAccountNonce,
-  getMempoolTransactionCount,
-  sleep,
-  waitTillMempoolClears,
-} from './helper_sc.js';
+import { contracts, network, wallets } from './consts.js';
+import { getWalletStoredNonce, globalNonce, setWalletStoredNonce } from './variables.js';
+import { callSCFunctionWallet, sleep, callSCFunction } from './helper_sc.js';
 
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
 
-export const popDisassembleQueue = async (walletAddress) => {
-  await callSCFunctionWithNonceWallet(
+export const popDisassembleQueue = async (walletAddress, nonce) => {
+  await callSCFunctionWallet(
     networkN,
     contracts[network].customizable.split('.')[0],
     contracts[network].customizable.split('.')[1],
     'pop-disassemble-work-queue-public',
     [],
-    walletAddress
+    walletAddress,
+    nonce
   );
 };
 
-export const mintDegen = async (url, walletAddress) => {
-  await callSCFunctionWithNonce(
+export const mintDegen = async (url, walletAddress, nonce) => {
+  await callSCFunction(
     networkN,
     contracts[network].degens.split('.')[0],
     contracts[network].degens.split('.')[1],
     'mint-uri',
-    [wallets[walletAddress][network], url]
+    [wallets[walletAddress][network], url],
+    nonce
   );
 };
 
-export const burnDegen = async (id, walletAddress) => {
-  await callSCFunctionWithNonceWallet(
+export const burnDegen = async (id, walletAddress, nonce) => {
+  await callSCFunctionWallet(
     networkN,
     contracts[network].degens.split('.')[0],
     contracts[network].degens.split('.')[1],
     'burn-token',
     [id],
-    walletAddress
+    walletAddress,
+    nonce
   );
 };
 
-export const mintMiami = async (walletAddress) => {
-  await callSCFunctionWithNonceWallet(
+export const mintMiami = async (walletAddress, nonce) => {
+  await callSCFunctionWallet(
     networkN,
     contracts[network].miami.split('.')[0],
     contracts[network].miami.split('.')[1],
     'claim',
     [],
-    walletAddress
+    walletAddress,
+    nonce
   );
 };
 
-export const mintNYC = async (walletAddress) => {
-  await callSCFunctionWithNonceWallet(
+export const mintNYC = async (walletAddress, nonce) => {
+  await callSCFunctionWallet(
     networkN,
     contracts[network].nyc.split('.')[0],
     contracts[network].nyc.split('.')[1],
     'claim',
     [],
-    walletAddress
+    walletAddress,
+    nonce
   );
 };
 
 // for components
-export const mintBackground = async (name, walletAddress) => {
-  await callSCFunctionWithNonce(
+export const mintBackground = async (name, walletAddress, nonce) => {
+  await callSCFunction(
     networkN,
     contracts[network].backgrounds.split('.')[0],
     contracts[network].backgrounds.split('.')[1],
     'mint-name',
-    [wallets[walletAddress][network], name]
+    [wallets[walletAddress][network], name],
+    nonce
   );
 };
 
-export const mintCar = async (name, walletAddress) => {
+export const mintCar = async (name, walletAddress, nonce) => {
   console.log('car', name);
-  await callSCFunctionWithNonce(
+  await callSCFunction(
     networkN,
     contracts[network].cars.split('.')[0],
     contracts[network].cars.split('.')[1],
     'mint-name',
-    [wallets[walletAddress][network], name]
+    [wallets[walletAddress][network], name],
+    nonce
   );
 };
 
-export const mintHead = async (name, walletAddress) => {
+export const mintHead = async (name, walletAddress, nonce) => {
   console.log('head', name);
-  await callSCFunctionWithNonce(
+  await callSCFunction(
     networkN,
     contracts[network].heads.split('.')[0],
     contracts[network].heads.split('.')[1],
     'mint-name',
-    [wallets[walletAddress][network], name]
+    [wallets[walletAddress][network], name],
+    nonce
   );
 };
 
-export const mintRims = async (name, walletAddress) => {
-  await callSCFunctionWithNonce(
+export const mintRims = async (name, walletAddress, nonce) => {
+  await callSCFunction(
     networkN,
     contracts[network].rims.split('.')[0],
     contracts[network].rims.split('.')[1],
     'mint-name',
-    [wallets[walletAddress][network], name]
+    [wallets[walletAddress][network], name],
+    nonce
   );
 };
 
 //for queues
-export const addDisassembleToQueue = async (degenId, walletAddress) => {
+export const addDisassembleToQueue = async (degenId, walletAddress, nonce) => {
   // call add-work-disassemble
   // manual value
-  await callSCFunctionWithNonceWallet(
+  await callSCFunctionWallet(
     networkN,
     contracts[network].customizable.split('.')[0],
     contracts[network].customizable.split('.')[1],
     'add-disassemble-work-in-queue',
     [degenId],
-    walletAddress
+    walletAddress,
+    nonce
   );
 };
 
 // (background-id uint) (car-id uint) (rim-id uint) (head-id uint))
-export const addAssembleToQueue = async (backgroundId, carId, rimId, headId, walletAddress) => {
+export const addAssembleToQueue = async (backgroundId, carId, rimId, headId, walletAddress, nonce) => {
   // call add-work-assemble
-  await callSCFunctionWithNonceWallet(
+  await callSCFunctionWallet(
     networkN,
     contracts[network].customizable.split('.')[0],
     contracts[network].customizable.split('.')[1],
     'add-assemble-work-in-queue',
     [backgroundId, carId, rimId, headId],
-    walletAddress
+    walletAddress,
+    nonce
   );
 };
 
 // (degen-id uint) (component-id uint) (component-type (string-ascii 30)
-export const addSwapToQueue = async (degenId, componentId, componentType, walletAddress) => {
+export const addSwapToQueue = async (degenId, componentId, componentType, walletAddress, nonce) => {
   // call add-work-assemble
-  await callSCFunctionWithNonceWallet(
+  await callSCFunctionWallet(
     networkN,
     contracts[network].customizable.split('.')[0],
     contracts[network].customizable.split('.')[1],
     'add-swap-work-in-queue',
     [degenId, componentId, componentType],
-    walletAddress
+    walletAddress,
+    nonce
   );
 };
 
-export const addMergeToQueue = async (id, type, walletAddress) => {
+export const addMergeToQueue = async (id, type, walletAddress, nonce) => {
   // call add-work-merge
   // manual value
-  await callSCFunctionWithNonceWallet(
+  await callSCFunctionWallet(
     networkN,
     contracts[network].customizable.split('.')[0],
     contracts[network].customizable.split('.')[1],
     'add-merge-work-in-queue',
     [id, type],
-    walletAddress
+    walletAddress,
+    nonce
   );
 };
 
 // NOT applicable IRL - for multiple mints
 export const mintNDegens = async (degenUrls, n, walletAddress) => {
-  let availableNonce = await getAccountNonce(wallets.admin[network]);
-  let lastUsedNonce = availableNonce - 1;
-
-  async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
-
-    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
-    else {
-      await sleep(checkIt * 1000);
-      availableNonce = await getAccountNonce(wallets.admin[network]);
-
-      return await checkNonceUpdate(++checkIt);
-    }
-  }
-
+  console.log('walletAddress', walletAddress);
+  console.log(globalNonce);
+  let availableNonce = getWalletStoredNonce(wallets.admin.name);
+  console.log('availableNonce mintNDegens Start: ', availableNonce);
   for (let i = 0; i < n; i++) {
-    await checkNonceUpdate();
-    await mintDegen(degenUrls[i], walletAddress);
+    await mintDegen(degenUrls[i], walletAddress, availableNonce);
+    availableNonce += 1;
   }
+  console.log('availableNonce mintNDegens End: ', availableNonce);
+  setWalletStoredNonce(walletAddress, availableNonce);
 };
 
 export const mintNMiami = async (n, walletAddress) => {
-  let availableNonce = await getAccountNonce(wallets[walletAddress][network]);
-  let lastUsedNonce = availableNonce - 1;
-
-  async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
-
-    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
-    else {
-      await sleep(checkIt * 1000);
-      availableNonce = await getAccountNonce(wallets[walletAddress][network]);
-
-      return await checkNonceUpdate(++checkIt);
-    }
-  }
-
+  console.log('walletAddress', walletAddress);
+  console.log(globalNonce);
+  let availableNonce = getWalletStoredNonce(walletAddress);
+  console.log('availableNonce mintNDegens Start: ', availableNonce);
   for (let i = 0; i < n; i++) {
-    await checkNonceUpdate();
-    await mintMiami(walletAddress);
+    // await checkNonceUpdate();
+    await mintMiami(walletAddress, availableNonce);
+    availableNonce += 1;
   }
+  console.log('availableNonce mintNDegens End: ', availableNonce);
+  setWalletStoredNonce(walletAddress, availableNonce);
 };
 
 export const mintNNYC = async (n, walletAddress) => {
-  let availableNonce = await getAccountNonce(wallets[walletAddress][network]);
-  let lastUsedNonce = availableNonce - 1;
-
-  async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
-
-    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
-    else {
-      await sleep(checkIt * 1000);
-      availableNonce = await getAccountNonce(wallets[walletAddress][network]);
-
-      return await checkNonceUpdate(++checkIt);
-    }
-  }
-
+  console.log('walletAddress', walletAddress);
+  console.log(globalNonce);
+  let availableNonce = getWalletStoredNonce(walletAddress);
+  console.log('availableNonce mintNDegens Start: ', availableNonce);
   for (let i = 0; i < n; i++) {
-    await checkNonceUpdate();
-    await mintNYC(walletAddress);
+    // await checkNonceUpdate();
+    await mintNYC(walletAddress, availableNonce);
+    availableNonce += 1;
   }
+  console.log('availableNonce mintNDegens End: ', availableNonce);
+  setWalletStoredNonce(walletAddress, availableNonce);
 };
 
 export const mintComponentSet = async (componentNames, walletAddress) => {
-  let availableNonce = await getAccountNonce(wallets.admin[network]);
-  let lastUsedNonce = availableNonce - 1;
-
-  async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 10) {
-      console.log('WTF: Nonce');
-      throw new Error("Nonce didn't update on the blockchain API.");
-    }
-    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
-    else {
-      await sleep(checkIt * 1000);
-      availableNonce = await getAccountNonce(wallets.admin[network]);
-
-      return await checkNonceUpdate(++checkIt);
-    }
-  }
-
-  // console.log(`Mempool TX Number: ${await getMempoolTransactionCount(wallets.admin[network])}`);
-  await getMempoolTransactionCount(wallets.admin[network]).then((x) => console.log(`Mempool TX Number: ${x}`));
-  await checkNonceUpdate()
-    .then(() => mintBackground(componentNames.Background, walletAddress))
-    .then(() => {
-      sleep(1000);
-      // waitTillMempoolClears();
-    })
-    .then(() => checkNonceUpdate())
-    .then(() => {
-      sleep(1000);
-      // waitTillMempoolClears();
-      // getMempoolTransactionCount(wallets.admin[network]).then((x) => console.log(`Mempool TX Number: ${x}`));
-    })
-    .then(() => mintCar(componentNames.Car, walletAddress))
-    .then(() => checkNonceUpdate())
-    .then(() => {
-      sleep(1000);
-      // waitTillMempoolClears();
-      // getMempoolTransactionCount(wallets.admin[network]).then((x) => console.log(`Mempool TX Number: ${x}`));
-    })
-    .then(() => mintRims(componentNames.Rims, walletAddress))
-    .then(() => checkNonceUpdate())
-    .then(() => {
-      sleep(1000);
-      // waitTillMempoolClears();
-      // getMempoolTransactionCount(wallets.admin[network]).then((x) => console.log(`Mempool TX Number: ${x}`));
-    })
-    .then(() => mintHead(componentNames.Head, walletAddress));
+  let availableNonce = getWalletStoredNonce(wallets.admin.name);
+  await mintBackground(componentNames.Background, walletAddress, availableNonce);
+  availableNonce += 1;
+  await mintCar(componentNames.Car, walletAddress, availableNonce);
+  availableNonce += 1;
+  await mintRims(componentNames.Rims, walletAddress, availableNonce);
+  availableNonce += 1;
+  await mintHead(componentNames.Head, walletAddress, availableNonce);
+  availableNonce += 1;
+  setWalletStoredNonce(wallets.admin.name, availableNonce);
 };
 
 export const mintNComponentSets = async (componentNames, n, walletAddress) => {
-  let availableNonce = await getAccountNonce(wallets.admin[network]);
-  let lastUsedNonce = availableNonce - 1;
-
-  async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
-
-    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
-    else {
-      await sleep(checkIt * 1000);
-      availableNonce = await getAccountNonce(wallets.admin[network]);
-
-      return await checkNonceUpdate(++checkIt);
-    }
-  }
-
+  let availableNonce = getWalletStoredNonce(wallets.admin.name);
+  console.log('AVAILABLE NONCE: ' + availableNonce);
   for (let i = 0; i < n; i++) {
-    await checkNonceUpdate();
-    await mintComponentSet(componentNames, walletAddress);
+    // await mintComponentSet(componentNames, walletAddress);
+    await mintBackground(componentNames.Background, walletAddress, availableNonce);
+    availableNonce += 1;
+    await mintCar(componentNames.Car, walletAddress, availableNonce);
+    availableNonce += 1;
+    await mintRims(componentNames.Rims, walletAddress, availableNonce);
+    availableNonce += 1;
+    await mintHead(componentNames.Head, walletAddress, availableNonce);
+    availableNonce += 1;
   }
+  setWalletStoredNonce(wallets.admin.name, availableNonce);
 };
 
-export const mintComponentsListnames = async (componentNames, walletAddress, type) => {
-  let availableNonce = await getAccountNonce(wallets.admin[network]);
-  let lastUsedNonce = availableNonce - 1;
+const componentMintCall = {
+  background: mintBackground,
+  car: mintBackground,
+  rims: mintRims,
+  head: mintHead,
+};
 
-  async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
-
-    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
-    else {
-      await sleep(checkIt * 1000);
-      availableNonce = await getAccountNonce(wallets.admin[network]);
-
-      return await checkNonceUpdate(++checkIt);
-    }
-  }
-
+export const mintComponentsListNames = async (componentNames, walletAddress, type) => {
+  let availableNonce = getWalletStoredNonce(wallets.admin.name);
+  // for (const component of componentNames) {
+  //   await componentMintCall[type](component, walletAddress, availableNonce);
+  //   availableNonce += 1;
+  // }
+  console.log('TYPE: ', type);
   if (type === 'background')
     for (const component of componentNames) {
-      // await sleep(60000).then(() => mintBackground(component, walletAddress));
-      await checkNonceUpdate().then(() => mintBackground(component, walletAddress));
+      await mintBackground(component, walletAddress, availableNonce);
+      availableNonce += 1;
     }
   else if (type === 'car')
     for (const component of componentNames) {
-      // await sleep(60000).then(() => mintCar(component, walletAddress));
-      await checkNonceUpdate().then(() => mintCar(component, walletAddress));
+      await mintCar(component, walletAddress, availableNonce);
+      availableNonce += 1;
     }
   else if (type === 'rims')
     for (const component of componentNames) {
-      // await sleep(60000).then(() => mintRims(component, walletAddress));
-      await checkNonceUpdate().then(() => mintRims(component, walletAddress));
+      await mintRims(component, walletAddress, availableNonce);
+      availableNonce += 1;
     }
   else if (type === 'head')
     for (const component of componentNames) {
-      // await sleep(60000).then(() => mintHead(component, walletAddress));
-      await checkNonceUpdate().then(() => mintHead(component, walletAddress));
+      await mintHead(component, walletAddress, availableNonce);
+      availableNonce += 1;
     }
+  setWalletStoredNonce(wallets.admin.name, availableNonce);
 };
 
 // assemble n component sets starting from component-id start to component-id start+n-1
 export const addNAssembleToQueue = async (start, n, walletAddress) => {
-  let availableNonce = await getAccountNonce(wallets[walletAddress][network]);
-  let lastUsedNonce = availableNonce - 1;
-
-  async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
-
-    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
-    else {
-      await sleep(checkIt * 1000);
-      availableNonce = await getAccountNonce(wallets[walletAddress][network]);
-
-      return await checkNonceUpdate(++checkIt);
-    }
-  }
-
+  let availableNonce = getWalletStoredNonce(walletAddress);
   for (let i = start; i < start + n; i++) {
-    await checkNonceUpdate();
-    await addAssembleToQueue(i, i, i, i, walletAddress);
+    await addAssembleToQueue(i, i, i, i, walletAddress, availableNonce);
+    availableNonce += 1;
   }
-
-  return null;
+  setWalletStoredNonce(walletAddress, availableNonce);
 };
 
 // disassemble n degens starting from degen-id start to degen-id start+n-1
 export const addNDisassembleToQueue = async (start, n, walletAddress) => {
-  let availableNonce = await getAccountNonce(wallets[walletAddress][network]);
-  let lastUsedNonce = availableNonce - 1;
-
-  async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
-
-    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
-    else {
-      await sleep(checkIt * 1000);
-      availableNonce = await getAccountNonce(wallets[walletAddress][network]);
-
-      return await checkNonceUpdate(++checkIt);
-    }
-  }
-
+  let availableNonce = getWalletStoredNonce(walletAddress);
   for (let i = start; i < start + n; i++) {
-    await checkNonceUpdate();
-    await addDisassembleToQueue(i, walletAddress);
+    await addDisassembleToQueue(i, walletAddress, availableNonce);
+    availableNonce += 1;
   }
-
-  return null;
+  setWalletStoredNonce(walletAddress, availableNonce);
 };
 
 export const addNMergeToQueue = async (start, n, type, walletAddress) => {
-  let availableNonce = await getAccountNonce(wallets[walletAddress][network]);
-  let lastUsedNonce = availableNonce - 1;
-
-  async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
-
-    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
-    else {
-      await sleep(checkIt * 1000);
-      availableNonce = await getAccountNonce(wallets[walletAddress][network]);
-
-      return await checkNonceUpdate(++checkIt);
-    }
-  }
-
+  let availableNonce = getWalletStoredNonce(walletAddress);
   for (let i = start; i < start + n; i++) {
-    await checkNonceUpdate();
-    await addMergeToQueue(i, type, walletAddress);
+    // await checkNonceUpdate();
+    await addMergeToQueue(i, type, walletAddress, availableNonce);
   }
-
-  return null;
+  setWalletStoredNonce(walletAddress, availableNonce);
 };
 
 // START PREFILLS CALLS
@@ -455,64 +348,54 @@ const prefillNAssemble = async (componentNames, start, n, walletAddress) => {
 
   console.log('Going to sleep');
 
-  await new Promise((r) => setTimeout(r, 2000));
+  await sleep(1000);
+  //  new Promise((r) => setTimeout(r, 2000));
 
   console.log('Going to asemble');
   await addNAssembleToQueue(start, n, walletAddress);
 };
 
 const prefillNDisassemble = async (degenUrls, start, n, walletAddress) => {
-  await mintNDegens(degenUrls, n, walletAddress)
-    .then(() => sleep(2000))
-    .then(() => addNDisassembleToQueue(start, n, walletAddress));
+  await mintNDegens(degenUrls, n, walletAddress);
+  await addNDisassembleToQueue(start, n, walletAddress);
 };
 
 const prefillNSwap = async (degenUrls, componentNames, n, walletAddress) => {
-  let availableNonce = await getAccountNonce(wallets[walletAddress][network]);
-  let lastUsedNonce = availableNonce - 1;
-  async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
-
-    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
-    else {
-      await sleep(checkIt * 1000);
-      availableNonce = await getAccountNonce(wallets[walletAddress][network]);
-
-      return await checkNonceUpdate(++checkIt);
-    }
-  }
-
   await mintNDegens(degenUrls, n, walletAddress);
   await mintNComponentSets(componentNames, n / 4, walletAddress);
 
+  let availableNonce = getWalletStoredNonce(walletAddress);
+  if (availableNonce < 1) availableNonce = 1;
   let componentId = 1;
   let degenId = 1;
   for (let i = 1; i <= n / 4; i++) {
-    await checkNonceUpdate();
-    addSwapToQueue(degenId, componentId, 'background-type', walletAddress);
+    // await checkNonceUpdate();
+    await addSwapToQueue(degenId, componentId, 'background-type', walletAddress, availableNonce);
     degenId += 1;
-    await checkNonceUpdate();
-    addSwapToQueue(degenId, componentId, 'car-type', walletAddress);
+    availableNonce += 1;
+    // await checkNonceUpdate();
+    await addSwapToQueue(degenId, componentId, 'car-type', walletAddress, availableNonce);
     degenId += 1;
-    await checkNonceUpdate();
-    addSwapToQueue(degenId, componentId, 'rim-type', walletAddress);
+    availableNonce += 1;
+    // await checkNonceUpdate();
+    await addSwapToQueue(degenId, componentId, 'rim-type', walletAddress, availableNonce);
     degenId += 1;
-    await checkNonceUpdate();
-    addSwapToQueue(degenId, componentId, 'head-type', walletAddress);
+    availableNonce += 1;
+    // await checkNonceUpdate();
+    await addSwapToQueue(degenId, componentId, 'head-type', walletAddress, availableNonce);
     degenId += 1;
+    availableNonce += 1;
     componentId += 1;
   }
 };
 
 const prefillNMerge = async (type, start, n, walletAddress) => {
   if (type === 'miami') {
-    await mintNMiami(n, walletAddress)
-      .then(() => sleep(2000))
-      .then(() => addNMergeToQueue(start, n, 'miami', walletAddress));
+    await mintNMiami(n, walletAddress);
+    await addNMergeToQueue(start, n, 'miami', walletAddress);
   } else if (type === 'nyc') {
-    await mintNNYC(n, walletAddress)
-      .then(() => sleep(2000))
-      .then(() => addNMergeToQueue(start, n, 'nyc', walletAddress));
+    await mintNNYC(n, walletAddress);
+    await addNMergeToQueue(start, n, 'nyc', walletAddress);
   }
 };
 
@@ -554,28 +437,37 @@ const runPrefillers = async () => {
     'ipfs://bafkreifovceyfttkdsn4rv3uf4oc6gzgkuh3tw3uhcnihysz2rogcktscu',
   ];
 
-  const walletUser = 'user';
-  const wallet2 = 'wallet2';
-  const wallet3 = 'wallet3';
-
   const n = 5;
-  let start = 16;
+  let start = 1;
 
   // max 25 tx per block, else server call throws error
 
   // SWAP
   //
-  // const swapNr = 4;
-  // await prefillNSwap(degenUrlsSwap, componentSet2, swapNr, walletUser); // %4 == 0
-  // start += swapNr /4;
+  const swapNr = 4;
+  await prefillNSwap(degenUrlsSwap, componentSet2, swapNr, wallets.user.name); // %4 == 0
+  start += swapNr / 4;
 
   // ASSEMBLE
   //
-  await prefillNAssemble(componentSet1, start, n, walletUser) // /4 + 1
-    .then(() => sleep(3000))
-    .then(() => prefillNAssemble(componentSet2, n + start, n, wallet2))
-    .then(() => sleep(3000))
-    .then(() => prefillNAssemble(componentSet3, 2 * n + start, n, wallet3));
+  await sleep(20000);
+  await prefillNAssemble(componentSet1, start, n, wallets.user.name); // /4 + 1
+  await sleep(20000);
+  await prefillNAssemble(componentSet2, n + start, n, wallets.wallet2.name);
+  await sleep(20000);
+  await prefillNAssemble(componentSet3, 2 * n + start, n, wallets.wallet3.name);
+  await sleep(20000);
+  await prefillNAssemble(componentSet3, 3 * n + start, n, wallets.wallet4.name);
+  await sleep(20000);
+  await prefillNAssemble(componentSet3, 4 * n + start, n, wallets.wallet5.name);
+  await sleep(20000);
+  await prefillNAssemble(componentSet3, 3 * n + start, n, wallets.wallet6.name);
+  await sleep(20000);
+  await prefillNAssemble(componentSet3, 4 * n + start, n, wallets.wallet7.name);
+  await sleep(20000);
+  await prefillNAssemble(componentSet3, 3 * n + start, n, wallets.wallet8.name);
+  await sleep(20000);
+  await prefillNAssemble(componentSet3, 4 * n + start, n, wallets.wallet9.name);
   //
   // can have only 5 per wallet - after first, call assemble and do the next
   // await prefillNAssemble(componentSet1, 3 * n + start, n, walletUser)
@@ -588,7 +480,7 @@ const runPrefillers = async () => {
 
   // DISASSEMBLE
   //
-  // await prefillNDisassemble(degenUrlsDisassemble, n + start, n, walletUser);
+  await prefillNDisassemble(degenUrlsDisassemble, n + start, n, wallets.user.name);
 
   // MERGE
   //
@@ -596,19 +488,15 @@ const runPrefillers = async () => {
   // prefillNMerge('nyc', 1, 6, walletUser);
 };
 
-const prefillWalletNFTs = async () => {
-  const walletUser = 'user';
-  const wallet2 = 'wallet2';
-  const wallet3 = 'wallet3';
+const prefillWalletNFTs = async (walletAddress) => {
   const backgroundsMintedList = ['DarkPurple', 'Emerald', 'Goldie', 'Orange', 'Purple', 'Sunset'];
   const rimsMintedList = ['SportyGold', 'ClassyWhite', 'SportyPearlescent'];
   const carMintedList = ['LamboPearlescent', 'BentleyGold', 'BentleyWhite'];
-  const headMintedList = ['Miami_Party_Bandana'];
+  const headMintedList = ['Miami_Party_Bandana', 'NYC_PUBG_BigSmile', 'NYC_PUBG_Vampire', 'Miami_Syringe_Sunglasses'];
 
   // DOESN'T WORK ON TESTNET BECAUSE OF NONCE
   //
-  await mintComponentsListnames(backgroundsMintedList, walletUser, 'background');
-
+  await mintComponentsListNames(backgroundsMintedList, walletAddress, 'background');
   // await mintBackground('DarkPurple', walletUser);
   // await mintBackground('Emerald', walletUser);
   // await mintBackground('Goldie', walletUser);
@@ -616,30 +504,89 @@ const prefillWalletNFTs = async () => {
   // await mintBackground('Purple', walletUser);
   // await mintBackground('Sunset', walletUser);
 
-  // await mintComponentsListnames(rimsMintedList, walletUser, 'rims');
-  // // await mintRims('SportyGold', walletUser);
-  // // await mintRims('ClassyWhite', walletUser);
-  // // await mintRims('SportyPearlescent', walletUser);
-
-  // await mintComponentsListnames(carMintedList, walletUser, 'car');
+  await mintComponentsListNames(carMintedList, walletAddress, 'car');
   // // await mintCar('LamboPearlescent', walletUser);
   // // await mintCar('BentleyGold', walletUser);
   // // await mintCar('BentleyWhite', walletUser);
 
-  // await mintComponentsListnames(headMintedList, walletUser, 'head');
-  // // await mintHead('Miami_Party_Bandana', walletUser);
+  await mintComponentsListNames(rimsMintedList, walletAddress, 'rims');
+  // // await mintRims('SportyGold', walletUser);
+  // // await mintRims('ClassyWhite', walletUser);
+  // // await mintRims('SportyPearlescent', walletUser);
 
-  // // await mintDegen('ipfs://bafkreidsdf4ecaoyx6kmukoown3ki5dr5smyjyb4bbfuu5hgxplnvz6uvu', walletUser);
-  // // await mintDegen('ipfs://bafkreigy75l6wwn76almtkrznnskzgrpkmde7wrjsjfvr566gpnezq2vmu', walletUser);
-  // // await mintDegen('ipfs://bafkreie5ztt34skvfvmkaalkzzdj6fq6247obkbtuywo63ch3vlipqdee4', walletUser);
-  // // await mintDegen('ipfs://bafkreifo3cbn7qnrneuxcoqxb2i7tskz5hg6fhdrmzmoigsoc5c67tlsou', walletUser);
+  await mintComponentsListNames(headMintedList, walletAddress, 'head');
+  // await mintHead('Miami_Party_Bandana', walletUser);
+
+  // await mintDegen('ipfs://bafkreidsdf4ecaoyx6kmukoown3ki5dr5smyjyb4bbfuu5hgxplnvz6uvu', walletUser);
+  // await sleep(3000);
+  // await mintDegen('ipfs://bafkreigy75l6wwn76almtkrznnskzgrpkmde7wrjsjfvr566gpnezq2vmu', walletUser);
+  // await sleep(3000);
+  // await mintDegen('ipfs://bafkreie5ztt34skvfvmkaalkzzdj6fq6247obkbtuywo63ch3vlipqdee4', walletUser);
+  // await sleep(3000);
+  // await mintDegen('ipfs://bafkreifo3cbn7qnrneuxcoqxb2i7tskz5hg6fhdrmzmoigsoc5c67tlsou', walletUser);
 
   // await mintNMiami(10, walletUser);
   // await mintNNYC(10, walletUser);
 };
 
-// await prefillWalletNFTs();
+// await prefillWalletNFTs(wallets.user.name);
 
-await runPrefillers();
-// await burnDegen(id, walletUser);
-// await popDisassembleQueue(walletUser);
+//
+//
+//
+// await runPrefillers();
+//
+//
+//
+
+// // await burnDegen(id, walletUser);
+// // await popDisassembleQueue(walletUser);
+
+// // const walletAdmin = wallets.admin.name;
+// // const walletUser = 'user';
+// // const wallet2 = 'wallet2';
+// // const wallet3 = 'wallet3';
+
+// let degenUrlsDisassemble = [
+//   'ipfs://bafkreigsavqryiu3tnampbfeip6bryrqybq27uy6zxgozir635tztpb4ve',
+//   'ipfs://bafkreidsdf4ecaoyx6kmukoown3ki5dr5smyjyb4bbfuu5hgxplnvz6uvu',
+//   'ipfs://bafkreigy75l6wwn76almtkrznnskzgrpkmde7wrjsjfvr566gpnezq2vmu',
+//   'ipfs://bafkreie5ztt34skvfvmkaalkzzdj6fq6247obkbtuywo63ch3vlipqdee4',
+//   'ipfs://bafkreifo3cbn7qnrneuxcoqxb2i7tskz5hg6fhdrmzmoigsoc5c67tlsou',
+// ];
+
+// setWalletStoredNonce(wallets.wallet2.name, await getAccountNonce(wallets[wallets.wallet2.name][network]));
+// setWalletStoredNonce(wallets.wallet3.name, await getAccountNonce(wallets[wallets.wallet3.name][network]));
+// setWalletStoredNonce(wallets.admin.name, await getAccountNonce(wallets[wallets.admin.name][network]));
+
+await mintNMiami(23, wallets.wallet2.name);
+// // await addNMergeToQueue(1, 5, 'miami', walletUser);
+// // await mintNNYC(23, wallet2);
+// // await addNMergeToQueue(1, 5, 'nyc', wallet2);
+// // await sleep(100);
+
+// console.log('FIRST LINE', getWalletStoredNonce(wallets.wallet2.name));
+
+// // console.log('\n START MINT NYC');
+// await mintNNYC(23, wallets.wallet2.name);
+// // await addNMergeToQueue(24, 5, 'nyc', wallet3);
+// // console.log('\n END MINT NYC');
+
+// let componentSet1 = {
+//   Background: 'Sunset',
+//   Car: 'BentleyGrey',
+//   Rims: 'SportyPearlescent',
+//   Head: 'Miami_Party_Sunglasses',
+// };
+// // console.log('\n START MINT DEGENS');
+
+// await mintNDegens(degenUrlsDisassemble, 5, wallets.wallet2.name);
+
+// // console.log('\n END MINT DEGENS');
+
+// // await mintComponentSet(componentSet1, wallet2);
+// // console.log('\n START MINT COMPONENTS');
+
+// await mintNComponentSets(componentSet1, 5, wallets.wallet3.name);
+
+// // console.log('\n END MINT COMPONENTS');

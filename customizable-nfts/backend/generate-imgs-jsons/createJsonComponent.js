@@ -49,7 +49,7 @@ fs.readdir(pathBgImg, (err, backgrounds) => {
       [{ trait_type: 'Background', value: backgroundName }],
       'DegenBackgrounds'
     );
-    fs.writeFile(pathBgGenerated + backgroundName + '.json', metadata, function (err, result) {
+    fs.writeFile(pathBgGenerated + backgroundName + '.json', metadata, (err, result) => {
       if (err) console.log('error', err);
     });
   });
@@ -68,7 +68,7 @@ fs.readdir(pathCarImg, (err, cars) => {
       [{ trait_type: 'Car', value: carName }],
       'DegenCars'
     );
-    fs.writeFile(pathCarGenerated + carName + '.json', metadata, function (err, result) {
+    fs.writeFile(pathCarGenerated + carName + '.json', metadata, (err, result) => {
       if (err) console.log('error', err);
     });
   });
@@ -87,7 +87,7 @@ fs.readdir(pathRimsImg, (err, rims) => {
       [{ trait_type: 'Rims', value: rimName }],
       'DegenRims'
     );
-    fs.writeFile(pathRimsGenerated + rimName + '.json', metadata, function (err, result) {
+    fs.writeFile(pathRimsGenerated + rimName + '.json', metadata, (err, result) => {
       if (err) console.log('error', err);
     });
   });
@@ -126,13 +126,9 @@ fs.readdir(pathHeadNYCImg, (err, heads) => {
           ],
           'DegenHeads'
         );
-        fs.writeFile(
-          pathHeadGenerated + 'NYC_' + headName + '_' + faceName + '.json',
-          metadata,
-          function (err, result) {
-            if (err) console.log('error', err);
-          }
-        );
+        fs.writeFile(pathHeadGenerated + 'NYC_' + headName + '_' + faceName + '.json', metadata, (err, result) => {
+          if (err) console.log('error', err);
+        });
       });
     });
   });
@@ -155,45 +151,10 @@ fs.readdir(pathHeadMiami, (err, heads) => {
           ],
           'DegenHeads'
         );
-        fs.writeFile(
-          pathHeadGenerated + 'Miami_' + headName + '_' + faceName + '.json',
-          metadata,
-          function (err, result) {
-            if (err) console.log('error', err);
-          }
-        );
+        fs.writeFile(pathHeadGenerated + 'Miami_' + headName + '_' + faceName + '.json', metadata, (err, result) => {
+          if (err) console.log('error', err);
+        });
       });
     });
   });
 });
-
-// fs.readdir(skullHead, (err, heads) => {
-//   heads.forEach((head) => {
-//     const headName = head.split('.')[0];
-//     fs.readdir(skullFace, (err, faces) => {
-//       faces.forEach((face) => {
-//         const faceName = face.split('.')[0];
-//         generateHead('Miami', head, face, headName, faceName);
-//       });
-//     });
-//   });
-// });
-
-// async function generateHead(city, head, face, headName, faceName) {
-//   const headPath = city == 'NYC' ? alienHead + head : city == 'Miami' ? skullHead + head : '';
-//   const facePath = city == 'NYC' ? alienFace + face : city == 'Miami' ? skullFace + face : '';
-//   const race = city == 'NYC' ? prefix + 'Alien.png' : city == 'Miami' ? prefix + 'Skull.png' : '';
-
-//   const img = await mergeImages([race, headPath, facePath], {
-//     Canvas: Canvas,
-//     Image: Image,
-//   }).then((b64) => {
-//     return b64;
-//   });
-
-//   const data = img.replace(/^data:image\/\w+;base64,/, '');
-//   const buf = Buffer.from(data, 'base64');
-//   fs.writeFile(pathHeadsGen + city + '_' + headName + '_' + faceName + '.png', buf, function (err, result) {
-//     if (err) console.log('error', err);
-//   });
-// }

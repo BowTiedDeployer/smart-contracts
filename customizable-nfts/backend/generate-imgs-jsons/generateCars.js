@@ -23,8 +23,7 @@ fs.readdir(lamboColors, (err, colors) => {
     generateCar('Lambo', color, colorName);
   });
 });
-
-async function generateCar(type, color, colorName) {
+const generateCar = async (type, color, colorName) => {
   const colorPath = type == 'Lambo' ? lamboColors + color : type == 'Bentley' ? bentleyColors + color : '';
   const carContour =
     type == 'Lambo' ? prefix + 'LamboContour.png' : type == 'Bentley' ? prefix + 'BentleyContour.png' : '';
@@ -38,7 +37,7 @@ async function generateCar(type, color, colorName) {
 
   const data = img.replace(/^data:image\/\w+;base64,/, '');
   const buf = Buffer.from(data, 'base64');
-  fs.writeFile(pathCarsGen + colorName + '.png', buf, function (err, result) {
+  fs.writeFile(pathCarsGen + colorName + '.png', buf, (err, result) => {
     if (err) console.log('error', err);
   });
-}
+};

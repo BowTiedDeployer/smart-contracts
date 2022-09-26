@@ -67,7 +67,7 @@ fs.readdir(pathRimsImg, (err, rims) => {
       { Rims: rimName },
       'DegenRims'
     );
-    fs.writeFile(pathRimsGenerated + rimName + '.json', metadata, function (err, result) {
+    fs.writeFile(pathRimsGenerated + rimName + '.json', metadata, (err, result) => {
       if (err) console.log('error', err);
     });
   });

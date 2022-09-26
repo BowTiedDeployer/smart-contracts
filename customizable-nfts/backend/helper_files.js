@@ -3,7 +3,7 @@ import { Canvas, Image } from 'canvas';
 import fs from 'fs';
 
 export const saveFile = async (filePath, fileContent) => {
-  fs.writeFile(filePath, fileContent, function (err) {
+  fs.writeFile(filePath, fileContent, (err) => {
     if (err) console.log('error', err);
   });
 };

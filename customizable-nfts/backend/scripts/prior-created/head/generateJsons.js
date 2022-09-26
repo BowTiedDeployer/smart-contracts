@@ -71,22 +71,17 @@ fs.readdir(pathHeadNYCImg, (err, heads) => {
     fs.readdir(pathFaceNYCImg, (err, faces) => {
       faces.forEach((face) => {
         const faceName = face.split('.')[0];
-
         const metadata = jsonContentCreate(
           'NYC_' + headName + '_' + faceName,
           `ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/NYC_${headName}_${faceName}.png`, // marketplace
           `ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/NYC_${headName}_${faceName}.png`, // component
-          `ipfs://QmTNDjMQYxsuQhgbCAYi77f34TfdDonyCDe9Y8Ez1tddoA/NYC_${headName}_${faceName}.png`, // in-game
+          `ipfs://QmbUFUAZfqN1AsDHNSLomFVnDXn7L8baEfRcJiv8jsYxAL/NYC_${headName}_${faceName}.png`, // in-game
           { Race: 'Alien', Head: headName, Face: faceName },
           'DegenHeads'
         );
-        fs.writeFile(
-          pathHeadGenerated + 'NYC_' + headName + '_' + faceName + '.json',
-          metadata,
-          function (err, result) {
-            if (err) console.log('error', err);
-          }
-        );
+        fs.writeFile(pathHeadGenerated + 'NYC_' + headName + '_' + faceName + '.json', metadata, (err, result) => {
+          if (err) console.log('error', err);
+        });
       });
     });
   });
@@ -98,22 +93,17 @@ fs.readdir(pathHeadMiamiImg, (err, heads) => {
     fs.readdir(pathFaceMiamiImg, (err, faces) => {
       faces.forEach((face) => {
         const faceName = face.split('.')[0];
-
         const metadata = jsonContentCreate(
           'Miami_' + headName + '_' + faceName,
           `ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/Miami_${headName}_${faceName}.png`, // marketplace
           `ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/Miami_${headName}_${faceName}.png`, // component
-          `ipfs://QmTNDjMQYxsuQhgbCAYi77f34TfdDonyCDe9Y8Ez1tddoA/Miami_${headName}_${faceName}.png`, // in-game
+          `ipfs://QmbUFUAZfqN1AsDHNSLomFVnDXn7L8baEfRcJiv8jsYxAL/Miami_${headName}_${faceName}.png`, // in-game
           { Race: 'Skull', Head: headName, Face: faceName },
           'DegenHeads'
         );
-        fs.writeFile(
-          pathHeadGenerated + 'Miami_' + headName + '_' + faceName + '.json',
-          metadata,
-          function (err, result) {
-            if (err) console.log('error', err);
-          }
-        );
+        fs.writeFile(pathHeadGenerated + 'Miami_' + headName + '_' + faceName + '.json', metadata, (err, result) => {
+          if (err) console.log('error', err);
+        });
       });
     });
   });
