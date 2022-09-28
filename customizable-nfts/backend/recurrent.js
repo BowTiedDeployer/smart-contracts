@@ -6,9 +6,12 @@ import { dbReadLastDone } from './helper_db.js';
 import { getMempoolTransactionCount } from './helper_sc.js';
 import { checkToStartFlowMerge } from './merge.js';
 import { checkToStartFlowSwap } from './swap.js';
+import { getNrOperationsAvailable, setNrOperationsAvailable } from './variables.js';
 
 const every_five_minutes = async () => {
-  // const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
+  const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
+  setNrOperationsAvailable(getNrOperationsAvailable() - transactionCount);
+  console.log('---Nr Operations Available: ' + getNrOperationsAvailable());
   let operationLimit = 4;
 
   while (operationLimit > 0) {

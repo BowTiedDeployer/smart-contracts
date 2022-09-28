@@ -2,9 +2,7 @@
 smart contract functions take the nonce directly
 
 n smart contract calls 
-  start with argument nonce
-  return the next nonce after finish
-
+  use nonce from Global Dictionary
 
 keep in parallel the nonce for every wallet_account
 

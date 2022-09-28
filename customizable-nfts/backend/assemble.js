@@ -13,15 +13,14 @@ import {
   getImgComponentUrlFromJson,
 } from './helper_json.js';
 import {
-  callSCFunctionWithNonce,
+  callSCFunction,
   chainGetTxIdStatus,
-  checkNonceUpdate,
-  getAccountNonce,
   getMempoolTransactionCount,
   readOnlySCJsonResponse,
   sleep,
 } from './helper_sc.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
+import { getNrOperationsAvailable, globalNonce, setNrOperationsAvailable } from './variables.js';
 
 // - needs nft id fetched from nfts owned combined with the nft metadata - gets it from the queue
 
@@ -63,22 +62,6 @@ const assembleServerFlow = async (operationLimit) => {
 
   // min( operationLimit, values.length )
   let upperLimit = valuesToAssemble.length < operationLimit ? valuesToAssemble.length : operationLimit;
-  let availableNonce = await getAccountNonce(wallets.admin[network]);
-  let lastUsedNonce = availableNonce - 1;
-
-  console.log('upperLimit', upperLimit);
-
-  async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
-
-    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
-    else {
-      await sleep(checkIt * 1000);
-      availableNonce = await getAccountNonce(wallets.admin[network]);
-
-      return await checkNonceUpdate(++checkIt);
-    }
-  }
 
   let lastTxId = null;
   for (let i = 0; i < upperLimit; i++) {
@@ -179,13 +162,9 @@ const assembleServerFlow = async (operationLimit) => {
       pinataToHTTPUrl(urlImgComponentHead),
       pinataToHTTPUrl(urlImgComponentRims)
     );
-    // ).then((degenImg) => uploadFlowImg(degenImgName, degenImg));
-
     const degenImgGame = await imgInGameContentCreate(pinataToHTTPUrl(urlImgGameCar), pinataToHTTPUrl(urlImgGameHead));
-    // ).then((degenImgGame) => uploadFlowImg(degenImgGameName, degenImgGame));
 
     // upload image and get hash
-
     const degenImgHash = await uploadFlowImg(degenImgName, degenImg);
     const degenImgGameHash = await uploadFlowImg(degenImgGameName, degenImgGame);
 
@@ -200,45 +179,20 @@ const assembleServerFlow = async (operationLimit) => {
       'DegenNFT'
     );
 
-    // const lastTxId = await new Promise(() => {
-    //   console.log('at content creation');
-    //   return jsonContentCreate(
-    //     degenName,
-    //     hashToPinataUrl(degenImgHash),
-    //     '',
-    //     hashToPinataUrl(degenImgGameHash),
-    //     attributes,
-    //     'DegenNFT'
-    //   );
-    // })
-    //   .then((degenJson) => {
-    //     console.log('at uploadFlow');
-    //     return uploadFlowJson(degenJsonName, degenJson);
-    //   })
-    //   .then((degenJsonHash) => {
-    //     console.log('at sc call');
-    //     callSCFunctionWithNonce(
-    //       networkN,
-    //       contracts[network].customizable.split('.')[0],
-    //       contracts[network].customizable.split('.')[1],
-    //       'assemble-finalize',
-    //       [tuple.address, hashToPinataUrl(degenJsonHash)]
-    //     );
-    //   });
-    // console.log(degenJson);
-
     //// upload json and get hash
     const degenJsonHash = await uploadFlowJson(degenJsonName, degenJson);
     console.log('jsonHash', degenJsonHash);
 
     // call assemble_finalize (member as address, json_hash as uri)
-    lastTxId = await callSCFunctionWithNonce(
+    lastTxId = await callSCFunction(
       networkN,
       contracts[network].customizable.split('.')[0],
       contracts[network].customizable.split('.')[1],
       'assemble-finalize',
-      [tuple.address, hashToPinataUrl(degenJsonHash)]
+      [tuple.address, hashToPinataUrl(degenJsonHash)],
+      globalNonce
     );
+    setNrOperationsAvailable(getNrOperationsAvailable() - 1);
 
     // increment id
     await dbIncremendId(currentDbId);
@@ -253,13 +207,13 @@ export const checkToStartFlowAssemble = async () => {
   // fetchJSONResponse(txId)
   // general call
   const status = await chainGetTxIdStatus(txId);
-  const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
-  const operationLimit = 25 - transactionCount;
-  console.log('operationLimit', operationLimit);
-
-  if ((status === 'success' || status === undefined) && operationLimit > 0) {
+  // const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
+  // const operationLimit = 25 - transactionCount;
+  const nrOperationsAvailable = getNrOperationsAvailable();
+  console.log('operationLimit', nrOperationsAvailable);
+  if ((status === 'success' || status === undefined) && nrOperationsAvailable > 0) {
     console.log('--------------flow can start-----------');
-    await assembleServerFlow(operationLimit);
+    await assembleServerFlow(nrOperationsAvailable);
     console.log('--------------db update-----------');
     await dbUpdateLastDone('assemble');
   } else if (status === 'abort_by_response') {

@@ -22,6 +22,12 @@ export let globalNonce = {
   wallet20: 0,
 };
 
+export let nrOperationsAvailable = 24;
+
+export const getNrOperationsAvailable = () => nrOperationsAvailable;
+
+export const setNrOperationsAvailable = (nr) => (nrOperationsAvailable = nr);
+
 export const getWalletStoredNonce = (walletAddress) => {
   return globalNonce[walletAddress];
 };

@@ -13,16 +13,15 @@ import {
   getImgComponentUrlFromJson,
 } from './helper_json.js';
 import {
-  callSCFunctionWithNonce,
+  callSCFunction,
   chainGetTxIdStatus,
-  checkNonceUpdate,
-  getAccountNonce,
   getMempoolTransactionCount,
   getTokenUri,
   readOnlySCJsonResponse,
   sleep,
 } from './helper_sc.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
+import { getNrOperationsAvailable, globalNonce, setNrOperationsAvailable } from './variables.js';
 
 // - needs nft id fetched from nfts owned combined with the nft metadata - gets it from the queue
 
@@ -63,20 +62,6 @@ const swapServerFlow = async (operationLimit) => {
 
   // maximum 25 transactions done in a block by the same account
   let upperLimit = valuesToSwap.length < operationLimit ? valuesToSwap.length : operationLimit;
-  let availableNonce = await getAccountNonce(wallets.admin[network]);
-  let lastUsedNonce = availableNonce - 1;
-
-  async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
-
-    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
-    else {
-      await sleep(checkIt * 1000);
-      availableNonce = await getAccountNonce(wallets.admin[network]);
-
-      return await checkNonceUpdate(++checkIt);
-    }
-  }
 
   let lastTxId = null;
   for (let i = 0; i < upperLimit; i++) {
@@ -247,13 +232,15 @@ const swapServerFlow = async (operationLimit) => {
     console.log('jsonHash', degenJsonHash);
 
     // call assemble_finalize (member as address, json_hash as uri, old component-name, component-type)
-    lastTxId = await callSCFunctionWithNonce(
+    lastTxId = await callSCFunction(
       networkN,
       contracts[network].customizable.split('.')[0],
       contracts[network].customizable.split('.')[1],
       'swap-finalize',
-      [tuple.degenId, tuple.address, hashToPinataUrl(degenJsonHash), oldComponentName, tuple.componentType]
+      [tuple.degenId, tuple.address, hashToPinataUrl(degenJsonHash), oldComponentName, tuple.componentType],
+      globalNonce
     );
+    setNrOperationsAvailable(getNrOperationsAvailable() - 1);
 
     // increment id
     await dbIncremendId(currentDbId);
@@ -268,13 +255,12 @@ export const checkToStartFlowSwap = async () => {
   // fetchJSONResponse(txId)
   // general call
   const status = await chainGetTxIdStatus(txId);
-  const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
-  const operationLimit = 25 - transactionCount;
-  console.log('operationLimit', operationLimit);
+  const nrOperationsAvailable = getNrOperationsAvailable();
+  console.log('operationLimit', nrOperationsAvailable);
 
-  if ((status === 'success' || status === undefined) && operationLimit > 0) {
+  if ((status === 'success' || status === undefined) && nrOperationsAvailable > 0) {
     console.log('--------------flow can start-----------');
-    await swapServerFlow(operationLimit);
+    await swapServerFlow(nrOperationsAvailable);
     console.log('--------------db update-----------');
     await dbUpdateLastDone('swap');
   } else if (status === 'abort_by_response') {

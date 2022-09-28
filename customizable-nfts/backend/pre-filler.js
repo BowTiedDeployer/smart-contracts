@@ -559,7 +559,7 @@ const prefillWalletNFTs = async (walletAddress) => {
 // setWalletStoredNonce(wallets.wallet3.name, await getAccountNonce(wallets[wallets.wallet3.name][network]));
 // setWalletStoredNonce(wallets.admin.name, await getAccountNonce(wallets[wallets.admin.name][network]));
 
-await mintNMiami(23, wallets.wallet2.name);
+await mintNMiami(23, wallets.user.name);
 // // await addNMergeToQueue(1, 5, 'miami', walletUser);
 // // await mintNNYC(23, wallet2);
 // // await addNMergeToQueue(1, 5, 'nyc', wallet2);

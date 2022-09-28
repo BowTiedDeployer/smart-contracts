@@ -12,19 +12,12 @@
 
 import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
 import { network, contracts, wallets, operationType } from './consts.js';
-import {
-  getAccountNonce,
-  readOnlySCJsonResponse,
-  callSCFunctionWithNonce,
-  chainGetTxIdStatus,
-  sleep,
-  getTokenUri,
-  getMempoolTransactionCount,
-} from './helper_sc.js';
+import { readOnlySCJsonResponse, callSCFunction, chainGetTxIdStatus, sleep, getTokenUri } from './helper_sc.js';
 import dotenv from 'dotenv';
 import { pinataToHTTPUrl } from './converters.js';
 import { fetchJsonFromUrl, getAttributesMapTraitValue } from './helper_json.js';
 import { dbGetTxId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
+import { getNrOperationsAvailable, globalNonce, setNrOperationsAvailable } from './variables.js';
 
 dotenv.config();
 
@@ -63,26 +56,10 @@ const disassembleServerFlow = async (operationLimit) => {
 
   // maximum 25 transactions done in a block by the same account
   let upperLimit = valuesToDisassemble.length < operationLimit ? valuesToDisassemble.length : operationLimit;
-  let availableNonce = await getAccountNonce(wallets.admin[network]);
-  let lastUsedNonce = availableNonce - 1;
-
-  async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
-
-    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
-    else {
-      await sleep(checkIt * 1000);
-      availableNonce = await getAccountNonce(wallets.admin[network]);
-
-      return await checkNonceUpdate(++checkIt);
-    }
-  }
 
   let lastTxId = null;
   for (let i = 0; i < upperLimit; i++) {
     // (await getValuesFromQueue()).forEach(async (x) => {
-    // verify available nonce
-    await checkNonceUpdate();
 
     const tuple = valuesToDisassemble[i];
     // get the token uri
@@ -106,7 +83,7 @@ const disassembleServerFlow = async (operationLimit) => {
 
     // -> mint them
     // (disassemble-finalize (token-id uint) (member principal) (background-name (string-ascii 30)) (body-name (string-ascii 30)) (rim-name (string-ascii 30)) (head-name (string-ascii 30)))
-    lastTxId = await callSCFunctionWithNonce(
+    lastTxId = await callSCFunction(
       networkN,
       contracts[network].customizable.split('.')[0],
       contracts[network].customizable.split('.')[1],
@@ -118,9 +95,11 @@ const disassembleServerFlow = async (operationLimit) => {
         attributes.Car,
         attributes.Rims,
         `${attributes.City}_${attributes.Head}_${attributes.Face}`,
-      ]
+      ],
+      globalNonce
     );
   }
+  setNrOperationsAvailable(getNrOperationsAvailable() - 1);
   console.log('lastTxId', lastTxId);
 
   await dbUpdateTxId(operationType.disassemble, lastTxId);
@@ -131,13 +110,13 @@ export const checkToStartFlowDisassemble = async () => {
   // fetchJSONResponse(txId)
   // general call
   const status = await chainGetTxIdStatus(txId);
-  const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
-  const operationLimit = 25 - transactionCount;
-  console.log('operationLimit', operationLimit);
+  const nrOperationsAvailable = getNrOperationsAvailable();
 
-  if ((status === 'success' || status === undefined) && operationLimit > 0) {
+  console.log('operationLimit', nrOperationsAvailable);
+
+  if ((status === 'success' || status === undefined) && nrOperationsAvailable > 0) {
     console.log('--------------flow can start-----------');
-    await disassembleServerFlow(operationLimit);
+    await disassembleServerFlow(nrOperationsAvailable);
     console.log('--------------db update-----------');
     await dbUpdateLastDone('disassemble');
   } else if (status === 'abort_by_response') {
