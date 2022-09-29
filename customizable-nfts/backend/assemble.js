@@ -8,19 +8,18 @@ import {
   jsonContentCreate,
   fetchJsonFromUrl,
   getAttributesMapTraitValue,
-  getImageUrlFromJson,
   getImgGameUrlFromJson,
   getImgComponentUrlFromJson,
 } from './helper_json.js';
-import {
-  callSCFunction,
-  chainGetTxIdStatus,
-  getMempoolTransactionCount,
-  readOnlySCJsonResponse,
-  sleep,
-} from './helper_sc.js';
+import { callSCFunction, chainGetTxIdStatus, readOnlySCJsonResponse, sleep } from './helper_sc.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
-import { getNrOperationsAvailable, globalNonce, setNrOperationsAvailable } from './variables.js';
+import {
+  getNrOperationsAvailable,
+  getWalletStoredNonce,
+  globalNonce,
+  setNrOperationsAvailable,
+  setWalletStoredNonce,
+} from './variables.js';
 
 // - needs nft id fetched from nfts owned combined with the nft metadata - gets it from the queue
 
@@ -66,7 +65,6 @@ const assembleServerFlow = async (operationLimit) => {
   let lastTxId = null;
   for (let i = 0; i < upperLimit; i++) {
     // verify available nonce
-    await checkNonceUpdate();
 
     const tuple = valuesToAssemble[i];
     console.log('tuple', tuple);
@@ -190,9 +188,10 @@ const assembleServerFlow = async (operationLimit) => {
       contracts[network].customizable.split('.')[1],
       'assemble-finalize',
       [tuple.address, hashToPinataUrl(degenJsonHash)],
-      globalNonce
+      getWalletStoredNonce(wallets.admin.name)
     );
     setNrOperationsAvailable(getNrOperationsAvailable() - 1);
+    setWalletStoredNonce(getWalletStoredNonce(wallets.admin.name) + 1);
 
     // increment id
     await dbIncremendId(currentDbId);
@@ -223,6 +222,9 @@ export const checkToStartFlowAssemble = async () => {
   } else if (status === 'pending') {
     // do nothing
     console.log(`----------pending---------- ${txId}`);
+  } else if (nrOperationsAvailable === 0) {
+    // should never happen here because of check in recurrent
+    console.log('No operations available');
   } else {
     console.error(`invalid status "${status}" txid: ${txId}`);
   }
@@ -230,4 +232,4 @@ export const checkToStartFlowAssemble = async () => {
 
 // await checkToStartFlowAssemble();
 // console.log('tx mempool', await getMempoolTransactionCount(wallets.admin[network]));
-await assembleServerFlow(25);
+// await assembleServerFlow(25);

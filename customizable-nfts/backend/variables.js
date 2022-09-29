@@ -32,6 +32,6 @@ export const getWalletStoredNonce = (walletAddress) => {
   return globalNonce[walletAddress];
 };
 
-export const setWalletStoredNonce = async (walletAddress, nonce) => {
+export const setWalletStoredNonce = (walletAddress, nonce) => {
   globalNonce[walletAddress] = nonce;
 };

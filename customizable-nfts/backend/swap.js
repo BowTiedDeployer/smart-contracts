@@ -21,7 +21,13 @@ import {
   sleep,
 } from './helper_sc.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
-import { getNrOperationsAvailable, globalNonce, setNrOperationsAvailable } from './variables.js';
+import {
+  getNrOperationsAvailable,
+  getWalletStoredNonce,
+  globalNonce,
+  setNrOperationsAvailable,
+  setWalletStoredNonce,
+} from './variables.js';
 
 // - needs nft id fetched from nfts owned combined with the nft metadata - gets it from the queue
 
@@ -66,7 +72,6 @@ const swapServerFlow = async (operationLimit) => {
   let lastTxId = null;
   for (let i = 0; i < upperLimit; i++) {
     // verify available nonce
-    await checkNonceUpdate();
 
     const tuple = valuesToSwap[i];
     let attributes = {};
@@ -238,10 +243,10 @@ const swapServerFlow = async (operationLimit) => {
       contracts[network].customizable.split('.')[1],
       'swap-finalize',
       [tuple.degenId, tuple.address, hashToPinataUrl(degenJsonHash), oldComponentName, tuple.componentType],
-      globalNonce
+      getWalletStoredNonce(wallets.admin.name)
     );
     setNrOperationsAvailable(getNrOperationsAvailable() - 1);
-
+    setWalletStoredNonce(getWalletStoredNonce(wallets.admin.name) + 1);
     // increment id
     await dbIncremendId(currentDbId);
 
@@ -270,6 +275,9 @@ export const checkToStartFlowSwap = async () => {
   } else if (status === 'pending') {
     // do nothing
     console.log('----------pending----------');
+  } else if (nrOperationsAvailable === 0) {
+    // should never happen here because of check in recurrent
+    console.log('No operations available');
   } else {
     console.error(`invalid status "${status}" txid: ${txId}`);
   }

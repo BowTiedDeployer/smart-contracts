@@ -2,19 +2,31 @@ import cron from 'node-cron';
 import { checkToStartFlowAssemble } from './assemble.js';
 import { network, operationType, urlApis, wallets } from './consts.js';
 import { checkToStartFlowDisassemble } from './disassemble.js';
-import { dbReadLastDone } from './helper_db.js';
+import { dbReadLastDone, dbReadLastExecutedBlockId, dbUpdateLastExecutedBlockId } from './helper_db.js';
 import { getMempoolTransactionCount } from './helper_sc.js';
 import { checkToStartFlowMerge } from './merge.js';
 import { checkToStartFlowSwap } from './swap.js';
-import { getNrOperationsAvailable, setNrOperationsAvailable } from './variables.js';
+import { getNrOperationsAvailable, setNrOperationsAvailable, setWalletStoredNonce } from './variables.js';
 
 const every_five_minutes = async () => {
   const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
   setNrOperationsAvailable(getNrOperationsAvailable() - transactionCount);
   console.log('---Nr Operations Available: ' + getNrOperationsAvailable());
-  let operationLimit = 4;
 
-  while (operationLimit > 0) {
+  const blcokchainNextNonce = 2; // await nonce;
+  setWalletStoredNonce(wallets.admin.name, blcokchainNextNonce);
+  const lastExecutedBlockId = await dbReadLastExecutedBlockId(); // TODO: test this
+  const currentBlockId = 0; // await getBlockchainCurrentBlock()
+  if (lastExecutedBlockId === currentBlockId) {
+    console.log('same Block, wait for a new block to start');
+    return;
+  } else if (lastExecutedBlockId > currentBlockId) {
+    console.log('ERROR: last executed block > current block');
+    return;
+  }
+  dbUpdateLastExecutedBlockId(lastExecutedBlockId, currentBlockId);
+  let operationLimit = 4;
+  while (operationLimit > 0 && getNrOperationsAvailable() > 0) {
     let lastOperation = await dbReadLastDone();
     console.log('lastOperation: ', lastOperation);
 

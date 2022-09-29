@@ -17,7 +17,13 @@ import dotenv from 'dotenv';
 import { pinataToHTTPUrl } from './converters.js';
 import { fetchJsonFromUrl, getAttributesMapTraitValue } from './helper_json.js';
 import { dbGetTxId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
-import { getNrOperationsAvailable, globalNonce, setNrOperationsAvailable } from './variables.js';
+import {
+  getNrOperationsAvailable,
+  getWalletStoredNonce,
+  globalNonce,
+  setNrOperationsAvailable,
+  setWalletStoredNonce,
+} from './variables.js';
 
 dotenv.config();
 
@@ -96,13 +102,14 @@ const disassembleServerFlow = async (operationLimit) => {
         attributes.Rims,
         `${attributes.City}_${attributes.Head}_${attributes.Face}`,
       ],
-      globalNonce
+      getWalletStoredNonce(wallets.admin.name)
     );
-  }
-  setNrOperationsAvailable(getNrOperationsAvailable() - 1);
-  console.log('lastTxId', lastTxId);
+    setNrOperationsAvailable(getNrOperationsAvailable() - 1);
+    setWalletStoredNonce(getWalletStoredNonce(wallets.admin.name) + 1);
+    console.log('lastTxId', lastTxId);
 
-  await dbUpdateTxId(operationType.disassemble, lastTxId);
+    await dbUpdateTxId(operationType.disassemble, lastTxId);
+  }
 };
 
 export const checkToStartFlowDisassemble = async () => {
@@ -126,6 +133,9 @@ export const checkToStartFlowDisassemble = async () => {
   } else if (status === 'pending') {
     // do nothing
     console.log('----------pending----------');
+  } else if (nrOperationsAvailable === 0) {
+    // should never happen here because of check in recurrent
+    console.log('No operations available');
   } else {
     console.error(`invalid status "${status}" txid: ${txId}`);
   }

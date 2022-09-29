@@ -360,14 +360,14 @@ const prefillNDisassemble = async (degenUrls, start, n, walletAddress) => {
   await addNDisassembleToQueue(start, n, walletAddress);
 };
 
-const prefillNSwap = async (degenUrls, componentNames, n, walletAddress) => {
+const prefillNSwap = async (degenUrls, componentNames, n, walletAddress, startDegenId, startComponentsId) => {
   await mintNDegens(degenUrls, n, walletAddress);
   await mintNComponentSets(componentNames, n / 4, walletAddress);
 
   let availableNonce = getWalletStoredNonce(walletAddress);
   if (availableNonce < 1) availableNonce = 1;
-  let componentId = 1;
-  let degenId = 1;
+  let componentId = startComponentsId;
+  let degenId = startDegenId;
   for (let i = 1; i <= n / 4; i++) {
     // await checkNonceUpdate();
     await addSwapToQueue(degenId, componentId, 'background-type', walletAddress, availableNonce);
@@ -396,6 +396,97 @@ const prefillNMerge = async (type, start, n, walletAddress) => {
   } else if (type === 'nyc') {
     await mintNNYC(n, walletAddress);
     await addNMergeToQueue(start, n, 'nyc', walletAddress);
+  }
+};
+
+// TODO: test this
+const wrapperPrefillNAssemble = async (noPrefills, start, n, componentSets, sleepTime) => {
+  if (noPrefills > 20) {
+    console.log('Too many prefills wrapper assemble');
+    return;
+  }
+  if (noPrefills == 1) {
+    await sleep(sleepTime);
+    console.log(`assemble wallet User starting ${start} and n ${n}`);
+    await prefillNAssemble(componentSets[0], start, n, wallets.user.name);
+    return;
+  }
+  for (let i = 1; i < noPrefills; i++) {
+    await sleep(sleepTime);
+    console.log(`assemble wallet ${i + 1} starting ${i * n + start} and n ${n}`);
+    await prefillNAssemble(componentSets[i % 3], i * n + start, n, wallets['wallet' + (i + 1)].name);
+  }
+};
+
+// TODO: test this
+const wrapperPrefillNDisassemble = async (noPrefills, start, n, degenUrls, sleepTime) => {
+  if (noPrefills > 20) {
+    console.log('Too many prefills wrapper disassemble');
+    return;
+  }
+  if (noPrefills == 1) {
+    await sleep(sleepTime);
+    console.log(`disassemble wallet User starting ${start} and n ${n}`);
+    await prefillNDisassemble(degenUrls, start, n, wallets.user.name);
+    return;
+  }
+  for (let i = 1; i < noPrefills; i++) {
+    await sleep(sleepTime);
+    console.log(`disassemble wallet ${i + 1} starting ${i * n + start}`);
+    await prefillNDisassemble(degenUrls, i * n + start, n, wallets['wallet' + (i + 1)].name);
+  }
+};
+
+// TODO: test this
+// n % 4 == 0
+const wrapperPrefillNSwap = async (
+  noPrefills,
+  startComponentsId,
+  startDegenId,
+  n,
+  degenUrls,
+  componentNames,
+  sleepTime
+) => {
+  if (noPrefills > 20) {
+    console.log('Too many prefills wrapper disassemble');
+    return;
+  }
+  let componentIndex = startComponentsId;
+  let degenIndex = startDegenId;
+  if (noPrefills == 1) {
+    await sleep(sleepTime);
+    console.log(`swap wallet User starting degen index ${degenIndex} and component index ${componentIndex}`);
+    await prefillNSwap(degenUrls, componentNames, n, wallets.user.name, degenIndex, componentIndex);
+    return;
+  }
+  for (let i = 1; i < noPrefills; i++) {
+    degenIndex += n;
+    componentIndex += n / 4; // TODO: check this
+    console.log(`swap wallet ${i + 1} starting degen index ${degenIndex} and component index ${componentIndex}`);
+    await sleep(sleepTime);
+    await prefillNSwap(degenUrls, componentNames, n, wallets['wallet' + (i + 1)].name, degenIndex, componentIndex);
+  }
+};
+
+// TODO: test this
+const wrapperPrefillNMerge = async (noPrefills, start, n, sleepTime) => {
+  if (noPrefills > 20) {
+    console.log('Too many prefills wrapper disassemble');
+    return;
+  }
+  if (noPrefills == 1) {
+    await sleep(sleepTime);
+    console.log(`disassemble wallet User starting ${start}`);
+    await prefillNMerge('miami', start, n, wallets.user.name);
+    await prefillNMerge('nyc', start, n, wallets.user.name);
+    return;
+  }
+  for (let i = 1; i < noPrefills; i++) {
+    await sleep(sleepTime);
+    console.log(`disassemble wallet ${i + 1} starting ${i * n + start}`);
+    await prefillNMerge('miami', i * n + start, n, wallets['wallet' + (i + 1)].name); // TODO: check this
+    await prefillNMerge('nyc', i * n + start, n, wallets['wallet' + (i + 1)].name);
   }
 };
 
@@ -439,35 +530,49 @@ const runPrefillers = async () => {
 
   const n = 5;
   let start = 1;
+  let componentIndex = 1;
+  let degenIndex = 1;
+  let sleepTime = 2000;
 
   // max 25 tx per block, else server call throws error
 
   // SWAP
   //
-  const swapNr = 4;
-  await prefillNSwap(degenUrlsSwap, componentSet2, swapNr, wallets.user.name); // %4 == 0
-  start += swapNr / 4;
+  // const swapNr = 4;
+  // const noSwaps = await prefillNSwap(degenUrlsSwap, componentSet2, swapNr, wallets.user.name); // %4 == 0
+  // start += swapNr / 4;
+
+  const nrSwapOp = 10;
+  const nSwap = 4; // nSwap % 4 === 0
+  await wrapperPrefillNSwap(nrSwapOp, componentIndex, degenIndex, nSwap, degenUrlsSwap, componentSet2, sleepTime);
+  degenIndex += nrSwapOp * nSwap;
+  componentIndex += (nrSwapOp * nSwap) / 4;
 
   // ASSEMBLE
   //
-  await sleep(20000);
-  await prefillNAssemble(componentSet1, start, n, wallets.user.name); // /4 + 1
-  await sleep(20000);
-  await prefillNAssemble(componentSet2, n + start, n, wallets.wallet2.name);
-  await sleep(20000);
-  await prefillNAssemble(componentSet3, 2 * n + start, n, wallets.wallet3.name);
-  await sleep(20000);
-  await prefillNAssemble(componentSet3, 3 * n + start, n, wallets.wallet4.name);
-  await sleep(20000);
-  await prefillNAssemble(componentSet3, 4 * n + start, n, wallets.wallet5.name);
-  await sleep(20000);
-  await prefillNAssemble(componentSet3, 3 * n + start, n, wallets.wallet6.name);
-  await sleep(20000);
-  await prefillNAssemble(componentSet3, 4 * n + start, n, wallets.wallet7.name);
-  await sleep(20000);
-  await prefillNAssemble(componentSet3, 3 * n + start, n, wallets.wallet8.name);
-  await sleep(20000);
-  await prefillNAssemble(componentSet3, 4 * n + start, n, wallets.wallet9.name);
+  // await sleep(20000);
+  // await prefillNAssemble(componentSet1, start, n, wallets.user.name); // /4 + 1
+  // await sleep(20000);
+  // await prefillNAssemble(componentSet2, n + start, n, wallets.wallet2.name);
+  // await sleep(20000);
+  // await prefillNAssemble(componentSet3, 2 * n + start, n, wallets.wallet3.name);
+  // await sleep(20000);
+  // await prefillNAssemble(componentSet3, 3 * n + start, n, wallets.wallet4.name);
+  // await sleep(20000);
+  // await prefillNAssemble(componentSet3, 4 * n + start, n, wallets.wallet5.name);
+  // await sleep(20000);
+  // await prefillNAssemble(componentSet3, 3 * n + start, n, wallets.wallet6.name);
+  // await sleep(20000);
+  // await prefillNAssemble(componentSet3, 4 * n + start, n, wallets.wallet7.name);
+  // await sleep(20000);
+  // await prefillNAssemble(componentSet3, 3 * n + start, n, wallets.wallet8.name);
+  // await sleep(20000);
+  // await prefillNAssemble(componentSet3, 4 * n + start, n, wallets.wallet9.name);
+  // equivalent to this
+  const nrAssembleOp = 9;
+  await wrapperPrefillNAssemble(nrAssembleOp, componentIndex, n, [componentSet1, componentSet2, componentSet3], 2000);
+  componentIndex += nrAssembleOp * n;
+
   //
   // can have only 5 per wallet - after first, call assemble and do the next
   // await prefillNAssemble(componentSet1, 3 * n + start, n, walletUser)
@@ -480,12 +585,21 @@ const runPrefillers = async () => {
 
   // DISASSEMBLE
   //
-  await prefillNDisassemble(degenUrlsDisassemble, n + start, n, wallets.user.name);
+  // await prefillNDisassemble(degenUrlsDisassemble, n + start, n, wallets.user.name);
+  //
+  //
+  const nrDisassembleOp = 9;
+  await wrapperPrefillNDisassemble(nrDisassembleOp, degenIndex, n, degenUrlsDisassemble, 2000);
+  degenIndex += nrDisassembleOp * n;
 
   // MERGE
   //
-  // prefillNMerge('miami', 1, 6, walletUser);
-  // prefillNMerge('nyc', 1, 6, walletUser);
+  // await prefillNMerge('miami', 1, 6, wallets.user.name);
+  // await prefillNMerge('nyc', 1, 6, wallets.user.name);
+  const nrMergeOp = 9;
+  const nMerge = 2;
+  await wrapperPrefillNMerge(nrMergeOp, 1, nMerge, 2000);
+  degenIndex += nrMergeOp * nMerge * 2;
 };
 
 const prefillWalletNFTs = async (walletAddress) => {

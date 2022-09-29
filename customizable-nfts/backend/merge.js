@@ -1,14 +1,7 @@
 import { operationType } from './consts.js';
 import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
 import { network, contracts, wallets } from './consts.js';
-import {
-  getAccountNonce,
-  readOnlySCJsonResponse,
-  callSCFunctionWithNonce,
-  chainGetTxIdStatus,
-  sleep,
-  getMempoolTransactionCount,
-} from './helper_sc.js';
+import { getAccountNonce, readOnlySCJsonResponse, chainGetTxIdStatus, sleep, callSCFunction } from './helper_sc.js';
 import {
   fetchJsonFromUrl,
   getAttributesMapTraitValue,
@@ -21,6 +14,13 @@ import { oldToNewComponentNames } from './mapOldNewComponentNames.js';
 import { imgInGameContentCreate, imgProfileContentCreate } from './helper_files.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
 import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
+import {
+  getNrOperationsAvailable,
+  getWalletStoredNonce,
+  globalNonce,
+  setNrOperationsAvailable,
+  setWalletStoredNonce,
+} from './variables.js';
 
 let networkN =
   network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
@@ -58,25 +58,10 @@ const mergeServerFlow = async (operationLimit) => {
 
   // maximum 25 transactions done in a block by the same account
   let upperLimit = valuesToMerge.length < operationLimit ? valuesToMerge.length : operationLimit;
-  let availableNonce = await getAccountNonce(wallets.admin[network]);
-  let lastUsedNonce = availableNonce - 1;
-
-  async function checkNonceUpdate(checkIt = 1) {
-    if (checkIt > 10) throw new Error("Nonce didn't update on the blockchain API.");
-
-    if (availableNonce > lastUsedNonce) return (lastUsedNonce = availableNonce);
-    else {
-      await sleep(checkIt * 1000);
-      availableNonce = await getAccountNonce(wallets.admin[network]);
-
-      return await checkNonceUpdate(++checkIt);
-    }
-  }
 
   let lastTxId = null;
   for (let i = 0; i < upperLimit; i++) {
     //verify available nonce
-    await checkNonceUpdate();
 
     const tuple = valuesToMerge[i];
     let attributes = {};
@@ -213,13 +198,16 @@ const mergeServerFlow = async (operationLimit) => {
     const degenJsonHash = await uploadFlowJson(degenJsonName, degenJson);
     // -> mint them
 
-    lastTxId = await callSCFunctionWithNonce(
+    lastTxId = await callSCFunction(
       networkN,
       contracts[network].customizable.split('.')[0],
       contracts[network].customizable.split('.')[1],
       'merge-finalize',
-      [tuple.degenId, tuple.address, hashToPinataUrl(degenJsonHash)]
+      [tuple.degenId, tuple.address, hashToPinataUrl(degenJsonHash)],
+      getWalletStoredNonce(wallets.admin.name)
     );
+    setNrOperationsAvailable(getNrOperationsAvailable() - 1);
+    setWalletStoredNonce(getWalletStoredNonce(wallets.admin.name) + 1);
     await dbIncremendId(currentDbId);
     await dbUpdateTxId(operationType.merge, lastTxId);
   }
@@ -230,13 +218,12 @@ export const checkToStartFlowMerge = async () => {
   // fetchJSONResponse(txId)
   // general call
   const status = await chainGetTxIdStatus(txId);
-  const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
-  const operationLimit = 25 - transactionCount;
-  console.log('operationLimit', operationLimit);
+  const nrOperationsAvailable = getNrOperationsAvailable();
+  console.log('operationLimit', nrOperationsAvailable);
 
-  if ((status === 'success' || status === undefined) && operationLimit > 0) {
+  if ((status === 'success' || status === undefined) && nrOperationsAvailable > 0) {
     console.log('--------------flow can start-----------');
-    await mergeServerFlow(operationLimit);
+    await mergeServerFlow(nrOperationsAvailable);
     console.log('--------------db update-----------');
     await dbUpdateLastDone('merge');
   } else if (status === 'abort_by_response') {
@@ -246,6 +233,9 @@ export const checkToStartFlowMerge = async () => {
   } else if (status === 'pending') {
     // do nothing
     console.log('----------pending----------');
+  } else if (nrOperationsAvailable === 0) {
+    // should never happen here because of check in recurrent
+    console.log('No operations available');
   } else {
     console.error(`invalid status "${status}" txid: ${txId}`);
   }

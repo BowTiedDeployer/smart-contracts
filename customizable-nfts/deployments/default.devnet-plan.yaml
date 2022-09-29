@@ -15,28 +15,22 @@ plan:
             path: "contracts\\nft-trait.clar"
             anchor-block-only: true
         - contract-publish:
-            contract-name: miami-degens
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 50150
-            path: "contracts\\miami-degens.clar"
-            anchor-block-only: true
-        - contract-publish:
             contract-name: backgrounds
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 49800
             path: "contracts\\backgrounds.clar"
             anchor-block-only: true
         - contract-publish:
-            contract-name: nyc-degens
+            contract-name: miami-degens
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 50060
-            path: "contracts\\nyc-degens.clar"
+            cost: 50130
+            path: "contracts\\miami-degens.clar"
             anchor-block-only: true
         - contract-publish:
-            contract-name: cars
+            contract-name: degens
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 55130
-            path: "contracts\\cars.clar"
+            cost: 27390
+            path: "contracts\\degens.clar"
             anchor-block-only: true
         - contract-publish:
             contract-name: rims
@@ -45,16 +39,22 @@ plan:
             path: "contracts\\rims.clar"
             anchor-block-only: true
         - contract-publish:
+            contract-name: cars
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 55130
+            path: "contracts\\cars.clar"
+            anchor-block-only: true
+        - contract-publish:
             contract-name: heads
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 196570
             path: "contracts\\heads.clar"
             anchor-block-only: true
         - contract-publish:
-            contract-name: degens
+            contract-name: nyc-degens
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 27390
-            path: "contracts\\degens.clar"
+            cost: 50060
+            path: "contracts\\nyc-degens.clar"
             anchor-block-only: true
         - contract-publish:
             contract-name: upgrade-contract

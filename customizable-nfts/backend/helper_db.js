@@ -37,6 +37,35 @@ export const dbIncremendId = async (currId) => {
   }
 };
 
+export const dbReadLastExecutedBlockId = async () => {
+  try {
+    await client.connect();
+    return (await client.db().collection(collectionId[network]).findOne())?.lastExecutedBlockId;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    client.close();
+  }
+};
+
+// console.log(await dbReadCurrentId());
+
+export const dbUpdateLastExecutedBlockId = async (currentLastExecuted, updatedLastExecuted) => {
+  try {
+    await client.connect();
+    const lastExecutedBlockIdDb = client.db().collection(collectionId[network]);
+    await lastExecutedBlockIdDb.updateOne(
+      { lastExecutedBlockId: currentLastExecuted },
+      { $set: { lastExecutedBlockId: updatedLastExecuted } }
+    );
+    client.close();
+  } catch (err) {
+    console.error(err);
+  } finally {
+    client.close();
+  }
+};
+
 export const dbGetTxId = async (operation) => {
   try {
     await client.connect();
