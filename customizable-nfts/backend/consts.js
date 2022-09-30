@@ -4,12 +4,17 @@ export const metadataOldDegensSrc = {
   nyc: (degenId) => `https://stxnft.mypinata.cloud/ipfs/QmayEqWwWc87a5ig4ujkRdcyTe6uw2cXEJz177iMHQY4SP/${degenId}.json`,
 };
 
-export const network = 'mocknet'; //"testnet", "mainnet";
+export const network = 'mocknet'; //"testnet", "mainnet", "mocknet";
 
 const coreApiUrl = {
   mainnet: 'https://stacks-node-api.mainnet.stacks.co',
   testnet: 'https://stacks-node-api.testnet.stacks.co',
   mocknet: 'http://localhost:3999',
+};
+
+export const nodeUrl = {
+  mainnet: 'https://api.gamma.io',
+  testnet: 'https://ancient-dawn-shadow.stacks-testnet.discover.quiknode.pro/207b1d96de37979493f2e1a9148caa69705473fd',
 };
 
 export const urlApis = {
@@ -20,6 +25,7 @@ export const urlApis = {
   accountNonce: (network, address) => `${coreApiUrl[network]}/extended/v1/address/${address}/nonces?unanchored=true`,
   accountDetails: (network, address) => `${coreApiUrl[network]}/v2/accounts/${address}`,
   accountMempool: (network, address) => `${coreApiUrl[network]}/extended/v1/address/${address}/mempool`,
+  lastBlock: (network) => `${coreApiUrl[network]}/extended/v1/block?limit=1`,
 };
 
 export const contracts = {

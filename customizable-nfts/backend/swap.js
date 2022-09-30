@@ -1,6 +1,6 @@
 // Assemble:
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
-import { componentType, contracts, network, operationType, wallets } from './consts.js';
+import { componentType, contracts, network, nodeUrl, operationType, wallets } from './consts.js';
 import { hashToPinataUrl, jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
 import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
 import { imgInGameContentCreate, imgProfileContentCreate } from './helper_files.js';
@@ -32,7 +32,11 @@ import {
 // - needs nft id fetched from nfts owned combined with the nft metadata - gets it from the queue
 
 let networkN =
-  network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
+  network === 'mainnet'
+    ? new StacksMainnet({ url: nodeUrl[network] })
+    : network === 'testnet'
+    ? new StacksTestnet({ url: nodeUrl[network] })
+    : new StacksMocknet();
 
 const listOfTuplesResponseToList = (tupleResponse) => {
   let idLists = [];

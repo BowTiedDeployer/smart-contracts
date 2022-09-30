@@ -1,4 +1,4 @@
-import { operationType } from './consts.js';
+import { nodeUrl, operationType } from './consts.js';
 import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
 import { network, contracts, wallets } from './consts.js';
 import { getAccountNonce, readOnlySCJsonResponse, chainGetTxIdStatus, sleep, callSCFunction } from './helper_sc.js';
@@ -23,7 +23,11 @@ import {
 } from './variables.js';
 
 let networkN =
-  network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
+  network === 'mainnet'
+    ? new StacksMainnet({ url: nodeUrl[network] })
+    : network === 'testnet'
+    ? new StacksTestnet({ url: nodeUrl[network] })
+    : new StacksMocknet();
 
 const listOfTuplesResponseToList = (tupleResponse) => {
   let idLists = [];

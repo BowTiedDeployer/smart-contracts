@@ -46,6 +46,7 @@ const convertPrincipalToArgReadOnly = (principal) => {
 
 const isPrincipal = (str) => {
   let secondChar = 'P';
+  str = str.toString();
   if (network !== 'mainnet') secondChar = 'T';
   if (str.charAt(0) === 'S' && str.charAt(1) === secondChar && str.length >= 39 && str.length <= 41) {
     return true;

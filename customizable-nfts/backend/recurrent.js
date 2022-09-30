@@ -3,7 +3,7 @@ import { checkToStartFlowAssemble } from './assemble.js';
 import { network, operationType, urlApis, wallets } from './consts.js';
 import { checkToStartFlowDisassemble } from './disassemble.js';
 import { dbReadLastDone, dbReadLastExecutedBlockId, dbUpdateLastExecutedBlockId } from './helper_db.js';
-import { getMempoolTransactionCount } from './helper_sc.js';
+import { getAccountNonce, getBlockHeight, getMempoolTransactionCount } from './helper_sc.js';
 import { checkToStartFlowMerge } from './merge.js';
 import { checkToStartFlowSwap } from './swap.js';
 import { getNrOperationsAvailable, setNrOperationsAvailable, setWalletStoredNonce } from './variables.js';
@@ -12,11 +12,12 @@ const every_five_minutes = async () => {
   const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
   setNrOperationsAvailable(getNrOperationsAvailable() - transactionCount);
   console.log('---Nr Operations Available: ' + getNrOperationsAvailable());
-
-  const blcokchainNextNonce = 2; // await nonce;
+  const blcokchainNextNonce = await getAccountNonce(wallets[wallets.admin.name][network]);
   setWalletStoredNonce(wallets.admin.name, blcokchainNextNonce);
   const lastExecutedBlockId = await dbReadLastExecutedBlockId(); // TODO: test this
-  const currentBlockId = 0; // await getBlockchainCurrentBlock()
+  const currentBlockId = await getBlockHeight();
+  console.log(currentBlockId);
+  return;
   if (lastExecutedBlockId === currentBlockId) {
     console.log('same Block, wait for a new block to start');
     return;
@@ -57,7 +58,8 @@ const every_five_minutes = async () => {
     }
   }
 };
+every_five_minutes();
 
-cron.schedule('*/5 * * * *', () => {
-  every_five_minutes();
-});
+// cron.schedule('*/5 * * * *', () => {
+//   every_five_minutes();
+// });

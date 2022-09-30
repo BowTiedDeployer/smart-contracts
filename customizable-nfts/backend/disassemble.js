@@ -11,7 +11,7 @@
 // (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.body-kits get-owner u1)
 
 import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
-import { network, contracts, wallets, operationType } from './consts.js';
+import { network, contracts, wallets, operationType, nodeUrl } from './consts.js';
 import { readOnlySCJsonResponse, callSCFunction, chainGetTxIdStatus, sleep, getTokenUri } from './helper_sc.js';
 import dotenv from 'dotenv';
 import { pinataToHTTPUrl } from './converters.js';
@@ -28,7 +28,11 @@ import {
 dotenv.config();
 
 let networkN =
-  network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
+  network === 'mainnet'
+    ? new StacksMainnet({ url: nodeUrl[network] })
+    : network === 'testnet'
+    ? new StacksTestnet({ url: nodeUrl[network] })
+    : new StacksMocknet();
 
 const listOfTuplesResponseToList = (tupleResponse) => {
   let idLists = [];
