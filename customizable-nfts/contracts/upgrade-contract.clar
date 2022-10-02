@@ -7,7 +7,7 @@
 
 ;; constants
 (define-constant err-invalid (err u300))
-(define-constant err-too-many-disassemble (err u200))
+(define-constant err-too-many-pending-requests (err u200))
 (define-constant err-not-owner (err u100))
 (define-constant err-component-type-invalid (err u501))
 
@@ -95,7 +95,7 @@
             ;; check user is not abusing the queue
             (asserts! 
               (< (len (filter is-disassemble-value-for-principal work-queue-value)) u5)
-              err-too-many-disassemble
+              err-too-many-pending-requests
             )
             (unwrap-panic (contract-call? .degens burn-token token-id))
             (append 
@@ -247,7 +247,7 @@
             ;; check user is not abusing the queue
             (asserts! 
               (< (len (filter is-assemble-value-for-principal work-queue-value)) u5)
-              err-too-many-disassemble
+              err-too-many-pending-requests
             )
             (unwrap-panic (contract-call? .backgrounds burn-token background-id))
             (unwrap-panic (contract-call? .cars burn-token car-id))
@@ -429,7 +429,7 @@
             ;; check user is not abusing the queue
             (asserts! 
               (< (len (filter is-swap-value-for-principal work-queue-value)) u5)
-              err-too-many-disassemble
+              err-too-many-pending-requests
             )
             (unwrap-panic (contract-call? .degens burn-token degen-id))
             (if (is-eq component-type background-type) 
@@ -591,7 +591,7 @@
             ;; check user is not abusing the queue
             (asserts! 
               (< (len (filter is-merge-value-for-principal work-queue-value)) u5)
-              err-too-many-disassemble
+              err-too-many-pending-requests
             )
 
             ;; (unwrap-panic (contract-call? .old-degens burn-token degen-id))

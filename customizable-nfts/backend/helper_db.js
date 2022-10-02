@@ -198,8 +198,8 @@ export const dbUpdateLastDone = async (nowDone) => {
 // let txIdAssemble = await dbGetTxId(operationType.assemble);
 // console.log('txIdAssemble', txIdAssemble);
 
-let lastDone = await dbReadLastDone();
-console.log('lastDone', lastDone);
+// let lastDone = await dbReadLastDone();
+// console.log('lastDone', lastDone);
 
 // await dbUpdateLastDone('merge');
 // lastDone = await dbReadLastDone();

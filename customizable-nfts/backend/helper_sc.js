@@ -26,7 +26,7 @@ export const getFeev2 = async (estimated_len, transaction_payload) => {
     const response = await axios.post(url, reqobj);
     return response.data.estimations[0].fee;
   } catch (err) {
-    console.log('getFeev2 err ', err.message);
+    // console.log('getFeev2 err ', err.message);
     return 50000;
   }
 };
@@ -36,7 +36,7 @@ export const getNormalizedFee = async (transaction) => {
   const serializedPayload = serializePayload(transaction.payload);
   const v2fee = await getFeev2(serializedTx.byteLength, serializedPayload.toString('hex'));
   const normalizedFee = Math.min(maxStacksTxFee, Number(v2fee));
-  console.log('normalizedFee ', normalizedFee);
+  // console.log('normalizedFee ', normalizedFee);
   return normalizedFee;
 };
 
@@ -85,12 +85,12 @@ export async function callSCFunction(networkInstance, contractAddress, contractN
     txOptions.fee = new BigNum(normalizedFee);
     transaction = await makeContractCall(txOptions);
     const tx = await broadcastTransaction(transaction, networkInstance);
-    console.log(
-      `${contractAddress}.${contractName}.${functionName} Admin SC public function call broadcasted tx: ${urlApis.transaction(
-        network,
-        tx.txid
-      )}`
-    );
+    // console.log(
+    //   `${contractAddress}.${contractName}.${functionName} Admin SC public function call broadcasted tx: ${urlApis.transaction(
+    //     network,
+    //     tx.txid
+    //   )}`
+    // );
     return tx.txid.toString();
   } catch (error) {
     console.log(`${contractAddress}.${contractName}.${functionName} Admin SC public function call ERROR: ${error}`);
@@ -140,7 +140,7 @@ export async function callSCFunctionWithNonceUser(networkInstance, contractAddre
   try {
     const latestNonce = await getAccountNonce(wallets.user[network]);
     await callSCFunctionUser(networkInstance, contractAddress, contractName, functionName, args, latestNonce);
-    console.log('options', latestNonce, wallets.user[network], contractAddress, contractName, functionName, args);
+    // console.log('options', latestNonce, wallets.user[network], contractAddress, contractName, functionName, args);
     // await mintNameUrl(address, url, latestNonce);
   } catch (error) {
     console.log(error);
@@ -166,15 +166,15 @@ export async function callSCFunctionWithNonceWallet(
       walletAddress,
       latestNonce
     );
-    console.log(
-      'options',
-      latestNonce,
-      wallets[walletAddress][network],
-      contractAddress,
-      contractName,
-      functionName,
-      args
-    );
+    // console.log(
+    //   'options',
+    //   latestNonce,
+    //   wallets[walletAddress][network],
+    //   contractAddress,
+    //   contractName,
+    //   functionName,
+    //   args
+    // );
     // await mintNameUrl(address, url, latestNonce);
   } catch (error) {
     console.log(error);
@@ -213,12 +213,12 @@ export async function callSCFunctionUser(networkInstance, contractAddress, contr
     txOptions.fee = new BigNum(normalizedFee);
     transaction = await makeContractCall(txOptions);
     const tx = await broadcastTransaction(transaction, networkInstance);
-    console.log(
-      `${contractAddress}.${functionName} User SC public function call broadcasted tx: ${urlApis.transaction(
-        network,
-        tx.txid
-      )}`
-    );
+    // console.log(
+    //   `${contractAddress}.${functionName} User SC public function call broadcasted tx: ${urlApis.transaction(
+    //     network,
+    //     tx.txid
+    //   )}`
+    // );
   } catch (error) {
     console.log(`${contractAddress}.${functionName} User SC public function call ERROR: ${error}`);
   }
@@ -253,12 +253,12 @@ export async function callSCFunctionWallet(
     txOptions.fee = new BigNum(normalizedFee);
     transaction = await makeContractCall(txOptions);
     const tx = await broadcastTransaction(transaction, networkInstance);
-    console.log(
-      `${contractAddress}.${functionName} User SC public function call broadcasted tx: ${urlApis.transaction(
-        network,
-        tx.txid
-      )} `
-    );
+    // console.log(
+    //   `${contractAddress}.${functionName} User SC public function call broadcasted tx: ${urlApis.transaction(
+    //     network,
+    //     tx.txid
+    //   )} `
+    // );
   } catch (error) {
     console.log(`${contractAddress}.${functionName} User SC public function call ERROR: ${error}`);
   }
