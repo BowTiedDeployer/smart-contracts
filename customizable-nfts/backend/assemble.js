@@ -11,7 +11,13 @@ import {
   getImgGameUrlFromJson,
   getImgComponentUrlFromJson,
 } from './helper_json.js';
-import { callSCFunction, chainGetTxIdStatus, readOnlySCJsonResponse, sleep } from './helper_sc.js';
+import {
+  callSCFunction,
+  chainGetTxIdStatus,
+  instantiateAllAccountsNonce,
+  readOnlySCJsonResponse,
+  sleep,
+} from './helper_sc.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
 import {
   getNrOperationsAvailable,
@@ -60,7 +66,7 @@ const getValuesFromQueueAssemble = async () => {
 const assembleServerFlow = async (operationLimit) => {
   // get values from queue
   let valuesToAssemble = await getValuesFromQueueAssemble();
-  console.log('valuesToAssemble: ', valuesToAssemble);
+  // console.log('valuesToAssemble: ', valuesToAssemble);
 
   // min( operationLimit, values.length )
   let upperLimit = valuesToAssemble.length < operationLimit ? valuesToAssemble.length : operationLimit;
@@ -185,17 +191,18 @@ const assembleServerFlow = async (operationLimit) => {
     console.log('jsonHash', degenJsonHash);
 
     // call assemble_finalize (member as address, json_hash as uri)
+    let availableNonce = getWalletStoredNonce(wallets.admin.name);
     lastTxId = await callSCFunction(
       networkN,
       contracts[network].customizable.split('.')[0],
       contracts[network].customizable.split('.')[1],
       'assemble-finalize',
       [tuple.address, hashToPinataUrl(degenJsonHash)],
-      getWalletStoredNonce(wallets.admin.name)
+      availableNonce
     );
     setNrOperationsAvailable(getNrOperationsAvailable() - 1);
-    setWalletStoredNonce(getWalletStoredNonce(wallets.admin.name) + 1);
-
+    setWalletStoredNonce(wallets.admin.name, availableNonce + 1);
+    console.log(`Nonce Used: ${availableNonce}`);
     // increment id
     await dbIncremendId(currentDbId);
 
@@ -208,6 +215,8 @@ export const checkToStartFlowAssemble = async () => {
   const txId = await dbGetTxId(operationType.assemble); //readFromDB
   // fetchJSONResponse(txId)
   // general call
+
+  instantiateAllAccountsNonce();
   const status = await chainGetTxIdStatus(txId);
   // const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
   // const operationLimit = 25 - transactionCount;
@@ -233,6 +242,6 @@ export const checkToStartFlowAssemble = async () => {
   }
 };
 
-// await checkToStartFlowAssemble();
+await checkToStartFlowAssemble();
 // console.log('tx mempool', await getMempoolTransactionCount(wallets.admin[network]));
 // await assembleServerFlow(25);

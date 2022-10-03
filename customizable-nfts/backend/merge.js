@@ -211,7 +211,7 @@ const mergeServerFlow = async (operationLimit) => {
       getWalletStoredNonce(wallets.admin.name)
     );
     setNrOperationsAvailable(getNrOperationsAvailable() - 1);
-    setWalletStoredNonce(getWalletStoredNonce(wallets.admin.name) + 1);
+    setWalletStoredNonce(wallets.admin.name, getWalletStoredNonce(wallets.admin.name) + 1);
     await dbIncremendId(currentDbId);
     await dbUpdateTxId(operationType.merge, lastTxId);
   }

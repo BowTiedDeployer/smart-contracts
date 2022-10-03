@@ -12,6 +12,7 @@ import { serializePayload } from '@stacks/transactions/dist/payload.js';
 import BigNum from 'bn.js';
 import axios from 'axios';
 import { convertArgsReadOnly, convertArgsSCCall, jsonResponseToTokenUri, stringToMap } from './converters.js';
+import { setWalletStoredNonce } from './variables.js';
 
 // helper functions
 export const maxStacksTxFee = 750000;
@@ -260,6 +261,7 @@ export async function callSCFunctionWallet(
     //   )} `
     // );
   } catch (error) {
+    throw error;
     console.log(`${contractAddress}.${functionName} User SC public function call ERROR: ${error}`);
   }
 }
@@ -304,4 +306,15 @@ export const getMempoolTransactionCount = async (address) => {
 export const getBlockHeight = async () => {
   const blockInfo = await fetch(urlApis.lastBlock(network)).then((res) => res.json());
   return blockInfo.results[0].height;
+};
+
+export const instantiateAllAccountsNonce = async () => {
+  setWalletStoredNonce(wallets.admin.name, await getAccountNonce(wallets[wallets.admin.name][network]));
+  setWalletStoredNonce(wallets.user.name, await getAccountNonce(wallets[wallets.user.name][network]));
+  for (let i = 2; i <= 20; i++) {
+    setWalletStoredNonce(
+      wallets[`wallet${i}`].name,
+      await getAccountNonce(wallets[wallets[`wallet${i}`].name][network])
+    );
+  }
 };

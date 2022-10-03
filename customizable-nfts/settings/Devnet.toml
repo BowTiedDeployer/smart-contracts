@@ -149,6 +149,13 @@ balance = 100_000_000_000_000
 # stx_address: ST2RNBTWA0SX7SRRG6SFJKC2EC5NHYF80MS5JB4MG
 # btc_address: mwgcpqeDAAguM9pHLwR8aoaSAqVi3pDAWT
 
+[accounts.wallet_21]
+mnemonic = "refuse frown air snap fever smooth loan boy empty mirror fox talk hedgehog pretty calm shiver tuition stamp fat disagree siren struggle pen inner"
+balance = 100_000_000_000_000
+# secret_key: b068f820264685e12b2c19127769e969ae96c27162d1af8eb755026d540a071e01
+# stx_address: ST3X70HXKKCYDH9DAKJMC6WCDDYB25BVRDZ5MZGFH
+# btc_address: n4M9jNLQ4waRDFom2s46xQ66ymiqJcL7yQ
+
 [accounts.faucet]
 mnemonic = "shadow private easily thought say logic fault paddle word top book during ignore notable orange flight clock image wealth health outside kitten belt reform"
 balance = 100_000_000_000_000

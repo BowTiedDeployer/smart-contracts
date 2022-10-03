@@ -179,6 +179,12 @@ export const wallets = {
     testnet: 'ST2RNBTWA0SX7SRRG6SFJKC2EC5NHYF80MS5JB4MG',
     mocknet: 'ST2RNBTWA0SX7SRRG6SFJKC2EC5NHYF80MS5JB4MG',
   },
+  wallet21: {
+    name: 'wallet21',
+    mainnet: {},
+    testnet: 'ST3X70HXKKCYDH9DAKJMC6WCDDYB25BVRDZ5MZGFH',
+    mocknet: 'ST3X70HXKKCYDH9DAKJMC6WCDDYB25BVRDZ5MZGFH',
+  },
 };
 
 export const operationType = {

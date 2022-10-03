@@ -109,7 +109,7 @@ const disassembleServerFlow = async (operationLimit) => {
       getWalletStoredNonce(wallets.admin.name)
     );
     setNrOperationsAvailable(getNrOperationsAvailable() - 1);
-    setWalletStoredNonce(getWalletStoredNonce(wallets.admin.name) + 1);
+    setWalletStoredNonce(wallets.admin.name, getWalletStoredNonce(wallets.admin.name) + 1);
     console.log('lastTxId', lastTxId);
 
     await dbUpdateTxId(operationType.disassemble, lastTxId);
