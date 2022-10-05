@@ -11,13 +11,10 @@
 ;;
 (define-data-var contract-admin principal tx-sender)
 
-;; private functions
-;;
-
-;; public functions
-;;
-
+;; data maps
+;; 
 (define-map remaining-mints principal uint)
+
 
 (define-read-only (get-remaining-mints (address principal)) 
   (map-get? remaining-mints address))

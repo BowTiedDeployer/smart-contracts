@@ -6,13 +6,9 @@
 (define-non-fungible-token background uint)
 
 ;; define errors
+(define-constant err-admin-only (err u100))
 (define-constant err-owner-only (err u101))
-(define-constant err-already-locked (err u102))
-(define-constant err-more-votes-than-members-required (err u103))
-(define-constant err-not-a-member (err u104))
-(define-constant err-votes-required-not-met (err u105))
 (define-constant err-invalid-name (err u301))
-(define-constant err-no-rights (err u403))
 
 
 ;; Store the last issues token ID
@@ -37,7 +33,7 @@
 ;; SIP009: Transfer token to a specified principal
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
   (begin
-    (asserts! (is-eq tx-sender sender) err-no-rights)
+    (asserts! (is-eq tx-sender sender) err-owner-only)
     (nft-transfer? background token-id sender recipient)
   )
 )
@@ -74,7 +70,7 @@
       (or
         (is-eq tx-sender (var-get contract-owner)) 
         (is-eq tx-sender (var-get contract-lootbox))) 
-      err-owner-only)
+      err-admin-only)
     (let 
       ((next-id (+ u1 (var-get last-id))))
       (var-set last-id next-id)
@@ -89,7 +85,7 @@
       (or
         (is-eq tx-sender (var-get contract-owner)) 
         (is-eq tx-sender (var-get contract-lootbox))) 
-      err-owner-only)
+      err-admin-only)
     (let 
       ((next-id (+ u1 (var-get last-id))))
       (map-set token-url {token-id: next-id} {url: url})
@@ -105,7 +101,7 @@
       (or
         (is-eq tx-sender (var-get contract-owner)) 
         (is-eq tx-sender (var-get contract-lootbox))) 
-      err-owner-only)
+      err-admin-only)
     (let 
     ;; define and assign: next-id and url
       (
@@ -127,7 +123,7 @@
 ;; Burn a token
 (define-public (burn-token (token-id uint))  
 	(begin     
-		(asserts! (is-eq (some tx-sender) (nft-get-owner? background token-id) ) err-no-rights)     
+		(asserts! (is-eq (some tx-sender) (nft-get-owner? background token-id) ) err-owner-only)     
 		(nft-burn? background token-id tx-sender)
   )
 )
@@ -144,7 +140,7 @@
       (or
         (is-eq tx-sender (var-get contract-owner)) 
         (is-eq tx-sender (var-get contract-lootbox))) 
-      err-owner-only)
+      err-admin-only)
     (ok (map-set name-url {name: name} {url: url}))
   )
 )
@@ -155,7 +151,7 @@
       (or
         (is-eq tx-sender (var-get contract-owner)) 
         (is-eq tx-sender (var-get contract-lootbox))) 
-      err-owner-only)
+      err-admin-only)
     (ok (map-delete name-url {name: name}))
   )
 )
