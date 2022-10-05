@@ -1,0 +1,37 @@
+[project]
+name = "lootbox"
+authors = []
+description = ""
+telemetry = false
+requirements = []
+boot_contracts = ["pox", "costs-v2", "bns"]
+
+[project.cache_location]
+path = ".requirements"
+[contracts.background]
+path = "contracts/background.clar"
+
+[contracts.get-vrf-block]
+path = "contracts/get-vrf-block.clar"
+
+[contracts.lootbox-background]
+path = "contracts/lootbox-background.clar"
+
+[contracts.nft-trait]
+path = "contracts/nft-trait.clar"
+
+[contracts.vrf-in-depth]
+path = "contracts/vrf-in-depth.clar"
+
+[repl]
+costs_version = 2
+parser_version = 2
+
+[repl.analysis]
+passes = ["check_checker"]
+
+[repl.analysis.check_checker]
+strict = false
+trusted_sender = false
+trusted_caller = false
+callee_filter = false
