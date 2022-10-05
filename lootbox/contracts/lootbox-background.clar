@@ -1,6 +1,5 @@
 ;; lootbox-background
-;; use the SIP009 interface (testnet)
-;; trait deployed by deployer address from ./settings/Devnet.toml
+;; use the SIP009 interface 
 (impl-trait .nft-trait.nft-trait)
 
 ;; NFT collection
@@ -16,13 +15,14 @@
 (define-constant err-missing-block-height (err u402))
 (define-constant err-lootbox-locked (err u403))
 (define-constant err-invalid-random (err u404))
+(define-constant err-invalid-lootbox (err u405))
 
 ;; data vars
 ;;
 (define-data-var contract-admin principal tx-sender)
 ;; only used in demo for 
 (define-data-var contract-third-party-claim principal .send-lootbox) 
-;; Store the last issues token ID
+;; store the last issues token ID
 (define-data-var last-id uint u0)
 ;; store the general ipfs-root of all lootbox nfts
 (define-data-var ipfs-root (string-ascii 80) "ipfs://QmWEA3QfSskyopgrw3nPyk8u7UAbPbL7uA3Wj8UbtCuXBt/")
@@ -71,8 +71,6 @@
 ;; Internal - Mint new NFT
 (define-private (mint (new-owner principal))
   (begin
-    ;; TODO: check if this is needed 
-    (asserts! (is-eq tx-sender (var-get contract-admin)) err-admin-only)
     (let 
       ((next-id (+ u1 (var-get last-id))))
       (var-set last-id next-id)
@@ -82,42 +80,17 @@
       )))
 
 
-
-
-
-
-
-;; operation between vrf and id
-;; any address should be able to call this
-(define-read-only (get-random (lootbox-id uint))
-  (begin
-    ;; verify can open lootbox
-    (asserts! (is-eq (ok true) (is-openable lootbox-id)) err-lootbox-locked)
-    ;; get block-height from map (id -> block-height)
-    (let ((block-height-lootbox (unwrap! (map-get? block-height-nft lootbox-id) err-missing-block-height)))
-    
-    ;; convert lootbox-id uint to buff
-    (print (uint-to-buff lootbox-id))
-    (print (concat 
-      (unwrap! (get-block-info? vrf-seed block-height-lootbox) err-lootbox-locked) 
-      (uint-to-buff lootbox-id)))
-    ;; concat vrf and id 
-    ;; hash it
-    ;; return it
-    (ok (keccak256 (concat 
-      (unwrap! (get-block-info? vrf-seed block-height-lootbox) err-lootbox-locked) 
-      (uint-to-buff lootbox-id)))))))
-
-
-
-
 ;; public functions
 ;;
 ;; mint lootbox - only admin can
 (define-public (create-lootbox (address principal)) 
   (begin
-    ;; verify is admin
-    (asserts! (is-eq tx-sender (var-get contract-admin)) err-admin-only)
+    ;; verify is admin (or demo send-lootbox smart-contract admin)
+    (asserts!
+      (or 
+        (is-eq tx-sender (var-get contract-admin)) 
+        (is-eq tx-sender (var-get contract-third-party-claim)))
+      err-admin-only) 
     ;; vefiry limit not exceeded
     (asserts! (is-eq true (> limit-mint (var-get last-id))) err-mint-limit-exceeded)
     ;; mint for user
@@ -132,18 +105,19 @@
     ;; verify lootbox is not locked
     (asserts! (is-eq (ok true) (is-openable lootbox-id)) err-lootbox-locked)
     ;; get random number
-    (let ((rnd (get-random lootbox-id))
-    ;; because it is a uniform distribution
-    ;; can pick any byte and have same randomness across all of them
-    ;; for convenience pick the first byte
-    (picked-number (buff-to-uint (unwrap! (element-at (try! rnd) u0) err-invalid-random)))
-    ;; keep address of tx-sender locally for (as-contract) call 
-    (address-redeem tx-sender)
-    ) 
+    (let 
+      ;; ((rnd (get-random lootbox-id))
+      ;; ;; because it is a uniform distribution
+      ;; ;; can pick any byte and have same randomness across all of them
+      ;; ;; for convenience pick the first byte
+      ;; (picked-number (buff-to-uint (unwrap! (element-at (try! rnd) u0) err-invalid-random)))
+      ;; keep address of tx-sender locally for (as-contract) call 
+      ((address-redeem tx-sender)) 
     ;; burn lootbox
     (some (burn-token lootbox-id))  
     ;; convert it to int => 255 values
-    (as-contract (contract-call? .background mint-name address-redeem (component-for-value picked-number))))))
+    ;; get the item name for that int value
+    (as-contract (contract-call? .background-item mint-name address-redeem (unwrap! (item-for-lootbox lootbox-id) err-invalid-lootbox))))))
 
 
 ;; set admin of contract
@@ -154,7 +128,25 @@
     (ok true)))
 
 
-(define-read-only (component-for-value (value uint)) 
+;; operation between vrf and id
+;; any address should be able to call this
+(define-read-only (get-random (lootbox-id uint))
+  (begin
+    ;; verify can open lootbox
+    (asserts! (is-eq (ok true) (is-openable lootbox-id)) err-lootbox-locked)
+    ;; get block-height from map (id -> block-height)
+    (let ((block-height-lootbox (unwrap! (map-get? block-height-nft lootbox-id) err-missing-block-height)))
+    
+    ;; convert lootbox-id uint to buff
+    ;; concat vrf and id 
+    ;; hash it
+    ;; return it
+    (ok (keccak256 (concat 
+      (unwrap! (get-block-info? vrf-seed block-height-lootbox) err-lootbox-locked) 
+      (uint-to-buff lootbox-id)))))))
+
+
+(define-read-only (item-for-value (value uint)) 
   ;; < 51 Goldie | 0x33
   (if (< value u51) "Goldie"
     ;; < 102 DarkPurple | 0x66
@@ -167,14 +159,10 @@
           (if (< value u231) "Sunset"
           "Purple"))))))
 
-
-;; return vrf-seed of current block
-(define-public (current-vrf) 
-  (ok (get-block-info? vrf-seed block-height)))
-
-;; return vrf-seed of next block
-(define-public (next-vrf) 
-  (ok (get-block-info? vrf-seed (+ block-height u1))))
+;; get name of the item for a lootbox id
+;; complete transparency for all users
+(define-read-only (item-for-lootbox (lootbox-id uint))
+  (ok (item-for-value (buff-to-uint (unwrap! (element-at (try! (get-random lootbox-id)) u0) err-invalid-random)))))
 
 
 ;; check ready to be opened
@@ -186,15 +174,14 @@
 
 
 
-
 ;; conversions
 ;;
 
 ;; base 16 -> base 10
-(define-private (buff-to-uint (byte (buff 1))) ;; buff = 1 byte = 2 hex characters
+(define-read-only (buff-to-uint (byte (buff 1))) ;; buff = 1 byte = 2 hex characters
   (unwrap-panic (index-of 0x000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff byte)))
 
 ;; base 10 -> base 16
-(define-private (uint-to-buff (number uint)) ;; uint equivalent to 1 byte = 2 hex characters
+(define-read-only (uint-to-buff (number uint)) ;; uint equivalent to 1 byte = 2 hex characters
   (unwrap-panic (element-at  0x000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff number)))
 

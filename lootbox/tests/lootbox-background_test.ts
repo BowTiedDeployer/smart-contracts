@@ -7,6 +7,7 @@ const OPEN_LOOTBOX = 'open-lootbox';
 const SET_ADMIN = 'set-admin';
 const GET_RANDOM = 'get-random';
 const GET_TOKEN_URI = 'get-token-uri';
+const ITEM_FOR_LOOTBOX = 'item-for-lootbox';
 const IS_OPENABLE = 'is-openable';
 const LIMIT_MINT = 255;
 
@@ -122,6 +123,28 @@ Clarinet.test({
       token_uri.result.expectOk().expectSome(),
       '"ipfs://QmWEA3QfSskyopgrw3nPyk8u7UAbPbL7uA3Wj8UbtCuXBt/$TOKEN_ID.json"'
     );
+  },
+});
+
+Clarinet.test({
+  name: 'Ensure that item-for-value is right',
+  async fn(chain: Chain, accounts: Map<string, Account>) {
+    const admin = accounts.get('deployer')!;
+    const receiver = accounts.get('wallet_1')!;
+    const receiver2 = accounts.get('wallet_2')!;
+    let block = chain.mineBlock([
+      Tx.contractCall(CONTRACT_NAME, CREATE_LOOTBOX, [types.principal(receiver.address)], admin.address),
+      Tx.contractCall(CONTRACT_NAME, CREATE_LOOTBOX, [types.principal(receiver2.address)], admin.address),
+    ]);
+    assertEquals(block.receipts.length, 2);
+    assertEquals(block.height, 2);
+    block.receipts[0].result.expectOk().expectBool(true);
+    chain.mineBlock([]);
+    chain.mineBlock([]);
+    let item = chain.callReadOnlyFn(CONTRACT_NAME, ITEM_FOR_LOOTBOX, [types.uint(1)], receiver.address);
+    assertEquals(item.result.expectOk(), '"Goldie"');
+    item = chain.callReadOnlyFn(CONTRACT_NAME, ITEM_FOR_LOOTBOX, [types.uint(2)], receiver.address);
+    assertEquals(item.result.expectOk(), '"Emerald"');
   },
 });
 
@@ -350,7 +373,7 @@ Clarinet.test({
       assertEquals(block.receipts[i].events[1].type, 'nft_mint_event');
       assertEquals(
         block.receipts[i].events[1].nft_mint_event.asset_identifier,
-        'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.background::background'
+        'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.background-item::background'
       );
       assertEquals(block.receipts[i].events[1].nft_mint_event.recipient, receiver.address);
       block.receipts[i].events[1].nft_mint_event.value.expectUint(i + 1);
