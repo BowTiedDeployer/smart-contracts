@@ -1,7 +1,7 @@
 ;; lootbox-background
 ;; use the SIP009 interface (testnet)
 ;; trait deployed by deployer address from ./settings/Devnet.toml
-(impl-trait 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.nft-trait.nft-trait)
+(impl-trait .nft-trait.nft-trait)
 
 ;; NFT collection
 (define-non-fungible-token lootbox-background uint)
@@ -25,7 +25,7 @@
 ;; Store the last issues token ID
 (define-data-var last-id uint u0)
 ;; store the general ipfs-root of all lootbox nfts
-(define-data-var ipfs-root (string-ascii 80) "ipfs://QmQcZyB1GEsZgYQXr82CHN2BeqEY53bmMPB89g6ryKPWJU/")
+(define-data-var ipfs-root (string-ascii 80) "ipfs://QmWEA3QfSskyopgrw3nPyk8u7UAbPbL7uA3Wj8UbtCuXBt/")
 
 ;; data maps 
 ;;

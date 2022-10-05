@@ -114,13 +114,13 @@ Clarinet.test({
     let token_uri = chain.callReadOnlyFn(CONTRACT_NAME, GET_TOKEN_URI, [types.uint(1)], receiver.address);
     assertEquals(
       token_uri.result.expectOk().expectSome(),
-      '"ipfs://QmQcZyB1GEsZgYQXr82CHN2BeqEY53bmMPB89g6ryKPWJU/$TOKEN_ID.json"'
+      '"ipfs://QmWEA3QfSskyopgrw3nPyk8u7UAbPbL7uA3Wj8UbtCuXBt/$TOKEN_ID.json"'
     );
     token_uri = chain.callReadOnlyFn(CONTRACT_NAME, GET_TOKEN_URI, [types.uint(2)], receiver.address);
     token_uri.result.expectOk().expectSome();
     assertEquals(
       token_uri.result.expectOk().expectSome(),
-      '"ipfs://QmQcZyB1GEsZgYQXr82CHN2BeqEY53bmMPB89g6ryKPWJU/$TOKEN_ID.json"'
+      '"ipfs://QmWEA3QfSskyopgrw3nPyk8u7UAbPbL7uA3Wj8UbtCuXBt/$TOKEN_ID.json"'
     );
   },
 });

@@ -1,6 +1,6 @@
 ;; use the SIP009 interface (testnet)
 ;; trait deployed by deployer address from ./settings/Devnet.toml
-(impl-trait 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.nft-trait.nft-trait)
+(impl-trait .nft-trait.nft-trait)
 
 ;; define a new NFT. Make sure to replace background
 (define-non-fungible-token background uint)
@@ -32,7 +32,7 @@
 
 ;; Owner
 (define-data-var contract-owner principal tx-sender)
-(define-data-var contract-lootbox principal 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.lootbox-background)
+(define-data-var contract-lootbox principal .lootbox-background)
 
 ;; SIP009: Transfer token to a specified principal
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
