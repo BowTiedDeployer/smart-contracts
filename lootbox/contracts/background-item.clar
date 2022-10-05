@@ -6,11 +6,11 @@
 (define-non-fungible-token background uint)
 
 ;; define errors
-(define-constant err-owner-only (err u1000))
-(define-constant err-already-locked (err u101))
-(define-constant err-more-votes-than-members-required (err u102))
-(define-constant err-not-a-member (err u103))
-(define-constant err-votes-required-not-met (err u104))
+(define-constant err-owner-only (err u101))
+(define-constant err-already-locked (err u102))
+(define-constant err-more-votes-than-members-required (err u103))
+(define-constant err-not-a-member (err u104))
+(define-constant err-votes-required-not-met (err u105))
 (define-constant err-invalid-name (err u301))
 (define-constant err-no-rights (err u403))
 
