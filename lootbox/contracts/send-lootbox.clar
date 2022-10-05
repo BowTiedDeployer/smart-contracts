@@ -1,6 +1,5 @@
 
 ;; send-lootbox
-;; <add a description here>
 
 ;; constants
 ;;
