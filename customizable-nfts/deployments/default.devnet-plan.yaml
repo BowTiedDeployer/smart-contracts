@@ -15,6 +15,18 @@ plan:
             path: "contracts\\nft-trait.clar"
             anchor-block-only: true
         - contract-publish:
+            contract-name: backgrounds
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 49800
+            path: "contracts\\backgrounds.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: cars
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 55130
+            path: "contracts\\cars.clar"
+            anchor-block-only: true
+        - contract-publish:
             contract-name: heads
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 196570
@@ -27,24 +39,6 @@ plan:
             path: "contracts\\degens.clar"
             anchor-block-only: true
         - contract-publish:
-            contract-name: rims
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 52460
-            path: "contracts\\rims.clar"
-            anchor-block-only: true
-        - contract-publish:
-            contract-name: cars
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 55130
-            path: "contracts\\cars.clar"
-            anchor-block-only: true
-        - contract-publish:
-            contract-name: backgrounds
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 49800
-            path: "contracts\\backgrounds.clar"
-            anchor-block-only: true
-        - contract-publish:
             contract-name: miami-degens
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 50130
@@ -55,6 +49,12 @@ plan:
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 50060
             path: "contracts\\nyc-degens.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: rims
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 52460
+            path: "contracts\\rims.clar"
             anchor-block-only: true
         - contract-publish:
             contract-name: upgrade-contract
