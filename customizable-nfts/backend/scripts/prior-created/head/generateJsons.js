@@ -77,7 +77,7 @@ fs.readdir(pathHeadNYCImg, (err, heads) => {
           `ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/NYC_${headName}_${faceName}.png`, // component
           `ipfs://QmbUFUAZfqN1AsDHNSLomFVnDXn7L8baEfRcJiv8jsYxAL/NYC_${headName}_${faceName}.png`, // in-game
           { Race: 'Alien', Head: headName, Face: faceName },
-          'DegenHeads'
+          'StacksDegensHeads'
         );
         fs.writeFile(pathHeadGenerated + 'NYC_' + headName + '_' + faceName + '.json', metadata, (err, result) => {
           if (err) console.log('error', err);
@@ -99,7 +99,7 @@ fs.readdir(pathHeadMiamiImg, (err, heads) => {
           `ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/Miami_${headName}_${faceName}.png`, // component
           `ipfs://QmbUFUAZfqN1AsDHNSLomFVnDXn7L8baEfRcJiv8jsYxAL/Miami_${headName}_${faceName}.png`, // in-game
           { Race: 'Skull', Head: headName, Face: faceName },
-          'DegenHeads'
+          'StacksDegensHeads'
         );
         fs.writeFile(pathHeadGenerated + 'Miami_' + headName + '_' + faceName + '.json', metadata, (err, result) => {
           if (err) console.log('error', err);

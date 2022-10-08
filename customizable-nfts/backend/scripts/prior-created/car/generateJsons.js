@@ -65,7 +65,7 @@ fs.readdir(pathCarImg, (err, cars) => {
       `ipfs://QmeCL653FLxAfdT8wGkHxhwHSdEfPBH4WF8h9Hz6XDbi4u/${car}`, // for assemble
       `ipfs://QmXivFXDKXgnECXN7ckPf8KHXn6mogvHwLsdT1rAfCCU72/${car}`, // in game
       { Car: carName },
-      'DegenCars'
+      'StacksDegensCars'
     );
     fs.writeFile(pathCarGenerated + carName + '.json', metadata, (err, result) => {
       if (err) console.log('error', err);
