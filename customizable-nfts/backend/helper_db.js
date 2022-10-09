@@ -219,14 +219,14 @@ export const dbInsertNFTINdex = async (collection, id, name, json_url, img_marke
     client.close();
   }
 };
-await dbInsertNFTINdex(
-  'stacksdegens',
-  24,
-  'Degen#24',
-  'ipfs:/bafkreia3yegwahw4w27cindmbz3wp5vbexdjyouttwjp5wiy75stqe67c4',
-  'ipfs://bafybeidzvpeh4pof7ty346f3bxvenpj6cqszrwt7s4gvzt2gudwrykqpsa',
-  'ipfs://bafkreifuzjosxtoq6o5oke7fiueo7kwznj2jov6imwd7kcpw2crjkhgyou'
-);
+// await dbInsertNFTINdex(
+//   'stacksdegens',
+//   24,
+//   'Degen#24',
+//   'ipfs:/bafkreia3yegwahw4w27cindmbz3wp5vbexdjyouttwjp5wiy75stqe67c4',
+//   'ipfs://bafybeidzvpeh4pof7ty346f3bxvenpj6cqszrwt7s4gvzt2gudwrykqpsa',
+//   'ipfs://bafkreifuzjosxtoq6o5oke7fiueo7kwznj2jov6imwd7kcpw2crjkhgyou'
+// );
 
 // await dbIncremendId(3);
 // console.log(operationType.assemble, await dbUpdateTxId(operationType.assembledsa, '1assemble132sda'));

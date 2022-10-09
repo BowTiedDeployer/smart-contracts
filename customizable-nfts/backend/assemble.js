@@ -2,7 +2,7 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { contracts, network, nodeUrl, operationType, wallets } from './consts.js';
 import { hashToPinataUrl, jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
-import { dbGetTxId, dbIncremendId, dbReadId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
+import { dbGetTxId, dbIncremendId, dbInsertNFTINdex, dbReadId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
 import { imgInGameContentCreate, imgProfileContentCreate } from './helper_files.js';
 import {
   jsonContentCreate,
@@ -203,6 +203,15 @@ const assembleServerFlow = async (operationLimit) => {
     setNrOperationsAvailable(getNrOperationsAvailable() - 1);
     setWalletStoredNonce(wallets.admin.name, availableNonce + 1);
     console.log(`Nonce Used: ${availableNonce}`);
+
+    await dbInsertNFTINdex(
+      'stacksdegens',
+      degenDbId,
+      `Degen${degenDbId}`,
+      degenJsonHash,
+      degenImgHash,
+      degenImgGameHash
+    );
     // increment id
     await dbIncremendId(degenDbId);
 

@@ -20,6 +20,7 @@ import {
   dbGetTxId,
   dbIncremendCurrentId,
   dbIncremendId,
+  dbInsertNFTINdex,
   dbReadId,
   dbUpdateLastDone,
   dbUpdateTxId,
@@ -31,6 +32,22 @@ import {
   setNrOperationsAvailable,
   setWalletStoredNonce,
 } from './variables.js';
+import {
+  background_img_marketplace_hash,
+  background_img_utility_hash,
+  background_json_url_hash,
+} from './hash-maps-components/backgorund-map.js';
+import { car_img_marketplace_hash, car_img_utility_hash, car_json_url_hash } from './hash-maps-components/car-map.js';
+import {
+  head_img_marketplace_hash,
+  head_img_utility_hash,
+  head_json_url_hash,
+} from './hash-maps-components/head-map.js';
+import {
+  rims_img_marketplace_hash,
+  rims_img_utility_hash,
+  rims_json_url_hash,
+} from './hash-maps-components/rims-map.js';
 
 dotenv.config();
 
@@ -117,10 +134,48 @@ const disassembleServerFlow = async (operationLimit) => {
     );
     setNrOperationsAvailable(getNrOperationsAvailable() - 1);
     setWalletStoredNonce(wallets.admin.name, getWalletStoredNonce(wallets.admin.name) + 1);
-    await dbIncremendId('background', await dbReadId('background'));
-    await dbIncremendId('car', await dbReadId('car'));
-    await dbIncremendId('head', await dbReadId('head'));
-    await dbIncremendId('rims', await dbReadId('rims'));
+    const backgroundId = await dbReadId('background');
+    const carId = await dbReadId('car');
+    const headId = await dbReadId('head');
+    const rimsId = await dbReadId('rims');
+    await dbInsertNFTINdex(
+      'background',
+      backgroundId,
+      attributes.Background,
+      background_json_url_hash[attributes.Background], // TODO: check if works as expected
+      background_img_marketplace_hash[attributes.Background],
+      background_img_utility_hash[attributes.Background]
+    );
+    await dbInsertNFTINdex(
+      'car',
+      carId,
+      attributes.Car,
+      car_json_url_hash[attributes.Car], // TODO:  check if works as expected
+      car_img_marketplace_hash[attributes.Car],
+      car_img_utility_hash[attributes.Car]
+    );
+    await dbInsertNFTINdex(
+      'head',
+      headId,
+      `${attributes.City}_${attributes.Head}_${attributes.Face}`,
+      head_json_url_hash[attributes.Head], // TODO: check if works as expected
+      head_img_marketplace_hash[attributes.Head],
+      head_img_utility_hash[attributes.Head]
+    );
+    await dbInsertNFTINdex(
+      'rims',
+      rimsId,
+      attributes.Rims,
+      rims_json_url_hash[attributes.Rims], // TODO: check if works as expected
+      rims_img_marketplace_hash[attributes.Rims],
+      rims_img_utility_hash[attributes.Rims]
+    );
+
+    await dbIncremendId('background', backgroundId);
+    await dbIncremendId('car', carId);
+    await dbIncremendId('head', headId);
+    await dbIncremendId('rims', rimsId);
+
     console.log('lastTxId', lastTxId);
 
     await dbUpdateTxId(operationType.disassemble, lastTxId);
