@@ -52,6 +52,7 @@ export const oldToNewComponentNames = {
       Purple: 'BentleyPurple',
       Midnight: 'BentleyMidnight',
       Blood: 'BentleyBlood',
+      'Purple-mist': 'BentleyPurple',
     },
     face: {
       Kaonashi: 'Kaonashi',
@@ -65,7 +66,7 @@ export const oldToNewComponentNames = {
       Vampire: 'Vampire',
     },
     head: {
-      Tomahwak: 'Tomahawk',
+      Tomahawk: 'Tomahawk',
       'Great-Hair': 'GreatHair',
       PUBG: 'PUBG',
       'Bitcoin-police': 'BitcoinPolice',

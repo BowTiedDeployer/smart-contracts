@@ -146,4 +146,4 @@ export const checkToStartFlowDisassemble = async () => {
 };
 
 // await disassembleServerFlow();
-// await checkToStartFlowDisassemble();
+await checkToStartFlowDisassemble();
