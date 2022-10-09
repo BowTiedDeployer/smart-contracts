@@ -1,4 +1,4 @@
-import cron from 'node-cron';
+//import cron from 'node-cron';
 import { checkToStartFlowAssemble } from './assemble.js';
 import { network, operationType, urlApis, wallets } from './consts.js';
 import { checkToStartFlowDisassemble } from './disassemble.js';
@@ -9,15 +9,16 @@ import { checkToStartFlowSwap } from './swap.js';
 import { getNrOperationsAvailable, setNrOperationsAvailable, setWalletStoredNonce } from './variables.js';
 
 const every_five_minutes = async () => {
-  const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
+  const transactionCount = await getMempoolTransactionCount(wallets.user[network]);
+  console.log(await transactionCount);
   setNrOperationsAvailable(getNrOperationsAvailable() - transactionCount);
   console.log('---Nr Operations Available: ' + getNrOperationsAvailable());
-  const blcokchainNextNonce = await getAccountNonce(wallets[wallets.admin.name][network]);
-  setWalletStoredNonce(wallets.admin.name, blcokchainNextNonce);
+  const blcokchainNextNonce = await getAccountNonce(wallets[wallets.user.name][network]);
+  setWalletStoredNonce(wallets.user.name, blcokchainNextNonce);
   const lastExecutedBlockId = await dbReadLastExecutedBlockId(); // TODO: test this
   const currentBlockId = await getBlockHeight();
+  console.log(await getBlockHeight, await dbReadLastExecutedBlockId());
   console.log(currentBlockId);
-  return;
   if (lastExecutedBlockId === currentBlockId) {
     console.log('same Block, wait for a new block to start');
     return;

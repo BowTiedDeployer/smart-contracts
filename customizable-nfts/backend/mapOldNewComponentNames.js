@@ -52,6 +52,7 @@ export const oldToNewComponentNames = {
       Purple: 'BentleyPurple',
       Midnight: 'BentleyMidnight',
       Blood: 'BentleyBlood',
+      'Purple-mist': 'BentleyPurple',
     },
     face: {
       Kaonashi: 'Kaonashi',

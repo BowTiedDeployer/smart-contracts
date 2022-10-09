@@ -23,20 +23,20 @@
 ;; eg. purple lambo car -> ipfs://dasd..
 (define-map name-url { name: (string-ascii 30)} { url: (string-ascii 256) })
 
-(map-set name-url  {name: "BentleyBlack"} {url: "ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/BentleyBlack.json"})
-(map-set name-url  {name: "BentleyBlood"} {url: "ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/BentleyBlood.json"})
-(map-set name-url  {name: "BentleyGold"} {url: "ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/BentleyGold.json"})
-(map-set name-url  {name: "BentleyGrey"} {url: "ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/BentleyGrey.json"})
-(map-set name-url  {name: "BentleyMidnight"} {url: "ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/BentleyMidnigh.json"})
-(map-set name-url  {name: "BentleyPurple"} {url: "ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/BentleyPurple.json"})
-(map-set name-url  {name: "BentleyWhite"} {url: "ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/BentleyWhite.json"})
-(map-set name-url  {name: "LamboBlue"} {url: "ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/LamboBlue.json"})
-(map-set name-url  {name: "LamboEmerald"} {url: "ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/LamboEmerald.json"})
-(map-set name-url  {name: "LamboGold"} {url: "ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/LamboGold.json"})
-(map-set name-url  {name: "LamboGrey"} {url: "ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/LamboGrey.json"})
-(map-set name-url  {name: "LamboPearlescent"} {url: "ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/LamboPearlescent.json"})
-(map-set name-url  {name: "LamboRed"} {url: "ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/LamboRed.json"})
-
+(map-set name-url  {name: "BentleyBlack"} {url: "ipfs://QmUeeP62n6izm2skUjr17RcVdr5b5PsTyGQwU8GMRg92ux/BentleyBlack.json"})
+(map-set name-url  {name: "BentleyBlood"} {url: "ipfs://QmUeeP62n6izm2skUjr17RcVdr5b5PsTyGQwU8GMRg92ux/BentleyBlood.json"})
+(map-set name-url  {name: "BentleyGold"} {url: "ipfs://QmUeeP62n6izm2skUjr17RcVdr5b5PsTyGQwU8GMRg92ux/BentleyGold.json"})
+(map-set name-url  {name: "BentleyGrey"} {url: "ipfs://QmUeeP62n6izm2skUjr17RcVdr5b5PsTyGQwU8GMRg92ux/BentleyGrey.json"})
+(map-set name-url  {name: "BentleyMidnight"} {url: "ipfs://QmUeeP62n6izm2skUjr17RcVdr5b5PsTyGQwU8GMRg92ux/BentleyMidnigh.json"})
+(map-set name-url  {name: "BentleyPurple"} {url: "ipfs://QmUeeP62n6izm2skUjr17RcVdr5b5PsTyGQwU8GMRg92ux/BentleyPurple.json"})
+(map-set name-url  {name: "BentleyWhite"} {url: "ipfs://QmUeeP62n6izm2skUjr17RcVdr5b5PsTyGQwU8GMRg92ux/BentleyWhite.json"})
+(map-set name-url  {name: "LamboBlue"} {url: "ipfs://QmUeeP62n6izm2skUjr17RcVdr5b5PsTyGQwU8GMRg92ux/LamboBlue.json"})
+(map-set name-url  {name: "LamboEmerald"} {url: "ipfs://QmUeeP62n6izm2skUjr17RcVdr5b5PsTyGQwU8GMRg92ux/LamboEmerald.json"})
+(map-set name-url  {name: "LamboGold"} {url: "ipfs://QmUeeP62n6izm2skUjr17RcVdr5b5PsTyGQwU8GMRg92ux/LamboGold.json"})
+(map-set name-url  {name: "LamboGrey"} {url: "ipfs://QmUeeP62n6izm2skUjr17RcVdr5b5PsTyGQwU8GMRg92ux/LamboGrey.json"})
+(map-set name-url  {name: "LamboPearlescent"} {url: "ipfs://QmUeeP62n6izm2skUjr17RcVdr5b5PsTyGQwU8GMRg92ux/LamboPearlescent.json"})
+(map-set name-url  {name: "LamboRed"} {url: "ipfs://QmUeeP62n6izm2skUjr17RcVdr5b5PsTyGQwU8GMRg92ux/LamboRed.json"})
+ 
 ;; Owner
 (define-data-var contract-owner principal tx-sender)
 

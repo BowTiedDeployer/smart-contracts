@@ -18,7 +18,7 @@ export const car_img_marketplace_hash = {
   BentleyBlood: 'ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/BentleyBlood.json',
   BentleyGold: 'ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/BentleyGold.json',
   BentleyGrey: 'ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/BentleyGrey.json',
-  BentleyMidnight: 'ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/BentleyMidnigh.json',
+  BentleyMidnight: 'ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/BentleyMidnight.json',
   BentleyPurple: 'ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/BentleyPurple.json',
   BentleyWhite: 'ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/BentleyWhite.json',
   LamboBlue: 'ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/LamboBlue.json',
