@@ -66,7 +66,7 @@ export const oldToNewComponentNames = {
       Vampire: 'Vampire',
     },
     head: {
-      Tomahwak: 'Tomahawk',
+      Tomahawk: 'Tomahawk',
       'Great-Hair': 'GreatHair',
       PUBG: 'PUBG',
       'Bitcoin-police': 'BitcoinPolice',

@@ -213,7 +213,7 @@ const assembleServerFlow = async (operationLimit) => {
       degenImgGameHash
     );
     // increment id
-    await dbIncremendId(degenDbId);
+    await dbIncremendId('degen', degenDbId);
 
     console.log('lastTxId', lastTxId);
     await dbUpdateTxId(operationType.assemble, lastTxId);

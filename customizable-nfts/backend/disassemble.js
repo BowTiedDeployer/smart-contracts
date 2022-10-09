@@ -179,7 +179,7 @@ const disassembleServerFlow = async (operationLimit) => {
     console.log('lastTxId', lastTxId);
 
     await dbUpdateTxId(operationType.disassemble, lastTxId);
-    // await dbIncremendId(degenDbId);
+    // await dbIncremendId('degen', degenDbId);
 
     // console.log('lastTxId', lastTxId);
     // await dbUpdateTxId(operationType.assemble, lastTxId);

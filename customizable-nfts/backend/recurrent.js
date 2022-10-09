@@ -15,7 +15,7 @@ const every_five_minutes = async () => {
   console.log('---Nr Operations Available: ' + getNrOperationsAvailable());
   const blcokchainNextNonce = await getAccountNonce(wallets[wallets.user.name][network]);
   setWalletStoredNonce(wallets.user.name, blcokchainNextNonce);
-  const lastExecutedBlockId = await dbReadLastExecutedBlockId(); // TODO: test this
+  const lastExecutedBlockId = await dbReadLastExecutedBlockId();
   const currentBlockId = await getBlockHeight();
   console.log(await getBlockHeight, await dbReadLastExecutedBlockId());
   console.log(currentBlockId);
@@ -26,7 +26,7 @@ const every_five_minutes = async () => {
     console.log('ERROR: last executed block > current block');
     return;
   }
-  dbUpdateLastExecutedBlockId(lastExecutedBlockId, currentBlockId);
+  await dbUpdateLastExecutedBlockId(lastExecutedBlockId, currentBlockId);
   let operationLimit = 4;
   while (operationLimit > 0 && getNrOperationsAvailable() > 0) {
     let lastOperation = await dbReadLastDone();

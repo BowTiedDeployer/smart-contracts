@@ -15,7 +15,7 @@ export const dbReadCurrentId = async () => {
   } catch (err) {
     console.error(err);
   } finally {
-    client.close();
+    await client.close();
   }
 };
 // console.log(await dbReadCurrentId());
@@ -25,11 +25,10 @@ export const dbIncremendCurrentId = async (currId) => {
     await client.connect();
     const currentIdDb = client.db().collection(customizableNFTInfo);
     await currentIdDb.updateOne({ currentId: currId }, { $set: { currentId: currId + 1 } });
-    client.close();
   } catch (err) {
     console.error(err);
   } finally {
-    client.close();
+    await client.close();
   }
 };
 // await dbIncremendId(await dbReadCurrentId());
@@ -42,7 +41,7 @@ export const dbReadId = async (component) => {
   } catch (err) {
     console.error(err);
   } finally {
-    client.close();
+    await client.close();
   }
 };
 // console.log(await dbReadId('head'));
@@ -52,11 +51,10 @@ export const dbIncremendId = async (component, currentId) => {
     await client.connect();
     const currentIdDb = client.db().collection(customizableNFTInfo);
     await currentIdDb.updateOne({ [`${component}Id`]: currentId }, { $set: { [`${component}Id`]: currentId + 1 } });
-    client.close();
   } catch (err) {
     console.error(err);
   } finally {
-    client.close();
+    await client.close();
   }
 };
 // await dbIncremendId('head', await dbReadId('head'));
@@ -69,7 +67,7 @@ export const dbReadLastExecutedBlockId = async () => {
   } catch (err) {
     console.error(err);
   } finally {
-    client.close();
+    await client.close();
   }
 };
 // console.log(await dbReadLastExecutedBlockId());
@@ -82,11 +80,10 @@ export const dbUpdateLastExecutedBlockId = async (currentLastExecuted, updatedLa
       { lastExecutedBlockId: currentLastExecuted },
       { $set: { lastExecutedBlockId: updatedLastExecuted } }
     );
-    client.close();
   } catch (err) {
     console.error(err);
   } finally {
-    client.close();
+    await client.close();
   }
 };
 // await dbUpdateLastExecutedBlockId(await dbReadLastExecutedBlockId(), 232);
@@ -115,7 +112,7 @@ export const dbGetTxId = async (operation) => {
   } catch (err) {
     console.error(err);
   } finally {
-    client.close();
+    await client.close();
   }
 };
 // console.log(await dbGetTxId('merge'));
@@ -145,7 +142,7 @@ export const dbUpdateTxId = async (operation, txId) => {
   } catch (err) {
     console.error(err);
   } finally {
-    client.close();
+    await client.close();
   }
 };
 // await dbUpdateTxId('merge', '3122311');
@@ -158,7 +155,7 @@ export const dbReadLastDone = async () => {
   } catch (err) {
     console.error(err);
   } finally {
-    client.close();
+    await client.close();
   }
 };
 // console.log(await dbReadLastDone());
@@ -194,14 +191,13 @@ export const dbUpdateLastDone = async (nowDone) => {
         console.error(`invalid operation ${nowDone}`);
         return null;
     }
-
     if (matchedCount === 0) {
       console.error(`cannot update to ${nowDone}`);
     }
   } catch (err) {
     console.error(err);
   } finally {
-    client.close();
+    await client.close();
   }
 };
 // await dbUpdateLastDone('swap');
@@ -212,11 +208,10 @@ export const dbInsertNFTINdex = async (collection, id, name, json_url, img_marke
     await client.connect();
     const currentIdDb = client.db().collection(NFTIndex);
     await currentIdDb.insertOne({ collection, id, name, json_url, img_marketplace, img_utility });
-    client.close();
   } catch (err) {
     console.error(err);
   } finally {
-    client.close();
+    await client.close();
   }
 };
 // await dbInsertNFTINdex(

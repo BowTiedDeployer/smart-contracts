@@ -13,7 +13,7 @@ import { jsonResponseToTokenUri, replaceTokenCurrentId, pinataToHTTPUrl, hashToP
 import { oldToNewComponentNames } from './mapOldNewComponentNames.js';
 import { imgInGameContentCreate, imgProfileContentCreate } from './helper_files.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
-import { dbGetTxId, dbIncremendId, dbReadId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
+import { dbGetTxId, dbIncremendId, dbInsertNFTINdex, dbReadId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
 import {
   getNrOperationsAvailable,
   getWalletStoredNonce,
@@ -94,6 +94,7 @@ const mergeServerFlow = async (operationLimit) => {
       contractType == 'miami'
         ? oldToNewComponentNames[contractType].car[attributesDegen.Car]
         : oldToNewComponentNames[contractType].car[attributesDegen.Colors];
+    console.log(attributesDegen);
     const headPartialNewName = oldToNewComponentNames[contractType].head[attributesDegen.Head];
     const facePartialNewName = oldToNewComponentNames[contractType].face[attributesDegen.Face];
     const rimsNewName = oldToNewComponentNames[contractType].rims[attributesDegen.Rims];
@@ -151,6 +152,7 @@ const mergeServerFlow = async (operationLimit) => {
 
     const backgroundJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlBackgroundJSON)));
     const carJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlCarJSON)));
+    // console.log('urlRimsJSON', urlRimsJSON);
     const rimsJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlRimsJSON)));
     const headJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlHeadJSON)));
 
@@ -212,8 +214,16 @@ const mergeServerFlow = async (operationLimit) => {
     );
     setNrOperationsAvailable(getNrOperationsAvailable() - 1);
     setWalletStoredNonce(wallets.admin.name, getWalletStoredNonce(wallets.admin.name) + 1);
-    await dbIncremendId(degenDbId);
+    await dbIncremendId('degen', degenDbId);
     await dbUpdateTxId(operationType.merge, lastTxId);
+    await dbInsertNFTINdex(
+      'stacksdegens',
+      tuple.degenId,
+      `Degen${tuple.degenId}`,
+      degenJsonHash,
+      degenImgHash,
+      degenImgGameHash
+    );
   }
 };
 

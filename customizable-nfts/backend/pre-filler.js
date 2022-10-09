@@ -922,7 +922,7 @@ const prefillAddToQueueThingsOut = async () => {
   }
 };
 
-//prefillMintThingsOut();
+// prefillMintThingsOut();
 prefillAddToQueueThingsOut();
 
 // await prefillWalletNFTs(wallets.wallet3.name);
