@@ -1,33 +1,29 @@
 import { MongoClient } from 'mongodb';
 import { network, operationType } from './consts.js';
-const uri =
-  'mongodb+srv://CustomizableUser:CustomizablePass@customizablenftscluster.fo7cge1.mongodb.net/CustomizableDB?retryWrites=true&w=majority';
-
-const collectionId = {
-  mainnnet: 'Mainnet',
-  testnet: 'Testnet',
-  mocknet: 'Devnet',
-};
+// const uri = process.env.DB_CONNECTION;
+// 'mongodb+srv://CustomizableUser:CustomizablePass@customizablenftscluster.fo7cge1.mongodb.net/CustomizableDB?retryWrites=true&w=majority';
+const uri = 'mongodb+srv://Radone:Radone@learningcluster.8d0t2ys.mongodb.net/_devnet?retryWrites=true&w=majority';
+const customizableNFTInfo = 'CustomizableNFTInfo';
+const NFTIndex = 'NFTIndex';
 
 const client = new MongoClient(uri);
 
 export const dbReadCurrentId = async () => {
   try {
     await client.connect();
-    return (await client.db().collection(collectionId[network]).findOne())?.currentId;
+    return (await client.db().collection(customizableNFTInfo).findOne())?.currentId;
   } catch (err) {
     console.error(err);
   } finally {
     client.close();
   }
 };
-
 // console.log(await dbReadCurrentId());
 
-export const dbIncremendId = async (currId) => {
+export const dbIncremendCurrentId = async (currId) => {
   try {
     await client.connect();
-    const currentIdDb = client.db().collection(collectionId[network]);
+    const currentIdDb = client.db().collection(customizableNFTInfo);
     await currentIdDb.updateOne({ currentId: currId }, { $set: { currentId: currId + 1 } });
     client.close();
   } catch (err) {
@@ -36,24 +32,52 @@ export const dbIncremendId = async (currId) => {
     client.close();
   }
 };
+// await dbIncremendId(await dbReadCurrentId());
+// console.log(await dbReadCurrentId());
 
-export const dbReadLastExecutedBlockId = async () => {
+export const dbReadId = async (component) => {
   try {
     await client.connect();
-    return (await client.db().collection(collectionId[network]).findOne())?.lastExecutedBlockId;
+    return (await client.db().collection(customizableNFTInfo).findOne())?.[`${component}Id`];
   } catch (err) {
     console.error(err);
   } finally {
     client.close();
   }
 };
+// console.log(await dbReadId('head'));
 
-// console.log(await dbReadCurrentId());
+export const dbIncremendId = async (component, currentId) => {
+  try {
+    await client.connect();
+    const currentIdDb = client.db().collection(customizableNFTInfo);
+    await currentIdDb.updateOne({ [`${component}Id`]: currentId }, { $set: { [`${component}Id`]: currentId + 1 } });
+    client.close();
+  } catch (err) {
+    console.error(err);
+  } finally {
+    client.close();
+  }
+};
+// await dbIncremendId('head', await dbReadId('head'));
+// console.log(await dbReadId('head'));
+
+export const dbReadLastExecutedBlockId = async () => {
+  try {
+    await client.connect();
+    return (await client.db().collection(customizableNFTInfo).findOne())?.lastExecutedBlockId;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    client.close();
+  }
+};
+// console.log(await dbReadLastExecutedBlockId());
 
 export const dbUpdateLastExecutedBlockId = async (currentLastExecuted, updatedLastExecuted) => {
   try {
     await client.connect();
-    const lastExecutedBlockIdDb = client.db().collection(collectionId[network]);
+    const lastExecutedBlockIdDb = client.db().collection(customizableNFTInfo);
     await lastExecutedBlockIdDb.updateOne(
       { lastExecutedBlockId: currentLastExecuted },
       { $set: { lastExecutedBlockId: updatedLastExecuted } }
@@ -65,11 +89,13 @@ export const dbUpdateLastExecutedBlockId = async (currentLastExecuted, updatedLa
     client.close();
   }
 };
+// await dbUpdateLastExecutedBlockId(await dbReadLastExecutedBlockId(), 232);
+// console.log(await dbReadLastExecutedBlockId());
 
 export const dbGetTxId = async (operation) => {
   try {
     await client.connect();
-    const result = await client.db().collection(collectionId[network]).findOne();
+    const result = await client.db().collection(customizableNFTInfo).findOne();
     switch (operation) {
       case operationType.merge:
         return result?.mergeTxId;
@@ -92,11 +118,12 @@ export const dbGetTxId = async (operation) => {
     client.close();
   }
 };
+// console.log(await dbGetTxId('merge'));
 
 export const dbUpdateTxId = async (operation, txId) => {
   try {
     await client.connect();
-    const currentIdDb = client.db().collection(collectionId[network]);
+    const currentIdDb = client.db().collection(customizableNFTInfo);
     switch (operation) {
       case operationType.merge:
         await currentIdDb.updateOne({}, { $set: { mergeTxId: txId } });
@@ -121,22 +148,25 @@ export const dbUpdateTxId = async (operation, txId) => {
     client.close();
   }
 };
+// await dbUpdateTxId('merge', '3122311');
+// console.log(await dbGetTxId('merge'));
 
 export const dbReadLastDone = async () => {
   try {
     await client.connect();
-    return (await client.db().collection(collectionId[network]).findOne())?.lastDone;
+    return (await client.db().collection(customizableNFTInfo).findOne())?.lastDone;
   } catch (err) {
     console.error(err);
   } finally {
     client.close();
   }
 };
+// console.log(await dbReadLastDone());
 
 export const dbUpdateLastDone = async (nowDone) => {
   try {
     await client.connect();
-    const currentIdDb = client.db().collection(collectionId[network]);
+    const currentIdDb = client.db().collection(customizableNFTInfo);
     // await currentIdDb.updateOne({}, { $set: { lastDone: nowDone } });
 
     let matchedCount = 0;
@@ -174,6 +204,29 @@ export const dbUpdateLastDone = async (nowDone) => {
     client.close();
   }
 };
+// await dbUpdateLastDone('swap');
+// console.log(await dbReadLastDone());
+
+export const dbInsertNFTINdex = async (collection, id, name, json_url, img_marketplace, img_utility) => {
+  try {
+    await client.connect();
+    const currentIdDb = client.db().collection(NFTIndex);
+    await currentIdDb.insertOne({ collection, id, name, json_url, img_marketplace, img_utility });
+    client.close();
+  } catch (err) {
+    console.error(err);
+  } finally {
+    client.close();
+  }
+};
+await dbInsertNFTINdex(
+  'stacksdegens',
+  24,
+  'Degen#24',
+  'ipfs:/bafkreia3yegwahw4w27cindmbz3wp5vbexdjyouttwjp5wiy75stqe67c4',
+  'ipfs://bafybeidzvpeh4pof7ty346f3bxvenpj6cqszrwt7s4gvzt2gudwrykqpsa',
+  'ipfs://bafkreifuzjosxtoq6o5oke7fiueo7kwznj2jov6imwd7kcpw2crjkhgyou'
+);
 
 // await dbIncremendId(3);
 // console.log(operationType.assemble, await dbUpdateTxId(operationType.assembledsa, '1assemble132sda'));

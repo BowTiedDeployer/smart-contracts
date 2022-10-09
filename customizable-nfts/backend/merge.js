@@ -13,7 +13,7 @@ import { jsonResponseToTokenUri, replaceTokenCurrentId, pinataToHTTPUrl, hashToP
 import { oldToNewComponentNames } from './mapOldNewComponentNames.js';
 import { imgInGameContentCreate, imgProfileContentCreate } from './helper_files.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
-import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
+import { dbGetTxId, dbIncremendId, dbReadId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
 import {
   getNrOperationsAvailable,
   getWalletStoredNonce,
@@ -173,12 +173,12 @@ const mergeServerFlow = async (operationLimit) => {
       pinataToHTTPUrl(urlImgComponentHead)
     );
 
-    let currentDbId = await dbReadCurrentId();
+    let degenDbId = await dbReadId('degen');
 
-    const degenName = `BadDegen#${currentDbId}`;
-    const degenImgName = `BadImgDegen#${currentDbId}`;
-    const degenImgGameName = `BadImgGameDegen#${currentDbId}`;
-    const degenJsonName = `BadJsonDegen#${currentDbId}`;
+    const degenName = `BadDegen#${degenDbId}`;
+    const degenImgName = `BadImgDegen#${degenDbId}`;
+    const degenImgGameName = `BadImgGameDegen#${degenDbId}`;
+    const degenJsonName = `BadJsonDegen#${degenDbId}`;
 
     attributes = { ...attributeBackground, ...attributeCar, ...attributeHead, ...attributeRims };
     attributes = { ...attributesDegen, Type: attributes.Race };
@@ -212,7 +212,7 @@ const mergeServerFlow = async (operationLimit) => {
     );
     setNrOperationsAvailable(getNrOperationsAvailable() - 1);
     setWalletStoredNonce(wallets.admin.name, getWalletStoredNonce(wallets.admin.name) + 1);
-    await dbIncremendId(currentDbId);
+    await dbIncremendId(degenDbId);
     await dbUpdateTxId(operationType.merge, lastTxId);
   }
 };

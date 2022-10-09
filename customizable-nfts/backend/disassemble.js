@@ -16,7 +16,14 @@ import { readOnlySCJsonResponse, callSCFunction, chainGetTxIdStatus, sleep, getT
 import dotenv from 'dotenv';
 import { pinataToHTTPUrl } from './converters.js';
 import { fetchJsonFromUrl, getAttributesMapTraitValue } from './helper_json.js';
-import { dbGetTxId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
+import {
+  dbGetTxId,
+  dbIncremendCurrentId,
+  dbIncremendId,
+  dbReadId,
+  dbUpdateLastDone,
+  dbUpdateTxId,
+} from './helper_db.js';
 import {
   getNrOperationsAvailable,
   getWalletStoredNonce,
@@ -110,9 +117,17 @@ const disassembleServerFlow = async (operationLimit) => {
     );
     setNrOperationsAvailable(getNrOperationsAvailable() - 1);
     setWalletStoredNonce(wallets.admin.name, getWalletStoredNonce(wallets.admin.name) + 1);
+    await dbIncremendId('background', await dbReadId('background'));
+    await dbIncremendId('car', await dbReadId('car'));
+    await dbIncremendId('head', await dbReadId('head'));
+    await dbIncremendId('rims', await dbReadId('rims'));
     console.log('lastTxId', lastTxId);
 
     await dbUpdateTxId(operationType.disassemble, lastTxId);
+    // await dbIncremendId(degenDbId);
+
+    // console.log('lastTxId', lastTxId);
+    // await dbUpdateTxId(operationType.assemble, lastTxId);
   }
 };
 

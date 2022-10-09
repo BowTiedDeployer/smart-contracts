@@ -2,7 +2,7 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { componentType, contracts, network, nodeUrl, operationType, wallets } from './consts.js';
 import { hashToPinataUrl, jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
-import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
+import { dbGetTxId, dbIncremendId, dbReadId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
 import { imgInGameContentCreate, imgProfileContentCreate } from './helper_files.js';
 import {
   jsonContentCreate,
@@ -203,11 +203,11 @@ const swapServerFlow = async (operationLimit) => {
     const urlImgComponentRims = getImgComponentUrlFromJson(jsonRims);
     // console.log('urlImgRims', urlImgRims);
 
-    const currentDbId = await dbReadCurrentId();
-    const degenName = `BadDegen#${currentDbId}`;
-    const degenImgName = `BadImgDegen#${currentDbId}`;
-    const degenImgGameName = `BadImgGameDegen#${currentDbId}`;
-    const degenJsonName = `BadJsonDegen#${currentDbId}`;
+    const degenDbId = await dbReadId('degen');
+    const degenName = `BadDegen#${degenDbId}`;
+    const degenImgName = `BadImgDegen#${degenDbId}`;
+    const degenImgGameName = `BadImgGameDegen#${degenDbId}`;
+    const degenJsonName = `BadJsonDegen#${degenDbId}`;
 
     // create image from component img urls (background_url, rims_url, car_url, head_url)
     const degenImg = await imgProfileContentCreate(
@@ -252,7 +252,9 @@ const swapServerFlow = async (operationLimit) => {
     setNrOperationsAvailable(getNrOperationsAvailable() - 1);
     setWalletStoredNonce(getWalletStoredNonce(wallets.admin.name) + 1);
     // increment id
-    await dbIncremendId(currentDbId);
+    await dbIncremendId('degen', degenDbId);
+
+    await dbIncremendId(tuple.componentType, await dbReadId(tuple.componentType));
 
     console.log('lastTxId', lastTxId);
     await dbUpdateTxId(operationType.swap, lastTxId);
