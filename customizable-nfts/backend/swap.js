@@ -318,6 +318,14 @@ const swapServerFlow = async (operationLimit) => {
 
     console.log('lastTxId', lastTxId);
     await dbUpdateTxId(operationType.swap, lastTxId);
+    await dbInsertNFTINdex(
+      'stacksdegens',
+      degenDbId,
+      `Degen${degenDbId}`,
+      degenJsonHash,
+      degenImgHash,
+      degenImgGameHash
+    );
   }
 };
 

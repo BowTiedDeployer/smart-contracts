@@ -152,7 +152,7 @@ const mergeServerFlow = async (operationLimit) => {
 
     const backgroundJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlBackgroundJSON)));
     const carJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlCarJSON)));
-    // console.log('urlRimsJSON', urlRimsJSON);
+    console.log('urlRimsJSON', urlRimsJSON);
     const rimsJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlRimsJSON)));
     const headJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlHeadJSON)));
 
@@ -183,7 +183,7 @@ const mergeServerFlow = async (operationLimit) => {
     const degenJsonName = `BadJsonDegen#${degenDbId}`;
 
     attributes = { ...attributeBackground, ...attributeCar, ...attributeHead, ...attributeRims };
-    attributes = { ...attributesDegen, Type: attributes.Race };
+    attributes = { ...attributes, Type: attributes.Race };
     const { Race, ...otherAttributes } = attributes;
     attributes = otherAttributes;
 
@@ -218,8 +218,8 @@ const mergeServerFlow = async (operationLimit) => {
     await dbUpdateTxId(operationType.merge, lastTxId);
     await dbInsertNFTINdex(
       'stacksdegens',
-      tuple.degenId,
-      `Degen${tuple.degenId}`,
+      degenDbId,
+      `Degen${degenDbId}`,
       degenJsonHash,
       degenImgHash,
       degenImgGameHash

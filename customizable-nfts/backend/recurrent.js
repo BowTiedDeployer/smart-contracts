@@ -28,7 +28,8 @@ const every_five_minutes = async () => {
   }
   await dbUpdateLastExecutedBlockId(lastExecutedBlockId, currentBlockId);
   let operationLimit = 4;
-  while (operationLimit > 0 && getNrOperationsAvailable() > 0) {
+  let nrOperationsAvailable = getNrOperationsAvailable();
+  while (operationLimit > 0 && nrOperationsAvailable > 0) {
     let lastOperation = await dbReadLastDone();
     console.log('lastOperation: ', lastOperation);
 
@@ -57,6 +58,7 @@ const every_five_minutes = async () => {
         console.error(`invalid`);
         return null;
     }
+    nrOperationsAvailable = getNrOperationsAvailable();
   }
 };
 every_five_minutes();

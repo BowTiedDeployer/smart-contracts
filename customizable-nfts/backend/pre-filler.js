@@ -721,7 +721,7 @@ const verifyOrderPrefill5Txs1Acc = async () => {
   degenIndex += swapNr;
   // ASSEMBLE
   //
-  // await sleep(10000);
+  await sleep(10000);
   console.log(`Starting Assemble 1 with componentIndex: ${componentIndex}`);
   await prefillNAssemble(componentSet1, componentIndex, n, wallets.user.name); // /4 + 1
   componentIndex += n;
@@ -770,49 +770,51 @@ const prefillMintThingsOut = async () => {
   instantiateAllAccountsNonce();
   // max 25 tx per block, else server call throws error
 
-  // // SWAP
-  // //
-  // const swapNr = 4;
-  // await mintNDegens(degenUrlsSwap, swapNr, wallets.user.name);
-  // await mintNComponentSets(componentSet2, swapNr / 4, wallets.user.name);
-  // componentIndex += swapNr / 4;
-  // degenIndex += swapNr;
-  // for (let i = 2; i <= 21; i++) {
-  //   console.log(`Starting Mint for Swap ${i} with degenIndex: ${degenIndex} and componentIndex: ${componentIndex}`);
-  //   await sleep(11000);
-  //   await mintNDegens(degenUrlsSwap, swapNr, wallets[`wallet${i}`].name);
-  //   await mintNComponentSets(componentSet2, swapNr / 4, wallets[`wallet${i}`].name);
-  //   componentIndex += swapNr / 4;
-  //   degenIndex += swapNr;
-  // }
+  // SWAP
+  //
+  const swapNr = 4;
+  await mintNDegens(degenUrlsSwap, swapNr, wallets.user.name);
+  await mintNComponentSets(componentSet2, swapNr / 4, wallets.user.name);
+  componentIndex += swapNr / 4;
+  degenIndex += swapNr;
+  for (let i = 2; i <= 3; i++) {
+    console.log(`Starting Mint for Swap ${i} with degenIndex: ${degenIndex} and componentIndex: ${componentIndex}`);
+    await sleep(15000);
+    await mintNDegens(degenUrlsSwap, swapNr, wallets[`wallet${i}`].name);
+    await mintNComponentSets(componentSet2, swapNr / 4, wallets[`wallet${i}`].name);
+    componentIndex += swapNr / 4;
+    degenIndex += swapNr;
+  }
 
-  // // ASSEMBLE
+  // ASSEMBLE
+  //componentIndex += 3;
 
-  // await sleep(15000);
-  // console.log('\n\nASSSSEMBLEE\n\n');
-  // console.log(`Starting Mint for Assemble 1 with componentIndex: ${componentIndex}`);
-  // await mintNComponentSets(componentSet1, n, wallets.user.name);
-  // componentIndex += n;
-  // for (let i = 2; i <= 6; i++) {
-  //   console.log(`Starting Mint for Assemble ${i} with componentIndex: ${componentIndex}`);
-  //   await sleep(15000);
-  //   await mintNComponentSets(componentSet1, n, wallets[`wallet${i}`].name);
-  //   componentIndex += n;
-  // }
-  // console.log('//\n//\n// before n assemble');
+  await sleep(15000);
+  console.log('\n\nASSSSEMBLEE\n\n');
+  console.log(`Starting Mint for Assemble 1 with componentIndex: ${componentIndex}`);
+  await mintNComponentSets(componentSet1, n, wallets.user.name);
+  componentIndex += n;
+  for (let i = 2; i <= 6; i++) {
+    console.log(`Starting Mint for Assemble ${i} with componentIndex: ${componentIndex}`);
+    await sleep(15000);
+    await mintNComponentSets(componentSet1, n, wallets[`wallet${i}`].name);
+    componentIndex += n;
+  }
+  console.log('//\n//\n// before n assemble');
 
-  // // DISASSEMBLE
-  // //
-  // console.log(`Starting Disassemble 1 with degenIndex: ${degenIndex}`);
-  // await sleep(11000);
-  // await mintNDegens(degenUrlsDisassemble, n, wallets.user.name);
-  // degenIndex += n;
-  // for (let i = 2; i <= 6; i++) {
-  //   console.log(`Starting Disassemble ${i} with degenIndex: ${degenIndex}`);
-  //   await sleep(11000);
-  //   await mintNDegens(degenUrlsDisassemble, n, wallets[`wallet${i}`].name);
-  //   degenIndex += n;
-  // }
+  // DISASSEMBLE
+  //
+  //degenIndex += 12;
+  console.log(`Starting Disassemble 1 with degenIndex: ${degenIndex}`);
+  await sleep(11000);
+  await mintNDegens(degenUrlsDisassemble, n, wallets.user.name);
+  degenIndex += n;
+  for (let i = 2; i <= 6; i++) {
+    console.log(`Starting Disassemble ${i} with degenIndex: ${degenIndex}`);
+    await sleep(11000);
+    await mintNDegens(degenUrlsDisassemble, n, wallets[`wallet${i}`].name);
+    degenIndex += n;
+  }
 
   // MERGE
   //
@@ -840,76 +842,75 @@ const prefillAddToQueueThingsOut = async () => {
 
   // max 25 tx per block, else server call throws error
   instantiateAllAccountsNonce();
-  // // SWAP
+  // SWAP
 
-  // const swapNr = 4;
-  // for (let i = 1; i <= swapNr / 4; i++) {
-  //   // await checkNonceUpdate();
-  //   await addSwapToQueue(degenIndex, componentIndex, 'background-type', wallets.user.name);
-  //   degenIndex += 1;
-  //   // await checkNonceUpdate();
-  //   await addSwapToQueue(degenIndex, componentIndex, 'car-type', wallets.user.name);
-  //   degenIndex += 1;
-  //   // await checkNonceUpdate();
-  //   await addSwapToQueue(degenIndex, componentIndex, 'rim-type', wallets.user.name);
-  //   degenIndex += 1;
-  //   // await checkNonceUpdate();
-  //   await addSwapToQueue(degenIndex, componentIndex, 'head-type', wallets.user.name);
-  //   degenIndex += 1;
-  //   componentIndex += 1;
-  //   await sleep(3000);
-  // }
-  // for (let i = 2; i <= 21; i++) {
-  //   console.log(`Starting Swap ${i} with degenIndex: ${degenIndex} and componentIndex: ${componentIndex}`);
-  //   for (let j = 1; j <= swapNr / 4; j++) {
-  //     // await checkNonceUpdate();
-  //     await addSwapToQueue(degenIndex, componentIndex, 'background-type', wallets[`wallet${i}`].name);
-  //     degenIndex += 1;
-  //     // await checkNonceUpdate();
-  //     await addSwapToQueue(degenIndex, componentIndex, 'car-type', wallets[`wallet${i}`].name);
-  //     degenIndex += 1;
-  //     // await checkNonceUpdate();
-  //     await addSwapToQueue(degenIndex, componentIndex, 'rim-type', wallets[`wallet${i}`].name);
-  //     degenIndex += 1;
-  //     // await checkNonceUpdate();
-  //     await addSwapToQueue(degenIndex, componentIndex, 'head-type', wallets[`wallet${i}`].name);
-  //     degenIndex += 1;
-  //     componentIndex += 1;
-  //     await sleep(3000);
-  //   }
-  // }
-  // // ASSEMBLE
+  const swapNr = 4;
+  for (let i = 1; i <= swapNr / 4; i++) {
+    // await checkNonceUpdate();
+    await addSwapToQueue(degenIndex, componentIndex, 'background-type', wallets.user.name);
+    degenIndex += 1;
+    // await checkNonceUpdate();
+    await addSwapToQueue(degenIndex, componentIndex, 'car-type', wallets.user.name);
+    degenIndex += 1;
+    // await checkNonceUpdate();
+    await addSwapToQueue(degenIndex, componentIndex, 'rim-type', wallets.user.name);
+    degenIndex += 1;
+    // await checkNonceUpdate();
+    await addSwapToQueue(degenIndex, componentIndex, 'head-type', wallets.user.name);
+    degenIndex += 1;
+    componentIndex += 1;
+    await sleep(4000);
+  }
+  for (let i = 2; i <= 3; i++) {
+    console.log(`Starting Swap ${i} with degenIndex: ${degenIndex} and componentIndex: ${componentIndex}`);
+    for (let j = 1; j <= swapNr / 4; j++) {
+      // await checkNonceUpdate();
+      await addSwapToQueue(degenIndex, componentIndex, 'background-type', wallets[`wallet${i}`].name);
+      degenIndex += 1;
+      // await checkNonceUpdate();
+      await addSwapToQueue(degenIndex, componentIndex, 'car-type', wallets[`wallet${i}`].name);
+      degenIndex += 1;
+      // await checkNonceUpdate();
+      await addSwapToQueue(degenIndex, componentIndex, 'rim-type', wallets[`wallet${i}`].name);
+      degenIndex += 1;
+      // await checkNonceUpdate();
+      await addSwapToQueue(degenIndex, componentIndex, 'head-type', wallets[`wallet${i}`].name);
+      degenIndex += 1;
+      componentIndex += 1;
+      await sleep(4000);
+    }
+  }
+  // ASSEMBLE
 
-  // await sleep(15000);
-  // console.log('nassemble');
-  // await addNAssembleToQueue(componentIndex, n, wallets.user.name);
-  // componentIndex += n;
-  // for (let i = 2; i <= 6; i++) {
-  //   console.log(`Starting Queue for Assemble ${i} with componentIndex: ${componentIndex}`);
-  //   await sleep(15000);
-  //   await addNAssembleToQueue(componentIndex, n, wallets[`wallet${i}`].name);
-  //   componentIndex += n;
-  // }
+  await sleep(15000);
+  console.log('nassemble');
+  await addNAssembleToQueue(componentIndex, n, wallets.user.name);
+  componentIndex += n;
+  for (let i = 2; i <= 6; i++) {
+    console.log(`Starting Queue for Assemble ${i} with componentIndex: ${componentIndex}`);
+    await sleep(15000);
+    await addNAssembleToQueue(componentIndex, n, wallets[`wallet${i}`].name);
+    componentIndex += n;
+  }
   // when tested Swap + Assemble + Disassemble stopped at ASSEMBLE componentIndex 43 && NO MEMPOOL
   // addNAssembleToQueue;
   // DISASSEMBLE
 
-  // console.log(`Starting Disassemble 1 with degenIndex: ${degenIndex}`);
-  // await sleep(11000);
-  // await addNDisassembleToQueue(degenIndex, n, wallets.user.name);
-  // degenIndex += n;
-  // for (let i = 2; i <= 6; i++) {
-  //   console.log(`Starting Disassemble ${i} with degenIndex: ${degenIndex}`);
-  //   await sleep(10000);
-  //   await addNDisassembleToQueue(degenIndex, n, wallets[`wallet${i}`].name);
-  //   degenIndex += n;
-  // }
-  //
+  console.log(`Starting Disassemble 1 with degenIndex: ${degenIndex}`);
+  await sleep(11000);
+  await addNDisassembleToQueue(degenIndex, n, wallets.user.name);
+  degenIndex += n;
+  for (let i = 2; i <= 6; i++) {
+    console.log(`Starting Disassemble ${i} with degenIndex: ${degenIndex}`);
+    await sleep(10000);
+    await addNDisassembleToQueue(degenIndex, n, wallets[`wallet${i}`].name);
+    degenIndex += n;
+  }
 
   // MERGE
   //
+  degenIndex = 1;
   await sleep(11000);
-
   await addNMergeToQueue(degenIndex, 2, 'miami', wallets.user.name);
   await addNMergeToQueue(degenIndex, 2, 'nyc', wallets.user.name);
   degenIndex += 2;
@@ -922,7 +923,7 @@ const prefillAddToQueueThingsOut = async () => {
   }
 };
 
-// prefillMintThingsOut();
+//prefillMintThingsOut();
 prefillAddToQueueThingsOut();
 
 // await prefillWalletNFTs(wallets.wallet3.name);
