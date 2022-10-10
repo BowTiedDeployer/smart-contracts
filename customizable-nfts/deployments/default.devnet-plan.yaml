@@ -33,10 +33,10 @@ plan:
             path: "contracts\\nyc-degens.clar"
             anchor-block-only: true
         - contract-publish:
-            contract-name: miami-degens
+            contract-name: backgrounds
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 50130
-            path: "contracts\\miami-degens.clar"
+            cost: 49800
+            path: "contracts\\backgrounds.clar"
             anchor-block-only: true
         - contract-publish:
             contract-name: heads
@@ -49,6 +49,18 @@ plan:
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 49800
             path: "contracts\\backgrounds.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: degens
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 27390
+            path: "contracts\\degens.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: cars
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 55150
+            path: "contracts\\cars.clar"
             anchor-block-only: true
         - contract-publish:
             contract-name: degens

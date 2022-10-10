@@ -224,7 +224,6 @@ const swapServerFlow = async (operationLimit) => {
     const degenImgName = `BadImgDegen#${degenDbId}`;
     const degenImgGameName = `BadImgGameDegen#${degenDbId}`;
     const degenJsonName = `BadJsonDegen#${degenDbId}`;
-
     // create image from component img urls (background_url, rims_url, car_url, head_url)
     const degenImg = await imgProfileContentCreate(
       pinataToHTTPUrl(urlImgComponentBackground),
@@ -232,14 +231,14 @@ const swapServerFlow = async (operationLimit) => {
       pinataToHTTPUrl(urlImgComponentHead),
       pinataToHTTPUrl(urlImgComponentRims)
     );
-
+    console.log('degenImg', degenImg);
     const degenImgGame = await imgInGameContentCreate(pinataToHTTPUrl(urlImgGameCar), pinataToHTTPUrl(urlImgGameHead));
 
     // todo: check before production - upload to pinata 0 bytes
     // upload image and get hash
     const degenImgHash = await uploadFlowImg(degenImgName, degenImg);
     const degenImgGameHash = await uploadFlowImg(degenImgGameName, degenImgGame);
-
+    console.log('hash', degenImgHash, degenImgGameHash);
     // create json with component attributes (name#id, img hash, attributes, collection("DegenNFT"))
     const degenJson = jsonContentCreate(
       degenName,
@@ -357,6 +356,6 @@ export const checkToStartFlowSwap = async () => {
   }
 };
 
-// await checkToStartFlowSwap();
+await checkToStartFlowSwap();
 
 // await swapServerFlow();

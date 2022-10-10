@@ -74,7 +74,7 @@ const mergeServerFlow = async (operationLimit) => {
     let contractType = '';
     if (tuple.degenType == 'miami') contractType = 'miami';
     else contractType = 'nyc';
-    console.log(contractType);
+    console.log('\n\n', contractType.toUpperCase(), tuple.degenId, '\n\n');
     const urlJsonDegen = await jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
@@ -89,6 +89,7 @@ const mergeServerFlow = async (operationLimit) => {
     const jsonDegen = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlJsonDegen, tuple.degenId)));
     // -> get the attributes
     let attributesDegen = getAttributesMapTraitValue(jsonDegen);
+    console.log('attributesDegen', attributesDegen);
     const backgroundNewName = oldToNewComponentNames[contractType].background[attributesDegen.Background];
     const carNewName =
       contractType == 'miami'
@@ -100,6 +101,7 @@ const mergeServerFlow = async (operationLimit) => {
     const rimsNewName = oldToNewComponentNames[contractType].rims[attributesDegen.Rims];
     let headNewName = '';
     let typeNewName = '';
+    console.log('headPartialNewName', headPartialNewName);
     if (tuple.degenType == 'miami') {
       typeNewName = 'Skull';
       headNewName = `Miami_${headPartialNewName}_${facePartialNewName}`;
@@ -107,7 +109,17 @@ const mergeServerFlow = async (operationLimit) => {
       typeNewName = 'Alien';
       headNewName = `NYC_${headPartialNewName}_${facePartialNewName}`;
     }
-
+    // console.log(
+    //   'readonly sc json BG',
+    //   await readOnlySCJsonResponse(
+    //     network,
+    //     wallets.user[network],
+    //     contracts[network].backgrounds.split('.')[0],
+    //     contracts[network].backgrounds.split('.')[1],
+    //     'get-name-url',
+    //     [backgroundNewName]
+    //   )
+    // );
     const urlBackgroundJSON = jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
@@ -116,6 +128,20 @@ const mergeServerFlow = async (operationLimit) => {
         contracts[network].backgrounds.split('.')[1],
         'get-name-url',
         [backgroundNewName]
+      )
+    );
+    console.log('urlBackgroundJSON', urlBackgroundJSON);
+    console.log('carNewName', attributesDegen.Car, carNewName);
+    console.log(
+      'readonly sc json CAR',
+      carNewName,
+      await readOnlySCJsonResponse(
+        network,
+        wallets.user[network],
+        contracts[network].cars.split('.')[0],
+        contracts[network].cars.split('.')[1],
+        'get-name-url',
+        [carNewName]
       )
     );
 
@@ -129,6 +155,19 @@ const mergeServerFlow = async (operationLimit) => {
         [carNewName]
       )
     );
+
+    console.log('urlCarJSON', urlCarJSON);
+    console.log(
+      'readonly sc json RIMS',
+      await readOnlySCJsonResponse(
+        network,
+        wallets.user[network],
+        contracts[network].rims.split('.')[0],
+        contracts[network].rims.split('.')[1],
+        'get-name-url',
+        [rimsNewName]
+      )
+    );
     const urlRimsJSON = jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
@@ -139,6 +178,19 @@ const mergeServerFlow = async (operationLimit) => {
         [rimsNewName]
       )
     );
+    console.log('urlRimsJSON', urlRimsJSON);
+    console.log(
+      'readonly sc json HEAD',
+      await readOnlySCJsonResponse(
+        network,
+        wallets.user[network],
+        contracts[network].heads.split('.')[0],
+        contracts[network].heads.split('.')[1],
+        'get-name-url',
+        [headNewName]
+      )
+    );
+    console.log(headNewName);
     const urlHeadJSON = jsonResponseToTokenUri(
       await readOnlySCJsonResponse(
         network,
@@ -149,6 +201,8 @@ const mergeServerFlow = async (operationLimit) => {
         [headNewName]
       )
     );
+
+    console.log('urlHeadJSON', urlHeadJSON);
 
     const backgroundJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlBackgroundJSON)));
     const carJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlCarJSON)));
@@ -255,4 +309,4 @@ export const checkToStartFlowMerge = async () => {
   }
 };
 
-// await checkToStartFlowMerge();
+await checkToStartFlowMerge();
