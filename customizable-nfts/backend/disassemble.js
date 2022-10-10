@@ -114,7 +114,6 @@ const disassembleServerFlow = async (operationLimit) => {
     // -> get the attributes
     const attributes = getAttributesMapTraitValue(jsonFetched);
     attributes.Type == 'Alien' ? (attributes.City = 'NYC') : (attributes.City = 'Miami');
-
     // -> mint them
     // (disassemble-finalize (token-id uint) (member principal) (background-name (string-ascii 30)) (body-name (string-ascii 30)) (rim-name (string-ascii 30)) (head-name (string-ascii 30)))
     lastTxId = await callSCFunction(
@@ -154,13 +153,14 @@ const disassembleServerFlow = async (operationLimit) => {
       car_img_marketplace_hash[attributes.Car],
       car_img_utility_hash[attributes.Car]
     );
+    console.log();
     await dbInsertNFTINdex(
       'head',
       headId,
       `${attributes.City}_${attributes.Head}_${attributes.Face}`,
-      head_json_url_hash[attributes.Head], // TODO: check if works as expected
-      head_img_marketplace_hash[attributes.Head],
-      head_img_utility_hash[attributes.Head]
+      head_json_url_hash[`${attributes.City}_${attributes.Head}_${attributes.Face}`], // TODO: check if works as expected
+      head_img_marketplace_hash[`${attributes.City}_${attributes.Head}_${attributes.Face}`],
+      head_img_utility_hash[`${attributes.City}_${attributes.Head}_${attributes.Face}`]
     );
     await dbInsertNFTINdex(
       'rims',

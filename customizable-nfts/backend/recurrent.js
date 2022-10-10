@@ -1,4 +1,4 @@
-//import cron from 'node-cron';
+import cron from 'node-cron';
 import { checkToStartFlowAssemble } from './assemble.js';
 import { network, operationType, urlApis, wallets } from './consts.js';
 import { checkToStartFlowDisassemble } from './disassemble.js';
