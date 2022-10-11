@@ -819,18 +819,18 @@ const prefillMintThingsOut = async () => {
     degenIndex += n;
   }
 
-  //   // MERGE
-  //   //
-  //   await sleep(11000);
-  //   await mintNMiami(2, wallets.user.name);
-  //   await sleep(2000);
-  //   await mintNNYC(2, wallets.user.name);
-  //   for (let i = 2; i <= 3; i++) {
-  //     await sleep(11000);
-  //     await mintNMiami(2, wallets[`wallet${i}`].name);
-  //     await sleep(2000);
-  //     await mintNNYC(2, wallets[`wallet${i}`].name);
-  //   }
+  // MERGE
+  //
+  await sleep(11000);
+  await mintNMiami(2, wallets.user.name);
+  await sleep(2000);
+  await mintNNYC(2, wallets.user.name);
+  for (let i = 2; i <= 3; i++) {
+    await sleep(11000);
+    await mintNMiami(2, wallets[`wallet${i}`].name);
+    await sleep(2000);
+    await mintNNYC(2, wallets[`wallet${i}`].name);
+  }
 };
 
 // console.log('Going to sleep');
@@ -912,25 +912,25 @@ const prefillAddToQueueThingsOut = async () => {
     degenIndex += n;
   }
 
-  // // MERGE
-  // //
-  // degenIndex = 1;
-  // await sleep(11000);
-  // await addNMergeToQueue(degenIndex, 2, 'miami', wallets.user.name);
-  // await sleep(2000);
-  // await addNMergeToQueue(degenIndex, 2, 'nyc', wallets.user.name);
-  // degenIndex += 2;
-  // for (let i = 2; i <= 3; i++) {
-  //   console.log(`Starting Merging ${i} with`);
-  //   await sleep(11000);
-  //   await addNMergeToQueue(degenIndex, 2, 'miami', wallets[`wallet${i}`].name);
-  //   await sleep(2000);
-  //   await addNMergeToQueue(degenIndex, 2, 'nyc', wallets[`wallet${i}`].name);
-  //   degenIndex += 2;
-  // }
+  // MERGE
+  //
+  degenIndex = 1;
+  await sleep(11000);
+  await addNMergeToQueue(degenIndex, 2, 'miami', wallets.user.name);
+  await sleep(2000);
+  await addNMergeToQueue(degenIndex, 2, 'nyc', wallets.user.name);
+  degenIndex += 2;
+  for (let i = 2; i <= 3; i++) {
+    console.log(`Starting Merging ${i} with`);
+    await sleep(11000);
+    await addNMergeToQueue(degenIndex, 2, 'miami', wallets[`wallet${i}`].name);
+    await sleep(2000);
+    await addNMergeToQueue(degenIndex, 2, 'nyc', wallets[`wallet${i}`].name);
+    degenIndex += 2;
+  }
 };
 
-//prefillMintThingsOut();
+// prefillMintThingsOut();
 prefillAddToQueueThingsOut();
 
 // await prefillWalletNFTs(wallets.wallet3.name);

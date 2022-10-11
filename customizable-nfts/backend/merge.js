@@ -85,8 +85,14 @@ const mergeServerFlow = async (operationLimit) => {
         [tuple.degenId]
       )
     );
+    console.log('urlJsonDegen', urlJsonDegen);
     // -> get the json
-    const jsonDegen = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlJsonDegen, tuple.degenId)));
+    // miami needs the replacement of ${TOKEN_ID} with the id
+    let jsonDegen;
+    if (tuple.degenType == 'miami')
+      jsonDegen = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlJsonDegen, tuple.degenId)));
+    // nyc gets the url with the id correct
+    else jsonDegen = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlJsonDegen, tuple.degenId)));
     // -> get the attributes
     let attributesDegen = getAttributesMapTraitValue(jsonDegen);
     const backgroundNewName = oldToNewComponentNames[contractType].background[attributesDegen.Background];
