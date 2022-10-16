@@ -42,16 +42,23 @@
   (let ((spots (map-get? whitelist-spots address))) 
     (if (and (is-some spots) (> (unwrap-panic spots) u0))  true false )))
 
-(define-read-only (can-mint (address principal)) 
+(define-public (can-mint (address principal)) 
   (if (is-eq false (var-get only-whitelisted)) 
     (ok true)
     (if (is-eq true (is-whitelisted address)) 
-      (ok true)
+      (begin
+        (map-set whitelist-spots address (- (unwrap-panic (map-get? whitelist-spots address)) u1))
+        (ok true))
       (ok false))))
 
 ;; if address does not have map-get or is 0 => no whitelist
 (define-read-only (get-whitelist-spots (address principal)) 
   (map-get? whitelist-spots address))
+
+;; if address does not have map-get or is 0 => no whitelist
+(define-public (set-whitelist-spots (address principal) (spots uint))
+  (ok (map-set whitelist-spots address spots)))
+
 
 
 ;; bns related functions
@@ -127,7 +134,7 @@
 (define-private (set-nft-name (id uint) (name (string-ascii 20))) 
   (map-set degen-name id name)) 
 
-(define-public (claim (nft-id uint)) 
+(define-public (claim) 
   (begin    
     ;; verify can mint
     (asserts! (is-eq (can-mint tx-sender) (ok true)) err-cannot-mint)

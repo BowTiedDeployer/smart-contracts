@@ -12,9 +12,6 @@ path = ".requirements"
 [contracts.background-item]
 path = "contracts/background-item.clar"
 
-[contracts.get-vrf-block]
-path = "contracts/get-vrf-block.clar"
-
 [contracts.lootbox-background]
 path = "contracts/lootbox-background.clar"
 
@@ -23,9 +20,6 @@ path = "contracts/nft-trait.clar"
 
 [contracts.send-lootbox]
 path = "contracts/send-lootbox.clar"
-
-[contracts.vrf-in-depth]
-path = "contracts/vrf-in-depth.clar"
 
 [repl]
 costs_version = 2
