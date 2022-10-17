@@ -31,6 +31,8 @@ export const urlApis = {
 export const contracts = {
   mainnet: {},
   testnet: {
+    //lootbox_background: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.lootbox-background',
+    //background_item: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.background-item',
     backgrounds: 'ST2FSGYVG0T3Z7XSSTNVY89D80V31PVFEMPZBK6N2.backgrounds',
     cars: 'ST2FSGYVG0T3Z7XSSTNVY89D80V31PVFEMPZBK6N2.cars',
     heads: 'ST2FSGYVG0T3Z7XSSTNVY89D80V31PVFEMPZBK6N2.heads',
@@ -41,6 +43,8 @@ export const contracts = {
     nyc: 'ST2FSGYVG0T3Z7XSSTNVY89D80V31PVFEMPZBK6N2.nyc-degens',
   },
   mocknet: {
+    lootbox_background: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.lootbox-background',
+    background_item: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.background-item',
     backgrounds: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.backgrounds',
     cars: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.cars',
     heads: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.heads',
