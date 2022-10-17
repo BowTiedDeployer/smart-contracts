@@ -4,7 +4,7 @@ export const metadataOldDegensSrc = {
   nyc: (degenId) => `https://stxnft.mypinata.cloud/ipfs/QmayEqWwWc87a5ig4ujkRdcyTe6uw2cXEJz177iMHQY4SP/${degenId}.json`,
 };
 
-export const network = 'mocknet'; //"testnet", "mainnet", "mocknet";
+export const network = 'testnet'; //"testnet", "mainnet", "mocknet";
 
 const coreApiUrl = {
   mainnet: 'https://stacks-node-api.mainnet.stacks.co',
@@ -56,31 +56,31 @@ export const wallets = {
   admin: {
     name: 'admin',
     mainnet: {},
-    testnet: 'ST2FSGYVG0T3Z7XSSTNVY89D80V31PVFEMPZBK6N2',
+    testnet: 'ST1R5PZYKMSXVVVMTXV3FCA2HFT1DT3KNFXK1JQB',
     mocknet: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
   },
   user: {
     name: 'user',
     mainnet: {},
-    testnet: 'ST3M4VFJQFEJDKY2CG9HKMPJJGKVWC9TSX73C040M',
+    testnet: 'ST21C9AEEJ8V3TAXPPVP1A21G9N22WBTQ9TZ84RQQ',
     mocknet: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
   },
   wallet2: {
     name: 'wallet2',
     mainnet: {},
-    testnet: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG',
+    testnet: 'ST1F5ERZW00N6BVPMHXMCQZT415W73SAC4RDA8SYK',
     mocknet: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG',
   },
   wallet3: {
     name: 'wallet3',
     mainnet: {},
-    testnet: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC',
+    testnet: 'ST311KQNQ79QE5Q8Z90137SB47ZMJS817SHGJSNP9',
     mocknet: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC',
   },
   wallet4: {
     name: 'wallet4',
     mainnet: {},
-    testnet: 'ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND',
+    testnet: 'ST3D73SYRSZ2KGEY910KWWJS60NKMQWG2XAAFDFF6',
     mocknet: 'ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND',
   },
   wallet5: {
