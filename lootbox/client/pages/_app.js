@@ -1,23 +1,23 @@
-import "../styles/globals.css";
+import '../styles/globals.css';
 
-import { Connect } from "@stacks/connect-react";
+import { Connect } from '@stacks/connect-react';
 
-import { userSession } from "../components/ConnectWallet";
+import { userSession } from '../components/ConnectWallet.tsx';
 
 function MyApp({ Component, pageProps }) {
   let icon;
-  if (typeof window !== "undefined") {
-    icon = window.location.origin + "/nft-logo.png";
+  if (typeof window !== 'undefined') {
+    icon = window.location.origin + '/nft-logo.png';
   }
 
   return (
     <Connect
       authOptions={{
         appDetails: {
-          name: "Stacks Next.js Template",
+          name: 'Stacks Next.js Template',
           icon,
         },
-        redirectTo: "/",
+        redirectTo: '/',
         onFinish: () => {
           window.location.reload();
         },

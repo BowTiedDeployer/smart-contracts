@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useConnect } from '@stacks/connect-react';
-import { StacksMocknet, StacksTestnet } from '@stacks/network';
+import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
 import styles from '../styles/Home.module.css';
 
 import {
@@ -15,9 +15,9 @@ import {
   PostConditionType,
   PostConditionMode,
 } from '@stacks/transactions';
-import { userSession } from './ConnectWallet';
 //import useInterval from 'use-interval';
 import React from 'react';
+import { userSession } from './ConnectWallet.tsx';
 import { fetchAllNftsOwned } from '../constants/nftpartsFetching.tsx';
 import { network } from '../constants/network.tsx';
 import { pinataToHTTPUrl } from '../constants/convert.tsx';
@@ -25,6 +25,8 @@ import { contractsNFT } from '../constants/contract.tsx';
 import { apiMapping } from '../constants/apiUrl.tsx';
 
 const MainMenu = () => {
+  const activeNetwork =
+    network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
   const { doContractCall } = useConnect();
   const [selectedLootbox, setSelectedLootbox] = useState('');
   const [canOpenLootbox, setCanOpenLootbox] = useState(false);
@@ -49,7 +51,7 @@ const MainMenu = () => {
         contractAddress: 'ST15DF8K1Z4XQ952AC2GFY106XRTNJSWE9SP6VZYA',
         contractName: 'background-item',
         functionName: 'get-token-uri',
-        network: new StacksTestnet(),
+        network: activeNetwork,
         functionArgs: [uintCV(nft)],
         senderAddress: userAddress,
       };
@@ -95,6 +97,7 @@ const MainMenu = () => {
     console.log('selectedLootbox', id);
     if (canOpenLootbox)
       doContractCall({
+        name: 'Open Lootbox',
         network: new StacksTestnet(),
         anchorMode: AnchorMode.Any,
         contractAddress: contractsNFT[network].lootbox_background.split('.')[0],

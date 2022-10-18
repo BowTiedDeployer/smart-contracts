@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import ConnectWallet from '../components/ConnectWallet';
+import { ConnectWallet } from '../components/ConnectWallet.tsx';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
