@@ -25,8 +25,6 @@ import { contractsNFT } from '../constants/contract.tsx';
 import { apiMapping } from '../constants/apiUrl.tsx';
 
 const MainMenu = () => {
-  const activeNetwork =
-    network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
   const { doContractCall } = useConnect();
   const [selectedLootbox, setSelectedLootbox] = useState('');
   const [canOpenLootbox, setCanOpenLootbox] = useState(false);
@@ -43,6 +41,8 @@ const MainMenu = () => {
   // const postConditionAmount = 1;
 
   const fetchNftsOwnedBackground = useCallback(async () => {
+    const activeNetwork =
+      network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
     let localNftsOwnedUrls: Array<Record<string, string>> = [];
     let localNftsOwnedBackground: string[] = await fetchAllNftsOwned(userAddress, 'background_item');
     console.log('localNftsOwnedBackground', localNftsOwnedBackground);
@@ -73,13 +73,14 @@ const MainMenu = () => {
       setNftsOwnedBackground([]);
       return [];
     }
-  }, []);
+  }, [userAddress]);
+
   const fetchLootboxesOwned = useCallback(async () => {
     let localLootboxesOwned: string[] = await fetchAllNftsOwned(userAddress, 'lootbox_background');
     setHasRespondedLootbox(true);
     if (localLootboxesOwned) setLootboxesOwned(localLootboxesOwned);
     else setLootboxesOwned([]);
-  }, []);
+  }, [userAddress]);
 
   const changeSelection = (nft: string, localGarageSelectedNFT: string) => {
     document.getElementById(`nftLootbox${localGarageSelectedNFT}`)?.classList.remove('card-selected');
@@ -140,7 +141,7 @@ const MainMenu = () => {
     }, 30000);
     //interval;
     //return clearInterval(interval);
-  }, [userSession.isUserSignedIn()]);
+  }, [userSession.isUserSignedIn(), fetchLootboxesOwned, fetchNftsOwnedBackground]);
 
   if (!userSession.isUserSignedIn()) {
     return null;
@@ -154,8 +155,8 @@ const MainMenu = () => {
           <h1>Backgrounds Owned</h1>
           <br></br>
           {nftsOwnedBackground.map((nft) => (
-            <span class="card" key={nft.id}>
-              <img src={pinataToHTTPUrl(nft.imgSrc)} width="60px"></img>
+            <span className="card" key={nft.id}>
+              <img src={pinataToHTTPUrl(nft.imgSrc)} width="60px" alt={`background ${nft.id}`}></img>
             </span>
           ))}
         </div>
@@ -167,17 +168,15 @@ const MainMenu = () => {
           <br></br>
           {lootboxesOwned.map((nftLootbox) => (
             // <div width="100%">
-            <span>
-              <span id={`nftLootbox${nftLootbox}`} key={nftLootbox} class="lootboxContainer">
-                <img
-                  class="lootboxImg"
-                  src={`https://stxnft.mypinata.cloud/ipfs/QmciPXBGPDYF57QAHtoRs99ocMqEzJVvsjjmSjGCEV4qp7/${nftLootbox}.png`}
-                  width="60px"
-                  onClick={() => handleClickLootbox(nftLootbox)}
-                ></img>
-                {`Lootbox#${nftLootbox}`}
-              </span>
-              {/* <span>{`Lootbox#${nftLootbox}`}</span> */}
+            <span id={`nftLootbox${nftLootbox}`} key={nftLootbox} className="lootboxContainer">
+              <img
+                className="lootboxImg"
+                src={`https://stxnft.mypinata.cloud/ipfs/QmciPXBGPDYF57QAHtoRs99ocMqEzJVvsjjmSjGCEV4qp7/${nftLootbox}.png`}
+                width="60px"
+                onClick={() => handleClickLootbox(nftLootbox)}
+                alt={`lootbox ${nft.id}`}
+              ></img>
+              {`Lootbox#${nftLootbox}`}
             </span>
           ))}
           <br></br>
