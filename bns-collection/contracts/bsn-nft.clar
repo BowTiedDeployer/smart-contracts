@@ -2,12 +2,15 @@
 ;; NFT collection
 (impl-trait .nft-trait.nft-trait)
 
-;; define a new NFT. Make sure to replace degen
+;; define a new NFT. if address owns a .btc domain will get that name, else get BitcoinDegen#number
 (define-non-fungible-token bitcoin-degen uint)
 
 ;; define errors
 (define-constant err-owner-only (err u100))
 (define-constant err-cannot-mint (err u101))
+(define-constant err-bns-convert (err u102))
+(define-constant err-bns-size (err u103))
+
 (define-constant err-no-rights (err u403))
 
 ;; price 100 stx
@@ -42,7 +45,7 @@
   (let ((spots (map-get? whitelist-spots address))) 
     (if (and (is-some spots) (> (unwrap-panic spots) u0))  true false )))
 
-(define-public (can-mint (address principal)) 
+(define-private (can-mint-and-update-spots (address principal)) 
   (if (is-eq false (var-get only-whitelisted)) 
     (ok true)
     (if (is-eq true (is-whitelisted address)) 
@@ -65,11 +68,11 @@
 ;;
 ;;
 
-;; TODO:
 ;; get the name and namespace and make the read version of it 
 ;; from buff[] to string-ascii 
-(define-read-only (get-address-bns-name (address principal)) 
-  "random")
+(define-read-only (get-address-bns-name (bns {name: (buff 20), namespace: (buff 10)})) ;; TODO: why buff 40??
+  ;; gets raw value of bns or error if wallet does not own a bns
+  (contract-call? .conversions resolve-principal-to-ascii bns))
 
 ;; fees: 0.69 stx
 (define-private (fee-processing)
@@ -90,18 +93,50 @@
 ;;
 ;;
 
-;; SIP009: Transfer token to a specified principal
+;; ;; SIP009: Transfer token to a specified principal
+;; (define-public (transfer (token-id uint) (sender principal) (recipient principal))
+;;   (begin
+;;     (asserts! (is-eq tx-sender sender) err-no-rights)
+;;     (let ((address-bns-name (contract-call? .bns resolve-principal recipient))) 
+;;     (if (is-err address-bns-name)  
+;;       ;; if address doen't own a bns-name - is same name
+;;       false
+;;       ;; else if recipient has bns -> change name to it
+;;       (let ((complete-bns-name (unwrap! address-bns-name err-bns-convert))
+;;         (bns-name (as-max-len? (get name complete-bns-name) u20))
+;;         (bns-namespace (as-max-len? (get namespace complete-bns-name) u10)))
+;;         (if (is-some bns-name) 
+;;           (if (is-some bns-namespace) 
+;;             (set-nft-name token-id (get-address-bns-name {name: (unwrap-panic bns-name), namespace: (unwrap-panic bns-namespace)})) TODO: make it work
+;;             false)
+;;         false)
+;;         (nft-transfer? bitcoin-degen token-id sender recipient))))))
+;;         (ok true)
+;;   ;; ))
+
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
   (begin
     (asserts! (is-eq tx-sender sender) err-no-rights)
     ;; change name of degen based on recipient bns ( if it has one )
     (if (is-err (contract-call? .bns resolve-principal recipient)) 
       ;; if recipient has bns -> change name to it
-      (set-nft-name token-id (get-address-bns-name recipient))
+      (set-nft-name token-id (concat "CustomName#" "23"))
       ;; else change name to BitcoinDegen#id
       (set-nft-name token-id (concat "BitcoinDegen#" "23"))
     )
     (nft-transfer? bitcoin-degen token-id sender recipient)))
+
+;; (define-read-only (verify-name-length (name (buff 20)))
+;;   (if (> (len name) u20)
+;;     false
+;;     true))
+
+;; (define-read-only (verify-namespace-length (namespace (buff 10)))
+;;   (if (> (len namespace) u10)
+;;     false
+;;     true))
+
+
 
 (define-public (transfer-memo (token-id uint) (sender principal) (recipient principal) (memo (buff 34)))
   (begin 
@@ -137,7 +172,7 @@
 (define-public (claim) 
   (begin    
     ;; verify can mint
-    (asserts! (is-eq (can-mint tx-sender) (ok true)) err-cannot-mint)
+    (asserts! (is-eq (can-mint-and-update-spots tx-sender) (ok true)) err-cannot-mint)
     ;; pay to mint price / discount_price
     (try! (payment-by-address tx-sender))
     (try! (mint tx-sender))
@@ -156,6 +191,14 @@
     (ok value)))
 
 
+
+;; (contract-call? .bsn-nft concat-name 0x7369726a6f6e617468616e 0x627463)
+;; (define-read-only (concat-name (first-hex (buff 20)) (second-hex (buff 10)))
+;;   (concat 
+;;     (concat 
+;;       (contract-call? .conversions convert-word-hexa-to-ascii first-hex) 
+;;       ".")
+;;       (contract-call? .conversions convert-word-hexa-to-ascii second-hex)))
 
 
 ;; if has bns in wallet - map id to bns value

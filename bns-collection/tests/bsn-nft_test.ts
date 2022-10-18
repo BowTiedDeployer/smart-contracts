@@ -92,7 +92,7 @@ Clarinet.test({
 //   check can mint true/ false
 
 Clarinet.test({
-  name: 'Ensure that whitelist functionalities work properly, also inside mint function',
+  name: `Ensure that ${GET_WHITELIST_SPOTS} functionalities work properly, also inside mint function`,
   // wallet 1, 2 are whitelisted, 3 is not whitelisted
   // wallet 1, 2 can mint, 3 cannot mint
   async fn(chain: Chain, accounts: Map<string, Account>) {
@@ -221,7 +221,6 @@ Clarinet.test({
     block.receipts[5].result.expectErr().expectUint(ERR_CANNOT_MINT);
     block.receipts[6].result.expectErr().expectUint(ERR_CANNOT_MINT);
 
-    // block = chain.mineBlock([Tx.contractCall(BNS_NFT_CONTRACT_NAME, SET_ONLY_WHITELIST, [], deployer.address)]);
     block = chain.mineBlock([
       Tx.contractCall(BNS_NFT_CONTRACT_NAME, SET_ONLY_WHITELIST, [types.bool(false)], deployer.address),
     ]);
