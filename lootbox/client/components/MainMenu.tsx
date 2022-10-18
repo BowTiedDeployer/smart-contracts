@@ -45,8 +45,6 @@ const MainMenu = () => {
     let localNftsOwnedBackground: string[] = await fetchAllNftsOwned(userAddress, 'background_item');
     console.log('localNftsOwnedBackground', localNftsOwnedBackground);
     for (let nft of localNftsOwnedBackground) {
-      console.log('nft', nft);
-      console.log('userAddress', userAddress);
       const options = {
         contractAddress: 'ST15DF8K1Z4XQ952AC2GFY106XRTNJSWE9SP6VZYA',
         contractName: 'background-item',
@@ -81,7 +79,13 @@ const MainMenu = () => {
     else setLootboxesOwned([]);
   }, []);
 
+  const changeSelection = (nft: string, localGarageSelectedNFT: string) => {
+    document.getElementById(`nftLootbox${localGarageSelectedNFT}`)?.classList.remove('card-selected');
+    document.getElementById(`nftLootbox${nft}`)?.classList.add('card-selected');
+  };
+
   function handleClickLootbox(id: string) {
+    changeSelection(id, selectedLootbox);
     console.log('clicked lootbox with id:', id);
     setSelectedLootbox(id);
     checkCanOpenLootbox(id);
@@ -109,6 +113,7 @@ const MainMenu = () => {
         },
       });
   }
+
   const checkCanOpenLootbox = async (id: string) => {
     const options = {
       contractAddress: 'ST15DF8K1Z4XQ952AC2GFY106XRTNJSWE9SP6VZYA',
@@ -146,7 +151,7 @@ const MainMenu = () => {
           <h1>Backgrounds Owned</h1>
           <br></br>
           {nftsOwnedBackground.map((nft) => (
-            <span key={nft.id}>
+            <span class="card" key={nft.id}>
               <img src={pinataToHTTPUrl(nft.imgSrc)} width="60px"></img>
             </span>
           ))}
@@ -158,12 +163,18 @@ const MainMenu = () => {
           <h1>Lootboxes</h1>
           <br></br>
           {lootboxesOwned.map((nftLootbox) => (
-            <span key={nftLootbox}>
-              <img
-                src={`https://stxnft.mypinata.cloud/ipfs/QmciPXBGPDYF57QAHtoRs99ocMqEzJVvsjjmSjGCEV4qp7/${nftLootbox}.png`}
-                width="60px"
-                onClick={() => handleClickLootbox(nftLootbox)}
-              ></img>
+            // <div width="100%">
+            <span>
+              <span id={`nftLootbox${nftLootbox}`} key={nftLootbox} class="lootboxContainer">
+                <img
+                  class="lootboxImg"
+                  src={`https://stxnft.mypinata.cloud/ipfs/QmciPXBGPDYF57QAHtoRs99ocMqEzJVvsjjmSjGCEV4qp7/${nftLootbox}.png`}
+                  width="60px"
+                  onClick={() => handleClickLootbox(nftLootbox)}
+                ></img>
+                {`Lootbox#${nftLootbox}`}
+              </span>
+              {/* <span>{`Lootbox#${nftLootbox}`}</span> */}
             </span>
           ))}
           <br></br>

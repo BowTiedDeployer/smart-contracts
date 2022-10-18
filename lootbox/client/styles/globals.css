@@ -2,8 +2,8 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
+    Helvetica Neue, sans-serif;
 }
 
 a {
@@ -43,4 +43,48 @@ button.Vote {
   border-radius: 14px;
   padding: 8px 12px;
   margin: 4px;
+}
+
+.card {
+  color: white;
+  padding: 5px;
+}
+
+.cards {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+}
+
+.card-selected {
+  border-width: 2px;
+  background-color: #ffe883;
+}
+
+.card-img-top {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.card-body {
+  background-color: #fdcf00;
+}
+.card-lead {
+  color: #7530e3;
+}
+.lead {
+  color: #7530e3;
+}
+.lootboxImg {
+  display: block;
+  width: 90px;
+}
+.lootboxContainer {
+  display: inline-block;
+  padding: 10px;
+  margin-left: 10px;
+  font-weight: bold;
+  text-align: center;
+  align-items: center;
+  align-content: center;
 }

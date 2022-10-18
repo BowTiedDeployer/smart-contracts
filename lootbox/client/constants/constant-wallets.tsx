@@ -1,13 +1,3 @@
-// local wallets in mocknet
-
-// type IWallet = {
-//   wallet: string;
-//   private_key: string;
-//   btc_key: string;
-// };
-
-//type IWalletsList = Record<string, IWallet>;
-
 const wallets = {
   depoyer: {
     wallet: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
