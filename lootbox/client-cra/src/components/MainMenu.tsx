@@ -25,7 +25,8 @@ export const MainMenu = () => {
   const [nftsOwnedBackground, setNftsOwnedBackground]: any[] = useState([]); // TODO: update this type
   const [lootboxesOwned, setLootboxesOwned]: any[] = useState([]); // TODO: update this type// TODO: update this type
   const userAddress = userSession.loadUserData().profile.stxAddress[network];
-
+  const activeNetwork =
+    network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
   //TODO: Fix that.
   // const postConditionAddress = userSession.loadUserData().profile.stxAddress[network];
   // const nonFungibleConditionCode = NonFungibleConditionCode.Sends;
@@ -33,8 +34,6 @@ export const MainMenu = () => {
   // const postConditionAmount = 1;
 
   const fetchNftsOwnedBackground = useCallback(async () => {
-    const activeNetwork =
-      network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
     let localNftsOwnedUrls: Array<Record<string, string>> = [];
     let localNftsOwnedBackground: string[] = await fetchAllNftsOwned(userAddress, 'background_item');
     console.log('localNftsOwnedBackground', localNftsOwnedBackground);
@@ -90,8 +89,7 @@ export const MainMenu = () => {
     console.log('selectedLootbox', id);
     if (canOpenLootbox)
       doContractCall({
-        // name: 'Open Lootbox',
-        network: new StacksTestnet(),
+        network: activeNetwork,
         anchorMode: AnchorMode.Any,
         contractAddress: contractsNFT[network].lootbox_background.split('.')[0],
         contractName: contractsNFT[network].lootbox_background.split('.')[1].split('::')[0],
@@ -128,11 +126,7 @@ export const MainMenu = () => {
   useEffect(() => {
     fetchNftsOwnedBackground();
     fetchLootboxesOwned();
-    setInterval(() => {
-      console.log('this will run every 10s');
-    }, 30000);
-    //interval;
-    //return clearInterval(interval);
+    setInterval(() => {}, 30000);
   }, [userSession.isUserSignedIn(), fetchLootboxesOwned, fetchNftsOwnedBackground]);
 
   if (!userSession.isUserSignedIn()) {
@@ -144,11 +138,10 @@ export const MainMenu = () => {
       {hasRespondedBackground && nftsOwnedBackground.length == 0 && <h1>No background NFTs available</h1>}
       {hasRespondedBackground && nftsOwnedBackground.length > 0 && (
         <div>
-          <h1>Backgrounds Owned</h1>
-          <br></br>
+          <h2>Backgrounds Owned</h2>
           {nftsOwnedBackground.map((nft: InfoNFT) => (
-            <span className="card" key={nft.id}>
-              <img src={pinataToHTTPUrl(nft.imgSrc)} width="60px" alt={`background ${nft.id}`}></img>
+            <span className="nftContainer" key={nft.id}>
+              <img className="nftImg" src={pinataToHTTPUrl(nft.imgSrc)} width="90px" alt={`background ${nft.id}`}></img>
             </span>
           ))}
         </div>
@@ -156,15 +149,12 @@ export const MainMenu = () => {
       {hasRespondedLootbox && lootboxesOwned.length == 0 && <h1>No lootbox NFTs available</h1>}
       {hasRespondedLootbox && lootboxesOwned.length > 0 && (
         <div>
-          <h1>Lootboxes</h1>
-          <br></br>
+          <h2>Lootboxes</h2>
           {lootboxesOwned.map((nftLootbox: string) => (
-            // <div width="100%">
             <span id={`nftLootbox${nftLootbox}`} key={nftLootbox} className="lootboxContainer">
               <img
                 className="lootboxImg"
                 src={`https://stxnft.mypinata.cloud/ipfs/QmciPXBGPDYF57QAHtoRs99ocMqEzJVvsjjmSjGCEV4qp7/${nftLootbox}.png`}
-                width="60px"
                 onClick={() => handleClickLootbox(nftLootbox)}
                 alt={`lootbox ${nftLootbox}`}
               ></img>
@@ -172,7 +162,7 @@ export const MainMenu = () => {
             </span>
           ))}
           <br></br>
-          {/* <button className="Vote" onClick={() => vote("🍊")}></button> */}
+          <br></br>
           <button
             className="ContractCall"
             disabled={!canOpenLootbox}

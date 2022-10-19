@@ -41,3 +41,96 @@
   align-items: center;
   align-content: center;
 }
+.nftContainer {
+  display: inline-block;
+  color: white;
+  padding: 7px;
+}
+.nftImg {
+  display: block;
+  color: white;
+}
+@media (min-width: 0px) {
+  .lootboxImg {
+    width: 100%;
+  }
+  .lootboxContainer {
+    width: 30%;
+  }
+  .nftContainer {
+    width: 30%;
+  }
+  .nftImg {
+    width: 100%;
+  }
+}
+@media (min-width: 420px) {
+  .lootboxImg {
+    width: 100%;
+  }
+  .lootboxContainer {
+    width: 23%;
+  }
+  .nftContainer {
+    width: 23%;
+  }
+  .nftImg {
+    width: 100%;
+  }
+}
+@media (min-width: 600px) {
+  .lootboxImg {
+    width: 100%;
+  }
+  .lootboxContainer {
+    width: 20%;
+  }
+  .nftContainer {
+    width: 20%;
+  }
+  .nftImg {
+    width: 100%;
+  }
+}
+@media (min-width: 600px) {
+  .lootboxImg {
+    width: 100%;
+  }
+  .lootboxContainer {
+    width: 15%;
+  }
+  .nftContainer {
+    width: 15%;
+  }
+  .nftImg {
+    width: 100%;
+  }
+}
+@media (min-width: 900px) {
+  .lootboxImg {
+    width: 100%;
+  }
+  .lootboxContainer {
+    width: 10%;
+  }
+  .nftContainer {
+    width: 10%;
+  }
+  .nftImg {
+    width: 100%;
+  }
+}
+@media (min-width: 1000px) {
+  .lootboxImg {
+    width: 100%;
+  }
+  .lootboxContainer {
+    width: 8%;
+  }
+  .nftContainer {
+    width: 8%;
+  }
+  .nftImg {
+    width: 100%;
+  }
+}

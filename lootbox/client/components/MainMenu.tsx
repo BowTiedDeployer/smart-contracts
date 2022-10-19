@@ -98,7 +98,6 @@ const MainMenu = () => {
     console.log('selectedLootbox', id);
     if (canOpenLootbox)
       doContractCall({
-        name: 'Open Lootbox',
         network: new StacksTestnet(),
         anchorMode: AnchorMode.Any,
         contractAddress: contractsNFT[network].lootbox_background.split('.')[0],
@@ -167,14 +166,13 @@ const MainMenu = () => {
           <h1>Lootboxes</h1>
           <br></br>
           {lootboxesOwned.map((nftLootbox) => (
-            // <div width="100%">
             <span id={`nftLootbox${nftLootbox}`} key={nftLootbox} className="lootboxContainer">
               <img
                 className="lootboxImg"
                 src={`https://stxnft.mypinata.cloud/ipfs/QmciPXBGPDYF57QAHtoRs99ocMqEzJVvsjjmSjGCEV4qp7/${nftLootbox}.png`}
                 width="60px"
                 onClick={() => handleClickLootbox(nftLootbox)}
-                alt={`lootbox ${nft.id}`}
+                alt={`lootbox ${nftLootbox.id}`}
               ></img>
               {`Lootbox#${nftLootbox}`}
             </span>

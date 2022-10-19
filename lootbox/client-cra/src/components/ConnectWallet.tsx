@@ -32,7 +32,7 @@ export const ConnectWallet = () => {
     return (
       <div>
         <MainMenu />
-        <button className="Connect" onClick={disconnect}>
+        <button className="ContractCall" onClick={disconnect}>
           Disconnect Wallet
         </button>
       </div>
@@ -40,7 +40,7 @@ export const ConnectWallet = () => {
   }
 
   return (
-    <button className="Connect" onClick={authenticate}>
+    <button className="ContractCall" onClick={authenticate}>
       Connect Wallet
     </button>
   );
