@@ -54,21 +54,22 @@ Clarinet.test({
 //     }
 //   },
 // });
-// Clarinet.test({
-//   name: 'Ensure that converts right evey buff to uint',
-//   async fn(chain: Chain, accounts: Map<string, Account>) {
-//     const deployer = accounts.get('deployer')!;
-//     for (let i = 0; i < 255; i++) {
-//       const buffy = ('0' + i).slice(-2);
-//       console.log(buffy);
-//       console.log(
-//         chain.callReadOnlyFn(CONVERT_CONTRACT, BUFF_TO_UINT8, [buffy], deployer.address)
-//         // .result.expectSome()
-//         // .expectUint(3);
-//       );
-//     }
-//   },
-// });
+Clarinet.test({
+  name: 'Ensure that converts right evey buff to uint',
+  async fn(chain: Chain, accounts: Map<string, Account>) {
+    const deployer = accounts.get('deployer')!;
+    // for (let i = 0; i < 255; i++) {
+    //   const buffy = ('0' + i).slice(-2);
+    //   console.log(buffy);
+    //   console.log(
+    //     chain.callReadOnlyFn(CONVERT_CONTRACT, BUFF_TO_UINT8, [buffy], deployer.address)
+    //     // .result.expectSome()
+    //     // .expectUint(3);
+    //   );
+    // }
+    // console.log('char code ', types.buff((0).toString(16)));
+  },
+});
 
 // ;; from base 10 to string-ascii
 // (define-read-only (uint-to-ascii (index uint))

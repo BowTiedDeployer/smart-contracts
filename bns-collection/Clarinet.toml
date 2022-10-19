@@ -8,11 +8,11 @@ boot_contracts = ["pox", "costs-v2", "bns"]
 
 [project.cache_location]
 path = ".requirements"
+[contracts.bitcoin-degens]
+path = "contracts/bitcoin-degens.clar"
+
 [contracts.bns]
 path = "contracts/bns.clar"
-
-[contracts.bsn-nft]
-path = "contracts/bsn-nft.clar"
 
 [contracts.conversions]
 path = "contracts/conversions.clar"

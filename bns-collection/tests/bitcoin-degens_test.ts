@@ -4,7 +4,7 @@ import { assertEquals } from 'https://deno.land/std@0.90.0/testing/asserts.ts';
 // import { StacksTestnet } from '@stacks/network';
 
 const BNS_CONTRACT_NAME = 'ST000000000000000000002AMW42H.bns';
-const BNS_NFT_CONTRACT_NAME = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bsn-nft';
+const BNS_NFT_CONTRACT_NAME = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bitcoin-degens';
 const FNC_PREORDER = 'preorder';
 const FNC_REGISTER = 'register';
 const FNC_CLAIM = 'claim';
