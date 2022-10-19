@@ -1,7 +1,6 @@
 {
   "name": "client-cra",
   "version": "0.1.0",
-  "homepage": "https://lootbox.testnet.stacksdegens.com/",
   "private": true,
   "dependencies": {
     "@stacks/connect": "^7.0.0",
