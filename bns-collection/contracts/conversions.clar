@@ -1,5 +1,6 @@
 
-(define-constant ERR-UINT-TO-ASCII (err u101))
+(define-constant err-too-long (err u102))
+
 
 ;; from base 16 to base 10
 (define-read-only (buff-to-u8 (byte (buff 1))) ;; buff = 1 byte = 2 hex characters
@@ -13,19 +14,36 @@
 (define-read-only (buff-to-ascii (byte (buff 1))) 
   (uint-to-ascii (buff-to-u8 byte)))
 
+(define-read-only (uint-to-string (value uint))
+  (if (<= value u9)
+    (unwrap-panic (element-at "0123456789" value))
+    (get r 
+      (fold uint-to-ascii-inner 
+        0x0000000000000000000000000000000000
+        {v: value, r: ""}))))
+
+(define-read-only (uint-to-ascii-inner (i (buff 1)) (d {v: uint, r: (string-ascii 17)}))
+  (if (> (get v d) u0)
+    {v: (/ (get v d) u10),
+      r: (unwrap-panic 
+        (as-max-len? (concat (unwrap-panic (element-at "0123456789" (mod (get v d) u10))) (get r d)) u17))}
+    d))
+
+;; used to convert to hex
 (define-private (concat-string (a (string-ascii 20)) (b (string-ascii 20))) 
   (unwrap-panic (as-max-len? (concat b a) u20)))
 
-(define-read-only (convert-word-hexa-to-ascii (byte (buff 41)))
+(define-read-only (convert-word-hex-to-ascii (byte (buff 20)))
   (fold concat-string (map buff-to-ascii byte) ""))
 
 ;; (contract-call? .bsn-nft concat-name 0x7369726a6f6e617468616e 0x627463)
-(define-read-only (concat-name (first-hex (buff 41)) (second-hex (buff 10)))
+(define-read-only (concat-name (first-hex (buff 20)) (second-hex (buff 9)))
   (concat 
-    (concat (convert-word-hexa-to-ascii first-hex) ".")
-    (convert-word-hexa-to-ascii second-hex)))
+    (concat (convert-word-hex-to-ascii first-hex) ".")
+    (convert-word-hex-to-ascii second-hex)))
 
 ;; (contract-call? .conversions resolve-principal-to-ascii {name: 0x7369726a6f6e617468616e, namespace: 0x627463})
-(define-read-only (resolve-principal-to-ascii (bns {name: (buff 41), namespace: (buff 10)})) 
-  (concat-name (get name bns) (get namespace bns)))
-  
+(define-read-only (resolve-principal-to-ascii (bns {name: (buff 20), namespace: (buff 9)}))
+  (let ((name (as-max-len? (concat-name (get name bns) (get namespace bns)) u30)))
+    (asserts! (not (is-none name)) err-too-long)
+    (ok (unwrap-panic name))))
