@@ -134,6 +134,7 @@ export const MainMenu = () => {
   }
   return (
     <div>
+      <h6>{`Current user address: ${userSession.loadUserData().profile.stxAddress[network]}`}</h6>
       {!hasRespondedBackground && !hasRespondedLootbox && <h1>Loading NFTs...</h1>}
       {hasRespondedBackground && nftsOwnedBackground.length == 0 && <h1>No background NFTs available</h1>}
       {hasRespondedBackground && nftsOwnedBackground.length > 0 && (
@@ -161,7 +162,6 @@ export const MainMenu = () => {
               {`Lootbox#${nftLootbox}`}
             </span>
           ))}
-          <br></br>
           <br></br>
           <button
             className="ContractCall"

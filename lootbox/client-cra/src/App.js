@@ -12,8 +12,6 @@ function App() {
 
         <ConnectWallet />
         <br></br>
-        <h10>{`Current user address: ${userSession.loadUserData().profile.stxAddress[network]}`}</h10>
-        <br></br>
         <a className="App-link" href="https://docs.hiro.so/build-apps/overview" target="_blank">
           Build by Stacks Degens
         </a>
