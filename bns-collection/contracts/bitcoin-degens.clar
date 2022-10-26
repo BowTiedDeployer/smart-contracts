@@ -23,8 +23,7 @@
 (define-data-var last-id uint u0)
 (define-data-var contract-owner principal tx-sender)
 (define-data-var only-whitelisted bool true)
-(define-data-var uri-root (string-ascii 80) "ipfs://QmQcZyB1GEsZgYQXr82CHN2BeqEY53bmMPB89g6ryKPWJU/")
-;; TODO: aws link instead of ipfs
+(define-data-var uri-root (string-ascii 80) "https://stacksdegens.com/bitcoin-degens/jsons/")
 
 ;; define maps
 ;; for each id keep in the map the name of the bns his owner has ( if one is present )
@@ -85,7 +84,7 @@
 
 (define-private (payment-by-address (address principal)) 
   ;; check if has bns in wallet 
-  (if (is-err (contract-call? .bns resolve-principal address)) 
+  (if (is-err (contract-call? 'ST000000000000000000002AMW42H.bns resolve-principal address)) 
     (fee-processing )
     ;; if it has, pay discount price 
     (discount-fee-processing )))
@@ -99,7 +98,7 @@
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
   (begin
     (asserts! (is-eq tx-sender sender) err-no-rights)
-    (let ((address-bns-name (contract-call? .bns resolve-principal recipient))) 
+    (let ((address-bns-name (contract-call? 'ST000000000000000000002AMW42H.bns resolve-principal recipient))) 
     (if (is-err address-bns-name)  
       ;; if address doen't own a bns-name -> change name to BitcoinDegen -> even if it was already that
       (set-nft-name token-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string token-id)))
@@ -139,7 +138,7 @@
 (define-private (mint (new-owner principal))
   (let 
     ((next-id (+ u1 (var-get last-id)))
-      (address-bns-name (contract-call? .bns resolve-principal new-owner))) 
+      (address-bns-name (contract-call? 'ST000000000000000000002AMW42H.bns resolve-principal new-owner))) 
     (if (is-err address-bns-name)  
       ;; does not have bns address
       (set-nft-name next-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string next-id)))
@@ -160,8 +159,16 @@
 (define-read-only (get-nft-name (id uint)) 
   (map-get? degen-name id )) 
 
-(define-private (set-nft-name (id uint) (name (string-ascii 30))) 
-  (map-set degen-name id name)) 
+(define-private (set-nft-name (id uint) (name (string-ascii 30)))
+  (begin
+    (print (concat (concat "New Name BitcoinDegen#" (contract-call? .conversions uint-to-string id)) name))  
+    (map-set degen-name id name))) 
+
+(define-public (set-nft-name-public (id uint) (name (string-ascii 30)))
+  (ok (begin
+    (print (concat (concat "New Name BitcoinDegen#" (contract-call? .conversions uint-to-string id)) name))  
+    (map-set degen-name id name)))) 
+
 
 (define-public (claim) 
   (begin    
@@ -182,5 +189,3 @@
     (asserts! (is-eq tx-sender (var-get contract-owner))  err-owner-only)
     (var-set only-whitelisted value)
     (ok value)))
-
-
