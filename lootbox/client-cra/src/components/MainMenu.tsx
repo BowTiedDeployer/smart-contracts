@@ -1,10 +1,21 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useConnect } from '@stacks/connect-react';
 import { StacksMocknet, StacksTestnet, StacksMainnet } from '@stacks/network';
-// import styles from '../styles/Home.module.css';
 
-import { AnchorMode, callReadOnlyFunction, uintCV, cvToJSON, PostConditionMode } from '@stacks/transactions';
-//import useInterval from 'use-interval';
+import {
+  AnchorMode,
+  callReadOnlyFunction,
+  uintCV,
+  cvToJSON,
+  PostConditionMode,
+  NonFungibleConditionCode,
+  createAssetInfo,
+  makeStandardNonFungiblePostCondition,
+  bufferCVFromString,
+  FungibleConditionCode,
+  makeStandardSTXPostCondition,
+  makeContractSTXPostCondition,
+} from '@stacks/transactions';
 import React from 'react';
 import { userSession } from './ConnectWallet';
 import { fetchAllNftsOwned } from '../constants/nftpartsFetching';
@@ -15,6 +26,33 @@ import { apiMapping } from '../constants/apiUrl';
 
 type InfoNFTFields = 'id' | 'imgSrc';
 type InfoNFT = Record<InfoNFTFields, string>;
+
+// With a standard principal
+const createPostConfitionLootbox = (userAddress: string, id: string) => {
+  const postConditionAddress = userAddress;
+  const postConditionCode = NonFungibleConditionCode.Sends;
+  const assetAddress = contractsNFT[network].lootbox_background.split('.')[0];
+  const assetContractName = contractsNFT[network].lootbox_background.split('.')[1].split('::')[0];
+  const assetName = contractsNFT[network].lootbox_background.split('.')[1].split('::')[1];
+  const tokenAssetName = uintCV(id);
+  const nonFungibleAssetInfo = createAssetInfo(assetAddress, assetContractName, assetName);
+
+  return makeStandardNonFungiblePostCondition(
+    postConditionAddress,
+    postConditionCode,
+    nonFungibleAssetInfo,
+    tokenAssetName
+  );
+};
+
+const createPostConditionSTXTransfer = (userAddress: string) => {
+  // With a standard principal
+  const postConditionAddress = userAddress;
+  const postConditionCode = FungibleConditionCode.Equal;
+  const postConditionAmount = 0;
+
+  return makeStandardSTXPostCondition(postConditionAddress, postConditionCode, postConditionAmount);
+};
 
 export const MainMenu = () => {
   const { doContractCall } = useConnect();
@@ -27,11 +65,6 @@ export const MainMenu = () => {
   const userAddress = userSession.loadUserData().profile.stxAddress[network];
   const activeNetwork =
     network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet();
-  //TODO: Fix that.
-  // const postConditionAddress = userSession.loadUserData().profile.stxAddress[network];
-  // const nonFungibleConditionCode = NonFungibleConditionCode.Sends;
-  // const postConditionType = PostConditionType.NonFungible;
-  // const postConditionAmount = 1;
 
   const fetchNftsOwnedBackground = useCallback(async () => {
     let localNftsOwnedUrls: Array<Record<string, string>> = [];
@@ -39,8 +72,8 @@ export const MainMenu = () => {
     console.log('localNftsOwnedBackground', localNftsOwnedBackground);
     for (let nft of localNftsOwnedBackground) {
       const options = {
-        contractAddress: 'ST15DF8K1Z4XQ952AC2GFY106XRTNJSWE9SP6VZYA',
-        contractName: 'background-item',
+        contractAddress: contractsNFT[network].background_item.split('.')[0],
+        contractName: contractsNFT[network].background_item.split('.')[1].split('::')[0],
         functionName: 'get-token-uri',
         network: activeNetwork,
         functionArgs: [uintCV(nft)],
@@ -87,6 +120,7 @@ export const MainMenu = () => {
 
   function handleOpenLootbox(id: string) {
     console.log('selectedLootbox', id);
+
     if (canOpenLootbox)
       doContractCall({
         network: activeNetwork,
@@ -95,8 +129,8 @@ export const MainMenu = () => {
         contractName: contractsNFT[network].lootbox_background.split('.')[1].split('::')[0],
         functionName: 'open-lootbox',
         functionArgs: [uintCV(parseInt(id))],
-        postConditionMode: PostConditionMode.Allow,
-        //postConditions: [makeStandardSTXPostCondition(postConditionAddress, postConditionCode, postConditionAmount)],
+        postConditionMode: PostConditionMode.Deny,
+        postConditions: [createPostConfitionLootbox(userAddress, id), createPostConditionSTXTransfer(userAddress)],
         onFinish: (data) => {
           console.log('onFinish:', data);
           console.log('Explorer:', apiMapping.explorerTxId(network, data.txId));
@@ -110,8 +144,8 @@ export const MainMenu = () => {
 
   const checkCanOpenLootbox = async (id: string) => {
     const options = {
-      contractAddress: 'ST15DF8K1Z4XQ952AC2GFY106XRTNJSWE9SP6VZYA',
-      contractName: 'lootbox-background',
+      contractAddress: contractsNFT[network].lootbox_background.split('.')[0],
+      contractName: contractsNFT[network].lootbox_background.split('.')[1].split('::')[0],
       functionName: 'is-openable',
       network: new StacksTestnet(),
       functionArgs: [uintCV(id)],

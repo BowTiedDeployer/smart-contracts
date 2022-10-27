@@ -13,7 +13,7 @@ root.render(
     <Connect
       authOptions={{
         appDetails: {
-          name: 'Stacks React Template',
+          name: 'Lootbox Smart Contract',
           // todo:
           icon: window.location.origin + '/logo.png',
         },
