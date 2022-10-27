@@ -14,7 +14,6 @@ root.render(
       authOptions={{
         appDetails: {
           name: 'Lootbox Smart Contract',
-          // todo:
           icon: window.location.origin + '/logo.png',
         },
         redirectTo: '/',
