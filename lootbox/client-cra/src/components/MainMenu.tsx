@@ -166,6 +166,7 @@ export const MainMenu = () => {
   if (!userSession.isUserSignedIn()) {
     return null;
   }
+
   return (
     <div>
       <h6>{`Current user address: ${userSession.loadUserData().profile.stxAddress[network]}`}</h6>
