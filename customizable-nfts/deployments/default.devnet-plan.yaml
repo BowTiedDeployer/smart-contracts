@@ -9,22 +9,46 @@ plan:
     - id: 0
       transactions:
         - contract-publish:
+            contract-name: conversion
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 25440
+            path: "contracts\\conversion.clar"
+            anchor-block-only: true
+        - contract-publish:
             contract-name: nft-trait
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 4660
             path: "contracts\\nft-trait.clar"
             anchor-block-only: true
         - contract-publish:
-            contract-name: backgrounds
+            contract-name: miami-degens
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 49380
-            path: "contracts\\backgrounds.clar"
+            cost: 49710
+            path: "contracts\\miami-degens.clar"
             anchor-block-only: true
         - contract-publish:
             contract-name: cars
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 54730
             path: "contracts\\cars.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: stacks-degens
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 26000
+            path: "contracts\\stacks-degens.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: nyc-degens
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 76800
+            path: "contracts\\nyc-degens.clar"
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: backgrounds
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 49380
+            path: "contracts\\backgrounds.clar"
             anchor-block-only: true
         - contract-publish:
             contract-name: rims
@@ -39,32 +63,8 @@ plan:
             path: "contracts\\heads.clar"
             anchor-block-only: true
         - contract-publish:
-            contract-name: nyc-degens
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 49640
-            path: "contracts\\nyc-degens.clar"
-            anchor-block-only: true
-        - contract-publish:
-            contract-name: stacks-degens
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 26000
-            path: "contracts\\stacks-degens.clar"
-            anchor-block-only: true
-        - contract-publish:
-            contract-name: miami-degens
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 49710
-            path: "contracts\\miami-degens.clar"
-            anchor-block-only: true
-        - contract-publish:
             contract-name: customizable-nfts
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 247040
             path: "contracts\\customizable-nfts.clar"
-            anchor-block-only: true
-        - contract-publish:
-            contract-name: conversion
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 25440
-            path: "contracts\\conversion.clar"
             anchor-block-only: true

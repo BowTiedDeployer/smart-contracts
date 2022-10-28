@@ -157,10 +157,10 @@ const assembleServerFlow = async (operationLimit) => {
     console.log('attributes', attributes);
 
     const degenDbId = await dbReadId('degen');
-    const degenName = `BadDegen#${degenDbId}`;
-    const degenImgName = `BadImgDegen#${degenDbId}`;
-    const degenImgGameName = `BadImgGameDegen#${degenDbId}`;
-    const degenJsonName = `BadJsonDegen#${degenDbId}`;
+    const degenName = `Degen#${degenDbId}`;
+    const degenImgName = `ImgDegen#${degenDbId}`;
+    const degenImgGameName = `ImgGameDegen#${degenDbId}`;
+    const degenJsonName = `JsonDegen#${degenDbId}`;
 
     // create image from component img urls (background_url, rims_url, car_url, head_url)
     const degenImg = await imgProfileContentCreate(

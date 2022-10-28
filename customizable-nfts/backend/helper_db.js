@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb';
 import { network, operationType } from './consts.js';
 // const uri = process.env.DB_CONNECTION;
 // 'mongodb+srv://CustomizableUser:CustomizablePass@customizablenftscluster.fo7cge1.mongodb.net/CustomizableDB?retryWrites=true&w=majority';
-const uri = 'mongodb+srv://Radone:Radone@learningcluster.8d0t2ys.mongodb.net/_devnet?retryWrites=true&w=majority';
+const uri = 'mongodb+srv://Radone:Radone@learningcluster.8d0t2ys.mongodb.net/_testnet?retryWrites=true&w=majority';
 const customizableNFTInfo = 'CustomizableNFTInfo';
 const NFTIndex = 'NFTIndex';
 

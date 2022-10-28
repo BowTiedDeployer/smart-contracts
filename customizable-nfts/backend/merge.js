@@ -183,10 +183,10 @@ const mergeServerFlow = async (operationLimit) => {
 
     let degenDbId = await dbReadId('degen');
 
-    const degenName = `BadDegen#${degenDbId}`;
-    const degenImgName = `BadImgDegen#${degenDbId}`;
-    const degenImgGameName = `BadImgGameDegen#${degenDbId}`;
-    const degenJsonName = `BadJsonDegen#${degenDbId}`;
+    const degenName = `Degen#${degenDbId}`;
+    const degenImgName = `ImgDegen#${degenDbId}`;
+    const degenImgGameName = `ImgGameDegen#${degenDbId}`;
+    const degenJsonName = `JsonDegen#${degenDbId}`;
 
     attributes = { ...attributeBackground, ...attributeCar, ...attributeHead, ...attributeRims };
     attributes = { ...attributes, Type: attributes.Race };
@@ -226,9 +226,9 @@ const mergeServerFlow = async (operationLimit) => {
       'stacksdegens',
       degenDbId,
       `Degen${degenDbId}`,
-      degenJsonHash,
-      degenImgHash,
-      degenImgGameHash
+      'ipfs://' + degenJsonHash,
+      'ipfs://' + degenImgHash,
+      'ipfs://' + degenImgGameHash
     );
   }
 };

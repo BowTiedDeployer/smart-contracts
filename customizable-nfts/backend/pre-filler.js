@@ -776,48 +776,48 @@ const prefillMintThingsOut = async () => {
   // SWAP
   //
   const swapNr = 4;
-  await mintNDegens(degenUrlsSwap, swapNr, wallets.user.name);
-  await mintNComponentSets(componentSet2, swapNr / 4, wallets.user.name);
-  componentIndex += swapNr / 4;
-  degenIndex += swapNr;
-  for (let i = 2; i <= 3; i++) {
-    console.log(`Starting Mint for Swap ${i} with degenIndex: ${degenIndex} and componentIndex: ${componentIndex}`);
-    await sleep(15000);
-    await mintNDegens(degenUrlsSwap, swapNr, wallets[`wallet${i}`].name);
-    await mintNComponentSets(componentSet2, swapNr / 4, wallets[`wallet${i}`].name);
-    componentIndex += swapNr / 4;
-    degenIndex += swapNr;
-  }
+  // await mintNDegens(degenUrlsSwap, swapNr, wallets.user.name);
+  // await mintNComponentSets(componentSet2, swapNr / 4, wallets.user.name);
+  // componentIndex += swapNr / 4;
+  // degenIndex += swapNr;
+  // for (let i = 2; i <= 3; i++) {
+  //   console.log(`Starting Mint for Swap ${i} with degenIndex: ${degenIndex} and componentIndex: ${componentIndex}`);
+  //   await sleep(15000);
+  //   await mintNDegens(degenUrlsSwap, swapNr, wallets[`wallet${i}`].name);
+  //   await mintNComponentSets(componentSet2, swapNr / 4, wallets[`wallet${i}`].name);
+  //   componentIndex += swapNr / 4;
+  //   degenIndex += swapNr;
+  // }
 
   // ASSEMBLE
   //componentIndex += 3;
 
-  await sleep(15000);
+  // await sleep(15000);
   console.log('\n\nASSSSEMBLEE\n\n');
   console.log(`Starting Mint for Assemble 1 with componentIndex: ${componentIndex}`);
-  await mintNComponentSets(componentSet1, n, wallets.user.name);
+  // await mintNComponentSets(componentSet1, n, wallets.user.name);
   componentIndex += n;
-  for (let i = 2; i <= 3; i++) {
+  for (let i = 2; i <= 2; i++) {
     console.log(`Starting Mint for Assemble ${i} with componentIndex: ${componentIndex}`);
-    await sleep(15000);
+    // await sleep(15000);
     await mintNComponentSets(componentSet1, n, wallets[`wallet${i}`].name);
     componentIndex += n;
   }
   console.log('//\n//\n// before n assemble');
 
-  // DISASSEMBLE
-  //
-  //degenIndex += 12;
-  console.log(`Starting Disassemble 1 with degenIndex: ${degenIndex}`);
-  await sleep(11000);
-  await mintNDegens(degenUrlsDisassemble, n, wallets.user.name);
-  degenIndex += n;
-  for (let i = 2; i <= 3; i++) {
-    console.log(`Starting Disassemble ${i} with degenIndex: ${degenIndex}`);
-    await sleep(11000);
-    await mintNDegens(degenUrlsDisassemble, n, wallets[`wallet${i}`].name);
-    degenIndex += n;
-  }
+  // // DISASSEMBLE
+  // //
+  // //degenIndex += 12;
+  // console.log(`Starting Disassemble 1 with degenIndex: ${degenIndex}`);
+  // await sleep(11000);
+  // await mintNDegens(degenUrlsDisassemble, n, wallets.user.name);
+  // degenIndex += n;
+  // for (let i = 2; i <= 3; i++) {
+  //   console.log(`Starting Disassemble ${i} with degenIndex: ${degenIndex}`);
+  //   await sleep(11000);
+  //   await mintNDegens(degenUrlsDisassemble, n, wallets[`wallet${i}`].name);
+  //   degenIndex += n;
+  // }
 
   // MERGE
   //
