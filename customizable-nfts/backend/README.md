@@ -57,7 +57,7 @@ FE <-> SC <-> BE
   - the resulted image has image and properties.image_game ( does not have propeties.image )
 - Pinata upload image and get hash
 - deployer: get id DB
-- create json (name#id, img hash, attributes, collection("DegenNFT"))
+- create json (name#id, img hash, attributes, collection("StacksDegensNFT"))
 - deployer: Pinata upload json and get hash ("ipfs://" + hash)
 - call assemble_finalize with (member as address, json_hash as uri)
 - deployer: DB increment id
@@ -78,7 +78,7 @@ FE <-> SC <-> BE
   - the resulted image has image and properties.image_game ( does not have propeties.image )
 - Pinata upload image and get hash
 - deployer: get id DB
-- create/update json (name#id, img hash, attributes, collection("DegenNFT"))
+- create/update json (name#id, img hash, attributes, collection("StacksDegensNFT"))
 - deployer: Pinata upload json and get hash ("ipfs://" + hash)
 - call swap_finalize with (member, json_hash as Dege uri, component-name, component-type)
 - DB increment id
@@ -98,7 +98,7 @@ FE <-> SC <-> BE
   - the resulted image has image and properties.image_game ( does not have propeties.image )
 - Pinata upload image and get hash
 - deployer: get id DB
-- create/update json (name#id, img hash, attributes, collection("DegenNFT"))
+- create/update json (name#id, img hash, attributes, collection("StacksDegensNFT"))
 - deployer: Pinata upload json and get hash ("ipfs://" + hash)
 - call merge_finalize(member as address, json_hash as Degen uri)
 - DB increment id

@@ -64,5 +64,6 @@ const every_five_minutes = async () => {
 every_five_minutes();
 
 // cron.schedule('*/5 * * * *', () => {
+//   //try catch
 //   every_five_minutes();
 // });

@@ -183,10 +183,10 @@ const mergeServerFlow = async (operationLimit) => {
 
     let degenDbId = await dbReadId('degen');
 
-    const degenName = `Degen#${degenDbId}`;
-    const degenImgName = `ImgDegen#${degenDbId}`;
-    const degenImgGameName = `ImgGameDegen#${degenDbId}`;
-    const degenJsonName = `JsonDegen#${degenDbId}`;
+    const degenName = `StacksDegen#${degenDbId}`;
+    const degenImgName = `ImgStacksDegen#${degenDbId}`;
+    const degenImgGameName = `ImgGameStacksDegen#${degenDbId}`;
+    const degenJsonName = `JsonStacksDegen#${degenDbId}`;
 
     attributes = { ...attributeBackground, ...attributeCar, ...attributeHead, ...attributeRims };
     attributes = { ...attributes, Type: attributes.Race };
@@ -204,7 +204,7 @@ const mergeServerFlow = async (operationLimit) => {
       '',
       hashToPinataUrl(degenImgGameHash),
       attributes,
-      `DegenNFT`
+      `StacksDegensNFT`
     );
 
     const degenJsonHash = await uploadFlowJson(degenJsonName, degenJson);
@@ -225,7 +225,7 @@ const mergeServerFlow = async (operationLimit) => {
     await dbInsertNFTINdex(
       'stacksdegens',
       degenDbId,
-      `Degen${degenDbId}`,
+      `StacksDegen${degenDbId}`,
       'ipfs://' + degenJsonHash,
       'ipfs://' + degenImgHash,
       'ipfs://' + degenImgGameHash

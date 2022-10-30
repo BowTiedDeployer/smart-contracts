@@ -220,10 +220,10 @@ const swapServerFlow = async (operationLimit) => {
     // console.log('urlImgRims', urlImgRims);
 
     const degenDbId = await dbReadId('degen');
-    const degenName = `Degen#${degenDbId}`;
-    const degenImgName = `ImgDegen#${degenDbId}`;
-    const degenImgGameName = `ImgGameDegen#${degenDbId}`;
-    const degenJsonName = `JsonDegen#${degenDbId}`;
+    const degenName = `StacksDegen#${degenDbId}`;
+    const degenImgName = `ImgStacksDegen#${degenDbId}`;
+    const degenImgGameName = `ImgGameStacksDegen#${degenDbId}`;
+    const degenJsonName = `JsonStacksDegen#${degenDbId}`;
 
     // create image from component img urls (background_url, rims_url, car_url, head_url)
     const degenImg = await imgProfileContentCreate(
@@ -240,14 +240,14 @@ const swapServerFlow = async (operationLimit) => {
     const degenImgHash = await uploadFlowImg(degenImgName, degenImg);
     const degenImgGameHash = await uploadFlowImg(degenImgGameName, degenImgGame);
 
-    // create json with component attributes (name#id, img hash, attributes, collection("DegenNFT"))
+    // create json with component attributes (name#id, img hash, attributes, collection("StacksDegensNFT"))
     const degenJson = jsonContentCreate(
       degenName,
       hashToPinataUrl(degenImgHash),
       '',
       hashToPinataUrl(degenImgGameHash),
       attributes,
-      'DegenNFT'
+      'StacksDegensNFT'
     );
     // console.log(degenJson);
 
@@ -321,7 +321,7 @@ const swapServerFlow = async (operationLimit) => {
     await dbInsertNFTINdex(
       'stacksdegens',
       degenDbId,
-      `Degen${degenDbId}`,
+      `StacksDegen${degenDbId}`,
       degenJsonHash,
       degenImgHash,
       degenImgGameHash
