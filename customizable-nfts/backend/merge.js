@@ -225,7 +225,7 @@ const mergeServerFlow = async (operationLimit) => {
     await dbInsertNFTINdex(
       'stacksdegens',
       degenDbId,
-      `StacksDegen${degenDbId}`,
+      `StacksDegen#${degenDbId}`,
       'ipfs://' + degenJsonHash,
       'ipfs://' + degenImgHash,
       'ipfs://' + degenImgGameHash

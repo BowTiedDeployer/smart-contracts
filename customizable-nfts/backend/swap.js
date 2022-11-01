@@ -321,7 +321,7 @@ const swapServerFlow = async (operationLimit) => {
     await dbInsertNFTINdex(
       'stacksdegens',
       degenDbId,
-      `StacksDegen${degenDbId}`,
+      `StacksDegen#${degenDbId}`,
       degenJsonHash,
       degenImgHash,
       degenImgGameHash

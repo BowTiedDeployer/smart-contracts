@@ -7,6 +7,7 @@ import { getAccountNonce, getBlockHeight, getMempoolTransactionCount } from './h
 import { checkToStartFlowMerge } from './merge.js';
 import { checkToStartFlowSwap } from './swap.js';
 import { getNrOperationsAvailable, setNrOperationsAvailable, setWalletStoredNonce } from './variables.js';
+import fs from 'fs';
 
 const every_five_minutes = async () => {
   const transactionCount = await getMempoolTransactionCount(wallets.user[network]);
@@ -61,7 +62,22 @@ const every_five_minutes = async () => {
     nrOperationsAvailable = getNrOperationsAvailable();
   }
 };
-every_five_minutes();
+
+const whole_operations = async () => {
+  try {
+    await every_five_minutes();
+  } catch (error) {
+    fs.writeFile('log.txt', data, (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('wrriten succesfully to log.txt');
+      }
+    });
+  }
+};
+
+whole_operations();
 
 // cron.schedule('*/5 * * * *', () => {
 //   //try catch
