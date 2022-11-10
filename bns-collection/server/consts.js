@@ -115,7 +115,7 @@ const createJsonAttributes = (attributes) => {
   for (const attribute of attributesList) {
     jsonAttributes += `
     {
-      "trait_type": "${attribute.trait_type}", 
+      "trait_type": "${attribute.trait_type}",
       "value": "${attribute.value}"
     },`;
   }
