@@ -2,7 +2,7 @@ import { cvToHex, cvToJSON, hexToCV, standardPrincipalCV, stringAsciiCV, uintCV 
 
 export const network = 'mocknet';
 export const coreApiUrl = {
-  mainnet: 'https://stacks-node-api.mainnet.stacks.co',
+  mainnet: 'https://muddy-clean-choice.stacks-mainnet.discover.quiknode.pro/9fbe48eca6f617ed40f285ea0b7587d2542bfb4f',
   testnet: 'https://damp-serene-dew.stacks-testnet.discover.quiknode.pro/d310070672d029b398e6314a17e73be0a6bf2595',
   mocknet: 'http://localhost:3999',
 };
