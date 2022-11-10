@@ -37,7 +37,7 @@ const getNFTNameBitcoinDegens = async (id) => {
 
 // find all the names of bitcoin degens
 const findAllNames = async () => {
-  for (let i = 1; i <= 2; i++) {
+  for (let i = 1; i <= 3; i++) {
     // read json
     let degenJson = JSON.parse(fs.readFileSync(`../files_stored/jsons/${i}.json`));
     const blockchainDegenName = await getNFTNameBitcoinDegens(i);

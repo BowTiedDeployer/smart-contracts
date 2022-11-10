@@ -1,9 +1,11 @@
 import { cvToHex, cvToJSON, hexToCV, standardPrincipalCV, stringAsciiCV, uintCV } from '@stacks/transactions';
 
-export const network = 'mocknet';
+export const network = 'testnet';
 export const coreApiUrl = {
   mainnet: 'https://muddy-clean-choice.stacks-mainnet.discover.quiknode.pro/9fbe48eca6f617ed40f285ea0b7587d2542bfb4f',
-  testnet: 'https://damp-serene-dew.stacks-testnet.discover.quiknode.pro/d310070672d029b398e6314a17e73be0a6bf2595',
+  testnet: 'https://stacks-node-api.testnet.stacks.co',
+  // testnet: 'https://sparkling-aged-putty.stacks-testnet.discover.quiknode.pro/105f77e9d2aab693b59849c69305640a65ffd2fa',
+  // testnet-notworking: 'https://damp-serene-dew.stacks-testnet.discover.quiknode.pro/d310070672d029b398e6314a17e73be0a6bf2595',
   mocknet: 'http://localhost:3999',
 };
 
@@ -14,8 +16,8 @@ export const contractBitcoinDegens = {
     functionName: 'get-nft-name',
   },
   testnet: {
-    contractAddress: 'ST1R5PZYKMSXVVVMTXV3FCA2HFT1DT3KNFXK1JQB',
-    contractName: 'independent-purple-ape',
+    contractAddress: 'ST26FG29A6Q187QW0QGTCKYDAYVGY1GN21XJCVABG',
+    contractName: 'dolphin-apple-juice',
     functionName: 'get-nft-name',
   },
   mocknet: {
