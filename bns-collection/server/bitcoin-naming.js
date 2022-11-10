@@ -39,14 +39,14 @@ const getNFTNameBitcoinDegens = async (id) => {
 const findAllNames = async () => {
   for (let i = 1; i <= 2; i++) {
     // read json
-    let degenJson = JSON.parse(fs.readFileSync(`./jsons/${i}.json`));
+    let degenJson = JSON.parse(fs.readFileSync(`../files_stored/jsons/${i}.json`));
     const blockchainDegenName = await getNFTNameBitcoinDegens(i);
     if (degenJson.name != blockchainDegenName) {
       // replace json.name = getNFTNameBitcoinDegens
       degenJson.name = blockchainDegenName;
       const jsonContent = jsonContentCreate(degenJson);
       // reWrite json
-      fs.writeFileSync(`./jsons/${i}.json`, jsonContent);
+      fs.writeFileSync(`../files_stored/jsons/${i}.json`, jsonContent);
 
       // keep a log with the updates jsons
       appendToCsv(i, degenJson.name);
@@ -55,6 +55,6 @@ const findAllNames = async () => {
 };
 
 // cron-job every 5 minutes
-cron.schedule('*/2 * * * *', () => {
-  findAllNames();
-});
+//cron.schedule('*/2 * * * *', () => {
+findAllNames();
+//});
