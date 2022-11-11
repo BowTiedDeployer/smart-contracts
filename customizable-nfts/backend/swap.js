@@ -2,7 +2,23 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import { componentType, contracts, network, nodeUrl, operationType, wallets } from './consts.js';
 import { hashToPinataUrl, jsonResponseToTokenUri, pinataToHTTPUrl } from './converters.js';
-import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
+import {
+  background_img_marketplace_hash,
+  background_img_utility_hash,
+  background_json_url_hash,
+} from './hash-maps-components/backgorund-map.js';
+import { car_img_marketplace_hash, car_img_utility_hash, car_json_url_hash } from './hash-maps-components/car-map.js';
+import {
+  head_img_marketplace_hash,
+  head_img_utility_hash,
+  head_json_url_hash,
+} from './hash-maps-components/head-map.js';
+import {
+  rims_img_marketplace_hash,
+  rims_img_utility_hash,
+  rims_json_url_hash,
+} from './hash-maps-components/rims-map.js';
+import { dbGetTxId, dbIncremendId, dbInsertNFTINdex, dbReadId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
 import { imgInGameContentCreate, imgProfileContentCreate } from './helper_files.js';
 import {
   jsonContentCreate,
@@ -203,11 +219,11 @@ const swapServerFlow = async (operationLimit) => {
     const urlImgComponentRims = getImgComponentUrlFromJson(jsonRims);
     // console.log('urlImgRims', urlImgRims);
 
-    const currentDbId = await dbReadCurrentId();
-    const degenName = `BadDegen#${currentDbId}`;
-    const degenImgName = `BadImgDegen#${currentDbId}`;
-    const degenImgGameName = `BadImgGameDegen#${currentDbId}`;
-    const degenJsonName = `BadJsonDegen#${currentDbId}`;
+    const degenDbId = await dbReadId('degen');
+    const degenName = `StacksDegen#${degenDbId}`;
+    const degenImgName = `ImgStacksDegen#${degenDbId}`;
+    const degenImgGameName = `ImgGameStacksDegen#${degenDbId}`;
+    const degenJsonName = `JsonStacksDegen#${degenDbId}`;
 
     // create image from component img urls (background_url, rims_url, car_url, head_url)
     const degenImg = await imgProfileContentCreate(
@@ -224,14 +240,14 @@ const swapServerFlow = async (operationLimit) => {
     const degenImgHash = await uploadFlowImg(degenImgName, degenImg);
     const degenImgGameHash = await uploadFlowImg(degenImgGameName, degenImgGame);
 
-    // create json with component attributes (name#id, img hash, attributes, collection("DegenNFT"))
+    // create json with component attributes (name#id, img hash, attributes, collection("StacksDegensNFT"))
     const degenJson = jsonContentCreate(
       degenName,
       hashToPinataUrl(degenImgHash),
       '',
       hashToPinataUrl(degenImgGameHash),
       attributes,
-      'DegenNFT'
+      'StacksDegensNFT'
     );
     // console.log(degenJson);
 
@@ -251,11 +267,65 @@ const swapServerFlow = async (operationLimit) => {
     );
     setNrOperationsAvailable(getNrOperationsAvailable() - 1);
     setWalletStoredNonce(getWalletStoredNonce(wallets.admin.name) + 1);
+
+    if (tuple.componentType === 'background') {
+      const backgroundId = await dbReadId(tuple.componentType);
+      await dbInsertNFTINdex(
+        'background',
+        backgroundId,
+        attributes.Background,
+        background_json_url_hash[attributes.Background], // TODO: check if works as expected
+        background_img_marketplace_hash[attributes.Background],
+        background_img_utility_hash[attributes.Background]
+      );
+      await dbIncremendId(tuple.componentType, backgroundId);
+    } else if (tuple.componentType === 'car') {
+      const carId = await dbReadId(tuple.componentType);
+      await dbInsertNFTINdex(
+        'car',
+        carId,
+        attributes.Car,
+        car_json_url_hash[attributes.Car], // TODO:  check if works as expected
+        car_img_marketplace_hash[attributes.Car],
+        car_img_utility_hash[attributes.Car]
+      );
+      await dbIncremendId(tuple.componentType, carId);
+    } else if (tuple.componentType === 'head') {
+      const headId = await dbReadId(tuple.componentType);
+      await dbInsertNFTINdex(
+        'head',
+        headId,
+        `${attributes.City}_${attributes.Head}_${attributes.Face}`,
+        head_json_url_hash[attributes.Head], // TODO: check if works as expected
+        head_img_marketplace_hash[attributes.Head],
+        head_img_utility_hash[attributes.Head]
+      );
+      await dbIncremendId(tuple.componentType, headId);
+    } else if (tuple.componentType === 'rims') {
+      const rimsId = await dbReadId(tuple.componentType);
+      await dbInsertNFTINdex(
+        'rims',
+        rimsId,
+        attributes.Rims,
+        rims_json_url_hash[attributes.Rims], // TODO: check if works as expected
+        rims_img_marketplace_hash[attributes.Rims],
+        rims_img_utility_hash[attributes.Rims]
+      );
+      await dbIncremendId(tuple.componentType, rimsId);
+    }
     // increment id
-    await dbIncremendId(currentDbId);
+    await dbIncremendId('degen', degenDbId);
 
     console.log('lastTxId', lastTxId);
     await dbUpdateTxId(operationType.swap, lastTxId);
+    await dbInsertNFTINdex(
+      'stacksdegens',
+      degenDbId,
+      `StacksDegen#${degenDbId}`,
+      degenJsonHash,
+      degenImgHash,
+      degenImgGameHash
+    );
   }
 };
 

@@ -86,12 +86,12 @@ export async function callSCFunction(networkInstance, contractAddress, contractN
     txOptions.fee = new BigNum(normalizedFee);
     transaction = await makeContractCall(txOptions);
     const tx = await broadcastTransaction(transaction, networkInstance);
-    // console.log(
-    //   `${contractAddress}.${contractName}.${functionName} Admin SC public function call broadcasted tx: ${urlApis.transaction(
-    //     network,
-    //     tx.txid
-    //   )}`
-    // );
+    console.log(
+      `${contractAddress}.${contractName}.${functionName} Admin SC public function call broadcasted tx: ${urlApis.transaction(
+        network,
+        tx.txid
+      )}`
+    );
     return tx.txid.toString();
   } catch (error) {
     console.log(`${contractAddress}.${contractName}.${functionName} Admin SC public function call ERROR: ${error}`);
@@ -214,12 +214,12 @@ export async function callSCFunctionUser(networkInstance, contractAddress, contr
     txOptions.fee = new BigNum(normalizedFee);
     transaction = await makeContractCall(txOptions);
     const tx = await broadcastTransaction(transaction, networkInstance);
-    // console.log(
-    //   `${contractAddress}.${functionName} User SC public function call broadcasted tx: ${urlApis.transaction(
-    //     network,
-    //     tx.txid
-    //   )}`
-    // );
+    console.log(
+      `${contractAddress}.${functionName} User SC public function call broadcasted tx: ${urlApis.transaction(
+        network,
+        tx.txid
+      )}`
+    );
   } catch (error) {
     console.log(`${contractAddress}.${functionName} User SC public function call ERROR: ${error}`);
   }

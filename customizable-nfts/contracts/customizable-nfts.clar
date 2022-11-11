@@ -1,5 +1,5 @@
-;; upgrade-contract
-;; Wrapper which is combining parts and degens
+;; customizable-nfts
+;; Wrapper which is combining parts and stacks-degens
 
 ;; Owner
 (define-data-var contract-owner principal tx-sender)
@@ -21,7 +21,7 @@
 (define-constant nyc-type "nyc")
 
 
-(define-constant burn-address 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG)
+(define-constant burn-address 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6)
 
 
 
@@ -30,11 +30,11 @@
 ;; Disassemble
 
 ;; eg. case
-;; (contract-call? .degens mint-uri 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "uriNiceDegen")
+;; (contract-call? .stacks-degens mint-uri 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "uriNiceDegen")
 ;; ::set_tx_sender STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-disassemble-work-in-queue u1)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.customizable-nfts add-disassemble-work-in-queue u1)
 ;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract disassemble-finalize u1 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "DarkPurple" "BentleyBlack" "ClassyCream" "Miami_Syringe_Cigar")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.customizable-nfts disassemble-finalize u1 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "DarkPurple" "BentleyBlack" "ClassyCream" "Miami_Syringe_Cigar")
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.cars get-token-uri u1)
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.cars get-owner u1)
 
@@ -74,7 +74,7 @@
     (begin
       ;; check user is owner of nft
       (asserts! 
-        (is-eq (some tx-sender) (unwrap-panic (contract-call? .degens get-owner token-id))) 
+        (is-eq (some tx-sender) (unwrap-panic (contract-call? .stacks-degens get-owner token-id))) 
         err-not-owner
       )    
       ;; transfer fees if not contract-owner
@@ -97,7 +97,7 @@
               (< (len (filter is-disassemble-value-for-principal work-queue-value)) u5)
               err-too-many-pending-requests
             )
-            (unwrap-panic (contract-call? .degens burn-token token-id))
+            (unwrap-panic (contract-call? .stacks-degens burn-token token-id))
             (append 
               (unwrap-panic (as-max-len? work-queue-value u99)) 
               value-to-add
@@ -178,9 +178,9 @@
 ;; (contract-call? .rims mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "ClassyCream")
 ;; (contract-call? .heads mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "NYC_Antenna_BigSmile")
 ;; ::set_tx_sender STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-assemble-work-in-queue u1 u1 u1 u1)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.customizable-nfts add-assemble-work-in-queue u1 u1 u1 u1)
 ;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-;; (contract-call? .upgrade-contract assemble-finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "uri-custom")
+;; (contract-call? .customizable-nfts assemble-finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "uri-custom")
 
 (define-data-var assemble-work-queue (list 100 {member: principal, background-id: uint, car-id: uint, rim-id: uint, head-id: uint}) (list))
 
@@ -188,7 +188,7 @@
 	(begin     
     ;; Check that admin is calling this contract
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
-    (unwrap-panic (contract-call? .degens mint-uri member metadata-uri))
+    (unwrap-panic (contract-call? .stacks-degens mint-uri member metadata-uri))
     (pop-assemble-work-queue)
   )
 )
@@ -329,14 +329,14 @@
 ;; SWAP
 
 ;; eg. case
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degens mint-uri 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "nice-link")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stacks-degens mint-uri 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "nice-link")
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.rims mint-name 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "ClassyCream")
 ;; ::set_tx_sender STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-swap-work-in-queue u1 u1 "rim-type")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.customizable-nfts add-swap-work-in-queue u1 u1 "rim-type")
 ;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract swap-finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "new-nice-link" "ClassyDark" "rim-type")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.customizable-nfts swap-finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "new-nice-link" "ClassyDark" "rim-type")
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.rims get-token-uri u2)
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degens get-token-uri u4)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stacks-degens get-token-uri u4)
 
 
 (define-data-var swap-work-queue (list 100 {member: principal, degen-id: uint, component-id: uint, component-type: (string-ascii 30)}) (list))
@@ -345,7 +345,7 @@
   (begin
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
     (asserts! (is-eq (some degen-id) (get degen-id (unwrap-panic (get-swap-head-work-queue)))) err-invalid)
-    (unwrap-panic (contract-call? .degens mint-uri member metadata-uri-dgn))
+    (unwrap-panic (contract-call? .stacks-degens mint-uri member metadata-uri-dgn))
     (if (is-eq false
           (if (is-eq component-type background-type) 
             (unwrap-panic (contract-call? .backgrounds mint-name member component-name))
@@ -388,7 +388,7 @@
       ;; check user is owner of nft
       (asserts! 
         (and
-          (is-eq (some tx-sender) (unwrap-panic (contract-call? .degens get-owner degen-id)))       
+          (is-eq (some tx-sender) (unwrap-panic (contract-call? .stacks-degens get-owner degen-id)))       
           (is-eq (some tx-sender)
               (if (is-eq component-type background-type) 
                 (unwrap-panic (contract-call? .backgrounds get-owner component-id))
@@ -431,7 +431,7 @@
               (< (len (filter is-swap-value-for-principal work-queue-value)) u5)
               err-too-many-pending-requests
             )
-            (unwrap-panic (contract-call? .degens burn-token degen-id))
+            (unwrap-panic (contract-call? .stacks-degens burn-token degen-id))
             (if (is-eq component-type background-type) 
               (unwrap-panic (contract-call? .backgrounds burn-token component-id))
               (if (is-eq component-type car-type) 
@@ -522,11 +522,11 @@
 ;; ::set_tx_sender STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.miami-degens claim)
 ;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.nyc-degens claim)
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract add-merge-work-in-queue u1 "miami")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.customizable-nfts add-merge-work-in-queue u1 "miami")
 ;; ::set_tx_sender ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract get-merge-work-queue)
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract merge-finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "nice-new-nft")
-;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degens get-token-uri u1)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.customizable-nfts get-merge-work-queue)
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.customizable-nfts merge-finalize 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6 "nice-new-nft")
+;; (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stacks-degens get-token-uri u1)
 
 (define-data-var merge-work-queue (list 100 {member: principal, degen-id: uint, degen-type: (string-ascii 30)}) (list))
 
@@ -534,7 +534,7 @@
   (begin
     (asserts! (is-eq tx-sender (var-get contract-owner)) err-invalid)
     (asserts! (is-eq (some degen-id) (get degen-id (unwrap-panic (get-merge-head-work-queue)))) err-invalid)
-    (unwrap-panic (contract-call? .degens mint-uri member metadata-uri-dgn))
+    (unwrap-panic (contract-call? .stacks-degens mint-uri member metadata-uri-dgn))
     (pop-merge-work-queue)
   )
 )

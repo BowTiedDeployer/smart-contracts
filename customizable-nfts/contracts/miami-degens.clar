@@ -1,6 +1,6 @@
 ;; MiamiDegens
 
-(impl-trait 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.nft-trait.nft-trait)
+(impl-trait .nft-trait.nft-trait)
 
 ;; Non Fungible Token, using sip-009
 (define-non-fungible-token miami-degens uint)

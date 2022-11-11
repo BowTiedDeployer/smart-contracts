@@ -14,8 +14,11 @@ path = "contracts/backgrounds.clar"
 [contracts.cars]
 path = "contracts/cars.clar"
 
-[contracts.degens]
-path = "contracts/degens.clar"
+[contracts.conversion]
+path = "contracts/conversion.clar"
+
+[contracts.customizable-nfts]
+path = "contracts/customizable-nfts.clar"
 
 [contracts.heads]
 path = "contracts/heads.clar"
@@ -32,8 +35,8 @@ path = "contracts/nyc-degens.clar"
 [contracts.rims]
 path = "contracts/rims.clar"
 
-[contracts.upgrade-contract]
-path = "contracts/upgrade-contract.clar"
+[contracts.stacks-degens]
+path = "contracts/stacks-degens.clar"
 
 [repl]
 costs_version = 2

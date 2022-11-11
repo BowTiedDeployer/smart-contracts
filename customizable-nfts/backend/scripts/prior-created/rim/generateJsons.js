@@ -65,7 +65,7 @@ fs.readdir(pathRimsImg, (err, rims) => {
       `ipfs://QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31/${rim}`, // component
       '', // in-game
       { Rims: rimName },
-      'DegenRims'
+      'StacksDegensRims'
     );
     fs.writeFile(pathRimsGenerated + rimName + '.json', metadata, (err, result) => {
       if (err) console.log('error', err);

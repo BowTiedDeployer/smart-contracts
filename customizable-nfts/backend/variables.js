@@ -20,6 +20,7 @@ export let globalNonce = {
   wallet18: 0,
   wallet19: 0,
   wallet20: 0,
+  wallet21: 0,
 };
 
 export let nrOperationsAvailable = 24;

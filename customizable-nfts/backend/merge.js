@@ -13,7 +13,7 @@ import { jsonResponseToTokenUri, replaceTokenCurrentId, pinataToHTTPUrl, hashToP
 import { oldToNewComponentNames } from './mapOldNewComponentNames.js';
 import { imgInGameContentCreate, imgProfileContentCreate } from './helper_files.js';
 import { uploadFlowImg, uploadFlowJson } from './uploads.js';
-import { dbGetTxId, dbIncremendId, dbReadCurrentId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
+import { dbGetTxId, dbIncremendId, dbInsertNFTINdex, dbReadId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
 import {
   getNrOperationsAvailable,
   getWalletStoredNonce,
@@ -85,8 +85,14 @@ const mergeServerFlow = async (operationLimit) => {
         [tuple.degenId]
       )
     );
+    console.log('urlJsonDegen', urlJsonDegen);
     // -> get the json
-    const jsonDegen = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlJsonDegen, tuple.degenId)));
+    // miami needs the replacement of ${TOKEN_ID} with the id
+    let jsonDegen;
+    if (tuple.degenType == 'miami')
+      jsonDegen = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlJsonDegen, tuple.degenId)));
+    // nyc gets the url with the id correct
+    else jsonDegen = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlJsonDegen, tuple.degenId)));
     // -> get the attributes
     let attributesDegen = getAttributesMapTraitValue(jsonDegen);
     const backgroundNewName = oldToNewComponentNames[contractType].background[attributesDegen.Background];
@@ -94,6 +100,7 @@ const mergeServerFlow = async (operationLimit) => {
       contractType == 'miami'
         ? oldToNewComponentNames[contractType].car[attributesDegen.Car]
         : oldToNewComponentNames[contractType].car[attributesDegen.Colors];
+    console.log(attributesDegen);
     const headPartialNewName = oldToNewComponentNames[contractType].head[attributesDegen.Head];
     const facePartialNewName = oldToNewComponentNames[contractType].face[attributesDegen.Face];
     const rimsNewName = oldToNewComponentNames[contractType].rims[attributesDegen.Rims];
@@ -151,6 +158,7 @@ const mergeServerFlow = async (operationLimit) => {
 
     const backgroundJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlBackgroundJSON)));
     const carJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlCarJSON)));
+    console.log('urlRimsJSON', urlRimsJSON);
     const rimsJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlRimsJSON)));
     const headJSONResponse = await fetchJsonFromUrl(pinataToHTTPUrl(replaceTokenCurrentId(urlHeadJSON)));
 
@@ -173,15 +181,15 @@ const mergeServerFlow = async (operationLimit) => {
       pinataToHTTPUrl(urlImgComponentHead)
     );
 
-    let currentDbId = await dbReadCurrentId();
+    let degenDbId = await dbReadId('degen');
 
-    const degenName = `BadDegen#${currentDbId}`;
-    const degenImgName = `BadImgDegen#${currentDbId}`;
-    const degenImgGameName = `BadImgGameDegen#${currentDbId}`;
-    const degenJsonName = `BadJsonDegen#${currentDbId}`;
+    const degenName = `StacksDegen#${degenDbId}`;
+    const degenImgName = `ImgStacksDegen#${degenDbId}`;
+    const degenImgGameName = `ImgGameStacksDegen#${degenDbId}`;
+    const degenJsonName = `JsonStacksDegen#${degenDbId}`;
 
     attributes = { ...attributeBackground, ...attributeCar, ...attributeHead, ...attributeRims };
-    attributes = { ...attributesDegen, Type: attributes.Race };
+    attributes = { ...attributes, Type: attributes.Race };
     const { Race, ...otherAttributes } = attributes;
     attributes = otherAttributes;
 
@@ -196,7 +204,7 @@ const mergeServerFlow = async (operationLimit) => {
       '',
       hashToPinataUrl(degenImgGameHash),
       attributes,
-      `DegenNFT`
+      `StacksDegensNFT`
     );
 
     const degenJsonHash = await uploadFlowJson(degenJsonName, degenJson);
@@ -212,8 +220,16 @@ const mergeServerFlow = async (operationLimit) => {
     );
     setNrOperationsAvailable(getNrOperationsAvailable() - 1);
     setWalletStoredNonce(wallets.admin.name, getWalletStoredNonce(wallets.admin.name) + 1);
-    await dbIncremendId(currentDbId);
+    await dbIncremendId('degen', degenDbId);
     await dbUpdateTxId(operationType.merge, lastTxId);
+    await dbInsertNFTINdex(
+      'stacksdegens',
+      degenDbId,
+      `StacksDegen#${degenDbId}`,
+      'ipfs://' + degenJsonHash,
+      'ipfs://' + degenImgHash,
+      'ipfs://' + degenImgGameHash
+    );
   }
 };
 
