@@ -12,7 +12,6 @@ path = ".requirements"
 [contracts.background-item]
 path = "contracts/background-item.clar"
 
-
 [contracts.lootbox-background]
 path = "contracts/lootbox-background.clar"
 

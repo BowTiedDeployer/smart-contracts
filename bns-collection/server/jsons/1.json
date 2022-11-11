@@ -1,0 +1,35 @@
+{
+  "sip": 16,
+  "name": "BitcoinDegen#1",
+  "image": "https://stacksdegens.com/bitcoin-degens/images/1.png",
+  "attributes": [
+    {
+      "trait_type": "Background", 
+      "value": "Sunset"
+    },
+    {
+      "trait_type": "Car", 
+      "value": "BentleyGrey"
+    },
+    {
+      "trait_type": "Rims", 
+      "value": "SportyPearlescent"
+    },
+    {
+      "trait_type": "Type", 
+      "value": "Skull"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "Party"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "Sunglasses"
+    }
+  ],
+  "properties": {
+    "image_game": "https://stacksdegens.com/bitcoin-degens/in-game/1.png",
+    "collection": "BitcoinDegens"
+  }
+}
