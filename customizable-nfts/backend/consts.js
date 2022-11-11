@@ -4,7 +4,7 @@ export const metadataOldDegensSrc = {
   nyc: (degenId) => `https://stxnft.mypinata.cloud/ipfs/QmayEqWwWc87a5ig4ujkRdcyTe6uw2cXEJz177iMHQY4SP/${degenId}.json`,
 };
 
-export const network = 'mocknet'; //"testnet", "mainnet", "mocknet";
+export const network = 'testnet'; //"testnet", "mainnet", "mocknet";
 
 const coreApiUrl = {
   mainnet: 'https://stacks-node-api.mainnet.stacks.co',
@@ -31,16 +31,14 @@ export const urlApis = {
 export const contracts = {
   mainnet: {},
   testnet: {
-    //lootbox_background: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.lootbox-background',
-    //background_item: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.background-item',
-    backgrounds: 'ST2FSGYVG0T3Z7XSSTNVY89D80V31PVFEMPZBK6N2.backgrounds',
-    cars: 'ST2FSGYVG0T3Z7XSSTNVY89D80V31PVFEMPZBK6N2.cars',
-    heads: 'ST2FSGYVG0T3Z7XSSTNVY89D80V31PVFEMPZBK6N2.heads',
-    rims: 'ST2FSGYVG0T3Z7XSSTNVY89D80V31PVFEMPZBK6N2.rims',
-    degens: 'ST2FSGYVG0T3Z7XSSTNVY89D80V31PVFEMPZBK6N2.degens',
-    customizable: 'ST2FSGYVG0T3Z7XSSTNVY89D80V31PVFEMPZBK6N2.upgrade-contract',
-    miami: 'ST2FSGYVG0T3Z7XSSTNVY89D80V31PVFEMPZBK6N2.miami-degens',
-    nyc: 'ST2FSGYVG0T3Z7XSSTNVY89D80V31PVFEMPZBK6N2.nyc-degens',
+    backgrounds: 'ST1HW9QWHEQ7PZYQGGKJ8FRWBF6VAG7V885WYH3TQ.backgrounds',
+    cars: 'ST1HW9QWHEQ7PZYQGGKJ8FRWBF6VAG7V885WYH3TQ.cars',
+    heads: 'ST1HW9QWHEQ7PZYQGGKJ8FRWBF6VAG7V885WYH3TQ.heads',
+    rims: 'ST1HW9QWHEQ7PZYQGGKJ8FRWBF6VAG7V885WYH3TQ.rims',
+    degens: 'ST1HW9QWHEQ7PZYQGGKJ8FRWBF6VAG7V885WYH3TQ.stacks-degens',
+    customizable: 'ST1HW9QWHEQ7PZYQGGKJ8FRWBF6VAG7V885WYH3TQ.customizable-nfts',
+    miami: 'ST1HW9QWHEQ7PZYQGGKJ8FRWBF6VAG7V885WYH3TQ.miami-degens',
+    nyc: 'ST1HW9QWHEQ7PZYQGGKJ8FRWBF6VAG7V885WYH3TQ.nyc-degens',
   },
   mocknet: {
     lootbox_background: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.lootbox-background',
@@ -49,8 +47,8 @@ export const contracts = {
     cars: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.cars',
     heads: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.heads',
     rims: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.rims',
-    degens: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.degens',
-    customizable: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.upgrade-contract',
+    degens: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stacks-degens',
+    customizable: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.customizable-nfts',
     miami: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.miami-degens',
     nyc: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.nyc-degens',
   },
@@ -60,31 +58,31 @@ export const wallets = {
   admin: {
     name: 'admin',
     mainnet: {},
-    testnet: 'ST2FSGYVG0T3Z7XSSTNVY89D80V31PVFEMPZBK6N2',
+    testnet: 'ST1HW9QWHEQ7PZYQGGKJ8FRWBF6VAG7V885WYH3TQ',
     mocknet: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
   },
   user: {
     name: 'user',
     mainnet: {},
-    testnet: 'ST3M4VFJQFEJDKY2CG9HKMPJJGKVWC9TSX73C040M',
+    testnet: 'STCWHVECFJ6VVAJPXPZGSRZVAHZ0QAPT07Q9FCXK',
     mocknet: 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5',
   },
   wallet2: {
     name: 'wallet2',
     mainnet: {},
-    testnet: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG',
+    testnet: 'ST3K6MF85B052DR514B89N3EDPRNCH89TZZ64WMRK',
     mocknet: 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG',
   },
   wallet3: {
     name: 'wallet3',
     mainnet: {},
-    testnet: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC',
+    testnet: 'ST38RTGB1BY7KTK9FZWR5N3BA9S40NVNFX0KQ8CTW',
     mocknet: 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC',
   },
   wallet4: {
     name: 'wallet4',
     mainnet: {},
-    testnet: 'ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND',
+    testnet: 'ST3MYR5KFX1182922P9CF2B1FXQPNAVKQDM14VVSB',
     mocknet: 'ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND',
   },
   wallet5: {

@@ -57,7 +57,7 @@ FE <-> SC <-> BE
   - the resulted image has image and properties.image_game ( does not have propeties.image )
 - Pinata upload image and get hash
 - deployer: get id DB
-- create json (name#id, img hash, attributes, collection("DegenNFT"))
+- create json (name#id, img hash, attributes, collection("StacksDegensNFT"))
 - deployer: Pinata upload json and get hash ("ipfs://" + hash)
 - call assemble_finalize with (member as address, json_hash as uri)
 - deployer: DB increment id
@@ -78,7 +78,7 @@ FE <-> SC <-> BE
   - the resulted image has image and properties.image_game ( does not have propeties.image )
 - Pinata upload image and get hash
 - deployer: get id DB
-- create/update json (name#id, img hash, attributes, collection("DegenNFT"))
+- create/update json (name#id, img hash, attributes, collection("StacksDegensNFT"))
 - deployer: Pinata upload json and get hash ("ipfs://" + hash)
 - call swap_finalize with (member, json_hash as Dege uri, component-name, component-type)
 - DB increment id
@@ -98,7 +98,7 @@ FE <-> SC <-> BE
   - the resulted image has image and properties.image_game ( does not have propeties.image )
 - Pinata upload image and get hash
 - deployer: get id DB
-- create/update json (name#id, img hash, attributes, collection("DegenNFT"))
+- create/update json (name#id, img hash, attributes, collection("StacksDegensNFT"))
 - deployer: Pinata upload json and get hash ("ipfs://" + hash)
 - call merge_finalize(member as address, json_hash as Degen uri)
 - DB increment id
@@ -127,28 +127,28 @@ convert old degen json to new json
 marketplace: https://stxnft.mypinata.cloud/ipfs/QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria  
 image-component: https://stxnft.mypinata.cloud/ipfs/QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria  
 image-in-game: 🚫  
-json: https://stxnft.mypinata.cloud/ipfs/QmSUD8LoZL4ChE1LRmhcACsP1FJCaHuWpW8FXEtedD1rPo
+json: https://stxnft.mypinata.cloud/ipfs/QmU3nYMUNS3Pk148Z4ndTiCL9mcAFPapyi2eZ7ACW5FzUR
 
 ### Car ✅
 
 marketplace: https://stxnft.mypinata.cloud/ipfs/QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1  
 image-component: https://stxnft.mypinata.cloud/ipfs/QmeCL653FLxAfdT8wGkHxhwHSdEfPBH4WF8h9Hz6XDbi4u  
 image-in-game: https://stxnft.mypinata.cloud/ipfs/QmXivFXDKXgnECXN7ckPf8KHXn6mogvHwLsdT1rAfCCU72  
-json: https://stxnft.mypinata.cloud/ipfs/QmWuEAHbgtHQpT82PtVb8W2uXF3dPc92XCRKsCwRaet5BE
+json: https://stxnft.mypinata.cloud/ipfs/QmUeeP62n6izm2skUjr17RcVdr5b5PsTyGQwU8GMRg92ux
 
 ### Rims ✅
 
 marketplace: https://stxnft.mypinata.cloud/ipfs/QmUAeq2AoLPPednjPxmZzstG3yDHR7fqs7mK3q8oQg2qRV  
 image-component: https://stxnft.mypinata.cloud/ipfs/QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31  
 image-in-game: 🚫  
-json: https://stxnft.mypinata.cloud/ipfs/QmXiDFRaq1CS4nQJfcCdFAYLixfAc9XUikjfWTCFYL4vJC
+json: https://stxnft.mypinata.cloud/ipfs/QmdbWpM18AdKzaomZQRnNQotmXtPtRX9mAkht13TbUaQ32
 
 ### Head ✅
 
 marketplace: https://stxnft.mypinata.cloud/ipfs/QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst  
 image-component: https://stxnft.mypinata.cloud/ipfs/QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK  
 image-in-game: https://stxnft.mypinata.cloud/ipfs/QmbUFUAZfqN1AsDHNSLomFVnDXn7L8baEfRcJiv8jsYxAL
-json: https://stxnft.mypinata.cloud/ipfs/QmewAMgQ7UWhFkSMo2eNcZC3BgHFKFLkHUnqhnTDs2Viwh
+json: https://stxnft.mypinata.cloud/ipfs/QmaFphBKc4QppqEu8uvEnzSEdSE57ZDXCWfpoAHFpAMnH8
 
 # Positions for marketplace picture:
 

@@ -16,7 +16,15 @@ import { readOnlySCJsonResponse, callSCFunction, chainGetTxIdStatus, sleep, getT
 import dotenv from 'dotenv';
 import { pinataToHTTPUrl } from './converters.js';
 import { fetchJsonFromUrl, getAttributesMapTraitValue } from './helper_json.js';
-import { dbGetTxId, dbUpdateLastDone, dbUpdateTxId } from './helper_db.js';
+import {
+  dbGetTxId,
+  dbIncremendCurrentId,
+  dbIncremendId,
+  dbInsertNFTINdex,
+  dbReadId,
+  dbUpdateLastDone,
+  dbUpdateTxId,
+} from './helper_db.js';
 import {
   getNrOperationsAvailable,
   getWalletStoredNonce,
@@ -24,6 +32,22 @@ import {
   setNrOperationsAvailable,
   setWalletStoredNonce,
 } from './variables.js';
+import {
+  background_img_marketplace_hash,
+  background_img_utility_hash,
+  background_json_url_hash,
+} from './hash-maps-components/backgorund-map.js';
+import { car_img_marketplace_hash, car_img_utility_hash, car_json_url_hash } from './hash-maps-components/car-map.js';
+import {
+  head_img_marketplace_hash,
+  head_img_utility_hash,
+  head_json_url_hash,
+} from './hash-maps-components/head-map.js';
+import {
+  rims_img_marketplace_hash,
+  rims_img_utility_hash,
+  rims_json_url_hash,
+} from './hash-maps-components/rims-map.js';
 
 dotenv.config();
 
@@ -90,7 +114,6 @@ const disassembleServerFlow = async (operationLimit) => {
     // -> get the attributes
     const attributes = getAttributesMapTraitValue(jsonFetched);
     attributes.Type == 'Alien' ? (attributes.City = 'NYC') : (attributes.City = 'Miami');
-
     // -> mint them
     // (disassemble-finalize (token-id uint) (member principal) (background-name (string-ascii 30)) (body-name (string-ascii 30)) (rim-name (string-ascii 30)) (head-name (string-ascii 30)))
     lastTxId = await callSCFunction(
@@ -110,9 +133,56 @@ const disassembleServerFlow = async (operationLimit) => {
     );
     setNrOperationsAvailable(getNrOperationsAvailable() - 1);
     setWalletStoredNonce(wallets.admin.name, getWalletStoredNonce(wallets.admin.name) + 1);
+    const backgroundId = await dbReadId('background');
+    const carId = await dbReadId('car');
+    const headId = await dbReadId('head');
+    const rimsId = await dbReadId('rims');
+    await dbInsertNFTINdex(
+      'background',
+      backgroundId,
+      attributes.Background,
+      background_json_url_hash[attributes.Background], // TODO: check if works as expected
+      background_img_marketplace_hash[attributes.Background],
+      background_img_utility_hash[attributes.Background]
+    );
+    await dbInsertNFTINdex(
+      'car',
+      carId,
+      attributes.Car,
+      car_json_url_hash[attributes.Car], // TODO:  check if works as expected
+      car_img_marketplace_hash[attributes.Car],
+      car_img_utility_hash[attributes.Car]
+    );
+    console.log();
+    await dbInsertNFTINdex(
+      'head',
+      headId,
+      `${attributes.City}_${attributes.Head}_${attributes.Face}`,
+      head_json_url_hash[`${attributes.City}_${attributes.Head}_${attributes.Face}`], // TODO: check if works as expected
+      head_img_marketplace_hash[`${attributes.City}_${attributes.Head}_${attributes.Face}`],
+      head_img_utility_hash[`${attributes.City}_${attributes.Head}_${attributes.Face}`]
+    );
+    await dbInsertNFTINdex(
+      'rims',
+      rimsId,
+      attributes.Rims,
+      rims_json_url_hash[attributes.Rims], // TODO: check if works as expected
+      rims_img_marketplace_hash[attributes.Rims],
+      rims_img_utility_hash[attributes.Rims]
+    );
+
+    await dbIncremendId('background', backgroundId);
+    await dbIncremendId('car', carId);
+    await dbIncremendId('head', headId);
+    await dbIncremendId('rims', rimsId);
+
     console.log('lastTxId', lastTxId);
 
     await dbUpdateTxId(operationType.disassemble, lastTxId);
+    // await dbIncremendId('degen', degenDbId);
+
+    // console.log('lastTxId', lastTxId);
+    // await dbUpdateTxId(operationType.assemble, lastTxId);
   }
 };
 

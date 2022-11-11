@@ -7,17 +7,19 @@ import { getAccountNonce, getBlockHeight, getMempoolTransactionCount } from './h
 import { checkToStartFlowMerge } from './merge.js';
 import { checkToStartFlowSwap } from './swap.js';
 import { getNrOperationsAvailable, setNrOperationsAvailable, setWalletStoredNonce } from './variables.js';
+import fs from 'fs';
 
 const every_five_minutes = async () => {
-  const transactionCount = await getMempoolTransactionCount(wallets.admin[network]);
+  const transactionCount = await getMempoolTransactionCount(wallets.user[network]);
+  console.log(await transactionCount);
   setNrOperationsAvailable(getNrOperationsAvailable() - transactionCount);
   console.log('---Nr Operations Available: ' + getNrOperationsAvailable());
-  const blcokchainNextNonce = await getAccountNonce(wallets[wallets.admin.name][network]);
-  setWalletStoredNonce(wallets.admin.name, blcokchainNextNonce);
-  const lastExecutedBlockId = await dbReadLastExecutedBlockId(); // TODO: test this
+  const blcokchainNextNonce = await getAccountNonce(wallets[wallets.user.name][network]);
+  setWalletStoredNonce(wallets.user.name, blcokchainNextNonce);
+  const lastExecutedBlockId = await dbReadLastExecutedBlockId();
   const currentBlockId = await getBlockHeight();
+  console.log(await getBlockHeight, await dbReadLastExecutedBlockId());
   console.log(currentBlockId);
-  return;
   if (lastExecutedBlockId === currentBlockId) {
     console.log('same Block, wait for a new block to start');
     return;
@@ -25,9 +27,10 @@ const every_five_minutes = async () => {
     console.log('ERROR: last executed block > current block');
     return;
   }
-  dbUpdateLastExecutedBlockId(lastExecutedBlockId, currentBlockId);
+  await dbUpdateLastExecutedBlockId(lastExecutedBlockId, currentBlockId);
   let operationLimit = 4;
-  while (operationLimit > 0 && getNrOperationsAvailable() > 0) {
+  let nrOperationsAvailable = getNrOperationsAvailable();
+  while (operationLimit > 0 && nrOperationsAvailable > 0) {
     let lastOperation = await dbReadLastDone();
     console.log('lastOperation: ', lastOperation);
 
@@ -56,10 +59,27 @@ const every_five_minutes = async () => {
         console.error(`invalid`);
         return null;
     }
+    nrOperationsAvailable = getNrOperationsAvailable();
   }
 };
-every_five_minutes();
+
+const whole_operations = async () => {
+  try {
+    await every_five_minutes();
+  } catch (error) {
+    fs.writeFile('log.txt', data, (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('wrriten succesfully to log.txt');
+      }
+    });
+  }
+};
+
+whole_operations();
 
 // cron.schedule('*/5 * * * *', () => {
+//   //try catch
 //   every_five_minutes();
 // });

@@ -66,7 +66,7 @@ fs.readdir(pathBgImg, (err, backgrounds) => {
       `ipfs://QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria/${background}`, // component
       '', // in-game
       { Background: backgroundName },
-      'DegenBackgrounds'
+      'StacksDegensBackgrounds'
     );
     fs.writeFile(pathBgGenerated + backgroundName + '.json', metadata, (err, result) => {
       if (err) console.log('error', err);

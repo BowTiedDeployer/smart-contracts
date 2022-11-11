@@ -68,10 +68,6 @@
 )
 
 
-;; optimize one time join
-;; after join, map-inset scoreboard default values
-;; if map-insert return false -> err ERR-ALREADY-JOINED
-;; else add balance print action etc 
 ;; anyone can call to join lobbies
 (define-public (join (id uint))
     (let (
@@ -199,4 +195,3 @@
     (ok true))
 )
 
-;; (set-owner 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)

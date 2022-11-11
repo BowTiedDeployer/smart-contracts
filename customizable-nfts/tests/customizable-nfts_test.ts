@@ -1,7 +1,7 @@
 import { Clarinet, Tx, Chain, Account, types } from 'https://deno.land/x/clarinet@v0.31.0/index.ts';
 import { assertEquals } from 'https://deno.land/std@0.90.0/testing/asserts.ts';
 
-const UPGRADE_CONTRACT = 'upgrade-contract';
+const UPGRADE_CONTRACT = 'customizable-nfts';
 const GET_DISASSEMBLE_WORK_QUEUE = 'get-disassemble-work-queue';
 const GET_DISASSEMBLE_HEAD_WORK_QUEUE = 'get-disassemble-head-work-queue';
 const POP_DISASSEMBLE_WORK_QUEUE = 'pop-disassemble-work-queue-public';
@@ -36,7 +36,7 @@ const ADD_MERGE_WORK_IN_QUEUE = 'add-merge-work-in-queue';
 const MERGE_FINALIZE = 'merge-finalize';
 const BURN_OLD_NFT = 'burn-old-nft-public';
 
-const DEGEN_CONTRACT = 'degens';
+const DEGEN_CONTRACT = 'stacks-degens';
 const DEGEN_MINT_URI = 'mint-uri';
 const BACKGROUND_CONTRACT = 'backgrounds';
 const CAR_CONTRACT = 'cars';
@@ -97,7 +97,7 @@ Clarinet.test({
 //DISASSEMBLE
 //is-disassemble-value-for-principal
 Clarinet.test({
-  name: 'upgrade-contract_is-disassemble-value-for-principal_deployer_deployer_true',
+  name: 'customizable-nfts_is-disassemble-value-for-principal_deployer_deployer_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -120,7 +120,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-disassemble-value-for-principal_deployer_address_false',
+  name: 'customizable-nfts_is-disassemble-value-for-principal_deployer_address_false',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -144,7 +144,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-disassemble-value-for-principal_address_address_true',
+  name: 'customizable-nfts_is-disassemble-value-for-principal_address_address_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -168,7 +168,7 @@ Clarinet.test({
 
 //fee-processing
 Clarinet.test({
-  name: 'upgrade-contract_fee-processing_address_ok',
+  name: 'customizable-nfts_fee-processing_address_ok',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -186,7 +186,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_fee-processing_deployer_error',
+  name: 'customizable-nfts_fee-processing_deployer_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -203,7 +203,7 @@ Clarinet.test({
 
 //add-disassemble-work-in-queue
 Clarinet.test({
-  name: 'upgrade-contract_add-disassemble-work-in-queue_address_tokenOwned_ok',
+  name: 'customizable-nfts_add-disassemble-work-in-queue_address_tokenOwned_ok',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -237,7 +237,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-disassemble-work-in-queue_deployer_tokenOwned_ok',
+  name: 'customizable-nfts_add-disassemble-work-in-queue_deployer_tokenOwned_ok',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -269,7 +269,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-disassemble-work-in-queue_address_tokenNotOwned_error',
+  name: 'customizable-nfts_add-disassemble-work-in-queue_address_tokenNotOwned_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -299,7 +299,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-disassemble-work-in-queue_deployer_tokenNotOwned_error',
+  name: 'customizable-nfts_add-disassemble-work-in-queue_deployer_tokenNotOwned_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -328,7 +328,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-disassemble-work-in-queue_address_tokenOwned_addedTwice_error',
+  name: 'customizable-nfts_add-disassemble-work-in-queue_address_tokenOwned_addedTwice_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -365,7 +365,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-disassemble-work-in-queue_deployer_tokenOwned_addedTwice_error',
+  name: 'customizable-nfts_add-disassemble-work-in-queue_deployer_tokenOwned_addedTwice_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -396,7 +396,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-disassemble-work-in-queue_address_add5Tokens_error',
+  name: 'customizable-nfts_add-disassemble-work-in-queue_address_add5Tokens_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -478,7 +478,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-disassemble-work-in-queue_deployer_add5Tokens_error',
+  name: 'customizable-nfts_add-disassemble-work-in-queue_deployer_add5Tokens_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const degen1 = 'urlNiceDegen1';
@@ -558,7 +558,7 @@ Clarinet.test({
 
 //get-disassemble-work-queue
 Clarinet.test({
-  name: 'upgrade-contract_get-disassemble-work-queue_address_emptyQueue',
+  name: 'customizable-nfts_get-disassemble-work-queue_address_emptyQueue',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -569,7 +569,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-disassemble-work-queue_address_singleElement',
+  name: 'customizable-nfts_get-disassemble-work-queue_address_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -600,7 +600,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-disassemble-work-queue_deployer_singleElement',
+  name: 'customizable-nfts_get-disassemble-work-queue_deployer_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -630,7 +630,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-disassemble-work-queue_address_multipleElements',
+  name: 'customizable-nfts_get-disassemble-work-queue_address_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -667,7 +667,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-disassemble-work-queue_deployer_multipleElements',
+  name: 'customizable-nfts_get-disassemble-work-queue_deployer_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const degen1 = 'urlNiceDegen1';
@@ -704,7 +704,7 @@ Clarinet.test({
 
 //get-disassemble-head-work-queue
 Clarinet.test({
-  name: 'upgrade-contract_get-disassemble-head-work-queue_address_emptyQueue',
+  name: 'customizable-nfts_get-disassemble-head-work-queue_address_emptyQueue',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -715,7 +715,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-disassemble-head-work-queue_address_singleElement',
+  name: 'customizable-nfts_get-disassemble-head-work-queue_address_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -743,7 +743,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-disassemble-head-work-queue_deployer_singleElement',
+  name: 'customizable-nfts_get-disassemble-head-work-queue_deployer_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -771,7 +771,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-disassemble-head-work-queue_address_multipleElements',
+  name: 'customizable-nfts_get-disassemble-head-work-queue_address_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -808,7 +808,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-disassemble-head-work-queue_deployer_multipleElements',
+  name: 'customizable-nfts_get-disassemble-head-work-queue_deployer_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const degen1 = 'urlNiceDegen1';
@@ -845,7 +845,7 @@ Clarinet.test({
 
 //is-disassemble-first-element
 Clarinet.test({
-  name: 'upgrade-contract_is-disassemble-first-element_deployer_emptyQueue_true',
+  name: 'customizable-nfts_is-disassemble-first-element_deployer_emptyQueue_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -879,7 +879,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-disassemble-first-element_deployer_firstElement_false',
+  name: 'customizable-nfts_is-disassemble-first-element_deployer_firstElement_false',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -915,7 +915,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-disassemble-first-element_deployer_notFirstElement_true',
+  name: 'customizable-nfts_is-disassemble-first-element_deployer_notFirstElement_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -960,7 +960,7 @@ Clarinet.test({
 
 //pop-disassemble-work-queue
 Clarinet.test({
-  name: 'upgrade-contract_pop-disassemble-work-queue_deployer_emptyQueue_true',
+  name: 'customizable-nfts_pop-disassemble-work-queue_deployer_emptyQueue_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -989,7 +989,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_pop-disassemble-work-queue_deployer_singleElement_true',
+  name: 'customizable-nfts_pop-disassemble-work-queue_deployer_singleElement_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -1019,7 +1019,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_pop-disassemble-work-queue_deployer_multipleElements_true',
+  name: 'customizable-nfts_pop-disassemble-work-queue_deployer_multipleElements_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -1063,7 +1063,7 @@ Clarinet.test({
 
 //disassemble-finalize
 Clarinet.test({
-  name: 'upgrade-contract_disassemble-finalize_address_error',
+  name: 'customizable-nfts_disassemble-finalize_address_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -1093,7 +1093,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_disassemble-finalize_deployer_tokenNotHeadQueue_error',
+  name: 'customizable-nfts_disassemble-finalize_deployer_tokenNotHeadQueue_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -1121,7 +1121,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_disassemble-finalize_deployer_tokenHeadQueue_ok',
+  name: 'customizable-nfts_disassemble-finalize_deployer_tokenHeadQueue_ok',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -1213,7 +1213,7 @@ Clarinet.test({
 //ASSEMBLE
 //is-assemble-value-for-principal
 Clarinet.test({
-  name: 'upgrade-contract_is-assemble-value-for-principal_deployer_deployer_true',
+  name: 'customizable-nfts_is-assemble-value-for-principal_deployer_deployer_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -1244,7 +1244,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-assemble-value-for-principal_deployer_address_false',
+  name: 'customizable-nfts_is-assemble-value-for-principal_deployer_address_false',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -1276,7 +1276,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-assemble-value-for-principal_address_address_true',
+  name: 'customizable-nfts_is-assemble-value-for-principal_address_address_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -1308,7 +1308,7 @@ Clarinet.test({
 
 //add-assemble-work-in-queue
 Clarinet.test({
-  name: 'upgrade-contract_add-assemble-work-in-queue_address_allTokensOwned_ok',
+  name: 'customizable-nfts_add-assemble-work-in-queue_address_allTokensOwned_ok',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -1371,7 +1371,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-assemble-work-in-queue_deployer_allTokensOwned_ok',
+  name: 'customizable-nfts_add-assemble-work-in-queue_deployer_allTokensOwned_ok',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -1432,7 +1432,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-assemble-work-in-queue_address_tokenNotOwned_error',
+  name: 'customizable-nfts_add-assemble-work-in-queue_address_tokenNotOwned_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -1480,7 +1480,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-assemble-work-in-queue_deployer_tokenNotOwned_error',
+  name: 'customizable-nfts_add-assemble-work-in-queue_deployer_tokenNotOwned_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -1532,7 +1532,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-assemble-work-in-queue_address_allTokensOwned_addedTwice_error',
+  name: 'customizable-nfts_add-assemble-work-in-queue_address_allTokensOwned_addedTwice_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -1599,7 +1599,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-assemble-work-in-queue_deployer_allTokensOwned_addedTwice_error',
+  name: 'customizable-nfts_add-assemble-work-in-queue_deployer_allTokensOwned_addedTwice_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -1666,7 +1666,7 @@ Clarinet.test({
 
 //get-assemble-work-queue
 Clarinet.test({
-  name: 'upgrade-contract_get-assemble-work-queue_address_emptyQueue',
+  name: 'customizable-nfts_get-assemble-work-queue_address_emptyQueue',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -1677,7 +1677,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-assemble-work-queue_address_singleElement',
+  name: 'customizable-nfts_get-assemble-work-queue_address_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -1741,7 +1741,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-assemble-work-queue_deployer_singleElement',
+  name: 'customizable-nfts_get-assemble-work-queue_deployer_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -1800,7 +1800,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-assemble-work-queue_address_multipleElements',
+  name: 'customizable-nfts_get-assemble-work-queue_address_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -1895,7 +1895,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-assemble-work-queue_deployer_multipleElements',
+  name: 'customizable-nfts_get-assemble-work-queue_deployer_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -1990,7 +1990,7 @@ Clarinet.test({
 
 //get-assemble-head-work-queue
 Clarinet.test({
-  name: 'upgrade-contract_get-assemble-head-work-queue_address_emptyQueue',
+  name: 'customizable-nfts_get-assemble-head-work-queue_address_emptyQueue',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -2001,7 +2001,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-assemble-head-work-queue_address_singleElement',
+  name: 'customizable-nfts_get-assemble-head-work-queue_address_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -2062,7 +2062,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-assemble-head-work-queue_deployer_singleElement',
+  name: 'customizable-nfts_get-assemble-head-work-queue_deployer_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -2118,7 +2118,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-assemble-head-work-queue_address_multipleElements',
+  name: 'customizable-nfts_get-assemble-head-work-queue_address_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -2210,7 +2210,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-assemble-head-work-queue_deployer_multipleElements',
+  name: 'customizable-nfts_get-assemble-head-work-queue_deployer_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -2303,7 +2303,7 @@ Clarinet.test({
 
 //is-assemble-first-element
 Clarinet.test({
-  name: 'upgrade-contract_is-assemble-first-element_deployer_emptyQueue_true',
+  name: 'customizable-nfts_is-assemble-first-element_deployer_emptyQueue_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -2333,7 +2333,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-assemble-first-element_deployer_firstElement_false',
+  name: 'customizable-nfts_is-assemble-first-element_deployer_firstElement_false',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -2402,7 +2402,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-assemble-first-element_deployer_notFirstElement_true',
+  name: 'customizable-nfts_is-assemble-first-element_deployer_notFirstElement_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -2507,7 +2507,7 @@ Clarinet.test({
 
 //pop-assemble-work-queue
 Clarinet.test({
-  name: 'upgrade-contract_pop-assemble-work-queue_deployer_emptyQueue_true',
+  name: 'customizable-nfts_pop-assemble-work-queue_deployer_emptyQueue_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -2527,7 +2527,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_pop-assemble-work-queue_deployer_singleElement_true',
+  name: 'customizable-nfts_pop-assemble-work-queue_deployer_singleElement_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -2588,7 +2588,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_pop-assemble-work-queue_deployer_multipleElements_true',
+  name: 'customizable-nfts_pop-assemble-work-queue_deployer_multipleElements_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -2697,7 +2697,7 @@ Clarinet.test({
 
 //assemble-finalize
 Clarinet.test({
-  name: 'upgrade-contract_assemble-finalize_address_error',
+  name: 'customizable-nfts_assemble-finalize_address_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -2719,7 +2719,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_assemble-finalize_deployer_tokenHeadQueue_ok',
+  name: 'customizable-nfts_assemble-finalize_deployer_tokenHeadQueue_ok',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -2795,7 +2795,7 @@ Clarinet.test({
 
 //is-swap-value-for-principal
 Clarinet.test({
-  name: 'upgrade-contract_is-swap-value-for-principal_deployer_deployer_true',
+  name: 'customizable-nfts_is-swap-value-for-principal_deployer_deployer_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -2825,7 +2825,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-swap-value-for-principal_deployer_address_false',
+  name: 'customizable-nfts_is-swap-value-for-principal_deployer_address_false',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -2856,7 +2856,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-swap-value-for-principal_address_address_true',
+  name: 'customizable-nfts_is-swap-value-for-principal_address_address_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -2887,7 +2887,7 @@ Clarinet.test({
 
 //add-swap-work-in-queue
 Clarinet.test({
-  name: 'upgrade-contract_add-swap-work-in-queue_address_tokensOwned_ok',
+  name: 'customizable-nfts_add-swap-work-in-queue_address_tokensOwned_ok',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -2934,7 +2934,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-swap-work-in-queue_deployer_tokenOwned_ok',
+  name: 'customizable-nfts_add-swap-work-in-queue_deployer_tokenOwned_ok',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -2975,7 +2975,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-swap-work-in-queue_address_degenNotOwned_error',
+  name: 'customizable-nfts_add-swap-work-in-queue_address_degenNotOwned_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -3012,7 +3012,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-swap-work-in-queue_address_componentNotOwned_error',
+  name: 'customizable-nfts_add-swap-work-in-queue_address_componentNotOwned_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -3049,7 +3049,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-swap-work-in-queue_address_componentTypeInvalid_error',
+  name: 'customizable-nfts_add-swap-work-in-queue_address_componentTypeInvalid_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -3086,7 +3086,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-swap-work-in-queue_deployer_degenNotOwned_error',
+  name: 'customizable-nfts_add-swap-work-in-queue_deployer_degenNotOwned_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -3122,7 +3122,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-swap-work-in-queue_deployer_componentNotOwned_error',
+  name: 'customizable-nfts_add-swap-work-in-queue_deployer_componentNotOwned_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -3158,7 +3158,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-swap-work-in-queue_deployer_componentTypeInvalid_error',
+  name: 'customizable-nfts_add-swap-work-in-queue_deployer_componentTypeInvalid_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const invalid_component_type = 'random-type';
@@ -3194,7 +3194,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-swap-work-in-queue_address_tokensOwned_addedTwice_error',
+  name: 'customizable-nfts_add-swap-work-in-queue_address_tokensOwned_addedTwice_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -3246,7 +3246,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-swap-work-in-queue_deployer_tokensOwned_addedTwice_error',
+  name: 'customizable-nfts_add-swap-work-in-queue_deployer_tokensOwned_addedTwice_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -3297,7 +3297,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-swap-work-in-queue_address_add5Tokens_error',
+  name: 'customizable-nfts_add-swap-work-in-queue_address_add5Tokens_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -3454,7 +3454,7 @@ Clarinet.test({
 
 //get-swap-work-queue
 Clarinet.test({
-  name: 'upgrade-contract_get-swap-work-queue_address_emptyQueue',
+  name: 'customizable-nfts_get-swap-work-queue_address_emptyQueue',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -3465,7 +3465,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-swap-work-queue_address_singleElement',
+  name: 'customizable-nfts_get-swap-work-queue_address_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -3517,7 +3517,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-swap-work-queue_deployer_singleElement',
+  name: 'customizable-nfts_get-swap-work-queue_deployer_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -3562,7 +3562,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-swap-work-queue_address_multipleElements',
+  name: 'customizable-nfts_get-swap-work-queue_address_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -3635,7 +3635,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-swap-work-queue_deployer_multipleElements',
+  name: 'customizable-nfts_get-swap-work-queue_deployer_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -3704,7 +3704,7 @@ Clarinet.test({
 
 //get-swap-head-work-queue
 Clarinet.test({
-  name: 'upgrade-contract_get-swap-head-work-queue_address_emptyQueue',
+  name: 'customizable-nfts_get-swap-head-work-queue_address_emptyQueue',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -3715,7 +3715,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-swap-head-work-queue_address_singleElement',
+  name: 'customizable-nfts_get-swap-head-work-queue_address_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -3758,7 +3758,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-swap-head-work-queue_deployer_singleElement',
+  name: 'customizable-nfts_get-swap-head-work-queue_deployer_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -3800,7 +3800,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-swap-head-work-queue_address_multipleElements',
+  name: 'customizable-nfts_get-swap-head-work-queue_address_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -3866,7 +3866,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-swap-head-work-queue_deployer_multipleElements',
+  name: 'customizable-nfts_get-swap-head-work-queue_deployer_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -3932,7 +3932,7 @@ Clarinet.test({
 
 //pop-swap-work-queue
 Clarinet.test({
-  name: 'upgrade-contract_pop-swap-work-queue_deployer_emptyQueue_true',
+  name: 'customizable-nfts_pop-swap-work-queue_deployer_emptyQueue_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -3952,7 +3952,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_pop-swap-work-queue_deployer_singleElement_true',
+  name: 'customizable-nfts_pop-swap-work-queue_deployer_singleElement_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -4004,7 +4004,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_pop-swap-work-queue_deployer_multipleElements_true',
+  name: 'customizable-nfts_pop-swap-work-queue_deployer_multipleElements_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -4086,7 +4086,7 @@ Clarinet.test({
 
 //is-swap-first-element
 Clarinet.test({
-  name: 'upgrade-contract_is-swap-first-element_deployer_emptyQueue_true',
+  name: 'customizable-nfts_is-swap-first-element_deployer_emptyQueue_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -4113,7 +4113,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-swap-first-element_deployer_firstElement_false',
+  name: 'customizable-nfts_is-swap-first-element_deployer_firstElement_false',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -4167,7 +4167,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-swap-first-element_deployer_notFirstElement_true',
+  name: 'customizable-nfts_is-swap-first-element_deployer_notFirstElement_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -4245,7 +4245,7 @@ Clarinet.test({
 
 //swap-finalize
 Clarinet.test({
-  name: 'upgrade-contract_swap-finalize_address_error',
+  name: 'customizable-nfts_swap-finalize_address_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -4273,7 +4273,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_swap-finalize_deployer_notHeadQueue_error',
+  name: 'customizable-nfts_swap-finalize_deployer_notHeadQueue_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -4323,7 +4323,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_swap-finalize_deployer_componentTypeInvalid_error',
+  name: 'customizable-nfts_swap-finalize_deployer_componentTypeInvalid_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -4374,7 +4374,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_swap-finalize_deployer_headQueue_ok',
+  name: 'customizable-nfts_swap-finalize_deployer_headQueue_ok',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -4446,7 +4446,7 @@ Clarinet.test({
 //MERGE
 //is-merge-value-for-principal
 Clarinet.test({
-  name: 'upgrade-contract_is-merge-value-for-principal_deployer_deployer_true',
+  name: 'customizable-nfts_is-merge-value-for-principal_deployer_deployer_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -4475,7 +4475,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-merge-value-for-principal_deployer_address_false',
+  name: 'customizable-nfts_is-merge-value-for-principal_deployer_address_false',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -4505,7 +4505,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-merge-value-for-principal_address_address_true',
+  name: 'customizable-nfts_is-merge-value-for-principal_address_address_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -4535,7 +4535,7 @@ Clarinet.test({
 
 //burn-old-nft
 Clarinet.test({
-  name: 'upgrade-contract_burn-old-nft_address_validTokenType_ok',
+  name: 'customizable-nfts_burn-old-nft_address_validTokenType_ok',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -4561,7 +4561,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_burn-old-nft_deployer_validTokenType_ok',
+  name: 'customizable-nfts_burn-old-nft_deployer_validTokenType_ok',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -4583,7 +4583,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_burn-old-nft_address_invalidTokenType_error',
+  name: 'customizable-nfts_burn-old-nft_address_invalidTokenType_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -4604,7 +4604,7 @@ Clarinet.test({
 
 //add-merge-work-in-queue
 Clarinet.test({
-  name: 'upgrade-contract_add-merge-work-in-queue_address_tokenOwned_ok',
+  name: 'customizable-nfts_add-merge-work-in-queue_address_tokenOwned_ok',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -4637,7 +4637,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-merge-work-in-queue_deployer_tokenOwned_ok',
+  name: 'customizable-nfts_add-merge-work-in-queue_deployer_tokenOwned_ok',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -4668,7 +4668,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-merge-work-in-queue_address_tokenNotOwned_error',
+  name: 'customizable-nfts_add-merge-work-in-queue_address_tokenNotOwned_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -4693,7 +4693,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-merge-work-in-queue_deployer_tokenNotOwned_error',
+  name: 'customizable-nfts_add-merge-work-in-queue_deployer_tokenNotOwned_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const receiver = accounts.get('wallet_1')!;
@@ -4717,7 +4717,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-merge-work-in-queue_address_tokenOwned_addedTwice_error',
+  name: 'customizable-nfts_add-merge-work-in-queue_address_tokenOwned_addedTwice_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -4758,7 +4758,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-merge-work-in-queue_deployer_tokenOwned_addedTwice_error',
+  name: 'customizable-nfts_add-merge-work-in-queue_deployer_tokenOwned_addedTwice_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -4798,7 +4798,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-merge-work-in-queue_address_add5Tokens_error',
+  name: 'customizable-nfts_add-merge-work-in-queue_address_add5Tokens_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -4874,7 +4874,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_add-merge-work-in-queue_deployer_add5Tokens_error',
+  name: 'customizable-nfts_add-merge-work-in-queue_deployer_add5Tokens_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -4948,7 +4948,7 @@ Clarinet.test({
 
 //get-merge-work-queue
 Clarinet.test({
-  name: 'upgrade-contract_get-merge-work-queue_address_emptyQueue',
+  name: 'customizable-nfts_get-merge-work-queue_address_emptyQueue',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -4959,7 +4959,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-merge-work-queue_address_singleElement',
+  name: 'customizable-nfts_get-merge-work-queue_address_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -4990,7 +4990,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-merge-work-queue_deployer_singleElement',
+  name: 'customizable-nfts_get-merge-work-queue_deployer_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -5020,7 +5020,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-merge-work-queue_address_multipleElements',
+  name: 'customizable-nfts_get-merge-work-queue_address_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -5051,7 +5051,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-merge-work-queue_deployer_multipleElements',
+  name: 'customizable-nfts_get-merge-work-queue_deployer_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -5083,7 +5083,7 @@ Clarinet.test({
 
 //get-merge-head-work-queue
 Clarinet.test({
-  name: 'upgrade-contract_get-merge-head-work-queue_address_emptyQueue',
+  name: 'customizable-nfts_get-merge-head-work-queue_address_emptyQueue',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -5094,7 +5094,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-merge-head-work-queue_address_singleElement',
+  name: 'customizable-nfts_get-merge-head-work-queue_address_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -5121,7 +5121,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-merge-head-work-queue_deployer_singleElement',
+  name: 'customizable-nfts_get-merge-head-work-queue_deployer_singleElement',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -5148,7 +5148,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-merge-head-work-queue_address_multipleElements',
+  name: 'customizable-nfts_get-merge-head-work-queue_address_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const member = accounts.get('wallet_1')!;
 
@@ -5183,7 +5183,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_get-merge-head-work-queue_deployer_multipleElements',
+  name: 'customizable-nfts_get-merge-head-work-queue_deployer_multipleElements',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -5219,7 +5219,7 @@ Clarinet.test({
 
 //pop-merge-work-queue
 Clarinet.test({
-  name: 'upgrade-contract_pop-merge-work-queue_deployer_emptyQueue_true',
+  name: 'customizable-nfts_pop-merge-work-queue_deployer_emptyQueue_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -5239,7 +5239,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_pop-merge-work-queue_deployer_singleElement_true',
+  name: 'customizable-nfts_pop-merge-work-queue_deployer_singleElement_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -5269,7 +5269,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_pop-merge-work-queue_deployer_multipleElements_true',
+  name: 'customizable-nfts_pop-merge-work-queue_deployer_multipleElements_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -5313,7 +5313,7 @@ Clarinet.test({
 
 //is-merge-first-element
 Clarinet.test({
-  name: 'upgrade-contract_is-merge-first-element_deployer_emptyQueue_true',
+  name: 'customizable-nfts_is-merge-first-element_deployer_emptyQueue_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -5348,7 +5348,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-merge-first-element_deployer_firstElement_false',
+  name: 'customizable-nfts_is-merge-first-element_deployer_firstElement_false',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -5389,7 +5389,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_is-merge-first-element_deployer_notFirstElement_true',
+  name: 'customizable-nfts_is-merge-first-element_deployer_notFirstElement_true',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
 
@@ -5436,7 +5436,7 @@ Clarinet.test({
 
 //merge-finalize
 Clarinet.test({
-  name: 'upgrade-contract_merge-finalize_address_error',
+  name: 'customizable-nfts_merge-finalize_address_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -5459,7 +5459,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_merge-finalize_deployer_tokenNotHeadQueue_error',
+  name: 'customizable-nfts_merge-finalize_deployer_tokenNotHeadQueue_error',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;
@@ -5480,7 +5480,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: 'upgrade-contract_merge-finalize_deployer_tokenHeadQueue_ok',
+  name: 'customizable-nfts_merge-finalize_deployer_tokenHeadQueue_ok',
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const member = accounts.get('wallet_1')!;

@@ -6,7 +6,7 @@
     ;; URI for metadata associated with the token
     (get-token-uri (uint) (response (optional (string-ascii 256)) uint))
 
-    ;; Owner of a given token identifier
+     ;; Owner of a given token identifier
     (get-owner (uint) (response (optional principal) uint))
 
     ;; Transfer from the sender to a new principal
