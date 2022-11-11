@@ -1,0 +1,13 @@
+
+Testnet
+Wallet that can mint lootboxes
+{
+  "mnemonic": "night giggle library border cram chunk acoustic behind oyster spike supreme pony example giant assume trick throw unfair dash clinic patient rude power raw",
+  "keyInfo": {
+    "privateKey": "40107d29796c7d324e4ce1f2baf6c657cfd31845e84d13eace5f38412d896ac001",
+    "address": "ST1VZVB0Z0KNQ78XATY9WM8D7KDBMAGS05HVXSTRQ",
+    "btcAddress": "mrTQbLzqoCcK2rPaTyUmnDd1cAKgmQCK6c",
+    "wif": "KyNF68pYYoAQ9KSAaXEeoKYYL4mAeqbMExejNktiw7wUhU1wWdCM",
+    "index": 0
+  }
+}
