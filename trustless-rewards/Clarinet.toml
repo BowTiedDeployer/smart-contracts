@@ -1,30 +1,24 @@
 [project]
-name = "stacksdegens"
+name = "open-trustless-rewards"
 authors = []
 description = ""
-telemetry = true
+telemetry = false
 requirements = []
 boot_contracts = ["pox", "costs-v2", "bns"]
 
 [project.cache_location]
 path = ".requirements"
-[contracts.conversion]
-path = "contracts/conversion.clar"
+[contracts.ft]
+path = "contracts/ft.clar"
 
 [contracts.ft-trait]
 path = "contracts/ft-trait.clar"
 
-[contracts.miami-degens]
-path = "contracts/miami-degens.clar"
+[contracts.nft]
+path = "contracts/nft.clar"
 
 [contracts.nft-trait]
 path = "contracts/nft-trait.clar"
-
-[contracts.nyc-degens]
-path = "contracts/nyc-degens.clar"
-
-[contracts.third-party]
-path = "contracts/third-party.clar"
 
 [contracts.trustless-rewards]
 path = "contracts/trustless-rewards.clar"

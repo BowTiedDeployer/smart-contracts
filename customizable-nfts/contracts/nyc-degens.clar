@@ -293,3 +293,4 @@
 (define-read-only (get-base-uri)
 (ok (var-get ipfs-root))
 )
+
