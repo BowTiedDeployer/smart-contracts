@@ -1,0 +1,15 @@
+{
+  "sip": 16,
+  "name": "SportyGrey",
+  "image": "ipfs://QmUAeq2AoLPPednjPxmZzstG3yDHR7fqs7mK3q8oQg2qRV/SportyGrey.png",
+  "attributes": [
+    {
+      "trait_type": "Rims", 
+      "value": "SportyGrey"
+    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31/SportyGrey.png",
+      "collection": "StacksDegensRims"
+  }
+}

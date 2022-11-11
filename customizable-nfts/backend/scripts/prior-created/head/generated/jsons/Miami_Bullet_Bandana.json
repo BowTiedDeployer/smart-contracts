@@ -1,0 +1,24 @@
+{
+  "sip": 16,
+  "name": "Miami_Bullet_Bandana",
+  "image": "ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/Miami_Bullet_Bandana.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Skull"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "Bullet"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "Bandana"
+    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/Miami_Bullet_Bandana.png",
+    "image_game": "ipfs://QmbUFUAZfqN1AsDHNSLomFVnDXn7L8baEfRcJiv8jsYxAL/Miami_Bullet_Bandana.png",
+    "collection": "StacksDegensHeads"
+  }
+}

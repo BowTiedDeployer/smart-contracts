@@ -1,6 +1,6 @@
 ;; use the SIP009 interface (testnet)
 ;; trait deployed by deployer address from ./settings/Devnet.toml
-(impl-trait 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.nft-trait.nft-trait)
+(impl-trait .nft-trait.nft-trait)
 
 ;; define a new NFT. Make sure to replace background
 (define-non-fungible-token background uint)
@@ -23,12 +23,12 @@
 ;; eg. purple background -> ipfs://dasd..
 (define-map name-url { name: (string-ascii 30)} { url: (string-ascii 256) })
 
-(map-set name-url  {name: "DarkPurple"} {url: "ipfs://Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP/DarkPurple.json"})
-(map-set name-url  {name: "Emerald"} {url: "ipfs://Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP/Emerald.json"})
-(map-set name-url  {name: "Goldie"} {url: "ipfs://Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP/Goldie.json"})
-(map-set name-url  {name: "Orange"} {url: "ipfs://Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP/Orange.json"})
-(map-set name-url  {name: "Purple"} {url: "ipfs://Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP/Purple.json"})
-(map-set name-url  {name: "Sunset"} {url: "ipfs://Qma8QqR2xPBSDhEGD8aZnBr33SbdEdav5m6YoPLMbXpNVP/Sunset.json"})
+(map-set name-url  {name: "DarkPurple"} {url: "ipfs://QmU3nYMUNS3Pk148Z4ndTiCL9mcAFPapyi2eZ7ACW5FzUR/DarkPurple.json"})
+(map-set name-url  {name: "Emerald"} {url: "ipfs://QmU3nYMUNS3Pk148Z4ndTiCL9mcAFPapyi2eZ7ACW5FzUR/Emerald.json"})
+(map-set name-url  {name: "Goldie"} {url: "ipfs://QmU3nYMUNS3Pk148Z4ndTiCL9mcAFPapyi2eZ7ACW5FzUR/Goldie.json"})
+(map-set name-url  {name: "Orange"} {url: "ipfs://QmU3nYMUNS3Pk148Z4ndTiCL9mcAFPapyi2eZ7ACW5FzUR/Orange.json"})
+(map-set name-url  {name: "Purple"} {url: "ipfs://QmU3nYMUNS3Pk148Z4ndTiCL9mcAFPapyi2eZ7ACW5FzUR/Purple.json"})
+(map-set name-url  {name: "Sunset"} {url: "ipfs://QmU3nYMUNS3Pk148Z4ndTiCL9mcAFPapyi2eZ7ACW5FzUR/Sunset.json"})
 
 ;; Owner
 (define-data-var contract-owner principal tx-sender)
@@ -120,7 +120,9 @@
 )
 
 (define-read-only (get-name-url (name (string-ascii 30)))
-  (map-get? name-url {name: name})
+  (let ((token-urr (get url (map-get? name-url {name: name})))) 
+    (ok token-urr)
+  )
 )
 
 (define-public (set-name-url (name (string-ascii 30)) (url (string-ascii 30))) 

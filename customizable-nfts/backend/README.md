@@ -52,10 +52,12 @@ FE <-> SC <-> BE
   - background, rims & car direct the value
   - head has 3 attributes -> create head [Alien|Skull, head_attribute, face_attribute] - for json
 - create image (background_url, rims_url, car_url, head_url)
-- save image locally to ('generated-degens')
+- save the 2 images locally to ('generated-degens')
+  - from properties.image_component and from properties.image_game
+  - the resulted image has image and properties.image_game ( does not have propeties.image )
 - Pinata upload image and get hash
 - deployer: get id DB
-- create json (name#id, img hash, attributes, collection("DegenNFT"))
+- create json (name#id, img hash, attributes, collection("StacksDegensNFT"))
 - deployer: Pinata upload json and get hash ("ipfs://" + hash)
 - call assemble_finalize with (member as address, json_hash as uri)
 - deployer: DB increment id
@@ -71,11 +73,12 @@ FE <-> SC <-> BE
   - get name-url ( string call read only - deployer )
   - fetch json
   - get image ( url )
-- create image (background_url, rims_url, car_url, head_url)
-- save image locally to ('generated-degens')
+- save the 2 images locally to ('generated-degens')
+  - from properties.image_component and from properties.image_game (background_url, rims_url, car_url, head_url)
+  - the resulted image has image and properties.image_game ( does not have propeties.image )
 - Pinata upload image and get hash
 - deployer: get id DB
-- create/update json (name#id, img hash, attributes, collection("DegenNFT"))
+- create/update json (name#id, img hash, attributes, collection("StacksDegensNFT"))
 - deployer: Pinata upload json and get hash ("ipfs://" + hash)
 - call swap_finalize with (member, json_hash as Dege uri, component-name, component-type)
 - DB increment id
@@ -90,10 +93,12 @@ FE <-> SC <-> BE
   - call car/background/head/rims get-name-url
   - fetch json component
   - get image attribute
-- create new image (background_url, car_url, head_url, rims_url)
+- save the 2 images locally to ('generated-degens')
+  - from properties.image_component and from properties.image_game (background_url, car_url, head_url, rims_url)
+  - the resulted image has image and properties.image_game ( does not have propeties.image )
 - Pinata upload image and get hash
 - deployer: get id DB
-- create/update json (name#id, img hash, attributes, collection("DegenNFT"))
+- create/update json (name#id, img hash, attributes, collection("StacksDegensNFT"))
 - deployer: Pinata upload json and get hash ("ipfs://" + hash)
 - call merge_finalize(member as address, json_hash as Degen uri)
 - DB increment id
@@ -114,3 +119,47 @@ deployer
 db
 upload json
 convert old degen json to new json
+
+# Pinata Hashes
+
+### Background ✅
+
+marketplace: https://stxnft.mypinata.cloud/ipfs/QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria  
+image-component: https://stxnft.mypinata.cloud/ipfs/QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria  
+image-in-game: 🚫  
+json: https://stxnft.mypinata.cloud/ipfs/QmU3nYMUNS3Pk148Z4ndTiCL9mcAFPapyi2eZ7ACW5FzUR
+
+### Car ✅
+
+marketplace: https://stxnft.mypinata.cloud/ipfs/QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1  
+image-component: https://stxnft.mypinata.cloud/ipfs/QmeCL653FLxAfdT8wGkHxhwHSdEfPBH4WF8h9Hz6XDbi4u  
+image-in-game: https://stxnft.mypinata.cloud/ipfs/QmXivFXDKXgnECXN7ckPf8KHXn6mogvHwLsdT1rAfCCU72  
+json: https://stxnft.mypinata.cloud/ipfs/QmUeeP62n6izm2skUjr17RcVdr5b5PsTyGQwU8GMRg92ux
+
+### Rims ✅
+
+marketplace: https://stxnft.mypinata.cloud/ipfs/QmUAeq2AoLPPednjPxmZzstG3yDHR7fqs7mK3q8oQg2qRV  
+image-component: https://stxnft.mypinata.cloud/ipfs/QmWBHgQFLKpXW8EnU6LeRXcU2iZRCpsSMCgfnb7G6obA31  
+image-in-game: 🚫  
+json: https://stxnft.mypinata.cloud/ipfs/QmdbWpM18AdKzaomZQRnNQotmXtPtRX9mAkht13TbUaQ32
+
+### Head ✅
+
+marketplace: https://stxnft.mypinata.cloud/ipfs/QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst  
+image-component: https://stxnft.mypinata.cloud/ipfs/QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK  
+image-in-game: https://stxnft.mypinata.cloud/ipfs/QmbUFUAZfqN1AsDHNSLomFVnDXn7L8baEfRcJiv8jsYxAL
+json: https://stxnft.mypinata.cloud/ipfs/QmaFphBKc4QppqEu8uvEnzSEdSE57ZDXCWfpoAHFpAMnH8
+
+# Positions for marketplace picture:
+
+### Rim finals:
+
+x: 99 | y: 419 | width: 180 | height: 180
+
+### Head finals:
+
+x: 165 | y: 80 | width: 500 | height: 580
+
+### Car finals:
+
+x: 40 | y: 110 | width: 730 | height: 730

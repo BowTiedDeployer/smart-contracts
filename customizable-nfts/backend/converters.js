@@ -1,7 +1,9 @@
 import {
   broadcastTransaction,
+  cvToHex,
   cvToJSON,
   hexToCV,
+  intCV,
   makeContractCall,
   PostConditionMode,
   standardPrincipalCV,
@@ -11,6 +13,8 @@ import {
 import { contracts, network, urlApis } from './consts.js';
 
 import dotenv from 'dotenv';
+import { stringCV } from '@stacks/transactions/dist/clarity/types/stringCV.js';
+import { principalCV } from '@stacks/transactions/dist/clarity/types/principalCV.js';
 dotenv.config();
 
 // format: "{'keyA':'valueA', 'keyB':'valueB', keyC':'valueC'}",
@@ -29,21 +33,20 @@ export const intToHexString = (number) => {
 };
 
 const convertIntToArgReadOnly = (number) => {
-  return '010000000000000000' + intToHexString(number);
+  return cvToHex(uintCV(number));
 };
 
 const convertStringToArgReadOnly = (str) => {
-  // TODO: convvert string to arg CV style
-  return str;
+  return cvToHex(stringCV(str, 'ascii'));
 };
 
 const convertPrincipalToArgReadOnly = (principal) => {
-  // TODO: convvert string to arg CV style
-  return isPrincipal(principal);
+  return cvToHex(principalCV(principal));
 };
 
 const isPrincipal = (str) => {
   let secondChar = 'P';
+  str = str.toString();
   if (network !== 'mainnet') secondChar = 'T';
   if (str.charAt(0) === 'S' && str.charAt(1) === secondChar && str.length >= 39 && str.length <= 41) {
     return true;
@@ -68,20 +71,38 @@ export const jsonResponseToTokenUri = (json) => {
   return json.value.value.value;
 };
 
+export const jsonResponseToTokenName = (json) => {
+  return json.value.value.url.value;
+};
+
 export const convertArgsSCCall = (args) => {
   let convArgs = [];
   args.forEach((arg) => {
     if (!isNaN(arg)) {
       // number
       convArgs.push(uintCV(arg));
-      console.log('is number: ' + arg);
+      // console.log('is number: ' + arg);
     } else if (isPrincipal(arg)) {
-      console.log('is principal ' + arg);
+      // console.log('is principal ' + arg);
       convArgs.push(standardPrincipalCV(arg));
     } else {
-      console.log('is string ' + arg);
+      // console.log('is string ' + arg);
       convArgs.push(stringAsciiCV(arg));
     }
   });
   return convArgs;
+};
+
+export const replaceTokenCurrentId = (pinataUrl, currentId) => {
+  let returnedUrl = pinataUrl.replace('$TOKEN_ID', currentId);
+  return returnedUrl;
+};
+
+export const pinataToHTTPUrl = (pinataUrl) => {
+  let httpUrl = 'https://stxnft.mypinata.cloud/' + pinataUrl.slice(0, 4) + pinataUrl.slice(6);
+  return httpUrl;
+};
+
+export const hashToPinataUrl = (hash) => {
+  return 'ipfs://' + hash;
 };

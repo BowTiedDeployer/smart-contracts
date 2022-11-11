@@ -1,0 +1,24 @@
+{
+  "sip": 16,
+  "name": "NYC_PUBG_NosePiercing",
+  "image": "ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/NYC_PUBG_NosePiercing.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Alien"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "PUBG"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "NosePiercing"
+    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/NYC_PUBG_NosePiercing.png",
+    "image_game": "ipfs://QmbUFUAZfqN1AsDHNSLomFVnDXn7L8baEfRcJiv8jsYxAL/NYC_PUBG_NosePiercing.png",
+    "collection": "StacksDegensHeads"
+  }
+}

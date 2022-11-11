@@ -1,0 +1,10 @@
+{
+  "mnemonic": "seven approve broccoli economy fatigue fabric hamster nest carbon endorse slow pride giraffe word baby heavy glass rebuild choose staff diesel mutual upset tattoo",
+  "keyInfo": {
+    "privateKey": "9b36227da32bb37150308b615b504a85702e539288daf8af2abb4d9ae0a084bb01",
+    "address": "ST3M4VFJQFEJDKY2CG9HKMPJJGKVWC9TSX73C040M",
+    "btcAddress": "n2hGCGog8ENJRoLCpyFXBf9Q8LxYVnEy2W",
+    "wif": "L2RRQoQatj9NcukYbophkF1p1VNEx3sWgAQnh7hmfouRcVQRpYXm",
+    "index": 0
+  }
+}

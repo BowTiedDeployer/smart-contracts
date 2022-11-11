@@ -1,0 +1,24 @@
+{
+  "sip": 16,
+  "name": "NYC_Samurai_Vampire",
+  "image": "ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/NYC_Samurai_Vampire.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Alien"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "Samurai"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "Vampire"
+    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/NYC_Samurai_Vampire.png",
+    "image_game": "ipfs://QmbUFUAZfqN1AsDHNSLomFVnDXn7L8baEfRcJiv8jsYxAL/NYC_Samurai_Vampire.png",
+    "collection": "StacksDegensHeads"
+  }
+}

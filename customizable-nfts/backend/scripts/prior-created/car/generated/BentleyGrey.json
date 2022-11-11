@@ -1,0 +1,16 @@
+{
+  "sip": 16,
+  "name": "BentleyGrey",
+  "image": "ipfs://QmYoRfeG8ucG27hyAaHwvsquHP5LrAGNeEncML1BkCcit1/BentleyGrey.png",
+  "attributes": [
+    {
+      "trait_type": "Car", 
+      "value": "BentleyGrey"
+    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmeCL653FLxAfdT8wGkHxhwHSdEfPBH4WF8h9Hz6XDbi4u/BentleyGrey.png",
+    "image_game": "ipfs://QmXivFXDKXgnECXN7ckPf8KHXn6mogvHwLsdT1rAfCCU72/BentleyGrey.png",
+    "collection": "StacksDegensCars"
+  }
+}

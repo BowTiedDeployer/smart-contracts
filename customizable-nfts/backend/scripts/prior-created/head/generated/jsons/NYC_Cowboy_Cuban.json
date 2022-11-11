@@ -1,0 +1,24 @@
+{
+  "sip": 16,
+  "name": "NYC_Cowboy_Cuban",
+  "image": "ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/NYC_Cowboy_Cuban.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Alien"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "Cowboy"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "Cuban"
+    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/NYC_Cowboy_Cuban.png",
+    "image_game": "ipfs://QmbUFUAZfqN1AsDHNSLomFVnDXn7L8baEfRcJiv8jsYxAL/NYC_Cowboy_Cuban.png",
+    "collection": "StacksDegensHeads"
+  }
+}
