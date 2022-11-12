@@ -67,7 +67,7 @@ const whole_operations = async () => {
   try {
     await every_five_minutes();
   } catch (error) {
-    fs.writeFile('log.txt', data, (err) => {
+    fs.appendFile('log.csv', error.toString() + ';' + new Date().toLocaleString() + '\n', (err) => {
       if (err) {
         console.log(err);
       } else {
@@ -81,5 +81,5 @@ whole_operations();
 
 // cron.schedule('*/5 * * * *', () => {
 //   //try catch
-//   every_five_minutes();
+//   whole_operations();
 // });
