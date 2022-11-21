@@ -258,11 +258,10 @@
   )
 )
 
-(define-public (set-level-up-resources (token-id uint) (item-id uint) (resource-id uint) (resource-qty uint))
+(define-public (set-level-up-resources (token-id uint) (resource-needed (list 100 {resource-id: uint, resource-qty: uint})))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
-    (map-set level-up-system {id: token-id} (list {resource-id: resource-id, resource-qty: resource-qty})) 
-    (ok true)    
+    (ok (map-set level-up-system {id: token-id} resource-needed))     
   )
 )
 
@@ -325,6 +324,13 @@
   )
 )
 
+(define-public (set-crafting-resources (token-id uint) (resource-needed (list 100 {resource-id: uint, resource-qty: uint})))
+  (begin 
+    (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
+    (ok (map-set crafting-system {id: token-id} resource-needed))     
+  )
+)
+
 (define-read-only (get-crafting-resources (token-id uint))
     (let ((token-urr (map-get? crafting-system {id: token-id})))
       (ok token-urr)
@@ -361,6 +367,13 @@
       )
       (ok false)
     )
+  )
+)
+
+(define-public (set-acquisition-resources (token-id uint) (resource-needed (list 100 {resource-id: uint, resource-qty: uint})))
+  (begin 
+    (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
+    (ok (map-set acquisition-system {id: token-id} resource-needed))     
   )
 )
 
