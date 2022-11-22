@@ -273,7 +273,12 @@
 
 
 (define-private (is-owned-needed  (item {resource-id: uint, resource-qty: uint}))
+(begin
+;;(asserts! (>= (get-balance-uint (get resource-id item) tx-sender) (get resource-qty item)) err-insufficient-balance)
+  ;;(ok
   (>= (get-balance-uint (get resource-id item) tx-sender) (get resource-qty item))
+  ;;)
+  )
 )
 
 (map-set level-up-system {id: u6} (list {resource-id: u3, resource-qty: u6} {resource-id: u5, resource-qty: u1} {resource-id: u2, resource-qty: u2}))
