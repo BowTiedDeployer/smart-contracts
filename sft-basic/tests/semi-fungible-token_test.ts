@@ -114,7 +114,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         mint,
-        [types.uint(wood), types.uint(4), types.principal(admin.address)],
+        [types.uint(wood), types.uint(2), types.principal(admin.address)],
         admin.address
       ),
     ]);
@@ -134,7 +134,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         mint,
-        [types.uint(iron), types.uint(4), types.principal(admin.address)],
+        [types.uint(iron), types.uint(2), types.principal(admin.address)],
         admin.address
       ),
     ]);
@@ -229,16 +229,94 @@ Clarinet.test({
     // craft ironShoes
 
     block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(ironShoes1)], admin.address)]);
-    let balance = chain.callReadOnlyFn(
+    let balanceIron = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(iron), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceWood = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(wood), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceWoodenSword1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenSword1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceIronSword1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironSword1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceWoodenArmor1 = chain.callReadOnlyFn(
       contractName,
       getBalance,
       [types.uint(woodenArmor1), types.principal(admin.address)],
       admin.address
     );
-    balance.result.expectOk().expectUint(1);
+    let balanceIronArmor1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironArmor1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceWoodenShield1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenShield1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceIronShield1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironShield1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceWoodenHelmet1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenHelmet1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceIronHelmet1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironHelmet1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceWoodenShoes1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenShoes1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceIronShoes1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironShoes1), types.principal(admin.address)],
+      admin.address
+    );
+
+    balanceIron.result.expectOk().expectUint(0);
+    balanceWood.result.expectOk().expectUint(0);
+    balanceWoodenSword1.result.expectOk().expectUint(1);
+    balanceIronSword1.result.expectOk().expectUint(1);
+    balanceWoodenArmor1.result.expectOk().expectUint(1);
+    balanceIronArmor1.result.expectOk().expectUint(1);
+    balanceWoodenShield1.result.expectOk().expectUint(1);
+    balanceIronShield1.result.expectOk().expectUint(1);
+    balanceWoodenHelmet1.result.expectOk().expectUint(1);
+    balanceIronHelmet1.result.expectOk().expectUint(1);
+    balanceWoodenShoes1.result.expectOk().expectUint(1);
+    balanceIronShoes1.result.expectOk().expectUint(1);
+
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 21);
     block.receipts[0].result.expectOk().expectBool(true);
-    // block.receipts[1].result.expectOk().expectUint(1);
   },
 });
