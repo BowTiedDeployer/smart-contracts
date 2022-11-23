@@ -246,17 +246,15 @@
 (define-map level-up-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
 (define-public (level-up (id-new uint))
-  (let ((level-up-resources (unwrap-panic (get-level-up-resources id-new))))
+  (let ((level-up-resources (unwrap-panic (get-level-up-resources id-new)))
+  (is-owned-needed-unwrapped (fold and (map is-owned-needed (unwrap-panic level-up-resources)) true)))
     (asserts! (is-some level-up-resources) err-not-some)
-    (if (fold and (map is-owned-needed (unwrap-panic level-up-resources)) true)
-      (begin 
+    (asserts! is-owned-needed-unwrapped err-insufficient-balance)
         (some (map transfer-wrapper (unwrap-panic level-up-resources)))
         (mint id-new u1 tx-sender)
-      )
-      (ok false)
     )
-  )
 )
+
 
 (define-public (set-level-up-resources (token-id uint) (resource-needed (list 100 {resource-id: uint, resource-qty: uint})))
   (begin 

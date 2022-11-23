@@ -249,7 +249,7 @@ Clarinet.test({
     assertEquals(block.height, 19);
     block.receipts[0].result.expectOk().expectBool(true);
 
-    // mint 9
+    // mint 10
 
     block = chain.mineBlock([
       Tx.contractCall(
@@ -2158,5 +2158,213 @@ Clarinet.test({
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 35);
     block.receipts[0].result.expectOk().expectBool(true);
+  },
+});
+
+Clarinet.test({
+  name: 'Crafting with more resources case',
+  async fn(chain: Chain, accounts: Map<string, Account>) {
+    const admin = accounts.get('deployer')!;
+
+    // mint phase
+
+    let block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(gold), types.uint(9999), types.principal(admin.address)],
+        admin.address
+      ),
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(energy), types.uint(9999), types.principal(admin.address)],
+        admin.address
+      ),
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(wood), types.uint(9999), types.principal(admin.address)],
+        admin.address
+      ),
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(iron), types.uint(9999), types.principal(admin.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 4);
+    assertEquals(block.height, 2);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // craft wooden sword 1
+
+    block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(woodenSword1)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 3);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // craft iron sword 1
+
+    block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(ironSword1)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 4);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // craft wooden armor 1
+
+    block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(woodenArmor1)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 5);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // craft iron armor 1
+
+    block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(ironArmor1)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 6);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // craft wooden shield 1
+
+    block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(woodenShield1)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 7);
+
+    // craft iron shield 1
+
+    block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(ironShield1)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 8);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // craft woodenHelmet1
+
+    block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(woodenHelmet1)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 9);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // craft ironHelmet1
+
+    block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(ironHelmet1)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 10);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // craft woodenShoes1
+
+    block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(woodenShoes1)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 11);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // craft ironShoes1
+
+    block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(ironShoes1)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 12);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    let balanceGold = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(gold), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceEnergy = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(energy), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceIron = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(iron), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceWood = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(wood), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceWoodenSword1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenSword1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceIronSword1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironSword1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceWoodenArmor1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenArmor1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceIronArmor1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironArmor1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceWoodenShield1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenShield1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceIronShield1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironShield1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceWoodenHelmet1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenHelmet1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceIronHelmet1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironHelmet1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceWoodenShoes1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenShoes1), types.principal(admin.address)],
+      admin.address
+    );
+    let balanceIronShoes1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironShoes1), types.principal(admin.address)],
+      admin.address
+    );
+
+    balanceGold.result.expectOk().expectUint(9999);
+    balanceEnergy.result.expectOk().expectUint(9999);
+    balanceIron.result.expectOk().expectUint(9986);
+    balanceWood.result.expectOk().expectUint(9986);
+    balanceWoodenSword1.result.expectOk().expectUint(1);
+    balanceIronSword1.result.expectOk().expectUint(1);
+    balanceWoodenArmor1.result.expectOk().expectUint(1);
+    balanceIronArmor1.result.expectOk().expectUint(1);
+    balanceWoodenShield1.result.expectOk().expectUint(1);
+    balanceIronShield1.result.expectOk().expectUint(1);
+    balanceWoodenHelmet1.result.expectOk().expectUint(1);
+    balanceIronHelmet1.result.expectOk().expectUint(1);
+    balanceWoodenShoes1.result.expectOk().expectUint(1);
+    balanceIronShoes1.result.expectOk().expectUint(1);
   },
 });
