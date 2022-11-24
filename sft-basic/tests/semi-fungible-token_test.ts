@@ -2812,3 +2812,168 @@ Clarinet.test({
     block.receipts[0].result.expectOk().expectBool(true);
   },
 });
+Clarinet.test({
+  name: 'Acquisition with more resources case',
+  async fn(chain: Chain, accounts: Map<string, Account>) {
+    const admin = accounts.get('deployer')!;
+
+    // mint 1
+
+    let block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(gold), types.uint(9999), types.principal(admin.address)],
+        admin.address
+      ),
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(energy), types.uint(9999), types.principal(admin.address)],
+        admin.address
+      ),
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(wood), types.uint(9999), types.principal(admin.address)],
+        admin.address
+      ),
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(iron), types.uint(9999), types.principal(admin.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 4);
+    assertEquals(block.height, 2);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy woodenSword1
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(woodenSword1)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 3);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy woodenSword2
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(woodenSword2)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 4);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy ironSword2
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(ironSword2)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 5);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy enhancedSword2
+
+    block = chain.mineBlock([
+      Tx.contractCall(contractName, acquisitionFn, [types.uint(enhancedSword2)], admin.address),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 6);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy woodenArmor1
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(woodenArmor1)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 7);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy woodenArmor3
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(woodenArmor3)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 8);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy ironArmor2
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(ironArmor2)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 9);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy enhancedArmor2
+
+    block = chain.mineBlock([
+      Tx.contractCall(contractName, acquisitionFn, [types.uint(enhancedArmor2)], admin.address),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 10);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy woodenShield3
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(woodenShield3)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 11);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy ironShield2
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(ironShield2)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 12);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy enhancedShield2
+
+    block = chain.mineBlock([
+      Tx.contractCall(contractName, acquisitionFn, [types.uint(enhancedShield2)], admin.address),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 13);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy woodenHelmet3
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(woodenHelmet3)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 14);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy ironHelmet2
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(ironHelmet2)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 15);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy enhancedHelmet1
+
+    block = chain.mineBlock([
+      Tx.contractCall(contractName, acquisitionFn, [types.uint(enhancedHelmet1)], admin.address),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 16);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy woodenShoes2
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(woodenShoes2)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 17);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy woodenShoes3
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(woodenShoes3)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 18);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy ironShoes2
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(ironShoes2)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 19);
+    block.receipts[0].result.expectOk().expectBool(true);
+  },
+});
