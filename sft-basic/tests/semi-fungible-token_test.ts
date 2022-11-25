@@ -1,10 +1,14 @@
 import { Clarinet, Tx, Chain, Account, types } from 'https://deno.land/x/clarinet@v1.0.3/index.ts';
 import { assertEquals } from 'https://deno.land/std@0.90.0/testing/asserts.ts';
+const errorInsufficientBalance = 1;
 const contractName = 'semi-fungible-token';
 const craftingFn = 'craft-item';
 const levelUpFn = 'level-up';
 const acquisitionFn = 'buy-item';
 const getBalance = 'get-balance';
+const getCraftingResources = 'get-crafting-resources';
+const getLevelUpResources = 'get-level-up-resources';
+const getAcquisitionResources = 'get-acquisition-resources';
 const mint = 'mint';
 const gold = '1';
 const energy = '2';
@@ -2989,7 +2993,7 @@ Clarinet.test({
     let block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(woodenSword1)], admin.address)]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 2);
-    block.receipts[0].result.expectErr().expectUint(1);
+    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // MINT ONE RESOURCE NOT ENOUGH
 
@@ -3010,7 +3014,7 @@ Clarinet.test({
     block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(ironSword1)], admin.address)]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 4);
-    block.receipts[0].result.expectErr().expectUint(1);
+    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // MINT ONE RESOURCE NONE OF THE OTHERS
 
@@ -3031,7 +3035,7 @@ Clarinet.test({
     block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(enhancedSword1)], admin.address)]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 6);
-    block.receipts[0].result.expectErr().expectUint(1);
+    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // mint
 
@@ -3081,13 +3085,13 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         mint,
-        [types.uint(woodenArmor3), types.uint(2), types.principal(admin.address)],
+        [types.uint(woodenArmor3), types.uint(1), types.principal(admin.address)],
         admin.address
       ),
       Tx.contractCall(
         contractName,
         mint,
-        [types.uint(ironArmor3), types.uint(2), types.principal(admin.address)],
+        [types.uint(ironArmor3), types.uint(1), types.principal(admin.address)],
         admin.address
       ),
     ]);
@@ -3101,7 +3105,7 @@ Clarinet.test({
     block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(enhancedArmor1)], admin.address)]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 12);
-    block.receipts[0].result.expectErr().expectUint(1);
+    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // mint 5
 
@@ -3342,7 +3346,7 @@ Clarinet.test({
     let block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(woodenSword1)], admin.address)]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 2);
-    block.receipts[0].result.expectErr().expectUint(1);
+    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // MINT ONE RESOURCE NONE OF THE OTHER 2
 
@@ -3363,7 +3367,7 @@ Clarinet.test({
     block = chain.mineBlock([Tx.contractCall(contractName, levelUpFn, [types.uint(woodenSword2)], admin.address)]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 4);
-    block.receipts[0].result.expectErr().expectUint(1);
+    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // MINT TWO RESOURCES NONE OF THE OTHER
 
@@ -3391,7 +3395,7 @@ Clarinet.test({
     block = chain.mineBlock([Tx.contractCall(contractName, levelUpFn, [types.uint(woodenSword3)], admin.address)]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 6);
-    block.receipts[0].result.expectErr().expectUint(1);
+    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // MINT ONE RESOURCE NOT ENOUGH
 
@@ -3412,7 +3416,7 @@ Clarinet.test({
     block = chain.mineBlock([Tx.contractCall(contractName, craftingFn, [types.uint(ironSword1)], admin.address)]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 8);
-    block.receipts[0].result.expectErr().expectUint(1);
+    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // mint 5
 
@@ -3440,7 +3444,7 @@ Clarinet.test({
     block = chain.mineBlock([Tx.contractCall(contractName, levelUpFn, [types.uint(ironSword2)], admin.address)]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 10);
-    block.receipts[0].result.expectErr().expectUint(1);
+    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // mint 6
 
@@ -3468,7 +3472,7 @@ Clarinet.test({
     block = chain.mineBlock([Tx.contractCall(contractName, levelUpFn, [types.uint(ironSword3)], admin.address)]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 12);
-    block.receipts[0].result.expectErr().expectUint(1);
+    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // intermediate balance check
 
@@ -4661,7 +4665,7 @@ Clarinet.test({
     ]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 2);
-    block.receipts[0].result.expectErr().expectUint(1);
+    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // MINT ONE RESOURCE NOT THE OTHER
 
@@ -4682,7 +4686,7 @@ Clarinet.test({
     block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(woodenSword2)], admin.address)]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 4);
-    block.receipts[0].result.expectErr().expectUint(1);
+    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // MINT 2 RESOURCE EACH ONE NOT ENOUGH
 
@@ -4710,7 +4714,7 @@ Clarinet.test({
     block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(ironSword2)], admin.address)]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 6);
-    block.receipts[0].result.expectErr().expectUint(1);
+    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // MINT ONE RESOURCE NONE OF THE OTHER 2
 
@@ -4733,7 +4737,7 @@ Clarinet.test({
     ]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 8);
-    block.receipts[0].result.expectErr().expectUint(1);
+    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // MINT
 
@@ -4837,7 +4841,7 @@ Clarinet.test({
     ]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 16);
-    block.receipts[0].result.expectErr().expectUint(1);
+    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // mint 9
 
@@ -5106,5 +5110,73 @@ Clarinet.test({
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 34);
     block.receipts[0].result.expectOk().expectBool(true);
+  },
+});
+
+Clarinet.test({
+  name: 'Getter read only functions test',
+  async fn(chain: Chain, accounts: Map<string, Account>) {
+    const admin = accounts.get('deployer')!;
+
+    let craftingNoneList = [
+      6, 7, 9, 10, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28, 30, 31, 33, 34, 36, 37, 39, 40, 42, 43, 45, 46, 48,
+      49,
+    ];
+    let levelupNoneList = [5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 38, 41, 44, 47];
+    let acquisitionNoneList = [
+      7, 8, 10, 11, 13, 15, 17, 19, 20, 22, 23, 24, 26, 28, 29, 31, 32, 33, 35, 37, 39, 40, 41, 44, 46, 47, 48, 49,
+    ];
+    for (let i = 5; i < 50; i++) {
+      let craftingResources = chain.callReadOnlyFn(contractName, getCraftingResources, [types.uint(i)], admin.address);
+      let levelUpResources = chain.callReadOnlyFn(contractName, getLevelUpResources, [types.uint(i)], admin.address);
+      let acquisitionResources = chain.callReadOnlyFn(
+        contractName,
+        getAcquisitionResources,
+        [types.uint(i)],
+        admin.address
+      );
+      if (craftingNoneList.indexOf(i) > -1) {
+        craftingResources.result.expectOk().expectNone();
+      } else {
+        craftingResources.result.expectOk().expectSome();
+      }
+      if (levelupNoneList.indexOf(i) > -1) {
+        levelUpResources.result.expectOk().expectNone();
+      } else {
+        levelUpResources.result.expectOk().expectSome();
+      }
+      if (acquisitionNoneList.indexOf(i) > -1) {
+        acquisitionResources.result.expectOk().expectNone();
+        console.log(i, 'none', acquisitionNoneList.indexOf(i));
+      } else {
+        acquisitionResources.result.expectOk().expectSome();
+        console.log(i, 'some', acquisitionNoneList.indexOf(i));
+      }
+    }
+
+    // let balanceIron = chain.callReadOnlyFn(
+    //   contractName,
+    //   getBalance,
+    //   [types.uint(iron), types.principal(admin.address)],
+    //   admin.address
+    // );
+    // balanceIron.result.expectOk().expectUint(0);
+
+    // let block = chain.mineBlock([
+    //     /*
+    //      * Add transactions with:
+    //      * Tx.contractCall(...)
+    //     */
+    // ]);
+    // assertEquals(block.receipts.length, 0);
+    // assertEquals(block.height, 2);
+    // block = chain.mineBlock([
+    //     /*
+    //      * Add transactions with:
+    //      * Tx.contractCall(...)
+    //     */
+    // ]);
+    // assertEquals(block.receipts.length, 0);
+    // assertEquals(block.height, 3);
   },
 });
