@@ -5147,36 +5147,9 @@ Clarinet.test({
       }
       if (acquisitionNoneList.indexOf(i) > -1) {
         acquisitionResources.result.expectOk().expectNone();
-        console.log(i, 'none', acquisitionNoneList.indexOf(i));
       } else {
         acquisitionResources.result.expectOk().expectSome();
-        console.log(i, 'some', acquisitionNoneList.indexOf(i));
       }
     }
-
-    // let balanceIron = chain.callReadOnlyFn(
-    //   contractName,
-    //   getBalance,
-    //   [types.uint(iron), types.principal(admin.address)],
-    //   admin.address
-    // );
-    // balanceIron.result.expectOk().expectUint(0);
-
-    // let block = chain.mineBlock([
-    //     /*
-    //      * Add transactions with:
-    //      * Tx.contractCall(...)
-    //     */
-    // ]);
-    // assertEquals(block.receipts.length, 0);
-    // assertEquals(block.height, 2);
-    // block = chain.mineBlock([
-    //     /*
-    //      * Add transactions with:
-    //      * Tx.contractCall(...)
-    //     */
-    // ]);
-    // assertEquals(block.receipts.length, 0);
-    // assertEquals(block.height, 3);
   },
 });
