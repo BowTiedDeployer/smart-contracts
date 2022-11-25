@@ -6146,3 +6146,323 @@ Clarinet.test({
     balanceIronArmor3User3.result.expectOk().expectUint(1);
   },
 });
+
+Clarinet.test({
+  name: 'Transfer acquisition items test',
+  async fn(chain: Chain, accounts: Map<string, Account>) {
+    const admin = accounts.get('deployer')!;
+    const user1 = accounts.get('wallet_1')!;
+    const user2 = accounts.get('wallet_2')!;
+    const user3 = accounts.get('wallet_3')!;
+    const user4 = accounts.get('wallet_4')!;
+    const user5 = accounts.get('wallet_5')!;
+
+    // mint 1
+
+    let block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(gold), types.uint(15), types.principal(admin.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 2);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy woodenSword1
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(woodenSword1)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 3);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // mint 2
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(gold), types.uint(40), types.principal(admin.address)],
+        admin.address
+      ),
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(wood), types.uint(7), types.principal(admin.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 2);
+    assertEquals(block.height, 4);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy woodenSword2
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(woodenSword2)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 5);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // mint 3
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(gold), types.uint(5), types.principal(admin.address)],
+        admin.address
+      ),
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(iron), types.uint(20), types.principal(admin.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 2);
+    assertEquals(block.height, 6);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy ironSword2
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(ironSword2)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 7);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // mint 4
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(gold), types.uint(500), types.principal(admin.address)],
+        admin.address
+      ),
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(iron), types.uint(11), types.principal(admin.address)],
+        admin.address
+      ),
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(wood), types.uint(11), types.principal(admin.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 3);
+    assertEquals(block.height, 8);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy enhancedSword2
+
+    block = chain.mineBlock([
+      Tx.contractCall(contractName, acquisitionFn, [types.uint(enhancedSword2)], admin.address),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 9);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // mint 5
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(gold), types.uint(15), types.principal(admin.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 10);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy woodenArmor1
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(woodenArmor1)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 11);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // mint 6
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(gold), types.uint(50), types.principal(admin.address)],
+        admin.address
+      ),
+      Tx.contractCall(
+        contractName,
+        mint,
+        [types.uint(wood), types.uint(17), types.principal(admin.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 2);
+    assertEquals(block.height, 12);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // buy woodenArmor3
+
+    block = chain.mineBlock([Tx.contractCall(contractName, acquisitionFn, [types.uint(woodenArmor3)], admin.address)]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 13);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // transfer 1 woodenSword1 from admin to user 1
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        transferFn,
+        [types.uint(woodenSword1), types.uint(1), types.principal(admin.address), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 14);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // balance after 1st transfer
+    let balanceWoodenSword1Admin = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenSword1), types.principal(admin.address)],
+      admin.address
+    );
+    balanceWoodenSword1Admin.result.expectOk().expectUint(0);
+
+    let balanceWoodenSword1User1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenSword1), types.principal(user1.address)],
+      user1.address
+    );
+    balanceWoodenSword1User1.result.expectOk().expectUint(1);
+
+    // transfer 1 ironSword2 from admin to user 2
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        transferFn,
+        [types.uint(ironSword2), types.uint(1), types.principal(admin.address), types.principal(user2.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 15);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // balance after 2nd transfer
+    let balanceIronSword2Admin = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironSword2), types.principal(admin.address)],
+      admin.address
+    );
+    balanceIronSword2Admin.result.expectOk().expectUint(0);
+
+    let balanceIronSword2User2 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironSword2), types.principal(user2.address)],
+      user2.address
+    );
+    balanceIronSword2User2.result.expectOk().expectUint(1);
+
+    // transfer 1 enhancedSword2 from admin to user3
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        transferFn,
+        [types.uint(enhancedSword2), types.uint(1), types.principal(admin.address), types.principal(user3.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 16);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // balance after 3rd transfer
+    let balanceEnhancedSword2Admin = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(enhancedSword2), types.principal(admin.address)],
+      admin.address
+    );
+    balanceEnhancedSword2Admin.result.expectOk().expectUint(0);
+
+    let balanceEnhancedSword2User3 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(enhancedSword2), types.principal(user3.address)],
+      user1.address
+    );
+    balanceEnhancedSword2User3.result.expectOk().expectUint(1);
+
+    // transfer 1 woodenArmor1 from admin to user 4
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        transferFn,
+        [types.uint(woodenArmor1), types.uint(1), types.principal(admin.address), types.principal(user4.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 17);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // balance after 4th transfer
+    let balanceWoodenArmor1Admin = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenArmor1), types.principal(admin.address)],
+      admin.address
+    );
+    balanceWoodenArmor1Admin.result.expectOk().expectUint(0);
+
+    let balanceWoodenArmor1User4 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenArmor1), types.principal(user4.address)],
+      user1.address
+    );
+    balanceWoodenArmor1User4.result.expectOk().expectUint(1);
+
+    // transfer 1 woodenArmor3 from admin to user 5
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        transferFn,
+        [types.uint(woodenArmor3), types.uint(1), types.principal(admin.address), types.principal(user5.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 18);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // balance after 4th transfer
+    let balanceWoodenArmor3Admin = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenArmor3), types.principal(admin.address)],
+      admin.address
+    );
+    balanceWoodenArmor3Admin.result.expectOk().expectUint(0);
+
+    let balanceWoodenArmor3User5 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenArmor3), types.principal(user5.address)],
+      user1.address
+    );
+    balanceWoodenArmor3User5.result.expectOk().expectUint(1);
+  },
+});
