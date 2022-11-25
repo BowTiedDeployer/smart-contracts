@@ -5213,21 +5213,21 @@ Clarinet.test({
     block.receipts[0].result.expectOk().expectBool(true);
 
     // balance after 1st transfer
-    let balanceGoldAdmin = chain.callReadOnlyFn(
+    let balanceIronAdmin = chain.callReadOnlyFn(
       contractName,
       getBalance,
       [types.uint(gold), types.principal(admin.address)],
       admin.address
     );
-    balanceGoldAdmin.result.expectOk().expectUint(900);
+    balanceIronAdmin.result.expectOk().expectUint(900);
 
-    let balanceGoldUser1 = chain.callReadOnlyFn(
+    let balanceIronUser1 = chain.callReadOnlyFn(
       contractName,
       getBalance,
       [types.uint(gold), types.principal(user1.address)],
       user1.address
     );
-    balanceGoldUser1.result.expectOk().expectUint(100);
+    balanceIronUser1.result.expectOk().expectUint(100);
 
     // transfer 200 energy from admin to user 2
     block = chain.mineBlock([
@@ -5251,13 +5251,13 @@ Clarinet.test({
     );
     balanceEnergyAdmin.result.expectOk().expectUint(800);
 
-    let balanceEnergyUser2 = chain.callReadOnlyFn(
+    let balanceIronUser4 = chain.callReadOnlyFn(
       contractName,
       getBalance,
       [types.uint(energy), types.principal(user2.address)],
       user2.address
     );
-    balanceEnergyUser2.result.expectOk().expectUint(200);
+    balanceIronUser4.result.expectOk().expectUint(200);
 
     // transfer 300 wood from admin to user
     block = chain.mineBlock([
@@ -5273,21 +5273,21 @@ Clarinet.test({
     block.receipts[0].result.expectOk().expectBool(true);
 
     // balance after 3rd transfer
-    let balanceWoodAdmin = chain.callReadOnlyFn(
+    balanceIronAdmin = chain.callReadOnlyFn(
       contractName,
       getBalance,
       [types.uint(wood), types.principal(admin.address)],
       admin.address
     );
-    balanceWoodAdmin.result.expectOk().expectUint(700);
+    balanceIronAdmin.result.expectOk().expectUint(700);
 
-    let balanceWoodUser3 = chain.callReadOnlyFn(
+    balanceIronUser4 = chain.callReadOnlyFn(
       contractName,
       getBalance,
       [types.uint(wood), types.principal(user3.address)],
       user1.address
     );
-    balanceWoodUser3.result.expectOk().expectUint(300);
+    balanceIronUser4.result.expectOk().expectUint(300);
 
     // transfer 400 iron from admin to user 4
     block = chain.mineBlock([
@@ -5303,7 +5303,7 @@ Clarinet.test({
     block.receipts[0].result.expectOk().expectBool(true);
 
     // balance after 4th transfer
-    let balanceIronAdmin = chain.callReadOnlyFn(
+    balanceIronAdmin = chain.callReadOnlyFn(
       contractName,
       getBalance,
       [types.uint(iron), types.principal(admin.address)],
@@ -5311,7 +5311,7 @@ Clarinet.test({
     );
     balanceIronAdmin.result.expectOk().expectUint(600);
 
-    let balanceIronUser4 = chain.callReadOnlyFn(
+    balanceIronUser4 = chain.callReadOnlyFn(
       contractName,
       getBalance,
       [types.uint(iron), types.principal(user4.address)],
@@ -5325,29 +5325,29 @@ Clarinet.test({
         contractName,
         transferFn,
         [types.uint(energy), types.uint(50), types.principal(user2.address), types.principal(user4.address)],
-        admin.address
+        user2.address
       ),
     ]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 7);
-    block.receipts[0].result.expectErr().expectUint(errorInvalidSender);
+    block.receipts[0].result.expectOk().expectBool(true);
 
     // balance after 5th transfer
-    balanceEnergyAdmin = chain.callReadOnlyFn(
+    balanceIronAdmin = chain.callReadOnlyFn(
       contractName,
       getBalance,
       [types.uint(energy), types.principal(admin.address)],
       admin.address
     );
-    balanceEnergyAdmin.result.expectOk().expectUint(800);
+    balanceIronAdmin.result.expectOk().expectUint(800);
 
-    balanceEnergyUser2 = chain.callReadOnlyFn(
+    balanceIronUser4 = chain.callReadOnlyFn(
       contractName,
       getBalance,
       [types.uint(energy), types.principal(user2.address)],
       user1.address
     );
-    balanceEnergyUser2.result.expectOk().expectUint(200);
+    balanceIronUser4.result.expectOk().expectUint(150);
 
     let balanceEnergyUser4 = chain.callReadOnlyFn(
       contractName,
@@ -5355,7 +5355,121 @@ Clarinet.test({
       [types.uint(energy), types.principal(user4.address)],
       user4.address
     );
-    balanceEnergyUser4.result.expectOk().expectUint(0);
+    balanceEnergyUser4.result.expectOk().expectUint(50);
+
+    // transfer 50 gold from user1 to user2
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        transferFn,
+        [types.uint(gold), types.uint(50), types.principal(user1.address), types.principal(user2.address)],
+        user1.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 8);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // balance after 6th transfer
+    balanceIronAdmin = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(gold), types.principal(admin.address)],
+      admin.address
+    );
+    balanceIronAdmin.result.expectOk().expectUint(900);
+
+    balanceIronUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(gold), types.principal(user1.address)],
+      user1.address
+    );
+    balanceIronUser1.result.expectOk().expectUint(50);
+
+    balanceIronUser4 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(gold), types.principal(user2.address)],
+      user2.address
+    );
+    balanceIronUser4.result.expectOk().expectUint(50);
+
+    // transfer 50 wood from user3 to user1
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        transferFn,
+        [types.uint(wood), types.uint(50), types.principal(user3.address), types.principal(user1.address)],
+        user3.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 9);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // balance after 6th transfer
+    balanceIronAdmin = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(wood), types.principal(admin.address)],
+      admin.address
+    );
+    balanceIronAdmin.result.expectOk().expectUint(700);
+
+    balanceIronUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(wood), types.principal(user1.address)],
+      user1.address
+    );
+    balanceIronUser1.result.expectOk().expectUint(50);
+
+    balanceIronUser4 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(wood), types.principal(user3.address)],
+      user3.address
+    );
+    balanceIronUser4.result.expectOk().expectUint(250);
+
+    // transfer 50 iron from user4 to user3
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        transferFn,
+        [types.uint(iron), types.uint(50), types.principal(user4.address), types.principal(user3.address)],
+        user4.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 10);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // balance after 6th transfer
+    balanceIronAdmin = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(iron), types.principal(admin.address)],
+      admin.address
+    );
+    balanceIronAdmin.result.expectOk().expectUint(600);
+
+    let balanceIronUser3 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(iron), types.principal(user3.address)],
+      user3.address
+    );
+    balanceIronUser3.result.expectOk().expectUint(50);
+
+    balanceIronUser4 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(iron), types.principal(user4.address)],
+      user4.address
+    );
+    balanceIronUser4.result.expectOk().expectUint(350);
   },
 });
 
