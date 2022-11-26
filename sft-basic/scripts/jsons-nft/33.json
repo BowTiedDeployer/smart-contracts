@@ -1,0 +1,24 @@
+{
+  "sip": 16,
+  "name": "Wooden Helmet 2",
+  "image": "ipfs://QmS57rKdQB7ioMsg5PNUdyzzQnZpfzPZF5G63E1xkGci4w/33.png",
+  "attributes": [
+    {
+      "trait_type": "type",
+      "value": "Helmet"
+    },
+    {
+      "trait_type": "level",
+      "display_type": "number",
+      "value": 2
+    },
+    {
+      "trait_type": "element",
+      "value": "Wooden"
+    }
+  ],
+  "properties": {
+      "image_in_game":  "ipfs://content_here/33.png",
+      "collection":  "Base_Game_SFTs"
+  }
+}
