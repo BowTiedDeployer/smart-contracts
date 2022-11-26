@@ -5724,6 +5724,7 @@ Clarinet.test({
       contractName,
       getBalance,
       [types.uint(enhancedSword1), types.principal(user3.address)],
+      user3.address
     );
     balanceEnhancedSword1User3.result.expectOk().expectUint(1);
 
@@ -6392,7 +6393,7 @@ Clarinet.test({
       contractName,
       getBalance,
       [types.uint(woodenSword3), types.principal(user3.address)],
-      user1.address
+      user3.address
     );
     balanceWoodenSword3User3.result.expectOk().expectUint(1);
 
@@ -6422,7 +6423,7 @@ Clarinet.test({
       contractName,
       getBalance,
       [types.uint(woodenArmor3), types.principal(user6.address)],
-      user1.address
+      user6.address
     );
     balanceWoodenArmor3User6.result.expectOk().expectUint(1);
 
@@ -6452,7 +6453,7 @@ Clarinet.test({
       contractName,
       getBalance,
       [types.uint(ironSword3), types.principal(user2.address)],
-      user1.address
+      user2.address
     );
     balanceIronSword3User2.result.expectOk().expectUint(1);
 
@@ -6482,9 +6483,161 @@ Clarinet.test({
       contractName,
       getBalance,
       [types.uint(ironArmor3), types.principal(user3.address)],
-      user1.address
+      user3.address
     );
     balanceIronArmor3User3.result.expectOk().expectUint(1);
+
+    // transfer 1 woodenSword3 from user3 to user1
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        transferFn,
+        [types.uint(woodenSword3), types.uint(1), types.principal(user3.address), types.principal(user1.address)],
+        user3.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 30);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // balance after 5th transfer
+    balanceWoodenSword3Admin = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenSword3), types.principal(admin.address)],
+      admin.address
+    );
+    balanceWoodenSword3Admin.result.expectOk().expectUint(0);
+
+    balanceWoodenSword3User3 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenSword3), types.principal(user3.address)],
+      user3.address
+    );
+    balanceWoodenSword3User3.result.expectOk().expectUint(0);
+
+    let balanceWoodenSword3User1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenSword3), types.principal(user1.address)],
+      user1.address
+    );
+    balanceWoodenSword3User1.result.expectOk().expectUint(1);
+
+    // transfer 1 woodenArmor3 from user6 to user2
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        transferFn,
+        [types.uint(woodenArmor3), types.uint(1), types.principal(user6.address), types.principal(user2.address)],
+        user6.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 31);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // balance after 6th transfer
+    balanceWoodenArmor3Admin = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenArmor3), types.principal(admin.address)],
+      admin.address
+    );
+    balanceWoodenArmor3Admin.result.expectOk().expectUint(0);
+
+    balanceWoodenArmor3User6 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenArmor3), types.principal(user6.address)],
+      user6.address
+    );
+    balanceWoodenArmor3User6.result.expectOk().expectUint(0);
+
+    let balanceWoodenArmor3User2 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenArmor3), types.principal(user2.address)],
+      user2.address
+    );
+    balanceWoodenArmor3User2.result.expectOk().expectUint(1);
+
+    // transfer 1 ironSword3 from user2 to user4
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        transferFn,
+        [types.uint(ironSword3), types.uint(1), types.principal(user2.address), types.principal(user4.address)],
+        user2.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 32);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // balance after 7th transfer
+    balanceIronSword3Admin = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironSword3), types.principal(admin.address)],
+      admin.address
+    );
+    balanceIronSword3Admin.result.expectOk().expectUint(0);
+
+    balanceIronSword3User2 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironSword3), types.principal(user2.address)],
+      user2.address
+    );
+    balanceIronSword3User2.result.expectOk().expectUint(0);
+
+    let balanceIronSword3User4 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironSword3), types.principal(user4.address)],
+      user4.address
+    );
+    balanceIronSword3User4.result.expectOk().expectUint(1);
+
+    // transfer 1 ironArmor3 from user3 to user5 XXXXXXXXXXXXX
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        transferFn,
+        [types.uint(ironArmor3), types.uint(1), types.principal(user3.address), types.principal(user5.address)],
+        user3.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 33);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // balance after 4th transfer
+    balanceIronArmor3Admin = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironArmor3), types.principal(admin.address)],
+      admin.address
+    );
+    balanceIronArmor3Admin.result.expectOk().expectUint(0);
+
+    balanceIronArmor3User3 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironArmor3), types.principal(user3.address)],
+      user3.address
+    );
+    balanceIronArmor3User3.result.expectOk().expectUint(0);
+
+    let balanceIronArmor3User5 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironArmor3), types.principal(user5.address)],
+      user5.address
+    );
+    balanceIronArmor3User5.result.expectOk().expectUint(1);
   },
 });
 
