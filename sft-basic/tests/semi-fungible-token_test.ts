@@ -61,7 +61,7 @@ const ironShoes3 = '46';
 const enhancedShoes1 = '47';
 const enhancedShoes2 = '48';
 const enhancedShoes3 = '49';
-/*
+
 Clarinet.test({
   name: 'Crafting Case',
   async fn(chain: Chain, accounts: Map<string, Account>) {
@@ -6640,7 +6640,7 @@ Clarinet.test({
     balanceIronArmor3User5.result.expectOk().expectUint(1);
   },
 });
-*/
+
 Clarinet.test({
   name: 'Transfer acquisition items test',
   async fn(chain: Chain, accounts: Map<string, Account>) {
