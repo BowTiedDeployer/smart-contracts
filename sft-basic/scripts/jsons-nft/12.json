@@ -1,7 +1,7 @@
 {
   "sip": 16,
   "name": "Enhanced Sword 2",
-  "image": "ipfs://QmS57rKdQB7ioMsg5PNUdyzzQnZpfzPZF5G63E1xkGci4w/12.png",
+  "image": "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/12.png",
   "attributes": [
     {
       "trait_type": "type",
@@ -18,7 +18,7 @@
     }
   ],
   "properties": {
-      "image_in_game":  "ipfs://content_here/12.png",
+      "image_in_game":  "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/12.png",
       "collection":  "Base_Game_SFTs"
   }
 }

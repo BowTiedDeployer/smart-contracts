@@ -1,7 +1,7 @@
 {
   "sip": 16,
   "name": "Iron Shield 2",
-  "image": "ipfs://QmS57rKdQB7ioMsg5PNUdyzzQnZpfzPZF5G63E1xkGci4w/27.png",
+  "image": "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/27.png",
   "attributes": [
     {
       "trait_type": "type",
@@ -18,7 +18,7 @@
     }
   ],
   "properties": {
-      "image_in_game":  "ipfs://content_here/27.png",
+      "image_in_game":  "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/27.png",
       "collection":  "Base_Game_SFTs"
   }
 }

@@ -10,11 +10,11 @@ elements = [
 levels=["1","2","3"]
 items=["Sword","Armor","Shield","Helmet","Shoes"]
 
-def get_duck_string(element, item, level, token_id):
+def generate_jsons(element, item, level, token_id):
   return """{
   "sip": 16,
   "name": "%s %s %s",
-  "image": "ipfs://QmS57rKdQB7ioMsg5PNUdyzzQnZpfzPZF5G63E1xkGci4w/%s.png",
+  "image": "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/%s.png",
   "attributes": [
     {
       "trait_type": "type",
@@ -31,7 +31,7 @@ def get_duck_string(element, item, level, token_id):
     }
   ],
   "properties": {
-      "image_in_game":  "ipfs://content_here/%s.png",
+      "image_in_game":  "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/%s.png",
       "collection":  "Base_Game_SFTs"
   }
 }
@@ -39,4 +39,4 @@ def get_duck_string(element, item, level, token_id):
 
 for i in range(5,50):
   with open("jsons-nft/%s.json"%i, "w") as outfile:
-    outfile.write(get_duck_string(elements[(i-5)%9//3],items[(i-5)//9],levels[(i-5)%3],i))
+    outfile.write(generate_jsons(elements[(i-5)%9//3],items[(i-5)//9],levels[(i-5)%3],i))

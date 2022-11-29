@@ -1,7 +1,7 @@
 {
   "sip": 16,
   "name": "Enhanced Armor 1",
-  "image": "ipfs://QmS57rKdQB7ioMsg5PNUdyzzQnZpfzPZF5G63E1xkGci4w/20.png",
+  "image": "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/20.png",
   "attributes": [
     {
       "trait_type": "type",
@@ -18,7 +18,7 @@
     }
   ],
   "properties": {
-      "image_in_game":  "ipfs://content_here/20.png",
-      "collection":  "Base_Game_SFTs"
+    "image_in_game": "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/20.png",
+    "collection": "Base_Game_SFTs"
   }
 }

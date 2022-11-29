@@ -1,7 +1,7 @@
 {
   "sip": 16,
   "name": "Enhanced Shield 1",
-  "image": "ipfs://QmS57rKdQB7ioMsg5PNUdyzzQnZpfzPZF5G63E1xkGci4w/29.png",
+  "image": "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/29.png",
   "attributes": [
     {
       "trait_type": "type",
@@ -18,7 +18,7 @@
     }
   ],
   "properties": {
-      "image_in_game":  "ipfs://content_here/29.png",
+      "image_in_game":  "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/29.png",
       "collection":  "Base_Game_SFTs"
   }
 }
