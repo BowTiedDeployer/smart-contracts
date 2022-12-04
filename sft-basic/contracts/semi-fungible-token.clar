@@ -112,6 +112,27 @@
   (match previous-response prev-ok (transfer-memo (get token-id item) (get amount item) (get sender item) (get recipient item) (get memo item)) prev-err previous-response)
 )
 
+;; Burn
+
+(define-public (burn (token-id uint) (amount uint) (sender principal))
+  (let
+    (
+      (sender-balance (get-balance-uint token-id sender))
+    )
+    (asserts! (or (is-eq sender tx-sender) (is-eq sender contract-caller)) err-invalid-sender)
+    (asserts! (<= amount sender-balance) err-insufficient-balance)
+    (try! (ft-burn? semi-fungible-token amount sender))
+    (try! (tag-nft-token-id {token-id: token-id, owner: sender}))
+    (set-balance token-id (- sender-balance amount) sender)
+    (print {type: "sft_burn", token-id: token-id, amount: amount, sender: sender})
+    (ok true)
+  )
+)
+
+(define-public (burn-wrapper (burn-tuple {resource-id: uint, resource-qty: uint})) 
+  (burn (get resource-id burn-tuple) (get resource-qty burn-tuple) tx-sender)
+)
+
 ;; Token URI
 
 (define-map token-uri { id: uint } { url: (string-ascii 256) })
@@ -250,7 +271,7 @@
         (verified-ownership (fold and (map is-owned-needed (unwrap-panic level-up-resources)) true)))
           (asserts! (is-some level-up-resources) err-not-some)
           (asserts! verified-ownership err-insufficient-balance)
-            (some (map transfer-wrapper (unwrap-panic level-up-resources)))
+            (some (map burn-wrapper (unwrap-panic level-up-resources)))
             (mint id-new u1 tx-sender)
     )
 )
@@ -271,12 +292,7 @@
 
 
 (define-private (is-owned-needed  (item {resource-id: uint, resource-qty: uint}))
-(begin
-;;(asserts! (>= (get-balance-uint (get resource-id item) tx-sender) (get resource-qty item)) err-insufficient-balance)
-  ;;(ok
   (>= (get-balance-uint (get resource-id item) tx-sender) (get resource-qty item))
-  ;;)
-  )
 )
 
 (map-set level-up-system {id: u6} (list {resource-id: u3, resource-qty: u6} {resource-id: u5, resource-qty: u1} {resource-id: u2, resource-qty: u2}))
@@ -319,7 +335,7 @@
         (verified-ownership (fold and (map is-owned-needed (unwrap-panic crafting-resources)) true)))
           (asserts! (is-some crafting-resources) err-not-some)
           (asserts! verified-ownership err-insufficient-balance)
-            (some (map transfer-wrapper (unwrap-panic crafting-resources)))
+            (some (map burn-wrapper (unwrap-panic crafting-resources)))
             (mint id-new u1 tx-sender)
   )
 )
@@ -362,7 +378,7 @@
         (verified-ownership (fold and (map is-owned-needed (unwrap-panic acquisition-resources)) true)))
           (asserts! (is-some acquisition-resources) err-not-some)
           (asserts! verified-ownership err-insufficient-balance)
-            (some (map transfer-wrapper (unwrap-panic acquisition-resources)))
+            (some (map burn-wrapper (unwrap-panic acquisition-resources)))
             (mint id-new u1 tx-sender) 
     )
 )
