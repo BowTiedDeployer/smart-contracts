@@ -166,6 +166,14 @@
 
 (define-map token-name { id: uint } { name: (string-ascii 256), type: (string-ascii 256), values: {dmg: uint, health: uint, defense: uint} })
 
+(define-public (set-token-name (token-id uint) (token-details {name: (string-ascii 256), type: (string-ascii 256), values: {dmg: uint, health: uint, defense: uint}}))
+  (begin 
+    (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
+    (map-set token-name {id: token-id} token-details) 
+    (ok true)    
+  )
+)
+
 (define-read-only (get-token-name (token-id uint))
     (let ((token-urr  (map-get? token-name {id: token-id})))
       (ok token-urr)
