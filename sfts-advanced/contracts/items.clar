@@ -204,6 +204,12 @@
 
 (define-map token-name { id: uint } { name: (string-ascii 256), type: (string-ascii 256), values: {dmg: uint, health: uint, defense: uint} })
 
+(define-read-only (get-token-name (token-id uint))
+    (let ((token-urr  (map-get? token-name {id: token-id})))
+      (ok token-urr)
+    )
+)
+
 (define-constant err-not-some (err u99))
 
 (map-set token-name {id: u5} {name: "wooden_sword_1", type: "sword", values: {dmg: u1, health: u0, defense: u0}})
