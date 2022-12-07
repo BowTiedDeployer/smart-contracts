@@ -5,9 +5,6 @@ authors = []
 telemetry = false
 cache_dir = '.\.cache'
 requirements = []
-[contracts.new-collection]
-path = 'contracts/new-collection.clar'
-clarity_version = 1
 
 [contracts.semi-fungible-token]
 path = 'contracts/semi-fungible-token.clar'
