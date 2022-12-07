@@ -18,7 +18,7 @@
 
 ;; Balance
 
-(define-public (get-balance-wrapper (token-id uint) (who principal)) 
+(define-read-only (get-balance-wrapper (token-id uint) (who principal)) 
   (if (< token-id u5) (contract-call? .resources get-balance token-id who) (contract-call? .items get-balance token-id who))
 )
 

@@ -13,7 +13,7 @@
 (define-constant err-invalid-sender (err u4))
 (define-constant err-invalid-destination-contract (err u5))
 
-(define-public (is-owned-needed  (item {resource-id: uint, resource-qty: uint}))
+(define-read-only (is-owned-needed  (item {resource-id: uint, resource-qty: uint}))
   (ok (>= (get-balance-uint (get resource-id item) tx-sender) (get resource-qty item)))
 )
 
