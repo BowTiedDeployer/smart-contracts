@@ -1,12 +1,45 @@
-;; wrapper
-;; Level-up
+;; Wrapper
+
+;; Constants
+
 (define-constant contract-owner tx-sender)
 (define-constant err-not-some (err u99))
 (define-constant err-insufficient-balance (err u1))
 (define-constant err-owner-only (err u100))
 
+;; Transfer
 
-(define-map level-up-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
+(define-public (transfer-wrapper (token-id uint) (amount uint) (sender principal) (recipient principal)) 
+  (if (< token-id u5) 
+    (contract-call? .resources transfer token-id amount sender recipient) 
+    (contract-call? .items transfer token-id amount sender recipient)
+  )
+)
+
+;; Balance
+
+(define-public (get-balance-wrapper (token-id uint) (who principal)) 
+  (if (< token-id u5) (contract-call? .resources get-balance token-id who) (contract-call? .items get-balance token-id who))
+)
+
+;; Mint
+
+(define-public (mint-wrapper (token-id uint) (amount uint) (recipient principal))
+  (if (< token-id u5) 
+    (contract-call? .resources mint token-id amount tx-sender) 
+    (if (< token-id u50) 
+      (contract-call? .items mint token-id amount tx-sender) 
+      (ok false))
+  )
+)
+
+;; Burn
+
+(define-public (burn-wrapper (burn-tuple {resource-id: uint, resource-qty: uint}))
+  (if (< (get resource-id burn-tuple) u5) (contract-call? .resources burn (get resource-id burn-tuple) (get resource-qty burn-tuple) tx-sender) (contract-call? .items burn (get resource-id burn-tuple) (get resource-qty burn-tuple) tx-sender))
+)
+
+;; Ownership
 
 (define-private (is-owned-needed-wrapper (item {resource-id: uint, resource-qty: uint})) 
   (unwrap-panic (if (< (get resource-id item) u5) 
@@ -16,22 +49,21 @@
   )
 )
 
+;; Level-up
+
+(define-map level-up-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
+
+
+
 (define-public (level-up (id-new uint))
   (let ((level-up-resources (unwrap-panic (get-level-up-resources id-new)))
         (verified-ownership (fold and (map is-owned-needed-wrapper (unwrap-panic level-up-resources)) true)))
           (asserts! (is-some level-up-resources) err-not-some)
           (asserts! verified-ownership err-insufficient-balance)
             (some (map burn-wrapper (unwrap-panic level-up-resources)))
-            (if (< id-new u50) 
-              (contract-call? .items mint id-new u1 tx-sender) 
-              (ok false)
-            )
-            ;; (mint id-new u1 tx-sender)
+            (mint-wrapper id-new u1 tx-sender)
+            
     )
-)
-
-(define-public (burn-wrapper (burn-tuple {resource-id: uint, resource-qty: uint}))
-  (if (< (get resource-id burn-tuple) u5) (contract-call? .resources burn (get resource-id burn-tuple) (get resource-qty burn-tuple) tx-sender) (contract-call? .items burn (get resource-id burn-tuple) (get resource-qty burn-tuple) tx-sender))
 )
 
 (define-public (set-level-up-resources (token-id uint) (resource-needed (list 100 {resource-id: uint, resource-qty: uint})))
@@ -88,8 +120,7 @@
           (asserts! (is-some crafting-resources) err-not-some)
           (asserts! verified-ownership err-insufficient-balance)
             (some (map burn-wrapper (unwrap-panic crafting-resources)))
-            (if (< id-new u50) (contract-call? .items mint id-new u1 tx-sender) (ok false))
-            ;; (mint id-new u1 tx-sender)
+            (mint-wrapper id-new u1 tx-sender)
   )
 )
 
@@ -132,8 +163,7 @@
           (asserts! (is-some acquisition-resources) err-not-some)
           (asserts! verified-ownership err-insufficient-balance)
             (some (map burn-wrapper (unwrap-panic acquisition-resources)))
-            (if (< id-new u50) (contract-call? .items mint id-new u1 tx-sender) (ok false))
-            ;;(mint id-new u1 tx-sender) 
+            (mint-wrapper id-new u1 tx-sender)
     )
 )
 
