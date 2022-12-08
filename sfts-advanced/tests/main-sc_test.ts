@@ -69,7 +69,7 @@ const enhancedShoes2 = "48";
 const enhancedShoes3 = "49";
 
 Clarinet.test({
-  name: "Crafting Case",
+  name: "Main-SC: Crafting Case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
 
@@ -441,7 +441,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Level up case",
+  name: "Main-SC: Level-Up Case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
 
@@ -2073,7 +2073,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Acquisition case",
+  name: "Main-SC: Acquisition Case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
 
@@ -2670,7 +2670,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Crafting with more resources case",
+  name: "Main-SC: Crafting with more resources Case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
 
@@ -2948,7 +2948,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Level up with more resources case ",
+  name: "Main-SC: Level-Up with more resources Case ",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
 
@@ -3707,7 +3707,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Acquisition with more resources case",
+  name: "Main-SC: Acquisition with more resources Case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
 
@@ -3984,7 +3984,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Crafting with less resources case",
+  name: "Main-SC: Crafting with less resources Case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
 
@@ -4427,7 +4427,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Level up with less resources case",
+  name: "Main-SC: Level-Up with less resources Case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
 
@@ -6063,7 +6063,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Acquisition with less resources case",
+  name: "Main-SC: Acquisition with less resources Case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
 
@@ -6634,7 +6634,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Getter read only functions test",
+  name: "Main-SC: Get read only functions Case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
 
@@ -6688,7 +6688,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Transfer resources test",
+  name: "Main-SC: Transfer resources Case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
     const user1 = accounts.get("wallet_1")!;
@@ -7045,7 +7045,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Transfer crafted items test",
+  name: "Main-SC: Transfer crafted items Case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
     const user1 = accounts.get("wallet_1")!;
@@ -7730,7 +7730,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Transfer level-up items test",
+  name: "Main-SC: Transfer Level-Up items Case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
     const user1 = accounts.get("wallet_1")!;
@@ -8447,7 +8447,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Transfer acquisition items test",
+  name: "Main-SC: Transfer Acquisition items Case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
     const user1 = accounts.get("wallet_1")!;

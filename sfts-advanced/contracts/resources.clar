@@ -169,8 +169,8 @@
 (define-public (set-token-name (token-id uint) (token-details {name: (string-ascii 256), type: (string-ascii 256), values: {dmg: uint, health: uint, defense: uint}}))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
-    (map-set token-name {id: token-id} token-details) 
-    (ok true)    
+    (map-set token-name {id: token-id} token-details)
+    (ok true)   
   )
 )
 
