@@ -6,6 +6,7 @@
 (define-constant err-not-some (err u99))
 (define-constant err-insufficient-balance (err u1))
 (define-constant err-owner-only (err u100))
+(define-constant err-inexistent-item (err u10))
 
 ;; Transfer
 
@@ -29,14 +30,27 @@
     (contract-call? .resources mint token-id amount tx-sender) 
     (if (< token-id u50) 
       (contract-call? .items mint token-id amount tx-sender) 
-      (ok false))
+      (if (< token-id u58) 
+        (contract-call? .collection-1 mint token-id amount recipient)
+        err-inexistent-item
+      )
+    )
   )
 )
 
 ;; Burn
 
 (define-public (burn-wrapper (burn-tuple {resource-id: uint, resource-qty: uint}))
-  (if (< (get resource-id burn-tuple) u5) (contract-call? .resources burn (get resource-id burn-tuple) (get resource-qty burn-tuple) tx-sender) (contract-call? .items burn (get resource-id burn-tuple) (get resource-qty burn-tuple) tx-sender))
+  (if (< (get resource-id burn-tuple) u5)
+    (contract-call? .resources burn (get resource-id burn-tuple) (get resource-qty burn-tuple) tx-sender) 
+    (if (< (get resource-id burn-tuple) u50) 
+      (contract-call? .items burn (get resource-id burn-tuple) (get resource-qty burn-tuple) tx-sender)
+      (if (< (get resource-id burn-tuple) u58)
+        (contract-call? .collection-1 burn (get resource-id burn-tuple) (get resource-qty burn-tuple) tx-sender)
+        err-inexistent-item  
+      )
+    )
+  )
 )
 
 ;; Ownership
@@ -44,7 +58,13 @@
 (define-private (is-owned-needed-wrapper (item {resource-id: uint, resource-qty: uint})) 
   (unwrap-panic (if (< (get resource-id item) u5) 
                   (contract-call? .resources is-owned-needed item) 
-                  (contract-call? .items is-owned-needed item)
+                  (if (< (get resource-id item) u50) 
+                    (contract-call? .items is-owned-needed item) 
+                    (if (< (get resource-id item) u58) 
+                      (contract-call? .collection-1 is-owned-needed item) 
+                      err-inexistent-item
+                    )  
+                  )
                 )
   )
 )
@@ -56,14 +76,16 @@
 
 
 (define-public (level-up (id-new uint))
-  (let ((level-up-resources (unwrap-panic (get-level-up-resources id-new)))
-        (verified-ownership (fold and (map is-owned-needed-wrapper (unwrap-panic level-up-resources)) true)))
-          (asserts! (is-some level-up-resources) err-not-some)
-          (asserts! verified-ownership err-insufficient-balance)
-            (some (map burn-wrapper (unwrap-panic level-up-resources)))
-            (mint-wrapper id-new u1 tx-sender)
-            
+  (begin
+    (asserts! (not (is-none (unwrap-panic (get-level-up-resources id-new)))) err-not-some)
+    (let ((level-up-resources (unwrap-panic (get-level-up-resources id-new)))
+          (verified-ownership (fold and (map is-owned-needed-wrapper (unwrap-panic level-up-resources)) true)))
+            (asserts! (is-some level-up-resources) err-not-some)
+            (asserts! verified-ownership err-insufficient-balance)
+              (some (map burn-wrapper (unwrap-panic level-up-resources)))
+              (mint-wrapper id-new u1 tx-sender)
     )
+  )
 )
 
 (define-public (set-level-up-resources (token-id uint) (resource-needed (list 100 {resource-id: uint, resource-qty: uint})))
@@ -115,12 +137,15 @@
 (define-map crafting-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
 (define-public (craft-item (id-new uint))
-  (let ((crafting-resources (unwrap-panic (get-crafting-resources id-new)))
-        (verified-ownership (fold and (map is-owned-needed-wrapper (unwrap-panic crafting-resources)) true)))
-          (asserts! (is-some crafting-resources) err-not-some)
-          (asserts! verified-ownership err-insufficient-balance)
-            (some (map burn-wrapper (unwrap-panic crafting-resources)))
-            (mint-wrapper id-new u1 tx-sender)
+  (begin
+    (asserts! (not (is-none (unwrap-panic (get-crafting-resources id-new)))) err-not-some)
+    (let ((crafting-resources (unwrap-panic (get-crafting-resources id-new)))
+          (verified-ownership (fold and (map is-owned-needed-wrapper (unwrap-panic crafting-resources)) true)))
+            (asserts! (is-some crafting-resources) err-not-some)
+            (asserts! verified-ownership err-insufficient-balance)
+              (some (map burn-wrapper (unwrap-panic crafting-resources)))
+              (mint-wrapper id-new u1 tx-sender)
+    )
   )
 )
 
@@ -152,19 +177,29 @@
 (map-set crafting-system {id: u41} (list {resource-id: u3, resource-qty: u1}))
 (map-set crafting-system {id: u44} (list {resource-id: u4, resource-qty: u1}))
 (map-set crafting-system {id: u47} (list {resource-id: u43, resource-qty: u1} {resource-id: u46, resource-qty: u1} {resource-id: u2, resource-qty: u5}))
+;; collection 1
+(map-set crafting-system {id: u52} (list {resource-id: u3, resource-qty: u2} {resource-id: u4, resource-qty: u4}))
+(map-set crafting-system {id: u53} (list {resource-id: u3, resource-qty: u2} {resource-id: u50, resource-qty: u4}))
+(map-set crafting-system {id: u54} (list {resource-id: u3, resource-qty: u2} {resource-id: u51, resource-qty: u4}))
+(map-set crafting-system {id: u55} (list {resource-id: u3, resource-qty: u2} {resource-id: u4, resource-qty: u5}))
+(map-set crafting-system {id: u56} (list {resource-id: u3, resource-qty: u2} {resource-id: u50, resource-qty: u5}))
+(map-set crafting-system {id: u57} (list {resource-id: u3, resource-qty: u2} {resource-id: u51, resource-qty: u5}))
 
 ;; Acquisition
 
 (define-map acquisition-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
 (define-public (buy-item (id-new uint))
-  (let ((acquisition-resources (unwrap-panic (get-acquisition-resources id-new)))
-        (verified-ownership (fold and (map is-owned-needed-wrapper (unwrap-panic acquisition-resources)) true)))
-          (asserts! (is-some acquisition-resources) err-not-some)
-          (asserts! verified-ownership err-insufficient-balance)
-            (some (map burn-wrapper (unwrap-panic acquisition-resources)))
-            (mint-wrapper id-new u1 tx-sender)
-    )
+  (begin
+    (asserts! (not (is-none (unwrap-panic (get-acquisition-resources id-new)))) err-not-some)
+    (let ((acquisition-resources (unwrap-panic (get-acquisition-resources id-new)))
+          (verified-ownership (fold and (map is-owned-needed-wrapper (unwrap-panic acquisition-resources)) true))) 
+            (asserts! (is-some acquisition-resources) err-not-some)
+            (asserts! verified-ownership err-insufficient-balance)
+              (some (map burn-wrapper (unwrap-panic acquisition-resources)))
+              (mint-wrapper id-new u1 tx-sender)
+      )
+  )
 )
 
 
@@ -198,3 +233,12 @@
 (map-set acquisition-system {id: u42} (list {resource-id: u1, resource-qty: u25} {resource-id: u3, resource-qty: u2}))
 (map-set acquisition-system {id: u43} (list {resource-id: u1, resource-qty: u120} {resource-id: u3, resource-qty: u5}))
 (map-set acquisition-system {id: u45} (list {resource-id: u1, resource-qty: u1} {resource-id: u4, resource-qty: u10}))
+;; collection 1
+(map-set acquisition-system {id: u50} (list {resource-id: u1, resource-qty: u500}))
+(map-set acquisition-system {id: u51} (list {resource-id: u1, resource-qty: u1000}))
+(map-set acquisition-system {id: u52} (list {resource-id: u1, resource-qty: u15}))
+(map-set acquisition-system {id: u53} (list {resource-id: u1, resource-qty: u50}))
+(map-set acquisition-system {id: u54} (list {resource-id: u1, resource-qty: u100}))
+(map-set acquisition-system {id: u55} (list {resource-id: u1, resource-qty: u30}))
+(map-set acquisition-system {id: u56} (list {resource-id: u1, resource-qty: u100}))
+(map-set acquisition-system {id: u57} (list {resource-id: u1, resource-qty: u200}))

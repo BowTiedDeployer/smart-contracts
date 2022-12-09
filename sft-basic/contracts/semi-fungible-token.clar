@@ -281,13 +281,16 @@
 (define-map level-up-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
 (define-public (level-up (id-new uint))
-  (let ((level-up-resources (unwrap-panic (get-level-up-resources id-new)))
-        (verified-ownership (fold and (map is-owned-needed (unwrap-panic level-up-resources)) true)))
-          (asserts! (is-some level-up-resources) err-not-some)
-          (asserts! verified-ownership err-insufficient-balance)
-            (some (map burn-wrapper (unwrap-panic level-up-resources)))
-            (mint id-new u1 tx-sender)
-    )
+  (begin
+    (asserts! (not (is-none (unwrap-panic (get-level-up-resources id-new)))) err-not-some)
+    (let ((level-up-resources (unwrap-panic (get-level-up-resources id-new)))
+          (verified-ownership (fold and (map is-owned-needed (unwrap-panic level-up-resources)) true)))
+            (asserts! (is-some level-up-resources) err-not-some)
+            (asserts! verified-ownership err-insufficient-balance)
+              (some (map burn-wrapper (unwrap-panic level-up-resources)))
+              (mint id-new u1 tx-sender)
+      )
+  )
 )
 
 
@@ -353,12 +356,15 @@
 (define-map crafting-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
 (define-public (craft-item (id-new uint))
-  (let ((crafting-resources (unwrap-panic (get-crafting-resources id-new)))
-        (verified-ownership (fold and (map is-owned-needed (unwrap-panic crafting-resources)) true)))
-          (asserts! (is-some crafting-resources) err-not-some)
-          (asserts! verified-ownership err-insufficient-balance)
-            (some (map burn-wrapper (unwrap-panic crafting-resources)))
-            (mint id-new u1 tx-sender)
+  (begin
+    (asserts! (not (is-none (unwrap-panic (get-crafting-resources id-new)))) err-not-some)
+    (let ((crafting-resources (unwrap-panic (get-crafting-resources id-new)))
+          (verified-ownership (fold and (map is-owned-needed (unwrap-panic crafting-resources)) true)))
+            (asserts! (is-some crafting-resources) err-not-some)
+            (asserts! verified-ownership err-insufficient-balance)
+              (some (map burn-wrapper (unwrap-panic crafting-resources)))
+              (mint id-new u1 tx-sender)
+    )
   )
 )
 
@@ -396,13 +402,16 @@
 (define-map acquisition-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
 (define-public (buy-item (id-new uint))
-  (let ((acquisition-resources (unwrap-panic (get-acquisition-resources id-new)))
-        (verified-ownership (fold and (map is-owned-needed (unwrap-panic acquisition-resources)) true)))
-          (asserts! (is-some acquisition-resources) err-not-some)
-          (asserts! verified-ownership err-insufficient-balance)
-            (some (map burn-wrapper (unwrap-panic acquisition-resources)))
-            (mint id-new u1 tx-sender) 
-    )
+  (begin
+    (asserts! (not (is-none (unwrap-panic (get-acquisition-resources id-new)))) err-not-some)
+    (let ((acquisition-resources (unwrap-panic (get-acquisition-resources id-new)))
+          (verified-ownership (fold and (map is-owned-needed (unwrap-panic acquisition-resources)) true)))
+            (asserts! (is-some acquisition-resources) err-not-some)
+            (asserts! verified-ownership err-insufficient-balance)
+              (some (map burn-wrapper (unwrap-panic acquisition-resources)))
+              (mint id-new u1 tx-sender) 
+      )
+  )
 )
 
 
