@@ -312,14 +312,6 @@
   (>= (get-balance-uint (get resource-id item) tx-sender) (get resource-qty item))
 )
 
-;; destination contract to mint as field, the contract which contains every resource as field
-;; (map-set level-up-system {id: u6} 
-;; {
-;;  (list {resource-id: u3, resource-qty: u6, resource-contract:string} {resource-id: u5, resource-qty: u1, resource-contract:string} {resource-id: u2, resource-qty: u2 , resource-contract:string})
-;;  , 
-;;  destination-contract: string}
-;; )
-
 (map-set level-up-system {id: u6} (list {resource-id: u3, resource-qty: u6} {resource-id: u5, resource-qty: u1} {resource-id: u2, resource-qty: u2}))
 (map-set level-up-system {id: u7} (list {resource-id: u3, resource-qty: u10} {resource-id: u6, resource-qty: u1} {resource-id: u2, resource-qty: u3}))
 (map-set level-up-system {id: u9} (list {resource-id: u4, resource-qty: u6} {resource-id: u8, resource-qty: u1} {resource-id: u2, resource-qty: u5}))

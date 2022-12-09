@@ -13,14 +13,28 @@
 (define-public (transfer-wrapper (token-id uint) (amount uint) (sender principal) (recipient principal)) 
   (if (< token-id u5) 
     (contract-call? .resources transfer token-id amount sender recipient) 
-    (contract-call? .items transfer token-id amount sender recipient)
+    (if (< token-id u50) 
+      (contract-call? .items transfer token-id amount sender recipient) 
+      (if (< token-id u58) 
+        (contract-call? .collection-1 transfer token-id amount sender recipient) err-inexistent-item)
+    )    
   )
 )
+
 
 ;; Balance
 
 (define-read-only (get-balance-wrapper (token-id uint) (who principal)) 
-  (if (< token-id u5) (contract-call? .resources get-balance token-id who) (contract-call? .items get-balance token-id who))
+  (if (< token-id u5) 
+    (contract-call? .resources get-balance token-id who) 
+    (if (< token-id u50) 
+      (contract-call? .items get-balance token-id who) 
+      (if (< token-id u58) 
+        (contract-call? .collection-1 get-balance token-id who)
+        err-inexistent-item      
+      )
+    )
+  )
 )
 
 ;; Mint
