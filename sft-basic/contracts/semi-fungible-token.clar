@@ -36,6 +36,18 @@
   )
 )
 
+(define-private (mint-rewards (reward-tuple {resource-id: uint, resource-qty: uint}) (user principal)) 
+  (mint-wrapper-admin (get resource-id reward-tuple) (get resource-qty reward-tuple) user)
+)
+
+(define-private (mint-wrapper-admin (token-id uint) (amount uint) (recipient principal))
+  (begin 
+    (some 
+      (mint token-id amount recipient)
+    )
+    recipient
+  )
+)
 (define-private (set-balance (token-id uint) (balance uint) (owner principal))
   (map-set token-balances {token-id: token-id, owner: owner} balance)
 )
@@ -437,3 +449,116 @@
 (map-set acquisition-system {id: u42} (list {resource-id: u1, resource-qty: u25} {resource-id: u3, resource-qty: u2}))
 (map-set acquisition-system {id: u43} (list {resource-id: u1, resource-qty: u120} {resource-id: u3, resource-qty: u5}))
 (map-set acquisition-system {id: u45} (list {resource-id: u1, resource-qty: u1} {resource-id: u4, resource-qty: u10}))
+
+;; Fighting 
+;; Fight Needed Resources
+
+(define-map fight-needed-resources {fight-number: uint } (list 100 { resource-id: uint, resource-qty: uint }))
+
+(define-public (start-fight (fight-number uint)) 
+  (begin
+    (asserts! (not (is-none (unwrap-panic (get-fight-needed-resources fight-number)))) err-not-some)
+    (let ((fight-resources-needed (unwrap-panic (get-fight-needed-resources fight-number)))
+          (verified-ownership (fold and (map is-owned-needed (unwrap-panic fight-resources-needed)) true))) 
+            (asserts! (is-some fight-resources-needed) err-not-some)
+            (asserts! verified-ownership err-insufficient-balance)
+              (some (map burn-wrapper (unwrap-panic fight-resources-needed)))
+              (ok true)
+      )
+  )
+)
+
+(define-public (set-fight-needed-resources (fight-number uint) (resource-needed (list 100 {resource-id: uint, resource-qty: uint})))
+  (begin 
+    (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
+    (ok (map-set fight-needed-resources {fight-number: fight-number} resource-needed))     
+  )
+)
+
+(define-read-only (get-fight-needed-resources (fight-number uint))
+    (let ((token-urr (map-get? fight-needed-resources {fight-number: fight-number})))
+      (ok token-urr)
+    )
+)
+
+(map-set fight-needed-resources {fight-number: u1} (list {resource-id: u2, resource-qty: u10}))
+(map-set fight-needed-resources {fight-number: u2} (list {resource-id: u2, resource-qty: u12}))
+(map-set fight-needed-resources {fight-number: u3} (list {resource-id: u2, resource-qty: u15}))
+(map-set fight-needed-resources {fight-number: u4} (list {resource-id: u2, resource-qty: u19}))
+(map-set fight-needed-resources {fight-number: u5} (list {resource-id: u2, resource-qty: u30}))
+(map-set fight-needed-resources {fight-number: u6} (list {resource-id: u2, resource-qty: u32}))
+(map-set fight-needed-resources {fight-number: u7} (list {resource-id: u2, resource-qty: u36}))
+(map-set fight-needed-resources {fight-number: u8} (list {resource-id: u2, resource-qty: u42}))
+(map-set fight-needed-resources {fight-number: u9} (list {resource-id: u2, resource-qty: u50}))
+(map-set fight-needed-resources {fight-number: u10} (list {resource-id: u2, resource-qty: u70}))
+
+;; Fight Rewards
+
+(define-map fight-reward-system { fight-number: uint } (list 100 { resource-id: uint, resource-qty: uint }))
+
+(define-public (set-fight-rewards (fight-number uint) (resource-rewarded (list 100 {resource-id: uint, resource-qty: uint})))
+  (begin 
+    (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
+    (ok (map-set fight-reward-system {fight-number: fight-number} resource-rewarded))     
+  )
+)
+
+(define-read-only (get-fight-rewards (fight-number uint))
+    (let ((token-urr (map-get? fight-reward-system {fight-number: fight-number})))
+      (ok token-urr)
+    )
+)
+
+(define-public (reward-fighting (fight-number uint) (user principal))
+  (begin
+    (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+    (asserts! (not (is-none (unwrap-panic (get-fight-rewards fight-number)))) err-not-some)
+    (let ((fighting-rewards (unwrap-panic (get-fight-rewards fight-number)))) 
+            (asserts! (is-some fighting-rewards) err-not-some)
+            (ok (fold mint-rewards (unwrap-panic fighting-rewards) user))    
+    )
+  )
+)
+
+(map-set fight-reward-system {fight-number: u1} (list {resource-id: u1, resource-qty: u100}))
+(map-set fight-reward-system {fight-number: u2} (list {resource-id: u1, resource-qty: u120}))
+(map-set fight-reward-system {fight-number: u3} (list {resource-id: u1, resource-qty: u150}))
+(map-set fight-reward-system {fight-number: u4} (list {resource-id: u1, resource-qty: u190}))
+(map-set fight-reward-system {fight-number: u5} (list {resource-id: u1, resource-qty: u300} {resource-id: u7, resource-qty: u1}))
+(map-set fight-reward-system {fight-number: u6} (list {resource-id: u1, resource-qty: u320}))
+(map-set fight-reward-system {fight-number: u7} (list {resource-id: u1, resource-qty: u360}))
+(map-set fight-reward-system {fight-number: u8} (list {resource-id: u1, resource-qty: u420}))
+(map-set fight-reward-system {fight-number: u9} (list {resource-id: u1, resource-qty: u500}))
+(map-set fight-reward-system {fight-number: u10} (list {resource-id: u1, resource-qty: u700} {resource-id: u13, resource-qty: u1}))
+
+;; Sleeping reward center
+
+(define-map sleeping-reward-system {sleeping-time: uint } (list 100 { resource-id: uint, resource-qty: uint }))
+
+(define-public (reward-sleeping (sleeping-time uint) (user principal))
+  (begin
+    (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+    (asserts! (not (is-none (unwrap-panic (get-sleeping-rewards sleeping-time)))) err-not-some)
+    (let ((sleeping-rewards (unwrap-panic (get-sleeping-rewards sleeping-time)))) 
+            (asserts! (is-some sleeping-rewards) err-not-some)
+            (ok (fold mint-rewards (unwrap-panic sleeping-rewards) user))
+    )
+  )
+)
+
+(define-public (set-sleeping-rewards (sleeping-time uint) (resource-achieved (list 100 {resource-id: uint, resource-qty: uint})))
+  (begin 
+    (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+    (ok (map-set sleeping-reward-system {sleeping-time: sleeping-time} resource-achieved))
+  )
+)
+
+(define-read-only (get-sleeping-rewards (sleeping-time uint))
+    (let ((token-urr (map-get? sleeping-reward-system {sleeping-time: sleeping-time})))
+      (ok token-urr)
+    )
+)
+
+(map-set sleeping-reward-system {sleeping-time: u5} (list {resource-id: u2, resource-qty: u5}))
+(map-set sleeping-reward-system {sleeping-time: u10} (list {resource-id: u2, resource-qty: u15}))
+(map-set sleeping-reward-system {sleeping-time: u20} (list {resource-id: u2, resource-qty: u40}))
