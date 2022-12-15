@@ -13,6 +13,7 @@
 (define-constant err-invalid-sender (err u4))
 (define-constant err-invalid-destination-contract (err u5))
 
+;; Ownership
 
 (define-read-only (is-owned-needed (item {resource-id: uint, resource-qty: uint}))
   (ok (>= (get-balance-uint (get resource-id item) tx-sender) (get resource-qty item)))
@@ -28,6 +29,8 @@
   )
 )
 
+;; Mint
+
 (define-public (mint (token-id uint) (amount uint) (recipient principal))
   (begin
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)
@@ -40,6 +43,20 @@
     (ok true)
   )
 )
+
+(define-public (mint-user (token-id uint) (amount uint) (recipient principal))
+  (begin
+    (asserts! (< token-id u58) err-invalid-destination-contract)
+    (try! (ft-mint? semi-fungible-token amount recipient))
+    (try! (tag-nft-token-id {token-id: token-id, owner: recipient}))
+    (set-balance token-id (+ (get-balance-uint token-id recipient) amount) recipient)
+    (map-set token-supplies token-id (+  (unwrap-panic (get-total-supply token-id)) amount))
+    (print {type: "sft_mint", token-id: token-id, amount: amount, recipient: recipient})
+    (ok true)
+  )
+)
+
+;; Balances
 
 (define-private (set-balance (token-id uint) (balance uint) (owner principal))
   (map-set token-balances {token-id: token-id, owner: owner} balance)
@@ -68,7 +85,6 @@
 (define-read-only (get-decimals (token-id uint))
   (ok u0)
 )
-
 
 ;; Transfer
 

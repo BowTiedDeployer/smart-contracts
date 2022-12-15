@@ -43,11 +43,24 @@
 
 (define-public (mint-wrapper (token-id uint) (amount uint) (recipient principal)) 
   (if (< token-id u5) 
-    (contract-call? .resources mint token-id amount tx-sender) 
+    (contract-call? .resources mint token-id amount recipient) 
     (if (< token-id u50) 
-      (contract-call? .items mint token-id amount tx-sender) 
+      (contract-call? .items mint token-id amount recipient) 
       (if (< token-id u58) 
         (contract-call? .collection-1 mint token-id amount recipient)
+        err-inexistent-item
+      )
+    )
+  )
+)
+
+(define-public (mint-wrapper-user (token-id uint) (amount uint) (recipient principal)) 
+  (if (< token-id u5) 
+    (contract-call? .resources mint-user token-id amount recipient) 
+    (if (< token-id u50) 
+      (contract-call? .items mint-user token-id amount recipient) 
+      (if (< token-id u58) 
+        (contract-call? .collection-1 mint-user token-id amount recipient)
         err-inexistent-item
       )
     )
@@ -58,9 +71,9 @@
   (begin
     (some 
       (if (< token-id u5) 
-        (contract-call? .resources mint token-id amount tx-sender) 
+        (contract-call? .resources mint token-id amount recipient) 
         (if (< token-id u50) 
-          (contract-call? .items mint token-id amount tx-sender) 
+          (contract-call? .items mint token-id amount recipient) 
           (if (< token-id u58) 
             (contract-call? .collection-1 mint token-id amount recipient)
             err-inexistent-item
@@ -112,7 +125,7 @@
 
 (define-map level-up-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
-(define-public (level-up (id-new uint))
+(define-public (level-up (id-new uint) (recipient principal))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-level-up-resources id-new)))) err-not-some)
     (let ((level-up-resources (unwrap-panic (get-level-up-resources id-new)))
@@ -120,7 +133,7 @@
             (asserts! (is-some level-up-resources) err-not-some)
             (asserts! verified-ownership err-insufficient-balance)
               (some (map  burn-wrapper (unwrap-panic level-up-resources)))
-              (mint-wrapper id-new u1 tx-sender)
+              (mint-wrapper-user id-new u1 recipient)
     )
   )
 )
@@ -173,7 +186,7 @@
 
 (define-map crafting-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
-(define-public (craft-item (id-new uint))
+(define-public (craft-item (id-new uint) (recipient principal))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-crafting-resources id-new)))) err-not-some)
     (let ((crafting-resources (unwrap-panic (get-crafting-resources id-new)))
@@ -181,7 +194,7 @@
             (asserts! (is-some crafting-resources) err-not-some)
             (asserts! verified-ownership err-insufficient-balance)
               (some (map burn-wrapper (unwrap-panic crafting-resources)))
-              (mint-wrapper id-new u1 tx-sender)
+              (mint-wrapper-user id-new u1 recipient)
     )
   )
 )
@@ -226,7 +239,7 @@
 
 (define-map acquisition-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
-(define-public (buy-item (id-new uint))
+(define-public (buy-item (id-new uint) (recipient principal))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-acquisition-resources id-new)))) err-not-some)
     (let ((acquisition-resources (unwrap-panic (get-acquisition-resources id-new)))
@@ -234,7 +247,7 @@
             (asserts! (is-some acquisition-resources) err-not-some)
             (asserts! verified-ownership err-insufficient-balance)
               (some (map burn-wrapper (unwrap-panic acquisition-resources)))
-              (mint-wrapper id-new u1 tx-sender)
+              (mint-wrapper-user id-new u1 recipient)
       )
   )
 )
@@ -252,6 +265,8 @@
     )
 )
 
+(map-set acquisition-system {id: u3} (list {resource-id: u1, resource-qty: u3}))
+(map-set acquisition-system {id: u4} (list {resource-id: u1, resource-qty: u5}))
 (map-set acquisition-system {id: u5} (list {resource-id: u1, resource-qty: u15}))
 (map-set acquisition-system {id: u6} (list {resource-id: u1, resource-qty: u40} {resource-id: u3, resource-qty: u7}))
 (map-set acquisition-system {id: u9} (list {resource-id: u1, resource-qty: u5} {resource-id: u4, resource-qty: u20}))
@@ -466,12 +481,12 @@
     )
 )
 
-(map-set harvesting-system {token-id: u53, harvesting-time: u5} (list {resource-id: u3, resource-qty: u1}))
-(map-set harvesting-system {token-id: u53, harvesting-time: u10} (list {resource-id: u3, resource-qty: u3}))
-(map-set harvesting-system {token-id: u53, harvesting-time: u20} (list {resource-id: u3, resource-qty: u7}))
-(map-set harvesting-system {token-id: u54, harvesting-time: u5} (list {resource-id: u3, resource-qty: u5}))
-(map-set harvesting-system {token-id: u54, harvesting-time: u10} (list {resource-id: u3, resource-qty: u12}))
-(map-set harvesting-system {token-id: u54, harvesting-time: u20} (list {resource-id: u3, resource-qty: u26}))
-(map-set harvesting-system {token-id: u55, harvesting-time: u5} (list {resource-id: u3, resource-qty: u20}))
-(map-set harvesting-system {token-id: u55, harvesting-time: u10} (list {resource-id: u3, resource-qty: u45}))
-(map-set harvesting-system {token-id: u55, harvesting-time: u20} (list {resource-id: u3, resource-qty: u100}))
+(map-set harvesting-system {token-id: u52, harvesting-time: u5} (list {resource-id: u3, resource-qty: u1}))
+(map-set harvesting-system {token-id: u52, harvesting-time: u10} (list {resource-id: u3, resource-qty: u3}))
+(map-set harvesting-system {token-id: u52, harvesting-time: u20} (list {resource-id: u3, resource-qty: u7}))
+(map-set harvesting-system {token-id: u53, harvesting-time: u5} (list {resource-id: u3, resource-qty: u5}))
+(map-set harvesting-system {token-id: u53, harvesting-time: u10} (list {resource-id: u3, resource-qty: u12}))
+(map-set harvesting-system {token-id: u53, harvesting-time: u20} (list {resource-id: u3, resource-qty: u26}))
+(map-set harvesting-system {token-id: u54, harvesting-time: u5} (list {resource-id: u3, resource-qty: u20}))
+(map-set harvesting-system {token-id: u54, harvesting-time: u10} (list {resource-id: u3, resource-qty: u45}))
+(map-set harvesting-system {token-id: u54, harvesting-time: u20} (list {resource-id: u3, resource-qty: u100}))

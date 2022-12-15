@@ -17,7 +17,24 @@ const getBalance = "get-balance-wrapper";
 const getCraftingResources = "get-crafting-resources";
 const getLevelUpResources = "get-level-up-resources";
 const getAcquisitionResources = "get-acquisition-resources";
-const mint = "mint-wrapper";
+const mintWrapper = "mint-wrapper";
+const mintWrapperUser = "mint-wrapper-user";
+const mintAdmin = "mint-wrapper-admin";
+const startFight = "start-fight";
+const rewardFighting = "reward-fighting";
+const rewardSleeping = "reward-sleeping";
+const rewardMining = "reward-mining";
+const rewardHarvesting = "reward-harvesting";
+const fight1 = "1";
+const fight2 = "2";
+const fight3 = "3";
+const fight4 = "4";
+const fight5 = "5";
+const fight6 = "6";
+const fight7 = "7";
+const fight8 = "8";
+const fight9 = "9";
+const fight10 = "10";
 const gold = "1";
 const energy = "2";
 const wood = "3";
@@ -67,7 +84,15 @@ const ironShoes3 = "46";
 const enhancedShoes1 = "47";
 const enhancedShoes2 = "48";
 const enhancedShoes3 = "49";
-
+const goldBar = "50";
+const ruby = "51";
+const ironAxe = "52";
+const goldAxe = "53";
+const rubyAxe = "54";
+const ironPickaxe = "55";
+const goldPickaxe = "56";
+const rubyPickaxe = "57";
+/*
 Clarinet.test({
   name: "Main-SC: Crafting Case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
@@ -9044,5 +9069,856 @@ Clarinet.test({
       user6.address
     );
     balanceWoodenArmor3User6.result.expectOk().expectUint(1);
+  },
+});
+*/
+Clarinet.test({
+  name: "Gameplay Scenario Case",
+  async fn(chain: Chain, accounts: Map<string, Account>) {
+    const admin = accounts.get("deployer")!;
+    const user1 = accounts.get("wallet_1")!;
+    const user2 = accounts.get("wallet_2")!;
+    const user3 = accounts.get("wallet_3")!;
+    const user4 = accounts.get("wallet_4")!;
+    const user5 = accounts.get("wallet_5")!;
+    const user6 = accounts.get("wallet_6")!;
+
+    // Game start, the player (user1) will have 100 energy, 15 gold
+
+    let block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mintWrapper,
+        [types.uint(gold), types.uint(15), types.principal(user1.address)],
+        admin.address
+      ),
+      Tx.contractCall(
+        contractName,
+        mintWrapper,
+        [types.uint(energy), types.uint(100), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 2);
+    assertEquals(block.height, 2);
+    block.receipts[0].result.expectOk().expectBool(true);
+    block.receipts[1].result.expectOk().expectBool(true);
+
+    // Check balances for user1
+
+    let balanceGoldUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(gold), types.principal(user1.address)],
+      user1.address
+    );
+    let balanceEnergyUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(energy), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceGoldUser1.result.expectOk().expectUint(15);
+    balanceEnergyUser1.result.expectOk().expectUint(100);
+
+    // User1 buys wood and crafts woodenSword1
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        acquisitionFn,
+        [types.uint(wood), types.principal(user1.address)],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        acquisitionFn,
+        [types.uint(wood), types.principal(user1.address)],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        acquisitionFn,
+        [types.uint(wood), types.principal(user1.address)],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        acquisitionFn,
+        [types.uint(wood), types.principal(user1.address)],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        craftingFn,
+        [types.uint(woodenSword1), types.principal(user1.address)],
+        user1.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 5);
+    assertEquals(block.height, 3);
+    block.receipts[0].result.expectOk().expectBool(true);
+    block.receipts[1].result.expectOk().expectBool(true);
+    block.receipts[2].result.expectOk().expectBool(true);
+    block.receipts[3].result.expectOk().expectBool(true);
+    block.receipts[4].result.expectOk().expectBool(true);
+
+    // user1 fights first monster and wins (starts fight 1)
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        startFight,
+        [types.uint(fight1)],
+        user1.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 4);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    balanceEnergyUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(energy), types.principal(user1.address)],
+      user1.address
+    );
+    balanceEnergyUser1.result.expectOk().expectUint(90);
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        rewardFighting,
+        [types.uint(fight1), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 5);
+    block.receipts[0].result.expectOk().expectPrincipal(user1.address);
+
+    balanceGoldUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(gold), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceGoldUser1.result.expectOk().expectUint(103);
+
+    // User 1 has 103 gold. Buys resources to obtain all the wooden items lvl 1
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        acquisitionFn,
+        [types.uint(woodenArmor1), types.principal(user1.address)],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        acquisitionFn,
+        [types.uint(wood), types.principal(user1.address)],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        acquisitionFn,
+        [types.uint(wood), types.principal(user1.address)],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        craftingFn,
+        [types.uint(woodenShield1), types.principal(user1.address)],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        acquisitionFn,
+        [types.uint(wood), types.principal(user1.address)],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        acquisitionFn,
+        [types.uint(wood), types.principal(user1.address)],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        craftingFn,
+        [types.uint(woodenHelmet1), types.principal(user1.address)],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        acquisitionFn,
+        [types.uint(wood), types.principal(user1.address)],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        craftingFn,
+        [types.uint(woodenShoes1), types.principal(user1.address)],
+        user1.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 9);
+    assertEquals(block.height, 6);
+    block.receipts[0].result.expectOk().expectBool(true);
+    block.receipts[1].result.expectOk().expectBool(true);
+    block.receipts[2].result.expectOk().expectBool(true);
+    block.receipts[3].result.expectOk().expectBool(true);
+    block.receipts[4].result.expectOk().expectBool(true);
+    block.receipts[5].result.expectOk().expectBool(true);
+    block.receipts[6].result.expectOk().expectBool(true);
+    block.receipts[7].result.expectOk().expectBool(true);
+    block.receipts[8].result.expectOk().expectBool(true);
+
+    // ceck balances for user1. He should have every wooden item. he already has woodenSword1
+
+    let balanceWoodenArmor1User1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenArmor1), types.principal(user1.address)],
+      user1.address
+    );
+    let balanceWoodenShield1User1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenShield1), types.principal(user1.address)],
+      user1.address
+    );
+    let balanceWoodenHelmet1User1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenHelmet1), types.principal(user1.address)],
+      user1.address
+    );
+    let balanceWoodenShoes1User1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenShoes1), types.principal(user1.address)],
+      user1.address
+    );
+    balanceGoldUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(gold), types.principal(user1.address)],
+      user1.address
+    );
+    let balanceWoodUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(wood), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceWoodenArmor1User1.result.expectOk().expectUint(1);
+    balanceWoodenShield1User1.result.expectOk().expectUint(1);
+    balanceWoodenHelmet1User1.result.expectOk().expectUint(1);
+    balanceWoodenShoes1User1.result.expectOk().expectUint(1);
+    balanceGoldUser1.result.expectOk().expectUint(73);
+    balanceWoodUser1.result.expectOk().expectUint(0);
+
+    // user1 sleeps 5 mins to recover energy
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        rewardSleeping,
+        [types.uint(5), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 7);
+    block.receipts[0].result.expectOk().expectPrincipal(user1.address);
+
+    balanceEnergyUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(energy), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceEnergyUser1.result.expectOk().expectUint(95); // 90 + 5 energy
+
+    // user1 starts fight2 and wins it
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        startFight,
+        [types.uint(fight2)],
+        user1.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 8);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    balanceEnergyUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(energy), types.principal(user1.address)],
+      user1.address
+    );
+    balanceEnergyUser1.result.expectOk().expectUint(83); // 95 - 12 energy
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        rewardFighting,
+        [types.uint(fight2), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 9);
+    block.receipts[0].result.expectOk().expectPrincipal(user1.address);
+
+    balanceGoldUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(gold), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceGoldUser1.result.expectOk().expectUint(193); // 73 + 120 gold
+
+    // user1 starts fight 3 and loses it
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        startFight,
+        [types.uint(fight3)],
+        user1.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 10);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    balanceEnergyUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(energy), types.principal(user1.address)],
+      user1.address
+    );
+    balanceEnergyUser1.result.expectOk().expectUint(68); // 83 - 15 energy
+
+    // user1 buys iron axe and pickaxe
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        acquisitionFn,
+        [types.uint(ironAxe), types.principal(user1.address)],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        acquisitionFn,
+        [types.uint(ironPickaxe), types.principal(user1.address)],
+        user1.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 2);
+    assertEquals(block.height, 11);
+    block.receipts[0].result.expectOk().expectBool(true);
+    block.receipts[1].result.expectOk().expectBool(true);
+
+    let balanceIronAxeUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironAxe), types.principal(user1.address)],
+      user1.address
+    );
+    let balanceIronPickaxeUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ironPickaxe), types.principal(user1.address)],
+      user1.address
+    );
+    balanceGoldUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(gold), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceGoldUser1.result.expectOk().expectUint(148); // 193 - 15 - 30 gold
+    balanceIronAxeUser1.result.expectOk().expectUint(1);
+    balanceIronPickaxeUser1.result.expectOk().expectUint(1);
+
+    // user1 mines for 20 mins
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        rewardMining,
+        [
+          types.uint(ironPickaxe),
+          types.uint(20),
+          types.principal(user1.address),
+        ],
+        admin.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 12);
+    block.receipts[0].result.expectOk().expectPrincipal(user1.address);
+
+    // after mining he should have 5 iron, 1 gold bar
+
+    let balanceGoldbarUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(goldBar), types.principal(user1.address)],
+      user1.address
+    );
+    let balanceIronUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(iron), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceGoldbarUser1.result.expectOk().expectUint(1);
+    balanceIronUser1.result.expectOk().expectUint(5);
+
+    // user1 harvests for 10 mins
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        rewardHarvesting,
+        [types.uint(ironAxe), types.uint(10), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 13);
+    block.receipts[0].result.expectOk().expectPrincipal(user1.address);
+
+    // after harvesting he should have 3 wood
+
+    balanceWoodUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(wood), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceWoodUser1.result.expectOk().expectUint(3);
+
+    // user1 starts fight2 and wins it
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        startFight,
+        [types.uint(fight2)],
+        user1.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 14);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    balanceEnergyUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(energy), types.principal(user1.address)],
+      user1.address
+    );
+    balanceEnergyUser1.result.expectOk().expectUint(56); // 68 - 12 energy
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        rewardFighting,
+        [types.uint(fight2), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 15);
+    block.receipts[0].result.expectOk().expectPrincipal(user1.address);
+
+    balanceGoldUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(gold), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceGoldUser1.result.expectOk().expectUint(268); // 148 + 120 gold
+
+    // user1 starts fight3 and wins it
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        startFight,
+        [types.uint(fight3)],
+        user1.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 16);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    balanceEnergyUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(energy), types.principal(user1.address)],
+      user1.address
+    );
+    balanceEnergyUser1.result.expectOk().expectUint(41); // 56 - 15 energy
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        rewardFighting,
+        [types.uint(fight3), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 17);
+    block.receipts[0].result.expectOk().expectPrincipal(user1.address);
+
+    balanceGoldUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(gold), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceGoldUser1.result.expectOk().expectUint(418); // 268 + 150 gold
+
+    // user1 needs to recover, so he sleeps 20 mins, then 10 mins
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        rewardSleeping,
+        [types.uint(20), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 18);
+    block.receipts[0].result.expectOk().expectPrincipal(user1.address);
+
+    balanceEnergyUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(energy), types.principal(user1.address)],
+      user1.address
+    );
+    balanceEnergyUser1.result.expectOk().expectUint(81); // 41 + 40 energy
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        rewardSleeping,
+        [types.uint(10), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 19);
+    block.receipts[0].result.expectOk().expectPrincipal(user1.address);
+
+    balanceEnergyUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(energy), types.principal(user1.address)],
+      user1.address
+    );
+    balanceEnergyUser1.result.expectOk().expectUint(96); // 81 + 15 energy
+
+    // user1 starts fight4 and wins it
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        startFight,
+        [types.uint(fight4)],
+        user1.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 20);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    balanceEnergyUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(energy), types.principal(user1.address)],
+      user1.address
+    );
+    balanceEnergyUser1.result.expectOk().expectUint(77); // 96 - 19 energy
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        rewardFighting,
+        [types.uint(fight4), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 21);
+    block.receipts[0].result.expectOk().expectPrincipal(user1.address);
+
+    balanceGoldUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(gold), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceGoldUser1.result.expectOk().expectUint(608); // 418 + 190
+
+    // user1 harvests for 20 min to obtain wood
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        rewardHarvesting,
+        [types.uint(ironAxe), types.uint(20), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 22);
+    block.receipts[0].result.expectOk().expectPrincipal(user1.address);
+
+    balanceWoodUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(wood), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceWoodUser1.result.expectOk().expectUint(10); // 3 + 7 wood
+
+    // user1 level-up to obtain woodenSword2
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        levelUpFn,
+        [types.uint(woodenSword2), types.principal(user1.address)],
+        user1.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 23);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    let balanceWoodenSword2User1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenSword2), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceWoodenSword2User1.result.expectOk().expectUint(1);
+
+    // user1 starts fight5 and wins it
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        startFight,
+        [types.uint(fight5)],
+        user1.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 24);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    balanceEnergyUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(energy), types.principal(user1.address)],
+      user1.address
+    );
+    balanceEnergyUser1.result.expectOk().expectUint(45); // 77 - 2 - 30 energy
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        rewardFighting,
+        [types.uint(fight5), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 25);
+    block.receipts[0].result.expectOk().expectPrincipal(user1.address);
+
+    balanceGoldUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(gold), types.principal(user1.address)],
+      user1.address
+    );
+
+    let balanceWoodenSword3User1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(woodenSword3), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceGoldUser1.result.expectOk().expectUint(908); // 608 + 300
+    balanceWoodenSword3User1.result.expectOk().expectUint(1); // mini boss' sword
+
+    // user1 buys ruby pickaxe and axe
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        acquisitionFn,
+        [types.uint(rubyAxe), types.principal(user1.address)],
+        user1.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 26);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        acquisitionFn,
+        [types.uint(rubyPickaxe), types.principal(user1.address)],
+        user1.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 27);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    let balanceRubyAxeUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(rubyAxe), types.principal(user1.address)],
+      user1.address
+    );
+    let balanceRubyPickAxeUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(rubyPickaxe), types.principal(user1.address)],
+      user1.address
+    );
+    balanceGoldUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(gold), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceRubyAxeUser1.result.expectOk().expectUint(1);
+    balanceRubyPickAxeUser1.result.expectOk().expectUint(1);
+    balanceGoldUser1.result.expectOk().expectUint(608); // 418 + 190
+
+    // user1 mines and then harvests 20 mins with rubyPickAxe, rubyAxe
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        rewardMining,
+        [
+          types.uint(rubyPickaxe),
+          types.uint(20),
+          types.principal(user1.address),
+        ],
+        admin.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 28);
+    block.receipts[0].result.expectOk().expectPrincipal(user1.address);
+
+    // after mining he should have 5 iron, 1 gold bar
+
+    let balanceRubyUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(ruby), types.principal(user1.address)],
+      user1.address
+    );
+    let balanceGoldBarUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(goldBar), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceGoldBarUser1.result.expectOk().expectUint(5); // 1 + 4 gold bar
+    balanceRubyUser1.result.expectOk().expectUint(3);
+
+    // user1 harvests
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        rewardHarvesting,
+        [types.uint(rubyAxe), types.uint(20), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 29);
+    block.receipts[0].result.expectOk().expectPrincipal(user1.address);
+
+    // after harvesting he should have 3 wood
+
+    balanceWoodUser1 = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(wood), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceWoodUser1.result.expectOk().expectUint(104); // 4 + 100 wood
   },
 });

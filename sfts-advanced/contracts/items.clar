@@ -34,7 +34,19 @@
 (define-public (mint (token-id uint) (amount uint) (recipient principal))
   (begin
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)
-    (asserts! (> token-id u4) err-invalid-destination-contract)
+    (asserts! (< token-id u50) err-invalid-destination-contract)
+    (try! (ft-mint? semi-fungible-token amount recipient))
+    (try! (tag-nft-token-id {token-id: token-id, owner: recipient}))
+    (set-balance token-id (+ (get-balance-uint token-id recipient) amount) recipient)
+    (map-set token-supplies token-id (+  (unwrap-panic (get-total-supply token-id)) amount))
+    (print {type: "sft_mint", token-id: token-id, amount: amount, recipient: recipient})
+    (ok true)
+  )
+)
+
+(define-public (mint-user (token-id uint) (amount uint) (recipient principal))
+  (begin
+    (asserts! (< token-id u50) err-invalid-destination-contract)
     (try! (ft-mint? semi-fungible-token amount recipient))
     (try! (tag-nft-token-id {token-id: token-id, owner: recipient}))
     (set-balance token-id (+ (get-balance-uint token-id recipient) amount) recipient)
