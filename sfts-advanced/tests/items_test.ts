@@ -1,78 +1,71 @@
-import {
-  Clarinet,
-  Tx,
-  Chain,
-  Account,
-  types,
-} from "https://deno.land/x/clarinet@v1.0.3/index.ts";
-import { assertEquals } from "https://deno.land/std@0.90.0/testing/asserts.ts";
+import { Clarinet, Tx, Chain, Account, types } from 'https://deno.land/x/clarinet@v1.0.3/index.ts';
+import { assertEquals } from 'https://deno.land/std@0.90.0/testing/asserts.ts';
 
-const errorInsufficientBalance = 1;
-const contractName = "items";
-const mint = "mint";
-const burn = "burn";
-const burnWrapper = "burn-wrapper";
-const transferFn = "transfer";
-const getBalance = "get-balance";
-const setTokenURI = "set-token-uri";
-const getTokenURI = "get-token-uri";
-const tokenURI8Initial =
-  "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/8.png";
-const isOwnedNeeded = "is-owned-needed";
-const tokenURI8 = "8.png";
-const woodenSword1 = "5";
-const woodenSword2 = "6";
-const woodenSword3 = "7";
-const ironSword1 = "8";
-const ironSword2 = "9";
-const ironSword3 = "10";
-const enhancedSword1 = "11";
-const enhancedSword2 = "12";
-const enhancedSword3 = "13";
-const woodenArmor1 = "14";
-const woodenArmor2 = "15";
-const woodenArmor3 = "16";
-const ironArmor1 = "17";
-const ironArmor2 = "18";
-const ironArmor3 = "19";
-const enhancedArmor1 = "20";
-const enhancedArmor2 = "21";
-const enhancedArmor3 = "22";
-const woodenShield1 = "23";
-const woodenShield2 = "24";
-const woodenShield3 = "25";
-const ironShield1 = "26";
-const ironShield2 = "27";
-const ironShield3 = "28";
-const enhancedShield1 = "29";
-const enhancedShield2 = "30";
-const enhancedShield3 = "31";
-const woodenHelmet1 = "32";
-const woodenHelmet2 = "33";
-const woodenHelmet3 = "34";
-const ironHelmet1 = "35";
-const ironHelmet2 = "36";
-const ironHelmet3 = "37";
-const enhancedHelmet1 = "38";
-const enhancedHelmet2 = "39";
-const enhancedHelmet3 = "40";
-const woodenShoes1 = "41";
-const woodenShoes2 = "42";
-const woodenShoes3 = "43";
-const ironShoes1 = "44";
-const ironShoes2 = "45";
-const ironShoes3 = "46";
-const enhancedShoes1 = "47";
-const enhancedShoes2 = "48";
-const enhancedShoes3 = "49";
+const errorInsufficientBalance = 101;
+const contractName = 'items';
+const mint = 'mint';
+const burn = 'burn';
+const burnWrapper = 'burn-wrapper';
+const transferFn = 'transfer';
+const getBalance = 'get-balance';
+const setTokenURI = 'set-token-uri';
+const getTokenURI = 'get-token-uri';
+const tokenURI8Initial = 'ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/8.png';
+const isOwnedNeeded = 'is-owned-needed';
+const tokenURI8 = '8.png';
+const woodenSword1 = '5';
+const woodenSword2 = '6';
+const woodenSword3 = '7';
+const ironSword1 = '8';
+const ironSword2 = '9';
+const ironSword3 = '10';
+const enhancedSword1 = '11';
+const enhancedSword2 = '12';
+const enhancedSword3 = '13';
+const woodenArmor1 = '14';
+const woodenArmor2 = '15';
+const woodenArmor3 = '16';
+const ironArmor1 = '17';
+const ironArmor2 = '18';
+const ironArmor3 = '19';
+const enhancedArmor1 = '20';
+const enhancedArmor2 = '21';
+const enhancedArmor3 = '22';
+const woodenShield1 = '23';
+const woodenShield2 = '24';
+const woodenShield3 = '25';
+const ironShield1 = '26';
+const ironShield2 = '27';
+const ironShield3 = '28';
+const enhancedShield1 = '29';
+const enhancedShield2 = '30';
+const enhancedShield3 = '31';
+const woodenHelmet1 = '32';
+const woodenHelmet2 = '33';
+const woodenHelmet3 = '34';
+const ironHelmet1 = '35';
+const ironHelmet2 = '36';
+const ironHelmet3 = '37';
+const enhancedHelmet1 = '38';
+const enhancedHelmet2 = '39';
+const enhancedHelmet3 = '40';
+const woodenShoes1 = '41';
+const woodenShoes2 = '42';
+const woodenShoes3 = '43';
+const ironShoes1 = '44';
+const ironShoes2 = '45';
+const ironShoes3 = '46';
+const enhancedShoes1 = '47';
+const enhancedShoes2 = '48';
+const enhancedShoes3 = '49';
 
 Clarinet.test({
-  name: "Items: Mint-Transfer-Burn-Balance Case",
+  name: 'Items: Mint-Transfer-Burn-Balance Case',
   async fn(chain: Chain, accounts: Map<string, Account>) {
-    const admin = accounts.get("deployer")!;
-    const user1 = accounts.get("wallet_1");
-    const user2 = accounts.get("wallet_2");
-    const user3 = accounts.get("wallet_3");
+    const admin = accounts.get('deployer')!;
+    const user1 = accounts.get('wallet_1');
+    const user2 = accounts.get('wallet_2');
+    const user3 = accounts.get('wallet_3');
 
     // mint item x 2
 
@@ -80,21 +73,13 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         mint,
-        [
-          types.uint(woodenArmor1),
-          types.uint(1),
-          types.principal(admin.address),
-        ],
+        [types.uint(woodenArmor1), types.uint(1), types.principal(admin.address)],
         admin.address
       ),
       Tx.contractCall(
         contractName,
         mint,
-        [
-          types.uint(woodenArmor1),
-          types.uint(1),
-          types.principal(admin.address),
-        ],
+        [types.uint(woodenArmor1), types.uint(1), types.principal(admin.address)],
         admin.address
       ),
     ]);
@@ -126,11 +111,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         mint,
-        [
-          types.uint(enhancedHelmet1),
-          types.uint(1),
-          types.principal(admin.address),
-        ],
+        [types.uint(enhancedHelmet1), types.uint(1), types.principal(admin.address)],
         admin.address
       ),
     ]);
@@ -165,31 +146,19 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         mint,
-        [
-          types.uint(enhancedShield3),
-          types.uint(1),
-          types.principal(admin.address),
-        ],
+        [types.uint(enhancedShield3), types.uint(1), types.principal(admin.address)],
         admin.address
       ),
       Tx.contractCall(
         contractName,
         mint,
-        [
-          types.uint(enhancedShield3),
-          types.uint(1),
-          types.principal(admin.address),
-        ],
+        [types.uint(enhancedShield3), types.uint(1), types.principal(admin.address)],
         admin.address
       ),
       Tx.contractCall(
         contractName,
         mint,
-        [
-          types.uint(enhancedShield3),
-          types.uint(6),
-          types.principal(admin.address),
-        ],
+        [types.uint(enhancedShield3), types.uint(6), types.principal(admin.address)],
         admin.address
       ),
     ]);
@@ -216,21 +185,13 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         mint,
-        [
-          types.uint(ironShield1),
-          types.uint(1),
-          types.principal(admin.address),
-        ],
+        [types.uint(ironShield1), types.uint(1), types.principal(admin.address)],
         admin.address
       ),
       Tx.contractCall(
         contractName,
         mint,
-        [
-          types.uint(woodenShield2),
-          types.uint(1),
-          types.principal(admin.address),
-        ],
+        [types.uint(woodenShield2), types.uint(1), types.principal(admin.address)],
         admin.address
       ),
     ]);
@@ -265,23 +226,13 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         transferFn,
-        [
-          types.uint(enhancedShield3),
-          types.uint(5),
-          types.principal(admin.address),
-          types.principal(user1.address),
-        ],
+        [types.uint(enhancedShield3), types.uint(5), types.principal(admin.address), types.principal(user1.address)],
         admin.address
       ),
       Tx.contractCall(
         contractName,
         transferFn,
-        [
-          types.uint(enhancedShield3),
-          types.uint(3),
-          types.principal(user1.address),
-          types.principal(user2.address),
-        ],
+        [types.uint(enhancedShield3), types.uint(3), types.principal(user1.address), types.principal(user2.address)],
         user1.address
       ),
     ]);
@@ -325,23 +276,13 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         transferFn,
-        [
-          types.uint(woodenShield2),
-          types.uint(1),
-          types.principal(admin.address),
-          types.principal(user3.address),
-        ],
+        [types.uint(woodenShield2), types.uint(1), types.principal(admin.address), types.principal(user3.address)],
         admin.address
       ),
       Tx.contractCall(
         contractName,
         transferFn,
-        [
-          types.uint(woodenShield2),
-          types.uint(1),
-          types.principal(user3.address),
-          types.principal(user1.address),
-        ],
+        [types.uint(woodenShield2), types.uint(1), types.principal(user3.address), types.principal(user1.address)],
         user3.address
       ),
     ]);
@@ -386,12 +327,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         transferFn,
-        [
-          types.uint(ironSword1),
-          types.uint(1),
-          types.principal(admin.address),
-          types.principal(user2.address),
-        ],
+        [types.uint(ironSword1), types.uint(1), types.principal(admin.address), types.principal(user2.address)],
         admin.address
       ),
     ]);
@@ -431,11 +367,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         burn,
-        [
-          types.uint(enhancedShield3),
-          types.uint(1),
-          types.principal(user1.address),
-        ],
+        [types.uint(enhancedShield3), types.uint(1), types.principal(user1.address)],
         user1.address
       ),
     ]);
@@ -465,46 +397,27 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Items: Set-Get Token URI Case",
+  name: 'Items: Set-Get Token URI Case',
   async fn(chain: Chain, accounts: Map<string, Account>) {
-    const admin = accounts.get("deployer")!;
-    const user1 = accounts.get("wallet_1");
-    const user2 = accounts.get("wallet_2");
-    const user3 = accounts.get("wallet_3");
+    const admin = accounts.get('deployer')!;
+    const user1 = accounts.get('wallet_1');
+    const user2 = accounts.get('wallet_2');
+    const user3 = accounts.get('wallet_3');
 
-    let block = chain.mineBlock([
-      Tx.contractCall(
-        contractName,
-        getTokenURI,
-        [types.uint(8)],
-        admin.address
-      ),
-    ]);
+    let block = chain.mineBlock([Tx.contractCall(contractName, getTokenURI, [types.uint(8)], admin.address)]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 2);
     block.receipts[0].result.expectOk();
     assertEquals(block.receipts[0].result, `(ok (some "${tokenURI8Initial}"))`);
 
     block = chain.mineBlock([
-      Tx.contractCall(
-        contractName,
-        setTokenURI,
-        [types.uint(8), types.ascii(tokenURI8)],
-        admin.address
-      ),
+      Tx.contractCall(contractName, setTokenURI, [types.uint(8), types.ascii(tokenURI8)], admin.address),
     ]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 3);
     block.receipts[0].result.expectOk().expectBool(true);
 
-    block = chain.mineBlock([
-      Tx.contractCall(
-        contractName,
-        getTokenURI,
-        [types.uint(8)],
-        admin.address
-      ),
-    ]);
+    block = chain.mineBlock([Tx.contractCall(contractName, getTokenURI, [types.uint(8)], admin.address)]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 4);
     block.receipts[0].result.expectOk();
@@ -512,12 +425,12 @@ Clarinet.test({
   },
 });
 Clarinet.test({
-  name: "Items: Burn-Wrapper Case",
+  name: 'Items: Burn-Wrapper Case',
   async fn(chain: Chain, accounts: Map<string, Account>) {
-    const admin = accounts.get("deployer")!;
-    const user1 = accounts.get("wallet_1");
-    const user2 = accounts.get("wallet_2");
-    const user3 = accounts.get("wallet_3");
+    const admin = accounts.get('deployer')!;
+    const user1 = accounts.get('wallet_1');
+    const user2 = accounts.get('wallet_2');
+    const user3 = accounts.get('wallet_3');
 
     // Mint some items
 
@@ -525,11 +438,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         mint,
-        [
-          types.uint(woodenSword1),
-          types.uint(1),
-          types.principal(user1.address),
-        ],
+        [types.uint(woodenSword1), types.uint(1), types.principal(user1.address)],
         admin.address
       ),
       Tx.contractCall(
@@ -550,8 +459,8 @@ Clarinet.test({
         burnWrapper,
         [
           types.tuple({
-            "resource-id": types.uint(woodenSword1),
-            "resource-qty": types.uint(1),
+            'resource-id': types.uint(woodenSword1),
+            'resource-qty': types.uint(1),
           }),
         ],
         user1.address
@@ -561,8 +470,8 @@ Clarinet.test({
         burnWrapper,
         [
           types.tuple({
-            "resource-id": types.uint(ironSword1),
-            "resource-qty": types.uint(2),
+            'resource-id': types.uint(ironSword1),
+            'resource-qty': types.uint(2),
           }),
         ],
         user3.address
@@ -594,12 +503,12 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Items: Ownership Test Case",
+  name: 'Items: Ownership Test Case',
   async fn(chain: Chain, accounts: Map<string, Account>) {
-    const admin = accounts.get("deployer")!;
-    const user1 = accounts.get("wallet_1");
-    const user2 = accounts.get("wallet_2");
-    const user3 = accounts.get("wallet_3");
+    const admin = accounts.get('deployer')!;
+    const user1 = accounts.get('wallet_1');
+    const user2 = accounts.get('wallet_2');
+    const user3 = accounts.get('wallet_3');
 
     // Mint some items
 
@@ -607,11 +516,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         mint,
-        [
-          types.uint(woodenSword1),
-          types.uint(1),
-          types.principal(user1.address),
-        ],
+        [types.uint(woodenSword1), types.uint(1), types.principal(user1.address)],
         admin.address
       ),
       Tx.contractCall(
@@ -632,8 +537,8 @@ Clarinet.test({
         isOwnedNeeded,
         [
           types.tuple({
-            "resource-id": types.uint(woodenSword1),
-            "resource-qty": types.uint(1),
+            'resource-id': types.uint(woodenSword1),
+            'resource-qty': types.uint(1),
           }),
         ],
         user1.address
@@ -643,8 +548,8 @@ Clarinet.test({
         isOwnedNeeded,
         [
           types.tuple({
-            "resource-id": types.uint(ironSword1),
-            "resource-qty": types.uint(2),
+            'resource-id': types.uint(ironSword1),
+            'resource-qty': types.uint(2),
           }),
         ],
         user3.address

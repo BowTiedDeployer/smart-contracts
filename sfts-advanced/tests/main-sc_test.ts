@@ -1,97 +1,91 @@
-import {
-  Clarinet,
-  Tx,
-  Chain,
-  Account,
-  types,
-} from "https://deno.land/x/clarinet@v1.0.3/index.ts";
-import { assertEquals } from "https://deno.land/std@0.90.0/testing/asserts.ts";
-const errorInsufficientBalance = 1;
-const errorInvalidSender = 4;
-const contractName = "main-sc";
-const transferFn = "transfer-wrapper";
-const craftingFn = "craft-item";
-const levelUpFn = "level-up";
-const acquisitionFn = "buy-item";
-const getBalance = "get-balance-wrapper";
-const getCraftingResources = "get-crafting-resources";
-const getLevelUpResources = "get-level-up-resources";
-const getAcquisitionResources = "get-acquisition-resources";
-const mintWrapper = "mint-wrapper";
-const mintWrapperUser = "mint-wrapper-user";
-const mintAdmin = "mint-wrapper-admin";
-const startFight = "start-fight";
-const rewardFighting = "reward-fighting";
-const rewardSleeping = "reward-sleeping";
-const rewardMining = "reward-mining";
-const rewardHarvesting = "reward-harvesting";
-const fight1 = "1";
-const fight2 = "2";
-const fight3 = "3";
-const fight4 = "4";
-const fight5 = "5";
-const fight6 = "6";
-const fight7 = "7";
-const fight8 = "8";
-const fight9 = "9";
-const fight10 = "10";
-const gold = "1";
-const energy = "2";
-const wood = "3";
-const iron = "4";
-const woodenSword1 = "5";
-const woodenSword2 = "6";
-const woodenSword3 = "7";
-const ironSword1 = "8";
-const ironSword2 = "9";
-const ironSword3 = "10";
-const enhancedSword1 = "11";
-const enhancedSword2 = "12";
-const enhancedSword3 = "13";
-const woodenArmor1 = "14";
-const woodenArmor2 = "15";
-const woodenArmor3 = "16";
-const ironArmor1 = "17";
-const ironArmor2 = "18";
-const ironArmor3 = "19";
-const enhancedArmor1 = "20";
-const enhancedArmor2 = "21";
-const enhancedArmor3 = "22";
-const woodenShield1 = "23";
-const woodenShield2 = "24";
-const woodenShield3 = "25";
-const ironShield1 = "26";
-const ironShield2 = "27";
-const ironShield3 = "28";
-const enhancedShield1 = "29";
-const enhancedShield2 = "30";
-const enhancedShield3 = "31";
-const woodenHelmet1 = "32";
-const woodenHelmet2 = "33";
-const woodenHelmet3 = "34";
-const ironHelmet1 = "35";
-const ironHelmet2 = "36";
-const ironHelmet3 = "37";
-const enhancedHelmet1 = "38";
-const enhancedHelmet2 = "39";
-const enhancedHelmet3 = "40";
-const woodenShoes1 = "41";
-const woodenShoes2 = "42";
-const woodenShoes3 = "43";
-const ironShoes1 = "44";
-const ironShoes2 = "45";
-const ironShoes3 = "46";
-const enhancedShoes1 = "47";
-const enhancedShoes2 = "48";
-const enhancedShoes3 = "49";
-const goldBar = "50";
-const ruby = "51";
-const ironAxe = "52";
-const goldAxe = "53";
-const rubyAxe = "54";
-const ironPickaxe = "55";
-const goldPickaxe = "56";
-const rubyPickaxe = "57";
+import { Clarinet, Tx, Chain, Account, types } from 'https://deno.land/x/clarinet@v1.0.3/index.ts';
+import { assertEquals } from 'https://deno.land/std@0.90.0/testing/asserts.ts';
+const errorInsufficientBalance = 101;
+const errorInvalidSender = 102;
+const contractName = 'main-sc';
+const transferFn = 'transfer-wrapper';
+const craftingFn = 'craft-item';
+const levelUpFn = 'level-up';
+const acquisitionFn = 'buy-item';
+const getBalance = 'get-balance-wrapper';
+const getCraftingResources = 'get-crafting-resources';
+const getLevelUpResources = 'get-level-up-resources';
+const getAcquisitionResources = 'get-acquisition-resources';
+const mintWrapper = 'mint-wrapper';
+const mintWrapperUser = 'mint-wrapper-user';
+const mintAdmin = 'mint-wrapper-admin';
+const startFight = 'start-fight';
+const rewardFighting = 'reward-fighting';
+const rewardSleeping = 'reward-sleeping';
+const rewardMining = 'reward-mining';
+const rewardHarvesting = 'reward-harvesting';
+const fight1 = '1';
+const fight2 = '2';
+const fight3 = '3';
+const fight4 = '4';
+const fight5 = '5';
+const fight6 = '6';
+const fight7 = '7';
+const fight8 = '8';
+const fight9 = '9';
+const fight10 = '10';
+const gold = '1';
+const energy = '2';
+const wood = '3';
+const iron = '4';
+const woodenSword1 = '5';
+const woodenSword2 = '6';
+const woodenSword3 = '7';
+const ironSword1 = '8';
+const ironSword2 = '9';
+const ironSword3 = '10';
+const enhancedSword1 = '11';
+const enhancedSword2 = '12';
+const enhancedSword3 = '13';
+const woodenArmor1 = '14';
+const woodenArmor2 = '15';
+const woodenArmor3 = '16';
+const ironArmor1 = '17';
+const ironArmor2 = '18';
+const ironArmor3 = '19';
+const enhancedArmor1 = '20';
+const enhancedArmor2 = '21';
+const enhancedArmor3 = '22';
+const woodenShield1 = '23';
+const woodenShield2 = '24';
+const woodenShield3 = '25';
+const ironShield1 = '26';
+const ironShield2 = '27';
+const ironShield3 = '28';
+const enhancedShield1 = '29';
+const enhancedShield2 = '30';
+const enhancedShield3 = '31';
+const woodenHelmet1 = '32';
+const woodenHelmet2 = '33';
+const woodenHelmet3 = '34';
+const ironHelmet1 = '35';
+const ironHelmet2 = '36';
+const ironHelmet3 = '37';
+const enhancedHelmet1 = '38';
+const enhancedHelmet2 = '39';
+const enhancedHelmet3 = '40';
+const woodenShoes1 = '41';
+const woodenShoes2 = '42';
+const woodenShoes3 = '43';
+const ironShoes1 = '44';
+const ironShoes2 = '45';
+const ironShoes3 = '46';
+const enhancedShoes1 = '47';
+const enhancedShoes2 = '48';
+const enhancedShoes3 = '49';
+const goldBar = '50';
+const ruby = '51';
+const ironAxe = '52';
+const goldAxe = '53';
+const rubyAxe = '54';
+const ironPickaxe = '55';
+const goldPickaxe = '56';
+const rubyPickaxe = '57';
 /*
 Clarinet.test({
   name: "Main-SC: Crafting Case",
@@ -9073,15 +9067,15 @@ Clarinet.test({
 });
 */
 Clarinet.test({
-  name: "Gameplay Scenario Case",
+  name: 'Gameplay Scenario Case',
   async fn(chain: Chain, accounts: Map<string, Account>) {
-    const admin = accounts.get("deployer")!;
-    const user1 = accounts.get("wallet_1")!;
-    const user2 = accounts.get("wallet_2")!;
-    const user3 = accounts.get("wallet_3")!;
-    const user4 = accounts.get("wallet_4")!;
-    const user5 = accounts.get("wallet_5")!;
-    const user6 = accounts.get("wallet_6")!;
+    const admin = accounts.get('deployer')!;
+    const user1 = accounts.get('wallet_1')!;
+    const user2 = accounts.get('wallet_2')!;
+    const user3 = accounts.get('wallet_3')!;
+    const user4 = accounts.get('wallet_4')!;
+    const user5 = accounts.get('wallet_5')!;
+    const user6 = accounts.get('wallet_6')!;
 
     // Game start, the player (user1) will have 100 energy, 15 gold
 
@@ -9125,30 +9119,10 @@ Clarinet.test({
     // User1 buys wood and crafts woodenSword1
 
     block = chain.mineBlock([
-      Tx.contractCall(
-        contractName,
-        acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
-        user1.address
-      ),
-      Tx.contractCall(
-        contractName,
-        acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
-        user1.address
-      ),
-      Tx.contractCall(
-        contractName,
-        acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
-        user1.address
-      ),
-      Tx.contractCall(
-        contractName,
-        acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
-        user1.address
-      ),
+      Tx.contractCall(contractName, acquisitionFn, [types.uint(wood), types.principal(user1.address)], user1.address),
+      Tx.contractCall(contractName, acquisitionFn, [types.uint(wood), types.principal(user1.address)], user1.address),
+      Tx.contractCall(contractName, acquisitionFn, [types.uint(wood), types.principal(user1.address)], user1.address),
+      Tx.contractCall(contractName, acquisitionFn, [types.uint(wood), types.principal(user1.address)], user1.address),
       Tx.contractCall(
         contractName,
         craftingFn,
@@ -9167,14 +9141,7 @@ Clarinet.test({
 
     // user1 fights first monster and wins (starts fight 1)
 
-    block = chain.mineBlock([
-      Tx.contractCall(
-        contractName,
-        startFight,
-        [types.uint(fight1)],
-        user1.address
-      ),
-    ]);
+    block = chain.mineBlock([Tx.contractCall(contractName, startFight, [types.uint(fight1)], user1.address)]);
 
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 4);
@@ -9219,48 +9186,23 @@ Clarinet.test({
         [types.uint(woodenArmor1), types.principal(user1.address)],
         user1.address
       ),
-      Tx.contractCall(
-        contractName,
-        acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
-        user1.address
-      ),
-      Tx.contractCall(
-        contractName,
-        acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
-        user1.address
-      ),
+      Tx.contractCall(contractName, acquisitionFn, [types.uint(wood), types.principal(user1.address)], user1.address),
+      Tx.contractCall(contractName, acquisitionFn, [types.uint(wood), types.principal(user1.address)], user1.address),
       Tx.contractCall(
         contractName,
         craftingFn,
         [types.uint(woodenShield1), types.principal(user1.address)],
         user1.address
       ),
-      Tx.contractCall(
-        contractName,
-        acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
-        user1.address
-      ),
-      Tx.contractCall(
-        contractName,
-        acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
-        user1.address
-      ),
+      Tx.contractCall(contractName, acquisitionFn, [types.uint(wood), types.principal(user1.address)], user1.address),
+      Tx.contractCall(contractName, acquisitionFn, [types.uint(wood), types.principal(user1.address)], user1.address),
       Tx.contractCall(
         contractName,
         craftingFn,
         [types.uint(woodenHelmet1), types.principal(user1.address)],
         user1.address
       ),
-      Tx.contractCall(
-        contractName,
-        acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
-        user1.address
-      ),
+      Tx.contractCall(contractName, acquisitionFn, [types.uint(wood), types.principal(user1.address)], user1.address),
       Tx.contractCall(
         contractName,
         craftingFn,
@@ -9330,12 +9272,7 @@ Clarinet.test({
     // user1 sleeps 5 mins to recover energy
 
     block = chain.mineBlock([
-      Tx.contractCall(
-        contractName,
-        rewardSleeping,
-        [types.uint(5), types.principal(user1.address)],
-        admin.address
-      ),
+      Tx.contractCall(contractName, rewardSleeping, [types.uint(5), types.principal(user1.address)], admin.address),
     ]);
 
     assertEquals(block.receipts.length, 1);
@@ -9353,14 +9290,7 @@ Clarinet.test({
 
     // user1 starts fight2 and wins it
 
-    block = chain.mineBlock([
-      Tx.contractCall(
-        contractName,
-        startFight,
-        [types.uint(fight2)],
-        user1.address
-      ),
-    ]);
+    block = chain.mineBlock([Tx.contractCall(contractName, startFight, [types.uint(fight2)], user1.address)]);
 
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 8);
@@ -9398,14 +9328,7 @@ Clarinet.test({
 
     // user1 starts fight 3 and loses it
 
-    block = chain.mineBlock([
-      Tx.contractCall(
-        contractName,
-        startFight,
-        [types.uint(fight3)],
-        user1.address
-      ),
-    ]);
+    block = chain.mineBlock([Tx.contractCall(contractName, startFight, [types.uint(fight3)], user1.address)]);
 
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 10);
@@ -9470,11 +9393,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         rewardMining,
-        [
-          types.uint(ironPickaxe),
-          types.uint(20),
-          types.principal(user1.address),
-        ],
+        [types.uint(ironPickaxe), types.uint(20), types.principal(user1.address)],
         admin.address
       ),
     ]);
@@ -9529,14 +9448,7 @@ Clarinet.test({
 
     // user1 starts fight2 and wins it
 
-    block = chain.mineBlock([
-      Tx.contractCall(
-        contractName,
-        startFight,
-        [types.uint(fight2)],
-        user1.address
-      ),
-    ]);
+    block = chain.mineBlock([Tx.contractCall(contractName, startFight, [types.uint(fight2)], user1.address)]);
 
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 14);
@@ -9574,14 +9486,7 @@ Clarinet.test({
 
     // user1 starts fight3 and wins it
 
-    block = chain.mineBlock([
-      Tx.contractCall(
-        contractName,
-        startFight,
-        [types.uint(fight3)],
-        user1.address
-      ),
-    ]);
+    block = chain.mineBlock([Tx.contractCall(contractName, startFight, [types.uint(fight3)], user1.address)]);
 
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 16);
@@ -9620,12 +9525,7 @@ Clarinet.test({
     // user1 needs to recover, so he sleeps 20 mins, then 10 mins
 
     block = chain.mineBlock([
-      Tx.contractCall(
-        contractName,
-        rewardSleeping,
-        [types.uint(20), types.principal(user1.address)],
-        admin.address
-      ),
+      Tx.contractCall(contractName, rewardSleeping, [types.uint(20), types.principal(user1.address)], admin.address),
     ]);
 
     assertEquals(block.receipts.length, 1);
@@ -9641,12 +9541,7 @@ Clarinet.test({
     balanceEnergyUser1.result.expectOk().expectUint(81); // 41 + 40 energy
 
     block = chain.mineBlock([
-      Tx.contractCall(
-        contractName,
-        rewardSleeping,
-        [types.uint(10), types.principal(user1.address)],
-        admin.address
-      ),
+      Tx.contractCall(contractName, rewardSleeping, [types.uint(10), types.principal(user1.address)], admin.address),
     ]);
 
     assertEquals(block.receipts.length, 1);
@@ -9663,14 +9558,7 @@ Clarinet.test({
 
     // user1 starts fight4 and wins it
 
-    block = chain.mineBlock([
-      Tx.contractCall(
-        contractName,
-        startFight,
-        [types.uint(fight4)],
-        user1.address
-      ),
-    ]);
+    block = chain.mineBlock([Tx.contractCall(contractName, startFight, [types.uint(fight4)], user1.address)]);
 
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 20);
@@ -9756,14 +9644,7 @@ Clarinet.test({
 
     // user1 starts fight5 and wins it
 
-    block = chain.mineBlock([
-      Tx.contractCall(
-        contractName,
-        startFight,
-        [types.uint(fight5)],
-        user1.address
-      ),
-    ]);
+    block = chain.mineBlock([Tx.contractCall(contractName, startFight, [types.uint(fight5)], user1.address)]);
 
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 24);
@@ -9864,11 +9745,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         rewardMining,
-        [
-          types.uint(rubyPickaxe),
-          types.uint(20),
-          types.principal(user1.address),
-        ],
+        [types.uint(rubyPickaxe), types.uint(20), types.principal(user1.address)],
         admin.address
       ),
     ]);

@@ -3,10 +3,14 @@
 ;; Constants
 
 (define-constant contract-owner tx-sender)
-(define-constant err-not-some (err u99))
-(define-constant err-insufficient-balance (err u1))
+
+
 (define-constant err-owner-only (err u100))
-(define-constant err-inexistent-item (err u10))
+(define-constant err-insufficient-balance (err u101))
+(define-constant err-invalid-sender (err u102))
+(define-constant err-not-some (err u103))
+(define-constant err-invalid-destination-contract (err u104))
+(define-constant err-inexistent-item (err u105))
 
 ;; Transfer
 
@@ -17,11 +21,7 @@
       (contract-call? .items transfer token-id amount sender recipient) 
       (if (< token-id u58) 
         (contract-call? .collection-1 transfer token-id amount sender recipient) 
-        err-inexistent-item
-      )
-    )    
-  )
-)
+        err-inexistent-item))))
 
 
 ;; Balance
@@ -33,11 +33,8 @@
       (contract-call? .items get-balance token-id who) 
       (if (< token-id u58) 
         (contract-call? .collection-1 get-balance token-id who)
-        err-inexistent-item      
-      )
-    )
-  )
-)
+        err-inexistent-item))))      
+
 
 ;; Mint
 
@@ -48,11 +45,8 @@
       (contract-call? .items mint token-id amount recipient) 
       (if (< token-id u58) 
         (contract-call? .collection-1 mint token-id amount recipient)
-        err-inexistent-item
-      )
-    )
-  )
-)
+        err-inexistent-item))))
+
 
 (define-public (mint-wrapper-user (token-id uint) (amount uint) (recipient principal)) 
   (if (< token-id u5) 
@@ -61,11 +55,7 @@
       (contract-call? .items mint-user token-id amount recipient) 
       (if (< token-id u58) 
         (contract-call? .collection-1 mint-user token-id amount recipient)
-        err-inexistent-item
-      )
-    )
-  )
-)
+        err-inexistent-item))))
 
 (define-private (mint-wrapper-admin (token-id uint) (amount uint) (recipient principal))
   (begin
@@ -76,19 +66,12 @@
           (contract-call? .items mint token-id amount recipient) 
           (if (< token-id u58) 
             (contract-call? .collection-1 mint token-id amount recipient)
-            err-inexistent-item
-          )
-        )
-      )
-    )
-    recipient
-  )
-)
+            err-inexistent-item))))
+    recipient))
 
 
 (define-private (mint-rewards (reward-tuple {resource-id: uint, resource-qty: uint}) (user principal)) 
-  (mint-wrapper-admin (get resource-id reward-tuple) (get resource-qty reward-tuple) user)
-)
+  (mint-wrapper-admin (get resource-id reward-tuple) (get resource-qty reward-tuple) user))
 
 ;; Burn
 
@@ -99,27 +82,21 @@
       (contract-call? .items burn (get resource-id burn-tuple) (get resource-qty burn-tuple) tx-sender)
       (if (< (get resource-id burn-tuple) u58)
         (contract-call? .collection-1 burn (get resource-id burn-tuple) (get resource-qty burn-tuple) tx-sender)
-        err-inexistent-item  
-      )
-    )
-  )
-)
+        err-inexistent-item))))
+
 
 ;; Ownership
 
 (define-private (is-owned-needed-wrapper (item {resource-id: uint, resource-qty: uint})) 
-  (unwrap-panic (if (< (get resource-id item) u5) 
-                  (contract-call? .resources is-owned-needed item) 
-                  (if (< (get resource-id item) u50) 
-                    (contract-call? .items is-owned-needed item) 
-                    (if (< (get resource-id item) u58) 
-                      (contract-call? .collection-1 is-owned-needed item) 
-                      err-inexistent-item
-                    )  
-                  )
-                )
-  )
-)
+  (unwrap-panic 
+    (if (< (get resource-id item) u5) 
+      (contract-call? .resources is-owned-needed item) 
+      (if (< (get resource-id item) u50) 
+        (contract-call? .items is-owned-needed item) 
+        (if (< (get resource-id item) u58) 
+          (contract-call? .collection-1 is-owned-needed item) 
+          err-inexistent-item)))))
+
 
 ;; Level-up
 
@@ -128,28 +105,22 @@
 (define-public (level-up (id-new uint) (recipient principal))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-level-up-resources id-new)))) err-not-some)
-    (let ((level-up-resources (unwrap-panic (get-level-up-resources id-new)))
+    (let  ((level-up-resources (unwrap-panic (get-level-up-resources id-new)))
           (verified-ownership (fold and (map is-owned-needed-wrapper (unwrap-panic level-up-resources)) true)))
-            (asserts! (is-some level-up-resources) err-not-some)
-            (asserts! verified-ownership err-insufficient-balance)
-              (some (map  burn-wrapper (unwrap-panic level-up-resources)))
-              (mint-wrapper-user id-new u1 recipient)
-    )
-  )
-)
+      (asserts! (is-some level-up-resources) err-not-some)
+      (asserts! verified-ownership err-insufficient-balance)
+      (some (map  burn-wrapper (unwrap-panic level-up-resources)))
+      (mint-wrapper-user id-new u1 recipient))))
+
+(define-read-only (get-level-up-resources (token-id uint))
+  (let ((token-urr (map-get? level-up-system {id: token-id})))
+    (ok token-urr)))
 
 (define-public (set-level-up-resources (token-id uint) (resource-needed (list 100 {resource-id: uint, resource-qty: uint})))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
-    (ok (map-set level-up-system {id: token-id} resource-needed))     
-  )
-)
+    (ok (map-set level-up-system {id: token-id} resource-needed))))
 
-(define-read-only (get-level-up-resources (token-id uint))
-    (let ((token-urr (map-get? level-up-system {id: token-id})))
-      (ok token-urr)
-    )
-)
 
 (map-set level-up-system {id: u6} (list {resource-id: u3, resource-qty: u6} {resource-id: u5, resource-qty: u1} {resource-id: u2, resource-qty: u2}))
 (map-set level-up-system {id: u7} (list {resource-id: u3, resource-qty: u10} {resource-id: u6, resource-qty: u1} {resource-id: u2, resource-qty: u3}))
@@ -189,28 +160,22 @@
 (define-public (craft-item (id-new uint) (recipient principal))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-crafting-resources id-new)))) err-not-some)
-    (let ((crafting-resources (unwrap-panic (get-crafting-resources id-new)))
+    (let  ((crafting-resources (unwrap-panic (get-crafting-resources id-new)))
           (verified-ownership (fold and (map is-owned-needed-wrapper (unwrap-panic crafting-resources)) true)))
-            (asserts! (is-some crafting-resources) err-not-some)
-            (asserts! verified-ownership err-insufficient-balance)
-              (some (map burn-wrapper (unwrap-panic crafting-resources)))
-              (mint-wrapper-user id-new u1 recipient)
-    )
-  )
-)
+      (asserts! (is-some crafting-resources) err-not-some)
+      (asserts! verified-ownership err-insufficient-balance)
+      (some (map burn-wrapper (unwrap-panic crafting-resources)))
+      (mint-wrapper-user id-new u1 recipient))))
+
+(define-read-only (get-crafting-resources (token-id uint))
+  (let ((token-urr (map-get? crafting-system {id: token-id})))
+    (ok token-urr)))
 
 (define-public (set-crafting-resources (token-id uint) (resource-needed (list 100 {resource-id: uint, resource-qty: uint})))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
-    (ok (map-set crafting-system {id: token-id} resource-needed))     
-  )
-)
+    (ok (map-set crafting-system {id: token-id} resource-needed))))     
 
-(define-read-only (get-crafting-resources (token-id uint))
-    (let ((token-urr (map-get? crafting-system {id: token-id})))
-      (ok token-urr)
-    )
-)
 
 (map-set crafting-system {id: u5} (list {resource-id: u3, resource-qty: u4}))
 (map-set crafting-system {id: u8} (list {resource-id: u4, resource-qty: u4}))
@@ -242,28 +207,22 @@
 (define-public (buy-item (id-new uint) (recipient principal))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-acquisition-resources id-new)))) err-not-some)
-    (let ((acquisition-resources (unwrap-panic (get-acquisition-resources id-new)))
+    (let  ((acquisition-resources (unwrap-panic (get-acquisition-resources id-new)))
           (verified-ownership (fold and (map is-owned-needed-wrapper (unwrap-panic acquisition-resources)) true))) 
-            (asserts! (is-some acquisition-resources) err-not-some)
-            (asserts! verified-ownership err-insufficient-balance)
-              (some (map burn-wrapper (unwrap-panic acquisition-resources)))
-              (mint-wrapper-user id-new u1 recipient)
-      )
-  )
-)
+      (asserts! (is-some acquisition-resources) err-not-some)
+      (asserts! verified-ownership err-insufficient-balance)
+      (some (map burn-wrapper (unwrap-panic acquisition-resources)))
+      (mint-wrapper-user id-new u1 recipient))))
+
+(define-read-only (get-acquisition-resources (token-id uint))
+    (let ((token-urr (map-get? acquisition-system {id: token-id})))
+      (ok token-urr)))
 
 (define-public (set-acquisition-resources (token-id uint) (resource-needed (list 100 {resource-id: uint, resource-qty: uint})))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
-    (ok (map-set acquisition-system {id: token-id} resource-needed))     
-  )
-)
+    (ok (map-set acquisition-system {id: token-id} resource-needed))))
 
-(define-read-only (get-acquisition-resources (token-id uint))
-    (let ((token-urr (map-get? acquisition-system {id: token-id})))
-      (ok token-urr)
-    )
-)
 
 (map-set acquisition-system {id: u3} (list {resource-id: u1, resource-qty: u3}))
 (map-set acquisition-system {id: u4} (list {resource-id: u1, resource-qty: u5}))
@@ -307,23 +266,16 @@
             (asserts! (is-some fight-resources-needed) err-not-some)
             (asserts! verified-ownership err-insufficient-balance)
               (some (map burn-wrapper (unwrap-panic fight-resources-needed)))
-              (ok true)
-      )
-  )
-)
+              (ok true))))
+
+(define-read-only (get-fight-needed-resources (fight-number uint))
+  (let ((token-urr (map-get? fight-needed-resources {fight-number: fight-number})))
+    (ok token-urr)))
 
 (define-public (set-fight-needed-resources (fight-number uint) (resource-needed (list 100 {resource-id: uint, resource-qty: uint})))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
-    (ok (map-set fight-needed-resources {fight-number: fight-number} resource-needed))     
-  )
-)
-
-(define-read-only (get-fight-needed-resources (fight-number uint))
-    (let ((token-urr (map-get? fight-needed-resources {fight-number: fight-number})))
-      (ok token-urr)
-    )
-)
+    (ok (map-set fight-needed-resources {fight-number: fight-number} resource-needed))))
 
 (map-set fight-needed-resources {fight-number: u1} (list {resource-id: u2, resource-qty: u10}))
 (map-set fight-needed-resources {fight-number: u2} (list {resource-id: u2, resource-qty: u12}))
@@ -340,29 +292,22 @@
 
 (define-map fight-reward-system { fight-number: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
-(define-public (set-fight-rewards (fight-number uint) (resource-rewarded (list 100 {resource-id: uint, resource-qty: uint})))
-  (begin 
-    (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
-    (ok (map-set fight-reward-system {fight-number: fight-number} resource-rewarded))     
-  )
-)
-
-(define-read-only (get-fight-rewards (fight-number uint))
-    (let ((token-urr (map-get? fight-reward-system {fight-number: fight-number})))
-      (ok token-urr)
-    )
-)
-
 (define-public (reward-fighting (fight-number uint) (user principal))
   (begin
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)
     (asserts! (not (is-none (unwrap-panic (get-fight-rewards fight-number)))) err-not-some)
-    (let ((fighting-rewards (unwrap-panic (get-fight-rewards fight-number)))) 
-            (asserts! (is-some fighting-rewards) err-not-some)
-            (ok (fold mint-rewards (unwrap-panic fighting-rewards) user))    
-    )
-  )
-)
+    (let  ((fighting-rewards (unwrap-panic (get-fight-rewards fight-number)))) 
+      (asserts! (is-some fighting-rewards) err-not-some)
+      (ok (fold mint-rewards (unwrap-panic fighting-rewards) user)))))
+
+(define-read-only (get-fight-rewards (fight-number uint))
+  (let ((token-urr (map-get? fight-reward-system {fight-number: fight-number})))
+    (ok token-urr)))
+
+(define-public (set-fight-rewards (fight-number uint) (resource-rewarded (list 100 {resource-id: uint, resource-qty: uint})))
+  (begin 
+    (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
+    (ok (map-set fight-reward-system {fight-number: fight-number} resource-rewarded))))
 
 (map-set fight-reward-system {fight-number: u1} (list {resource-id: u1, resource-qty: u100}))
 (map-set fight-reward-system {fight-number: u2} (list {resource-id: u1, resource-qty: u120}))
@@ -384,26 +329,18 @@
   (begin
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)
     (asserts! (not (is-none (unwrap-panic (get-sleeping-rewards sleeping-time)))) err-not-some)
-    (let ((sleeping-rewards (unwrap-panic (get-sleeping-rewards sleeping-time)))) 
-            (asserts! (is-some sleeping-rewards) err-not-some)
-            (ok (fold mint-rewards (unwrap-panic sleeping-rewards) user))    
-    )
-  )
-)
+    (let  ((sleeping-rewards (unwrap-panic (get-sleeping-rewards sleeping-time)))) 
+      (asserts! (is-some sleeping-rewards) err-not-some)
+      (ok (fold mint-rewards (unwrap-panic sleeping-rewards) user)))))
 
+(define-read-only (get-sleeping-rewards (sleeping-time uint))
+  (let ((token-urr (map-get? sleeping-reward-system {sleeping-time: sleeping-time})))
+    (ok token-urr)))
 
 (define-public (set-sleeping-rewards (sleeping-time uint) (resource-achieved (list 100 {resource-id: uint, resource-qty: uint})))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
-    (ok (map-set sleeping-reward-system {sleeping-time: sleeping-time} resource-achieved))     
-  )
-)
-
-(define-read-only (get-sleeping-rewards (sleeping-time uint))
-    (let ((token-urr (map-get? sleeping-reward-system {sleeping-time: sleeping-time})))
-      (ok token-urr)
-    )
-)
+    (ok (map-set sleeping-reward-system {sleeping-time: sleeping-time} resource-achieved))))
 
 (map-set sleeping-reward-system {sleeping-time: u5} (list {resource-id: u2, resource-qty: u5}))
 (map-set sleeping-reward-system {sleeping-time: u10} (list {resource-id: u2, resource-qty: u15}))
@@ -418,26 +355,19 @@
   (begin
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)
     (asserts! (not (is-none (unwrap-panic (get-mining-rewards token-id mining-time)))) err-not-some)
-    (let ((mining-rewards (unwrap-panic (get-mining-rewards token-id mining-time)))) 
-            (asserts! (is-some mining-rewards) err-not-some)
-            (ok (fold mint-rewards (unwrap-panic mining-rewards) user))    
-    )
-  )
-)
+    (let  ((mining-rewards (unwrap-panic (get-mining-rewards token-id mining-time)))) 
+      (asserts! (is-some mining-rewards) err-not-some)
+      (ok (fold mint-rewards (unwrap-panic mining-rewards) user)))))
 
+(define-read-only (get-mining-rewards (token-id uint) (mining-time uint))
+    (let ((token-urr (map-get? mining-reward-system {token-id: token-id, mining-time: mining-time})))
+      (ok token-urr)))
 
 (define-public (set-mining-rewards (token-id uint) (mining-time uint) (resource-achieved (list 100 {resource-id: uint, resource-qty: uint})))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
-    (ok (map-set mining-reward-system {token-id: token-id, mining-time: mining-time} resource-achieved))     
-  )
-)
+    (ok (map-set mining-reward-system {token-id: token-id, mining-time: mining-time} resource-achieved))))
 
-(define-read-only (get-mining-rewards (token-id uint) (mining-time uint))
-    (let ((token-urr (map-get? mining-reward-system {token-id: token-id, mining-time: mining-time})))
-      (ok token-urr)
-    )
-)
 
 (map-set mining-reward-system {token-id: u55, mining-time: u5} (list {resource-id: u4, resource-qty: u1}))
 (map-set mining-reward-system {token-id: u55, mining-time: u10} (list {resource-id: u4, resource-qty: u3}))
@@ -459,27 +389,19 @@
     (asserts! (not (is-none (unwrap-panic (get-harvesting-rewards token-id harvesting-time)))) err-not-some)
     (let ((harvesting-rewards (unwrap-panic (get-harvesting-rewards token-id harvesting-time)))) 
             (asserts! (is-some harvesting-rewards) err-not-some)
-              (ok (fold mint-harvesting-rewards (unwrap-panic harvesting-rewards) user))
-    )
-  )
-)
+              (ok (fold mint-harvesting-rewards (unwrap-panic harvesting-rewards) user)))))
 
 (define-private (mint-harvesting-rewards (reward-tuple {resource-id: uint, resource-qty: uint}) (user principal)) 
-  (mint-wrapper-admin (get resource-id reward-tuple) (get resource-qty reward-tuple) user)
-)
+  (mint-wrapper-admin (get resource-id reward-tuple) (get resource-qty reward-tuple) user))
+
+(define-read-only (get-harvesting-rewards (token-id uint) (harvesting-time uint))
+    (let ((token-urr (map-get? harvesting-system {token-id: token-id, harvesting-time: harvesting-time})))
+      (ok token-urr)))
 
 (define-public (set-harvesting-rewards (token-id uint) (harvesting-time uint) (resource-achieved (list 100 {resource-id: uint, resource-qty: uint})))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
-    (ok (map-set harvesting-system {token-id: token-id, harvesting-time: harvesting-time} resource-achieved))     
-  )
-)
-
-(define-read-only (get-harvesting-rewards (token-id uint) (harvesting-time uint))
-    (let ((token-urr (map-get? harvesting-system {token-id: token-id, harvesting-time: harvesting-time})))
-      (ok token-urr)
-    )
-)
+    (ok (map-set harvesting-system {token-id: token-id, harvesting-time: harvesting-time} resource-achieved))))
 
 (map-set harvesting-system {token-id: u52, harvesting-time: u5} (list {resource-id: u3, resource-qty: u1}))
 (map-set harvesting-system {token-id: u52, harvesting-time: u10} (list {resource-id: u3, resource-qty: u3}))
