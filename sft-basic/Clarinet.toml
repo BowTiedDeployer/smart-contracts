@@ -9,14 +9,17 @@ requirements = []
 [contracts.semi-fungible-token]
 path = 'contracts/semi-fungible-token.clar'
 clarity_version = 1
+epoch = 2.0
 
 [contracts.sip013-semi-fungible-token-trait]
 path = 'contracts/sip013-semi-fungible-token-trait.clar'
 clarity_version = 1
+epoch = 2.0
 
 [contracts.sip013-transfer-many-trait]
 path = 'contracts/sip013-transfer-many-trait.clar'
 clarity_version = 1
+epoch = 2.0
 [repl.analysis]
 passes = ['check_checker']
 

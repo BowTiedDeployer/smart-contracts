@@ -14,25 +14,21 @@ plan:
             cost: 4670
             path: "contracts\\nft-trait.clar"
             anchor-block-only: true
-            clarity-version: 1
         - contract-publish:
             contract-name: background-item
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 51970
             path: "contracts\\background-item.clar"
             anchor-block-only: true
-            clarity-version: 1
         - contract-publish:
             contract-name: lootbox-background
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 73750
             path: "contracts\\lootbox-background.clar"
             anchor-block-only: true
-            clarity-version: 1
         - contract-publish:
             contract-name: send-lootbox
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 11900
             path: "contracts\\send-lootbox.clar"
             anchor-block-only: true
-            clarity-version: 1

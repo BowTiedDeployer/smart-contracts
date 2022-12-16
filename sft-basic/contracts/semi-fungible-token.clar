@@ -1,7 +1,7 @@
 (impl-trait .sip013-semi-fungible-token-trait.sip013-semi-fungible-token-trait)
 (impl-trait .sip013-transfer-many-trait.sip013-transfer-many-trait)
 
-;; Basic
+;; Define SFT
 
 (define-fungible-token semi-fungible-token)
 (define-non-fungible-token semi-fungible-token-id {token-id: uint, owner: principal})
@@ -11,18 +11,16 @@
 (define-constant contract-owner tx-sender)
 
 (define-constant err-owner-only (err u100))
-(define-constant err-insufficient-balance (err u1))
-(define-constant err-invalid-sender (err u4))
+(define-constant err-insufficient-balance (err u101))
+(define-constant err-invalid-sender (err u102))
+(define-constant err-not-some (err u103))
 
 (define-private (tag-nft-token-id (nft-token-id {token-id: uint, owner: principal}))
   (begin
     (and
       (is-some (nft-get-owner? semi-fungible-token-id nft-token-id))
-      (try! (nft-burn? semi-fungible-token-id nft-token-id (get owner nft-token-id)))
-    )
-    (nft-mint? semi-fungible-token-id nft-token-id (get owner nft-token-id))
-  )
-)
+      (try! (nft-burn? semi-fungible-token-id nft-token-id (get owner nft-token-id))))
+    (nft-mint? semi-fungible-token-id nft-token-id (get owner nft-token-id))))
 
 (define-public (mint (token-id uint) (amount uint) (recipient principal))
   (begin
@@ -32,57 +30,46 @@
     (set-balance token-id (+ (get-balance-uint token-id recipient) amount) recipient)
     (map-set token-supplies token-id (+  (unwrap-panic (get-total-supply token-id)) amount))
     (print {type: "sft_mint", token-id: token-id, amount: amount, recipient: recipient})
-    (ok true)
-  )
-)
-
-(define-private (mint-rewards (reward-tuple {resource-id: uint, resource-qty: uint}) (user principal)) 
-  (mint-wrapper-admin (get resource-id reward-tuple) (get resource-qty reward-tuple) user)
-)
+    (ok true)))
 
 (define-private (mint-wrapper-admin (token-id uint) (amount uint) (recipient principal))
   (begin 
-    (some 
-      (mint token-id amount recipient)
-    )
-    recipient
-  )
-)
-(define-private (set-balance (token-id uint) (balance uint) (owner principal))
-  (map-set token-balances {token-id: token-id, owner: owner} balance)
-)
+    (some (mint token-id amount recipient))
+    recipient))
+
+(define-private (mint-rewards (reward-tuple {resource-id: uint, resource-qty: uint}) (user principal)) 
+  (mint-wrapper-admin (get resource-id reward-tuple) (get resource-qty reward-tuple) user))
 
 (define-private (get-balance-uint (token-id uint) (who principal))
-  (default-to u0 (map-get? token-balances {token-id: token-id, owner: who}))
-)
+  (default-to u0 (map-get? token-balances {token-id: token-id, owner: who})))
 
 (define-read-only (get-balance (token-id uint) (who principal))
-  (ok (get-balance-uint token-id who))
-)
+  (ok (get-balance-uint token-id who)))
 
 (define-read-only (get-overall-balance (who principal))
-  (ok (ft-get-balance semi-fungible-token who))
-)
+  (ok (ft-get-balance semi-fungible-token who)))
 
 (define-read-only (get-total-supply (token-id uint))
-  (ok (default-to u0 (map-get? token-supplies token-id)))
-)
+  (ok (default-to u0 (map-get? token-supplies token-id))))
 
 (define-read-only (get-overall-supply)
-  (ok (ft-get-supply semi-fungible-token))
-)
+  (ok (ft-get-supply semi-fungible-token)))
 
 (define-read-only (get-decimals (token-id uint))
-  (ok u0)
-)
+  (ok u0))
+  
+(define-private (is-owned-needed  (item {resource-id: uint, resource-qty: uint}))
+  (>= (get-balance-uint (get resource-id item) tx-sender) (get resource-qty item)))
+
+(define-private (set-balance (token-id uint) (balance uint) (owner principal))
+  (map-set token-balances {token-id: token-id, owner: owner} balance))
+
 
 ;; Transfer
 
 (define-public (transfer (token-id uint) (amount uint) (sender principal) (recipient principal))
   (let
-    (
-      (sender-balance (get-balance-uint token-id sender))
-    )
+      ((sender-balance (get-balance-uint token-id sender)))
     (asserts! (or (is-eq sender tx-sender) (is-eq sender contract-caller)) err-invalid-sender)
     (asserts! (<= amount sender-balance) err-insufficient-balance)
     (try! (ft-transfer? semi-fungible-token amount sender recipient))
@@ -91,77 +78,58 @@
     (set-balance token-id (- sender-balance amount) sender)
     (set-balance token-id (+ (get-balance-uint token-id recipient) amount) recipient)
     (print {type: "sft_transfer", token-id: token-id, amount: amount, sender: sender, recipient: recipient})
-    (ok true)
-  )
-)
+    (ok true)))
 
 (define-public (transfer-many (transfers (list 200 {token-id: uint, amount: uint, sender: principal, recipient: principal})))
-  (fold transfer-many-iter transfers (ok true))
-)
+  (fold transfer-many-iter transfers (ok true)))
 
 (define-public (transfer-memo (token-id uint) (amount uint) (sender principal) (recipient principal) (memo (buff 34)))
   (begin
     (try! (transfer token-id amount sender recipient))
     (print memo)
-    (ok true)
-  )
-)
-
+    (ok true)))
 
 (define-public (transfer-many-memo (transfers (list 200 {token-id: uint, amount: uint, sender: principal, recipient: principal, memo: (buff 34)})))
-  (fold transfer-many-memo-iter transfers (ok true))
-)
-
-(define-public (transfer-wrapper (transfer-tuple {resource-id: uint, resource-qty: uint})) 
-  (transfer (get resource-id transfer-tuple) (get resource-qty transfer-tuple) tx-sender 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG)
-)
+  (fold transfer-many-memo-iter transfers (ok true)))
 
 (define-private (transfer-many-iter (item {token-id: uint, amount: uint, sender: principal, recipient: principal}) (previous-response (response bool uint)))
-  (match previous-response prev-ok (transfer (get token-id item) (get amount item) (get sender item) (get recipient item)) prev-err previous-response)
-)
+  (match previous-response prev-ok (transfer (get token-id item) (get amount item) (get sender item) (get recipient item)) prev-err previous-response))
 
 (define-private (transfer-many-memo-iter (item {token-id: uint, amount: uint, sender: principal, recipient: principal, memo: (buff 34)}) (previous-response (response bool uint)))
-  (match previous-response prev-ok (transfer-memo (get token-id item) (get amount item) (get sender item) (get recipient item) (get memo item)) prev-err previous-response)
-)
+  (match previous-response prev-ok (transfer-memo (get token-id item) (get amount item) (get sender item) (get recipient item) (get memo item)) prev-err previous-response))
+
 
 ;; Burn
 
 (define-public (burn (token-id uint) (amount uint) (sender principal))
   (let
-    (
-      (sender-balance (get-balance-uint token-id sender))
-    )
+      ((sender-balance (get-balance-uint token-id sender)))
     (asserts! (or (is-eq sender tx-sender) (is-eq sender contract-caller)) err-invalid-sender)
     (asserts! (<= amount sender-balance) err-insufficient-balance)
     (try! (ft-burn? semi-fungible-token amount sender))
     (try! (tag-nft-token-id {token-id: token-id, owner: sender}))
     (set-balance token-id (- sender-balance amount) sender)
     (print {type: "sft_burn", token-id: token-id, amount: amount, sender: sender})
-    (ok true)
-  )
-)
+    (ok true)))
 
 (define-public (burn-wrapper (burn-tuple {resource-id: uint, resource-qty: uint})) 
-  (burn (get resource-id burn-tuple) (get resource-qty burn-tuple) tx-sender)
-)
+  (burn (get resource-id burn-tuple) (get resource-qty burn-tuple) tx-sender))
+
 
 ;; Token URI
 
 (define-map token-uri { id: uint } { url: (string-ascii 256) })
 
+(define-read-only (get-token-uri (token-id uint))
+  (let ((token-urr  (get url (map-get? token-uri {id: token-id}))))
+    (ok token-urr)))
+
 (define-public (set-token-uri (token-id uint) (token-url (string-ascii 256)))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
     (map-set token-uri {id: token-id} {url: token-url}) 
-    (ok true)    
-  )
-)
+    (ok true)))
 
-(define-read-only (get-token-uri (token-id uint))
-    (let ((token-urr  (get url (map-get? token-uri {id: token-id}))))
-      (ok token-urr)
-    )
-)
 
 (map-set token-uri {id: u1} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/1.png"})
 (map-set token-uri {id: u2} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/2.png"})
@@ -213,31 +181,30 @@
 (map-set token-uri {id: u48} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/48.png"})
 (map-set token-uri {id: u49} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/49.png"})
 
+
 ;; Token Name
 
 (define-map token-name { id: uint } { name: (string-ascii 256), type: (string-ascii 256), values: {dmg: uint, health: uint, defense: uint} })
+
+(define-read-only (get-token-name (token-id uint))
+  (let ((token-urr  (map-get? token-name {id: token-id})))
+    (ok token-urr)))
 
 (define-public (set-token-name (token-id uint) (token-details {name: (string-ascii 256), type: (string-ascii 256), values: {dmg: uint, health: uint, defense: uint}}))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
     (map-set token-name {id: token-id} token-details) 
-    (ok true)    
-  )
-)
+    (ok true)))
 
-(define-read-only (get-token-name (token-id uint))
-    (let ((token-urr  (map-get? token-name {id: token-id})))
-      (ok token-urr)
-    )
-)
 
-(define-constant err-not-some (err u99))
-
+;; Resources
 (map-set token-name {id: u1} {name: "gold", type: "resource", values: {dmg: u0, health: u0, defense: u0}})
 (map-set token-name {id: u2} {name: "energy-power", type: "resource", values: {dmg: u0, health: u0, defense: u0}})
 (map-set token-name {id: u3} {name: "wood", type: "resource", values: {dmg: u0, health: u0, defense: u0}})
 (map-set token-name {id: u4} {name: "iron", type: "resource", values: {dmg: u0, health: u0, defense: u0}})
 
+;; Items
+;; Swords
 (map-set token-name {id: u5} {name: "wooden_sword_1", type: "sword", values: {dmg: u1, health: u0, defense: u0}})
 (map-set token-name {id: u6} {name: "wooden_sword_2", type: "sword", values: {dmg: u2, health: u0, defense: u0}})
 (map-set token-name {id: u7} {name: "wooden_sword_3", type: "sword", values: {dmg: u4, health: u0, defense: u0}})
@@ -248,6 +215,7 @@
 (map-set token-name {id: u12} {name: "enhanced_sword_2", type: "sword", values: {dmg: u15, health: u0, defense: u0}})
 (map-set token-name {id: u13} {name: "enhanced_sword_3", type: "sword", values: {dmg: u19, health: u0, defense: u0}})
 
+;; Armors
 (map-set token-name {id: u14} {name: "wooden_armor_1", type: "armor", values: {dmg: u0, health: u10, defense: u5}})
 (map-set token-name {id: u15} {name: "wooden_armor_2", type: "armor", values: {dmg: u0, health: u15, defense: u8}})
 (map-set token-name {id: u16} {name: "wooden_armor_3", type: "armor", values: {dmg: u0, health: u20, defense: u11}})
@@ -258,6 +226,7 @@
 (map-set token-name {id: u21} {name: "enhanced_armor_2", type: "armor", values: {dmg: u0, health: u65, defense: u30}})
 (map-set token-name {id: u22} {name: "enhanced_armor_3", type: "armor", values: {dmg: u0, health: u80, defense: u35}})
 
+;; Shields
 (map-set token-name {id: u23} {name: "wooden_shield_1", type: "shield", values: {dmg: u0, health: u0, defense: u5}})
 (map-set token-name {id: u24} {name: "wooden_shield_2", type: "shield", values: {dmg: u0, health: u0, defense: u10}})
 (map-set token-name {id: u25} {name: "wooden_shield_3", type: "shield", values: {dmg: u0, health: u0, defense: u15}})
@@ -268,6 +237,7 @@
 (map-set token-name {id: u30} {name: "enhanced_shield_2", type: "shield", values: {dmg: u0, health: u0, defense: u45}})
 (map-set token-name {id: u31} {name: "enhanced_shield_3", type: "shield", values: {dmg: u0, health: u0, defense: u55}})
 
+;; Helmets
 (map-set token-name {id: u32} {name: "wooden_helmet_1", type: "helmet", values: {dmg: u0, health: u10, defense: u0}})
 (map-set token-name {id: u33} {name: "wooden_helmet_2", type: "helmet", values: {dmg: u0, health: u17, defense: u0}})
 (map-set token-name {id: u34} {name: "wooden_helmet_3", type: "helmet", values: {dmg: u0, health: u24, defense: u0}})
@@ -278,6 +248,7 @@
 (map-set token-name {id: u39} {name: "enhanced_helmet_2", type: "helmet", values: {dmg: u0, health: u70, defense: u0}})
 (map-set token-name {id: u40} {name: "enhanced_helmet_3", type: "helmet", values: {dmg: u0, health: u85, defense: u0}})
 
+;; Shoes
 (map-set token-name {id: u41} {name: "wooden_shoes_1", type: "shoes", values: {dmg: u3, health: u0, defense: u2}})
 (map-set token-name {id: u42} {name: "wooden_shoes_2", type: "shoes", values: {dmg: u4, health: u0, defense: u4}})
 (map-set token-name {id: u43} {name: "wooden_shoes_3", type: "shoes", values: {dmg: u5, health: u0, defense: u6}})
@@ -288,6 +259,7 @@
 (map-set token-name {id: u48} {name: "enhanced_shoes_2", type: "shoes", values: {dmg: u4, health: u0, defense: u18}})
 (map-set token-name {id: u49} {name: "enhanced_shoes_3", type: "shoes", values: {dmg: u5, health: u0, defense: u22}})
 
+
 ;; Level-up
 
 (define-map level-up-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
@@ -295,34 +267,22 @@
 (define-public (level-up (id-new uint))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-level-up-resources id-new)))) err-not-some)
-    (let ((level-up-resources (unwrap-panic (get-level-up-resources id-new)))
+    (let  ((level-up-resources (unwrap-panic (get-level-up-resources id-new)))
           (verified-ownership (fold and (map is-owned-needed (unwrap-panic level-up-resources)) true)))
-            (asserts! (is-some level-up-resources) err-not-some)
-            (asserts! verified-ownership err-insufficient-balance)
-              (some (map burn-wrapper (unwrap-panic level-up-resources)))
-              (mint id-new u1 tx-sender)
-      )
-  )
-)
+      (asserts! (is-some level-up-resources) err-not-some)
+      (asserts! verified-ownership err-insufficient-balance)
+      (some (map burn-wrapper (unwrap-panic level-up-resources)))
+      (mint id-new u1 tx-sender))))
 
+(define-read-only (get-level-up-resources (token-id uint))
+  (let ((token-urr (map-get? level-up-system {id: token-id})))
+    (ok token-urr)))
 
 (define-public (set-level-up-resources (token-id uint) (resource-needed (list 100 {resource-id: uint, resource-qty: uint})))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
-    (ok (map-set level-up-system {id: token-id} resource-needed))     
-  )
-)
+    (ok (map-set level-up-system {id: token-id} resource-needed))))
 
-(define-read-only (get-level-up-resources (token-id uint))
-    (let ((token-urr (map-get? level-up-system {id: token-id})))
-      (ok token-urr)
-    )
-)
-
-
-(define-private (is-owned-needed  (item {resource-id: uint, resource-qty: uint}))
-  (>= (get-balance-uint (get resource-id item) tx-sender) (get resource-qty item))
-)
 
 (map-set level-up-system {id: u6} (list {resource-id: u3, resource-qty: u6} {resource-id: u5, resource-qty: u1} {resource-id: u2, resource-qty: u2}))
 (map-set level-up-system {id: u7} (list {resource-id: u3, resource-qty: u10} {resource-id: u6, resource-qty: u1} {resource-id: u2, resource-qty: u3}))
@@ -355,6 +315,7 @@
 (map-set level-up-system {id: u48} (list {resource-id: u3, resource-qty: u3} {resource-id: u4, resource-qty: u3} {resource-id: u47, resource-qty: u1} {resource-id: u2, resource-qty: u6}))
 (map-set level-up-system {id: u49} (list {resource-id: u3, resource-qty: u5} {resource-id: u4, resource-qty: u5} {resource-id: u48, resource-qty: u1} {resource-id: u2, resource-qty: u7}))
 
+
 ;; Crafting
 
 (define-map crafting-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
@@ -362,28 +323,22 @@
 (define-public (craft-item (id-new uint))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-crafting-resources id-new)))) err-not-some)
-    (let ((crafting-resources (unwrap-panic (get-crafting-resources id-new)))
+    (let  ((crafting-resources (unwrap-panic (get-crafting-resources id-new)))
           (verified-ownership (fold and (map is-owned-needed (unwrap-panic crafting-resources)) true)))
-            (asserts! (is-some crafting-resources) err-not-some)
-            (asserts! verified-ownership err-insufficient-balance)
-              (some (map burn-wrapper (unwrap-panic crafting-resources)))
-              (mint id-new u1 tx-sender)
-    )
-  )
-)
+      (asserts! (is-some crafting-resources) err-not-some)
+      (asserts! verified-ownership err-insufficient-balance)
+      (some (map burn-wrapper (unwrap-panic crafting-resources)))
+      (mint id-new u1 tx-sender))))
+
+(define-read-only (get-crafting-resources (token-id uint))
+  (let ((token-urr (map-get? crafting-system {id: token-id})))
+    (ok token-urr)))
 
 (define-public (set-crafting-resources (token-id uint) (resource-needed (list 100 {resource-id: uint, resource-qty: uint})))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
-    (ok (map-set crafting-system {id: token-id} resource-needed))     
-  )
-)
+    (ok (map-set crafting-system {id: token-id} resource-needed))))
 
-(define-read-only (get-crafting-resources (token-id uint))
-    (let ((token-urr (map-get? crafting-system {id: token-id})))
-      (ok token-urr)
-    )
-)
 
 (map-set crafting-system {id: u5} (list {resource-id: u3, resource-qty: u4}))
 (map-set crafting-system {id: u8} (list {resource-id: u4, resource-qty: u4}))
@@ -401,6 +356,7 @@
 (map-set crafting-system {id: u44} (list {resource-id: u4, resource-qty: u1}))
 (map-set crafting-system {id: u47} (list {resource-id: u43, resource-qty: u1} {resource-id: u46, resource-qty: u1} {resource-id: u2, resource-qty: u5}))
 
+
 ;; Acquisition
 
 (define-map acquisition-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
@@ -408,29 +364,22 @@
 (define-public (buy-item (id-new uint))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-acquisition-resources id-new)))) err-not-some)
-    (let ((acquisition-resources (unwrap-panic (get-acquisition-resources id-new)))
+    (let  ((acquisition-resources (unwrap-panic (get-acquisition-resources id-new)))
           (verified-ownership (fold and (map is-owned-needed (unwrap-panic acquisition-resources)) true)))
-            (asserts! (is-some acquisition-resources) err-not-some)
-            (asserts! verified-ownership err-insufficient-balance)
-              (some (map burn-wrapper (unwrap-panic acquisition-resources)))
-              (mint id-new u1 tx-sender) 
-      )
-  )
-)
+      (asserts! (is-some acquisition-resources) err-not-some)
+      (asserts! verified-ownership err-insufficient-balance)
+      (some (map burn-wrapper (unwrap-panic acquisition-resources)))
+      (mint id-new u1 tx-sender))))
 
+(define-read-only (get-acquisition-resources (token-id uint))
+  (let ((token-urr (map-get? acquisition-system {id: token-id})))
+    (ok token-urr)))
 
 (define-public (set-acquisition-resources (token-id uint) (resource-needed (list 100 {resource-id: uint, resource-qty: uint})))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
-    (ok (map-set acquisition-system {id: token-id} resource-needed))     
-  )
-)
+    (ok (map-set acquisition-system {id: token-id} resource-needed))))
 
-(define-read-only (get-acquisition-resources (token-id uint))
-    (let ((token-urr (map-get? acquisition-system {id: token-id})))
-      (ok token-urr)
-    )
-)
 
 (map-set acquisition-system {id: u5} (list {resource-id: u1, resource-qty: u15}))
 (map-set acquisition-system {id: u6} (list {resource-id: u1, resource-qty: u40} {resource-id: u3, resource-qty: u7}))
@@ -450,6 +399,7 @@
 (map-set acquisition-system {id: u43} (list {resource-id: u1, resource-qty: u120} {resource-id: u3, resource-qty: u5}))
 (map-set acquisition-system {id: u45} (list {resource-id: u1, resource-qty: u1} {resource-id: u4, resource-qty: u10}))
 
+
 ;; Fighting 
 ;; Fight Needed Resources
 
@@ -458,28 +408,21 @@
 (define-public (start-fight (fight-number uint)) 
   (begin
     (asserts! (not (is-none (unwrap-panic (get-fight-needed-resources fight-number)))) err-not-some)
-    (let ((fight-resources-needed (unwrap-panic (get-fight-needed-resources fight-number)))
+    (let  ((fight-resources-needed (unwrap-panic (get-fight-needed-resources fight-number)))
           (verified-ownership (fold and (map is-owned-needed (unwrap-panic fight-resources-needed)) true))) 
-            (asserts! (is-some fight-resources-needed) err-not-some)
-            (asserts! verified-ownership err-insufficient-balance)
-              (some (map burn-wrapper (unwrap-panic fight-resources-needed)))
-              (ok true)
-      )
-  )
-)
+      (asserts! (is-some fight-resources-needed) err-not-some)
+      (asserts! verified-ownership err-insufficient-balance)
+      (some (map burn-wrapper (unwrap-panic fight-resources-needed)))
+      (ok true))))
+
+(define-read-only (get-fight-needed-resources (fight-number uint))
+  (let ((token-urr (map-get? fight-needed-resources {fight-number: fight-number})))
+    (ok token-urr)))
 
 (define-public (set-fight-needed-resources (fight-number uint) (resource-needed (list 100 {resource-id: uint, resource-qty: uint})))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
-    (ok (map-set fight-needed-resources {fight-number: fight-number} resource-needed))     
-  )
-)
-
-(define-read-only (get-fight-needed-resources (fight-number uint))
-    (let ((token-urr (map-get? fight-needed-resources {fight-number: fight-number})))
-      (ok token-urr)
-    )
-)
+    (ok (map-set fight-needed-resources {fight-number: fight-number} resource-needed))))
 
 (map-set fight-needed-resources {fight-number: u1} (list {resource-id: u2, resource-qty: u10}))
 (map-set fight-needed-resources {fight-number: u2} (list {resource-id: u2, resource-qty: u12}))
@@ -496,29 +439,22 @@
 
 (define-map fight-reward-system { fight-number: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
+(define-read-only (get-fight-rewards (fight-number uint))
+  (let ((token-urr (map-get? fight-reward-system {fight-number: fight-number})))
+    (ok token-urr)))
+
 (define-public (set-fight-rewards (fight-number uint) (resource-rewarded (list 100 {resource-id: uint, resource-qty: uint})))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
-    (ok (map-set fight-reward-system {fight-number: fight-number} resource-rewarded))     
-  )
-)
-
-(define-read-only (get-fight-rewards (fight-number uint))
-    (let ((token-urr (map-get? fight-reward-system {fight-number: fight-number})))
-      (ok token-urr)
-    )
-)
+    (ok (map-set fight-reward-system {fight-number: fight-number} resource-rewarded))))
 
 (define-public (reward-fighting (fight-number uint) (user principal))
   (begin
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)
     (asserts! (not (is-none (unwrap-panic (get-fight-rewards fight-number)))) err-not-some)
-    (let ((fighting-rewards (unwrap-panic (get-fight-rewards fight-number)))) 
-            (asserts! (is-some fighting-rewards) err-not-some)
-            (ok (fold mint-rewards (unwrap-panic fighting-rewards) user))    
-    )
-  )
-)
+    (let  ((fighting-rewards (unwrap-panic (get-fight-rewards fight-number)))) 
+      (asserts! (is-some fighting-rewards) err-not-some)
+      (ok (fold mint-rewards (unwrap-panic fighting-rewards) user)))))
 
 (map-set fight-reward-system {fight-number: u1} (list {resource-id: u1, resource-qty: u100}))
 (map-set fight-reward-system {fight-number: u2} (list {resource-id: u1, resource-qty: u120}))
@@ -531,7 +467,7 @@
 (map-set fight-reward-system {fight-number: u9} (list {resource-id: u1, resource-qty: u500}))
 (map-set fight-reward-system {fight-number: u10} (list {resource-id: u1, resource-qty: u700} {resource-id: u13, resource-qty: u1}))
 
-;; Sleeping reward center
+;; Sleeping Rewards center
 
 (define-map sleeping-reward-system {sleeping-time: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
@@ -539,25 +475,18 @@
   (begin
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)
     (asserts! (not (is-none (unwrap-panic (get-sleeping-rewards sleeping-time)))) err-not-some)
-    (let ((sleeping-rewards (unwrap-panic (get-sleeping-rewards sleeping-time)))) 
-            (asserts! (is-some sleeping-rewards) err-not-some)
-            (ok (fold mint-rewards (unwrap-panic sleeping-rewards) user))
-    )
-  )
-)
+    (let  ((sleeping-rewards (unwrap-panic (get-sleeping-rewards sleeping-time)))) 
+      (asserts! (is-some sleeping-rewards) err-not-some)
+      (ok (fold mint-rewards (unwrap-panic sleeping-rewards) user)))))
+
+(define-read-only (get-sleeping-rewards (sleeping-time uint))
+  (let ((token-urr (map-get? sleeping-reward-system {sleeping-time: sleeping-time})))
+    (ok token-urr)))
 
 (define-public (set-sleeping-rewards (sleeping-time uint) (resource-achieved (list 100 {resource-id: uint, resource-qty: uint})))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)
-    (ok (map-set sleeping-reward-system {sleeping-time: sleeping-time} resource-achieved))
-  )
-)
-
-(define-read-only (get-sleeping-rewards (sleeping-time uint))
-    (let ((token-urr (map-get? sleeping-reward-system {sleeping-time: sleeping-time})))
-      (ok token-urr)
-    )
-)
+    (ok (map-set sleeping-reward-system {sleeping-time: sleeping-time} resource-achieved))))
 
 (map-set sleeping-reward-system {sleeping-time: u5} (list {resource-id: u2, resource-qty: u5}))
 (map-set sleeping-reward-system {sleeping-time: u10} (list {resource-id: u2, resource-qty: u15}))

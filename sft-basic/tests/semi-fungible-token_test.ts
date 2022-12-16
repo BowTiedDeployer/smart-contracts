@@ -1,7 +1,7 @@
 import { Clarinet, Tx, Chain, Account, types } from 'https://deno.land/x/clarinet@v1.0.3/index.ts';
 import { assertEquals } from 'https://deno.land/std@0.90.0/testing/asserts.ts';
-const errorInsufficientBalance = 1;
-const errorInvalidSender = 4;
+const errorInsufficientBalance = 101;
+const errorInvalidSender = 102;
 const contractName = 'semi-fungible-token';
 const transferFn = 'transfer';
 const craftingFn = 'craft-item';

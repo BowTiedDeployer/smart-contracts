@@ -12,20 +12,28 @@ plan:
             contract-name: sip013-transfer-many-trait
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 4000
-            path: contracts/sip013-transfer-many-trait.clar
+            path: "contracts\\sip013-transfer-many-trait.clar"
+            anchor-block-only: true
+            clarity-version: 1
+        - contract-publish:
+            contract-name: new-collection
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 1390
+            path: "contracts\\new-collection.clar"
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
             contract-name: sip013-semi-fungible-token-trait
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 9610
-            path: contracts/sip013-semi-fungible-token-trait.clar
+            path: "contracts\\sip013-semi-fungible-token-trait.clar"
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
             contract-name: semi-fungible-token
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 160130
-            path: contracts/semi-fungible-token.clar
+            cost: 287960
+            path: "contracts\\semi-fungible-token.clar"
             anchor-block-only: true
             clarity-version: 1
+      epoch: "2.0"
