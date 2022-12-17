@@ -766,6 +766,24 @@ Clarinet.test({
     assertEquals(block.height, 2);
     block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
+    // mint
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mint,
+        [
+          types.uint(woodenArmor1),
+          types.uint(1),
+          types.principal(admin.address),
+        ],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 3);
+    block.receipts[0].result.expectOk().expectBool(true);
+
     // transfer memo
 
     block = chain.mineBlock([
@@ -773,7 +791,7 @@ Clarinet.test({
         contractName,
         transferMemoFn,
         [
-          types.uint(1),
+          types.uint(woodenArmor1),
           types.uint(1),
           types.principal(admin.address),
           types.principal(user3.address),
@@ -783,8 +801,8 @@ Clarinet.test({
       ),
     ]);
     assertEquals(block.receipts.length, 1);
-    assertEquals(block.height, 3);
-    block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
+    assertEquals(block.height, 4);
+    block.receipts[0].result.expectOk().expectBool(true);
 
     // transfer many memo
 
@@ -807,7 +825,7 @@ Clarinet.test({
       ),
     ]);
     assertEquals(block.receipts.length, 1);
-    assertEquals(block.height, 4);
+    assertEquals(block.height, 5);
     block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
 
     // transfer wrapper
@@ -826,7 +844,7 @@ Clarinet.test({
       ),
     ]);
     assertEquals(block.receipts.length, 1);
-    assertEquals(block.height, 5);
+    assertEquals(block.height, 6);
     block.receipts[0].result.expectErr().expectUint(errorInsufficientBalance);
   },
 });
