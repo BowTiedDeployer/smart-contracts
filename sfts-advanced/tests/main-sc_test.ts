@@ -9088,7 +9088,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Gameplay Scenario Case",
+  name: "Main-SC: Gameplay Scenario Case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
     const user1 = accounts.get("wallet_1")!;
@@ -9940,7 +9940,7 @@ Clarinet.test({
     assertEquals(block.height, 29);
     block.receipts[0].result.expectOk().expectPrincipal(user1.address);
 
-    // after mining 
+    // after mining
 
     balanceRubyUser1 = chain.callReadOnlyFn(
       contractName,
@@ -10011,7 +10011,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Mint case",
+  name: "Main-SC: Mint case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
     const user1 = accounts.get("wallet_1")!;
@@ -10072,7 +10072,7 @@ Clarinet.test({
     block = chain.mineBlock([
       Tx.contractCall(
         contractName,
-        mintWrapper,
+        mintWrapperUser,
         [types.uint(58), types.uint(1), types.principal(user1.address)],
         admin.address
       ),
@@ -10080,25 +10080,11 @@ Clarinet.test({
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 5);
     block.receipts[0].result.expectErr().expectUint(errInexistentItem);
-
-    // mint wrapper admin inexistent
-
-    // block = chain.mineBlock([
-    //   Tx.contractCall(
-    //     contractName,
-    //     mintAdmin,
-    //     [types.uint(58), types.uint(1), types.principal(user1.address)],
-    //     admin.address
-    //   ),
-    // ]);
-    // assertEquals(block.receipts.length, 1);
-    // assertEquals(block.height, 5);
-    // block.receipts[0].result.expectErr().expectUint(errInexistentItem);
   },
 });
 
 Clarinet.test({
-  name: "Transfer case",
+  name: "Main-SC: Transfer case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
     const user1 = accounts.get("wallet_1")!;
@@ -10205,7 +10191,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Burn case",
+  name: "Main-SC: Burn case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
     const user1 = accounts.get("wallet_1")!;
@@ -10237,7 +10223,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Set - Get case",
+  name: "Main-SC: Set - Get case",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const admin = accounts.get("deployer")!;
     const user1 = accounts.get("wallet_1")!;
