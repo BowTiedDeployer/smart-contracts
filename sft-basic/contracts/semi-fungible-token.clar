@@ -323,7 +323,7 @@
 (define-public (craft-item (id-new uint))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-crafting-resources id-new)))) err-not-some)
-    (let  ((crafting-resources (unwrap-panic (get-crafting-resources id-new)))
+    (let ((crafting-resources (unwrap-panic (get-crafting-resources id-new)))
           (verified-ownership (fold and (map is-owned-needed (unwrap-panic crafting-resources)) true)))
       (asserts! (is-some crafting-resources) err-not-some)
       (asserts! verified-ownership err-insufficient-balance)
@@ -364,7 +364,7 @@
 (define-public (buy-item (id-new uint))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-acquisition-resources id-new)))) err-not-some)
-    (let  ((acquisition-resources (unwrap-panic (get-acquisition-resources id-new)))
+    (let ((acquisition-resources (unwrap-panic (get-acquisition-resources id-new)))
           (verified-ownership (fold and (map is-owned-needed (unwrap-panic acquisition-resources)) true)))
       (asserts! (is-some acquisition-resources) err-not-some)
       (asserts! verified-ownership err-insufficient-balance)

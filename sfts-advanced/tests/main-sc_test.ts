@@ -9929,7 +9929,7 @@ Clarinet.test({
         rewardMining,
         [
           types.uint(rubyPickaxe),
-          types.uint(10),
+          types.uint(20),
           types.principal(user1.address),
         ],
         admin.address
@@ -9940,7 +9940,7 @@ Clarinet.test({
     assertEquals(block.height, 29);
     block.receipts[0].result.expectOk().expectPrincipal(user1.address);
 
-    // after mining he should have 5 iron, 1 gold bar
+    // after mining 
 
     balanceRubyUser1 = chain.callReadOnlyFn(
       contractName,
@@ -9955,8 +9955,8 @@ Clarinet.test({
       user1.address
     );
 
-    balanceGoldBarUser1.result.expectOk().expectUint(7); // 5 + 2 gold bar
-    balanceRubyUser1.result.expectOk().expectUint(4); // 3 + 1 ruby
+    balanceGoldBarUser1.result.expectOk().expectUint(9); // 5 + 4 gold bar
+    balanceRubyUser1.result.expectOk().expectUint(6); // 3 + 3 ruby
 
     // user1 harvests
 
@@ -9989,7 +9989,7 @@ Clarinet.test({
     block = chain.mineBlock([
       Tx.contractCall(
         contractName,
-        acquisitionFn,
+        craftingFn,
         [types.uint(rubyPickaxe), types.principal(user1.address)],
         user1.address
       ),
