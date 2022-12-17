@@ -6,8 +6,12 @@ import {
   types,
 } from "https://deno.land/x/clarinet@v1.0.3/index.ts";
 import { assertEquals } from "https://deno.land/std@0.90.0/testing/asserts.ts";
+const errOwnerOnly = 100;
 const errorInsufficientBalance = 101;
 const errorInvalidSender = 102;
+const errNotSome = 103;
+const errInvalidDestinationContract = 104;
+const errInexistentItem = 105;
 const contractName = "main-sc";
 const transferFn = "transfer-wrapper";
 const craftingFn = "craft-item";
@@ -20,11 +24,22 @@ const getAcquisitionResources = "get-acquisition-resources";
 const mintWrapper = "mint-wrapper";
 const mintWrapperUser = "mint-wrapper-user";
 const mintAdmin = "mint-wrapper-admin";
+const burnWrapper = "burn-wrapper";
 const startFight = "start-fight";
 const rewardFighting = "reward-fighting";
 const rewardSleeping = "reward-sleeping";
 const rewardMining = "reward-mining";
 const rewardHarvesting = "reward-harvesting";
+const isOwnedNeededWrapper = "is-owned-needed-wrapper";
+const transferWrapper = "transfer-wrapper";
+const setLvlUp = "set-level-up-resources";
+const setCrafting = "set-crafting-resources";
+const setAcquisition = "set-acquisition-resources";
+const setFightResources = "set-fight-needed-resources";
+const setFightRewards = "set-fight-rewards";
+const setSleepingRewards = "set-sleeping-rewards";
+const setMiningRewards = "set-mining-rewards";
+const setHarvestingRewards = "set-harvesting-rewards";
 const fight1 = "1";
 const fight2 = "2";
 const fight3 = "3";
@@ -9122,6 +9137,17 @@ Clarinet.test({
     balanceGoldUser1.result.expectOk().expectUint(15);
     balanceEnergyUser1.result.expectOk().expectUint(100);
 
+    // Try to get balance for inexistent item
+
+    let balanceInexistent = chain.callReadOnlyFn(
+      contractName,
+      getBalance,
+      [types.uint(58), types.principal(user1.address)],
+      user1.address
+    );
+
+    balanceInexistent.result.expectErr().expectUint(errInexistentItem);
+
     // User1 buys wood and crafts woodenSword1
 
     block = chain.mineBlock([
@@ -9981,5 +10007,440 @@ Clarinet.test({
     );
 
     balanceRubyPickAxeUser1.result.expectOk().expectUint(2);
+  },
+});
+
+Clarinet.test({
+  name: "Mint case",
+  async fn(chain: Chain, accounts: Map<string, Account>) {
+    const admin = accounts.get("deployer")!;
+    const user1 = accounts.get("wallet_1")!;
+    const user2 = accounts.get("wallet_2")!;
+    const user3 = accounts.get("wallet_3")!;
+    const user4 = accounts.get("wallet_4")!;
+    const user5 = accounts.get("wallet_5")!;
+    const user6 = accounts.get("wallet_6")!;
+
+    // mint item
+
+    let block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mintWrapper,
+        [
+          types.uint(woodenSword1),
+          types.uint(1),
+          types.principal(user1.address),
+        ],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 2);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // mint collection-1
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mintWrapper,
+        [types.uint(ruby), types.uint(1), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 3);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    // mint inexistent
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mintWrapper,
+        [types.uint(58), types.uint(1), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 4);
+    block.receipts[0].result.expectErr().expectUint(errInexistentItem);
+
+    // mint wrapper user inexistent
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mintWrapper,
+        [types.uint(58), types.uint(1), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 5);
+    block.receipts[0].result.expectErr().expectUint(errInexistentItem);
+
+    // mint wrapper admin inexistent
+
+    // block = chain.mineBlock([
+    //   Tx.contractCall(
+    //     contractName,
+    //     mintAdmin,
+    //     [types.uint(58), types.uint(1), types.principal(user1.address)],
+    //     admin.address
+    //   ),
+    // ]);
+    // assertEquals(block.receipts.length, 1);
+    // assertEquals(block.height, 5);
+    // block.receipts[0].result.expectErr().expectUint(errInexistentItem);
+  },
+});
+
+Clarinet.test({
+  name: "Transfer case",
+  async fn(chain: Chain, accounts: Map<string, Account>) {
+    const admin = accounts.get("deployer")!;
+    const user1 = accounts.get("wallet_1")!;
+    const user2 = accounts.get("wallet_2")!;
+    const user3 = accounts.get("wallet_3")!;
+    const user4 = accounts.get("wallet_4")!;
+    const user5 = accounts.get("wallet_5")!;
+    const user6 = accounts.get("wallet_6")!;
+
+    // mint
+
+    let block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mintWrapper,
+        [types.uint(gold), types.uint(10), types.principal(user1.address)],
+        admin.address
+      ),
+      Tx.contractCall(
+        contractName,
+        mintWrapper,
+        [
+          types.uint(woodenSword1),
+          types.uint(10),
+          types.principal(user1.address),
+        ],
+        admin.address
+      ),
+      Tx.contractCall(
+        contractName,
+        mintWrapper,
+        [types.uint(ruby), types.uint(10), types.principal(user1.address)],
+        admin.address
+      ),
+      Tx.contractCall(
+        contractName,
+        mintWrapper,
+        [types.uint(58), types.uint(10), types.principal(user1.address)],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 4);
+    assertEquals(block.height, 2);
+    block.receipts[0].result.expectOk().expectBool(true);
+    block.receipts[1].result.expectOk().expectBool(true);
+    block.receipts[2].result.expectOk().expectBool(true);
+    block.receipts[3].result.expectErr().expectUint(errInexistentItem);
+
+    // 4 transfers
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        transferWrapper,
+        [
+          types.uint(gold),
+          types.uint(10),
+          types.principal(user1.address),
+          types.principal(user2.address),
+        ],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        transferWrapper,
+        [
+          types.uint(woodenSword1),
+          types.uint(10),
+          types.principal(user1.address),
+          types.principal(user3.address),
+        ],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        transferWrapper,
+        [
+          types.uint(ruby),
+          types.uint(10),
+          types.principal(user1.address),
+          types.principal(user4.address),
+        ],
+        user1.address
+      ),
+      Tx.contractCall(
+        contractName,
+        transferWrapper,
+        [
+          types.uint(58),
+          types.uint(10),
+          types.principal(user1.address),
+          types.principal(user5.address),
+        ],
+        user1.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 4);
+    assertEquals(block.height, 3);
+    block.receipts[0].result.expectOk().expectBool(true);
+    block.receipts[1].result.expectOk().expectBool(true);
+    block.receipts[2].result.expectOk().expectBool(true);
+    block.receipts[3].result.expectErr().expectUint(errInexistentItem);
+  },
+});
+
+Clarinet.test({
+  name: "Burn case",
+  async fn(chain: Chain, accounts: Map<string, Account>) {
+    const admin = accounts.get("deployer")!;
+    const user1 = accounts.get("wallet_1")!;
+    const user2 = accounts.get("wallet_2")!;
+    const user3 = accounts.get("wallet_3")!;
+    const user4 = accounts.get("wallet_4")!;
+    const user5 = accounts.get("wallet_5")!;
+    const user6 = accounts.get("wallet_6")!;
+
+    // burn inexistent tuple
+
+    let block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        burnWrapper,
+        [
+          types.tuple({
+            "resource-id": types.uint(58),
+            "resource-qty": types.uint(1),
+          }),
+        ],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 2);
+    block.receipts[0].result.expectErr().expectUint(errInexistentItem);
+  },
+});
+
+Clarinet.test({
+  name: "Set - Get case",
+  async fn(chain: Chain, accounts: Map<string, Account>) {
+    const admin = accounts.get("deployer")!;
+    const user1 = accounts.get("wallet_1")!;
+    const user2 = accounts.get("wallet_2")!;
+    const user3 = accounts.get("wallet_3")!;
+    const user4 = accounts.get("wallet_4")!;
+    const user5 = accounts.get("wallet_5")!;
+    const user6 = accounts.get("wallet_6")!;
+
+    // mint item
+
+    let block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        setLvlUp,
+        [
+          types.uint(woodenSword1),
+          types.list([
+            types.tuple({
+              "resource-id": types.uint(2),
+              "resource-qty": types.uint(4),
+            }),
+            types.tuple({
+              "resource-id": types.uint(4),
+              "resource-qty": types.uint(5),
+            }),
+          ]),
+        ],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 2);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        setCrafting,
+        [
+          types.uint(woodenSword1),
+          types.list([
+            types.tuple({
+              "resource-id": types.uint(2),
+              "resource-qty": types.uint(4),
+            }),
+            types.tuple({
+              "resource-id": types.uint(4),
+              "resource-qty": types.uint(5),
+            }),
+          ]),
+        ],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 3);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        setAcquisition,
+        [
+          types.uint(woodenSword1),
+          types.list([
+            types.tuple({
+              "resource-id": types.uint(2),
+              "resource-qty": types.uint(4),
+            }),
+            types.tuple({
+              "resource-id": types.uint(4),
+              "resource-qty": types.uint(5),
+            }),
+          ]),
+        ],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 4);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        setFightResources,
+        [
+          types.uint(woodenSword1),
+          types.list([
+            types.tuple({
+              "resource-id": types.uint(2),
+              "resource-qty": types.uint(4),
+            }),
+            types.tuple({
+              "resource-id": types.uint(4),
+              "resource-qty": types.uint(5),
+            }),
+          ]),
+        ],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 5);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        setFightRewards,
+        [
+          types.uint(woodenSword1),
+          types.list([
+            types.tuple({
+              "resource-id": types.uint(2),
+              "resource-qty": types.uint(4),
+            }),
+            types.tuple({
+              "resource-id": types.uint(4),
+              "resource-qty": types.uint(5),
+            }),
+          ]),
+        ],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 6);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        setSleepingRewards,
+        [
+          types.uint(woodenSword1),
+          types.list([
+            types.tuple({
+              "resource-id": types.uint(2),
+              "resource-qty": types.uint(4),
+            }),
+            types.tuple({
+              "resource-id": types.uint(4),
+              "resource-qty": types.uint(5),
+            }),
+          ]),
+        ],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 7);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        setMiningRewards,
+        [
+          types.uint(woodenSword1),
+          types.uint(25),
+          types.list([
+            types.tuple({
+              "resource-id": types.uint(2),
+              "resource-qty": types.uint(4),
+            }),
+            types.tuple({
+              "resource-id": types.uint(4),
+              "resource-qty": types.uint(5),
+            }),
+          ]),
+        ],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 8);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        setHarvestingRewards,
+        [
+          types.uint(woodenSword1),
+          types.uint(25),
+          types.list([
+            types.tuple({
+              "resource-id": types.uint(2),
+              "resource-qty": types.uint(4),
+            }),
+            types.tuple({
+              "resource-id": types.uint(4),
+              "resource-qty": types.uint(5),
+            }),
+          ]),
+        ],
+        admin.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 9);
+    block.receipts[0].result.expectOk().expectBool(true);
   },
 });
