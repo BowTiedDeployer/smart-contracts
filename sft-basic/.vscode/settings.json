@@ -1,5 +1,5 @@
-
 {
-    "deno.enable": true,
-    "files.eol": "\n"
+  "deno.enable": true,
+  "files.eol": "\n",
+  "liveServer.settings.port": 5501
 }

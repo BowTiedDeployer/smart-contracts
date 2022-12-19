@@ -10233,8 +10233,6 @@ Clarinet.test({
     const user5 = accounts.get("wallet_5")!;
     const user6 = accounts.get("wallet_6")!;
 
-    // mint item
-
     let block = chain.mineBlock([
       Tx.contractCall(
         contractName,
