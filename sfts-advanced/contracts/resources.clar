@@ -51,8 +51,7 @@
 
 (define-public (mint-user (token-id uint) (amount uint) (recipient principal))
   (begin
-  (print tx-sender)
-  (asserts! (is-eq tx-sender (var-get contract-admin)) err-admin-only)
+    (asserts! (is-eq tx-sender (var-get contract-admin)) err-admin-only)
     (asserts! (< token-id u5) err-invalid-destination-contract)
     (try! (ft-mint? semi-fungible-token amount recipient))
     (try! (tag-nft-token-id {token-id: token-id, owner: recipient}))
