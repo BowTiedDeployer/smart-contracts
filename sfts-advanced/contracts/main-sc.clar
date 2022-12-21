@@ -10,6 +10,7 @@
 (define-constant err-not-some (err u103))
 (define-constant err-invalid-destination-contract (err u104))
 (define-constant err-inexistent-item (err u105))
+(define-constant err-already-claimed (err u106))
 
 ;; Transfer
 
@@ -49,11 +50,11 @@
 
 (define-private (mint-wrapper-user (token-id uint) (amount uint) (recipient principal)) 
   (if (< token-id u5) 
-    (contract-call? .resources mint-user token-id amount recipient) 
+    (as-contract (contract-call? .resources mint-user token-id amount recipient))
     (if (< token-id u50) 
-      (contract-call? .items mint-user token-id amount recipient) 
+      (as-contract (contract-call? .items mint-user token-id amount recipient))
       (if (< token-id u58) 
-        (contract-call? .collection-1 mint-user token-id amount recipient)
+        (as-contract (contract-call? .collection-1 mint-user token-id amount recipient))
         err-inexistent-item))))
 
 (define-private (mint-wrapper-admin (token-id uint) (amount uint) (recipient principal))
@@ -96,6 +97,20 @@
           (contract-call? .collection-1 is-owned-needed item) 
           err-inexistent-item)))))
 
+;; Starter kit
+
+(define-map starter-kit-system { user: principal } { claimed: bool })
+
+(define-read-only (get-starter-kit-status (user principal))
+  (let ((claimed (map-get? starter-kit-system {user: user})))
+    (ok claimed)))
+
+(define-public (claim-starter-kit)
+  (begin 
+    (asserts! (is-none (map-get? starter-kit-system {user: tx-sender})) err-already-claimed)
+    (some (mint-wrapper-user u1 u15 tx-sender))
+    (some (mint-wrapper-user u2 u100 tx-sender))
+    (ok (map-set starter-kit-system {user: tx-sender} {claimed: true}))))
 
 ;; Level-up
 

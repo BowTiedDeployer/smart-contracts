@@ -7,13 +7,22 @@
 (define-map token-balances {token-id: uint, owner: principal} uint)
 (define-map token-supplies uint uint)
 (define-constant contract-owner tx-sender)
-
+(define-data-var contract-admin principal .main-sc)
 
 (define-constant err-owner-only (err u100))
 (define-constant err-insufficient-balance (err u101))
 (define-constant err-invalid-sender (err u102))
 (define-constant err-not-some (err u103))
 (define-constant err-invalid-destination-contract (err u104))
+(define-constant err-admin-only (err u105))
+
+(define-read-only (get-contract-admin) 
+  (var-get contract-admin))
+
+(define-public (set-contract-admin (new-contract-admin principal)) 
+  (begin
+    (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+    (ok (var-set contract-admin new-contract-admin))))
 
 ;; Ownership
 
@@ -42,6 +51,7 @@
 
 (define-public (mint-user (token-id uint) (amount uint) (recipient principal))
   (begin
+    (asserts! (is-eq tx-sender (var-get contract-admin)) err-admin-only)
     (asserts! (< token-id u50) err-invalid-destination-contract)
     (try! (ft-mint? semi-fungible-token amount recipient))
     (try! (tag-nft-token-id {token-id: token-id, owner: recipient}))
