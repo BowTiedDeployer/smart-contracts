@@ -47,7 +47,7 @@
         err-inexistent-item))))
 
 
-(define-public (mint-wrapper-user (token-id uint) (amount uint) (recipient principal)) 
+(define-private (mint-wrapper-user (token-id uint) (amount uint) (recipient principal)) 
   (if (< token-id u5) 
     (contract-call? .resources mint-user token-id amount recipient) 
     (if (< token-id u50) 
@@ -101,7 +101,7 @@
 
 (define-map level-up-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
-(define-public (level-up (id-new uint) (recipient principal))
+(define-public (level-up (id-new uint))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-level-up-resources id-new)))) err-not-some)
     (let  ((level-up-resources (unwrap-panic (get-level-up-resources id-new)))
@@ -109,7 +109,7 @@
       (asserts! (is-some level-up-resources) err-not-some)
       (asserts! verified-ownership err-insufficient-balance)
       (some (map  burn-wrapper (unwrap-panic level-up-resources)))
-      (mint-wrapper-user id-new u1 recipient))))
+      (mint-wrapper-user id-new u1 tx-sender))))
 
 (define-read-only (get-level-up-resources (token-id uint))
   (let ((token-urr (map-get? level-up-system {id: token-id})))
@@ -156,7 +156,7 @@
 
 (define-map crafting-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
-(define-public (craft-item (id-new uint) (recipient principal))
+(define-public (craft-item (id-new uint))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-crafting-resources id-new)))) err-not-some)
     (let  ((crafting-resources (unwrap-panic (get-crafting-resources id-new)))
@@ -164,7 +164,7 @@
       (asserts! (is-some crafting-resources) err-not-some)
       (asserts! verified-ownership err-insufficient-balance)
       (some (map burn-wrapper (unwrap-panic crafting-resources)))
-      (mint-wrapper-user id-new u1 recipient))))
+      (mint-wrapper-user id-new u1 tx-sender))))
 
 (define-read-only (get-crafting-resources (token-id uint))
   (let ((token-urr (map-get? crafting-system {id: token-id})))
@@ -203,7 +203,7 @@
 
 (define-map acquisition-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
-(define-public (buy-item (id-new uint) (recipient principal))
+(define-public (buy-item (id-new uint))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-acquisition-resources id-new)))) err-not-some)
     (let  ((acquisition-resources (unwrap-panic (get-acquisition-resources id-new)))
@@ -211,7 +211,7 @@
       (asserts! (is-some acquisition-resources) err-not-some)
       (asserts! verified-ownership err-insufficient-balance)
       (some (map burn-wrapper (unwrap-panic acquisition-resources)))
-      (mint-wrapper-user id-new u1 recipient))))
+      (mint-wrapper-user id-new u1 tx-sender))))
 
 (define-read-only (get-acquisition-resources (token-id uint))
     (let ((token-urr (map-get? acquisition-system {id: token-id})))

@@ -37,6 +37,15 @@
     (some (mint token-id amount recipient))
     recipient))
 
+(define-private (mint-user (token-id uint) (amount uint) (recipient principal))
+  (begin
+    (try! (ft-mint? semi-fungible-token amount recipient))
+    (try! (tag-nft-token-id {token-id: token-id, owner: recipient}))
+    (set-balance token-id (+ (get-balance-uint token-id recipient) amount) recipient)
+    (map-set token-supplies token-id (+  (unwrap-panic (get-total-supply token-id)) amount))
+    (print {type: "sft_mint", token-id: token-id, amount: amount, recipient: recipient})
+    (ok true)))
+
 (define-private (mint-rewards (reward-tuple {resource-id: uint, resource-qty: uint}) (user principal)) 
   (mint-wrapper-admin (get resource-id reward-tuple) (get resource-qty reward-tuple) user))
 
@@ -272,7 +281,7 @@
       (asserts! (is-some level-up-resources) err-not-some)
       (asserts! verified-ownership err-insufficient-balance)
       (some (map burn-wrapper (unwrap-panic level-up-resources)))
-      (mint id-new u1 tx-sender))))
+      (mint-user id-new u1 tx-sender))))
 
 (define-read-only (get-level-up-resources (token-id uint))
   (let ((token-urr (map-get? level-up-system {id: token-id})))
@@ -328,7 +337,7 @@
       (asserts! (is-some crafting-resources) err-not-some)
       (asserts! verified-ownership err-insufficient-balance)
       (some (map burn-wrapper (unwrap-panic crafting-resources)))
-      (mint id-new u1 tx-sender))))
+      (mint-user id-new u1 tx-sender))))
 
 (define-read-only (get-crafting-resources (token-id uint))
   (let ((token-urr (map-get? crafting-system {id: token-id})))
@@ -369,7 +378,7 @@
       (asserts! (is-some acquisition-resources) err-not-some)
       (asserts! verified-ownership err-insufficient-balance)
       (some (map burn-wrapper (unwrap-panic acquisition-resources)))
-      (mint id-new u1 tx-sender))))
+      (mint-user id-new u1 tx-sender))))
 
 (define-read-only (get-acquisition-resources (token-id uint))
   (let ((token-urr (map-get? acquisition-system {id: token-id})))

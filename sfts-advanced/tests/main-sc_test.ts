@@ -133,7 +133,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenSword1), types.principal(admin.address)],
+        [types.uint(woodenSword1)],
         admin.address
       ),
     ]);
@@ -161,7 +161,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironSword1), types.principal(admin.address)],
+        [types.uint(ironSword1)],
         admin.address
       ),
     ]);
@@ -189,7 +189,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenArmor1), types.principal(admin.address)],
+        [types.uint(woodenArmor1)],
         admin.address
       ),
     ]);
@@ -217,7 +217,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironArmor1), types.principal(admin.address)],
+        [types.uint(ironArmor1)],
         admin.address
       ),
     ]);
@@ -245,7 +245,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenShield1), types.principal(admin.address)],
+        [types.uint(woodenShield1)],
         admin.address
       ),
     ]);
@@ -272,7 +272,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironShield1), types.principal(admin.address)],
+        [types.uint(ironShield1)],
         admin.address
       ),
     ]);
@@ -300,7 +300,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenHelmet1), types.principal(admin.address)],
+        [types.uint(woodenHelmet1)],
         admin.address
       ),
     ]);
@@ -328,7 +328,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironHelmet1), types.principal(admin.address)],
+        [types.uint(ironHelmet1)],
         admin.address
       ),
     ]);
@@ -356,7 +356,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenShoes1), types.principal(admin.address)],
+        [types.uint(woodenShoes1)],
         admin.address
       ),
     ]);
@@ -384,7 +384,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironShoes1), types.principal(admin.address)],
+        [types.uint(ironShoes1)],
         admin.address
       ),
     ]);
@@ -505,7 +505,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenSword1), types.principal(admin.address)],
+        [types.uint(woodenSword1)],
         admin.address
       ),
     ]);
@@ -540,7 +540,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenSword2), types.principal(admin.address)],
+        [types.uint(woodenSword2)],
         admin.address
       ),
     ]);
@@ -575,7 +575,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenSword3), types.principal(admin.address)],
+        [types.uint(woodenSword3)],
         admin.address
       ),
     ]);
@@ -603,7 +603,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironSword1), types.principal(admin.address)],
+        [types.uint(ironSword1)],
         admin.address
       ),
     ]);
@@ -638,7 +638,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironSword2), types.principal(admin.address)],
+        [types.uint(ironSword2)],
         admin.address
       ),
     ]);
@@ -673,7 +673,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironSword3), types.principal(admin.address)],
+        [types.uint(ironSword3)],
         admin.address
       ),
     ]);
@@ -718,7 +718,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedSword1), types.principal(admin.address)],
+        [types.uint(enhancedSword1)],
         admin.address
       ),
     ]);
@@ -760,7 +760,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedSword2), types.principal(admin.address)],
+        [types.uint(enhancedSword2)],
         admin.address
       ),
     ]);
@@ -802,7 +802,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedSword3), types.principal(admin.address)],
+        [types.uint(enhancedSword3)],
         admin.address
       ),
     ]);
@@ -830,7 +830,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenArmor1), types.principal(admin.address)],
+        [types.uint(woodenArmor1)],
         admin.address
       ),
     ]);
@@ -865,7 +865,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenArmor2), types.principal(admin.address)],
+        [types.uint(woodenArmor2)],
         admin.address
       ),
     ]);
@@ -900,7 +900,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenArmor3), types.principal(admin.address)],
+        [types.uint(woodenArmor3)],
         admin.address
       ),
     ]);
@@ -928,7 +928,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironArmor1), types.principal(admin.address)],
+        [types.uint(ironArmor1)],
         admin.address
       ),
     ]);
@@ -963,7 +963,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironArmor2), types.principal(admin.address)],
+        [types.uint(ironArmor2)],
         admin.address
       ),
     ]);
@@ -998,7 +998,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironArmor3), types.principal(admin.address)],
+        [types.uint(ironArmor3)],
         admin.address
       ),
     ]);
@@ -1043,7 +1043,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedArmor1), types.principal(admin.address)],
+        [types.uint(enhancedArmor1)],
         admin.address
       ),
     ]);
@@ -1085,7 +1085,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedArmor2), types.principal(admin.address)],
+        [types.uint(enhancedArmor2)],
         admin.address
       ),
     ]);
@@ -1127,7 +1127,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedArmor3), types.principal(admin.address)],
+        [types.uint(enhancedArmor3)],
         admin.address
       ),
     ]);
@@ -1155,7 +1155,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenShield1), types.principal(admin.address)],
+        [types.uint(woodenShield1)],
         admin.address
       ),
     ]);
@@ -1190,7 +1190,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenShield2), types.principal(admin.address)],
+        [types.uint(woodenShield2)],
         admin.address
       ),
     ]);
@@ -1225,7 +1225,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenShield3), types.principal(admin.address)],
+        [types.uint(woodenShield3)],
         admin.address
       ),
     ]);
@@ -1253,7 +1253,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironShield1), types.principal(admin.address)],
+        [types.uint(ironShield1)],
         admin.address
       ),
     ]);
@@ -1288,7 +1288,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironShield2), types.principal(admin.address)],
+        [types.uint(ironShield2)],
         admin.address
       ),
     ]);
@@ -1323,7 +1323,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironShield3), types.principal(admin.address)],
+        [types.uint(ironShield3)],
         admin.address
       ),
     ]);
@@ -1368,7 +1368,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedShield1), types.principal(admin.address)],
+        [types.uint(enhancedShield1)],
         admin.address
       ),
     ]);
@@ -1410,7 +1410,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedShield2), types.principal(admin.address)],
+        [types.uint(enhancedShield2)],
         admin.address
       ),
     ]);
@@ -1452,7 +1452,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedShield3), types.principal(admin.address)],
+        [types.uint(enhancedShield3)],
         admin.address
       ),
     ]);
@@ -1480,7 +1480,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenHelmet1), types.principal(admin.address)],
+        [types.uint(woodenHelmet1)],
         admin.address
       ),
     ]);
@@ -1515,7 +1515,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenHelmet2), types.principal(admin.address)],
+        [types.uint(woodenHelmet2)],
         admin.address
       ),
     ]);
@@ -1550,7 +1550,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenHelmet3), types.principal(admin.address)],
+        [types.uint(woodenHelmet3)],
         admin.address
       ),
     ]);
@@ -1578,7 +1578,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironHelmet1), types.principal(admin.address)],
+        [types.uint(ironHelmet1)],
         admin.address
       ),
     ]);
@@ -1613,7 +1613,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironHelmet2), types.principal(admin.address)],
+        [types.uint(ironHelmet2)],
         admin.address
       ),
     ]);
@@ -1648,7 +1648,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironHelmet3), types.principal(admin.address)],
+        [types.uint(ironHelmet3)],
         admin.address
       ),
     ]);
@@ -1693,7 +1693,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedHelmet1), types.principal(admin.address)],
+        [types.uint(enhancedHelmet1)],
         admin.address
       ),
     ]);
@@ -1735,7 +1735,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedHelmet2), types.principal(admin.address)],
+        [types.uint(enhancedHelmet2)],
         admin.address
       ),
     ]);
@@ -1777,7 +1777,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedHelmet3), types.principal(admin.address)],
+        [types.uint(enhancedHelmet3)],
         admin.address
       ),
     ]);
@@ -1805,7 +1805,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenShoes1), types.principal(admin.address)],
+        [types.uint(woodenShoes1)],
         admin.address
       ),
     ]);
@@ -1840,7 +1840,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenShoes2), types.principal(admin.address)],
+        [types.uint(woodenShoes2)],
         admin.address
       ),
     ]);
@@ -1875,7 +1875,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenShoes3), types.principal(admin.address)],
+        [types.uint(woodenShoes3)],
         admin.address
       ),
     ]);
@@ -1903,7 +1903,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironShoes1), types.principal(admin.address)],
+        [types.uint(ironShoes1)],
         admin.address
       ),
     ]);
@@ -1938,7 +1938,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironShoes2), types.principal(admin.address)],
+        [types.uint(ironShoes2)],
         admin.address
       ),
     ]);
@@ -1973,7 +1973,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironShoes3), types.principal(admin.address)],
+        [types.uint(ironShoes3)],
         admin.address
       ),
     ]);
@@ -2018,7 +2018,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedShoes1), types.principal(admin.address)],
+        [types.uint(enhancedShoes1)],
         admin.address
       ),
     ]);
@@ -2060,7 +2060,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedShoes2), types.principal(admin.address)],
+        [types.uint(enhancedShoes2)],
         admin.address
       ),
     ]);
@@ -2102,7 +2102,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedShoes3), types.principal(admin.address)],
+        [types.uint(enhancedShoes3)],
         admin.address
       ),
     ]);
@@ -2137,7 +2137,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenSword1), types.principal(admin.address)],
+        [types.uint(woodenSword1)],
         admin.address
       ),
     ]);
@@ -2171,7 +2171,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenSword2), types.principal(admin.address)],
+        [types.uint(woodenSword2)],
         admin.address
       ),
     ]);
@@ -2205,7 +2205,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironSword2), types.principal(admin.address)],
+        [types.uint(ironSword2)],
         admin.address
       ),
     ]);
@@ -2245,7 +2245,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(enhancedSword2), types.principal(admin.address)],
+        [types.uint(enhancedSword2)],
         admin.address
       ),
     ]);
@@ -2273,7 +2273,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenArmor1), types.principal(admin.address)],
+        [types.uint(woodenArmor1)],
         admin.address
       ),
     ]);
@@ -2307,7 +2307,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenArmor3), types.principal(admin.address)],
+        [types.uint(woodenArmor3)],
         admin.address
       ),
     ]);
@@ -2341,7 +2341,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironArmor2), types.principal(admin.address)],
+        [types.uint(ironArmor2)],
         admin.address
       ),
     ]);
@@ -2381,7 +2381,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(enhancedArmor2), types.principal(admin.address)],
+        [types.uint(enhancedArmor2)],
         admin.address
       ),
     ]);
@@ -2415,7 +2415,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenShield3), types.principal(admin.address)],
+        [types.uint(woodenShield3)],
         admin.address
       ),
     ]);
@@ -2449,7 +2449,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironShield2), types.principal(admin.address)],
+        [types.uint(ironShield2)],
         admin.address
       ),
     ]);
@@ -2489,7 +2489,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(enhancedShield2), types.principal(admin.address)],
+        [types.uint(enhancedShield2)],
         admin.address
       ),
     ]);
@@ -2523,7 +2523,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenHelmet3), types.principal(admin.address)],
+        [types.uint(woodenHelmet3)],
         admin.address
       ),
     ]);
@@ -2557,7 +2557,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironHelmet2), types.principal(admin.address)],
+        [types.uint(ironHelmet2)],
         admin.address
       ),
     ]);
@@ -2597,7 +2597,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(enhancedHelmet1), types.principal(admin.address)],
+        [types.uint(enhancedHelmet1)],
         admin.address
       ),
     ]);
@@ -2631,7 +2631,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenShoes2), types.principal(admin.address)],
+        [types.uint(woodenShoes2)],
         admin.address
       ),
     ]);
@@ -2665,7 +2665,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenShoes3), types.principal(admin.address)],
+        [types.uint(woodenShoes3)],
         admin.address
       ),
     ]);
@@ -2699,7 +2699,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironShoes2), types.principal(admin.address)],
+        [types.uint(ironShoes2)],
         admin.address
       ),
     ]);
@@ -2752,7 +2752,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenSword1), types.principal(admin.address)],
+        [types.uint(woodenSword1)],
         admin.address
       ),
     ]);
@@ -2766,7 +2766,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironSword1), types.principal(admin.address)],
+        [types.uint(ironSword1)],
         admin.address
       ),
     ]);
@@ -2780,7 +2780,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenArmor1), types.principal(admin.address)],
+        [types.uint(woodenArmor1)],
         admin.address
       ),
     ]);
@@ -2794,7 +2794,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironArmor1), types.principal(admin.address)],
+        [types.uint(ironArmor1)],
         admin.address
       ),
     ]);
@@ -2808,7 +2808,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenShield1), types.principal(admin.address)],
+        [types.uint(woodenShield1)],
         admin.address
       ),
     ]);
@@ -2821,7 +2821,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironShield1), types.principal(admin.address)],
+        [types.uint(ironShield1)],
         admin.address
       ),
     ]);
@@ -2835,7 +2835,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenHelmet1), types.principal(admin.address)],
+        [types.uint(woodenHelmet1)],
         admin.address
       ),
     ]);
@@ -2849,7 +2849,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironHelmet1), types.principal(admin.address)],
+        [types.uint(ironHelmet1)],
         admin.address
       ),
     ]);
@@ -2863,7 +2863,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenShoes1), types.principal(admin.address)],
+        [types.uint(woodenShoes1)],
         admin.address
       ),
     ]);
@@ -2877,7 +2877,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironShoes1), types.principal(admin.address)],
+        [types.uint(ironShoes1)],
         admin.address
       ),
     ]);
@@ -3030,7 +3030,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenSword1), types.principal(admin.address)],
+        [types.uint(woodenSword1)],
         admin.address
       ),
     ]);
@@ -3044,7 +3044,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenSword2), types.principal(admin.address)],
+        [types.uint(woodenSword2)],
         admin.address
       ),
     ]);
@@ -3058,7 +3058,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenSword3), types.principal(admin.address)],
+        [types.uint(woodenSword3)],
         admin.address
       ),
     ]);
@@ -3072,7 +3072,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironSword1), types.principal(admin.address)],
+        [types.uint(ironSword1)],
         admin.address
       ),
     ]);
@@ -3086,7 +3086,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironSword2), types.principal(admin.address)],
+        [types.uint(ironSword2)],
         admin.address
       ),
     ]);
@@ -3100,7 +3100,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironSword3), types.principal(admin.address)],
+        [types.uint(ironSword3)],
         admin.address
       ),
     ]);
@@ -3132,7 +3132,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedSword1), types.principal(admin.address)],
+        [types.uint(enhancedSword1)],
         admin.address
       ),
     ]);
@@ -3146,7 +3146,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedSword2), types.principal(admin.address)],
+        [types.uint(enhancedSword2)],
         admin.address
       ),
     ]);
@@ -3160,7 +3160,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedSword3), types.principal(admin.address)],
+        [types.uint(enhancedSword3)],
         admin.address
       ),
     ]);
@@ -3174,7 +3174,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenArmor1), types.principal(admin.address)],
+        [types.uint(woodenArmor1)],
         admin.address
       ),
     ]);
@@ -3188,7 +3188,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenArmor2), types.principal(admin.address)],
+        [types.uint(woodenArmor2)],
         admin.address
       ),
     ]);
@@ -3202,7 +3202,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenArmor3), types.principal(admin.address)],
+        [types.uint(woodenArmor3)],
         admin.address
       ),
     ]);
@@ -3216,7 +3216,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironArmor1), types.principal(admin.address)],
+        [types.uint(ironArmor1)],
         admin.address
       ),
     ]);
@@ -3230,7 +3230,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironArmor2), types.principal(admin.address)],
+        [types.uint(ironArmor2)],
         admin.address
       ),
     ]);
@@ -3244,7 +3244,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironArmor3), types.principal(admin.address)],
+        [types.uint(ironArmor3)],
         admin.address
       ),
     ]);
@@ -3276,7 +3276,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedArmor1), types.principal(admin.address)],
+        [types.uint(enhancedArmor1)],
         admin.address
       ),
     ]);
@@ -3290,7 +3290,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedArmor2), types.principal(admin.address)],
+        [types.uint(enhancedArmor2)],
         admin.address
       ),
     ]);
@@ -3304,7 +3304,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedArmor3), types.principal(admin.address)],
+        [types.uint(enhancedArmor3)],
         admin.address
       ),
     ]);
@@ -3318,7 +3318,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenShield1), types.principal(admin.address)],
+        [types.uint(woodenShield1)],
         admin.address
       ),
     ]);
@@ -3332,7 +3332,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenShield2), types.principal(admin.address)],
+        [types.uint(woodenShield2)],
         admin.address
       ),
     ]);
@@ -3346,7 +3346,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenShield3), types.principal(admin.address)],
+        [types.uint(woodenShield3)],
         admin.address
       ),
     ]);
@@ -3360,7 +3360,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironShield1), types.principal(admin.address)],
+        [types.uint(ironShield1)],
         admin.address
       ),
     ]);
@@ -3374,7 +3374,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironShield2), types.principal(admin.address)],
+        [types.uint(ironShield2)],
         admin.address
       ),
     ]);
@@ -3388,7 +3388,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironShield3), types.principal(admin.address)],
+        [types.uint(ironShield3)],
         admin.address
       ),
     ]);
@@ -3420,7 +3420,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedShield1), types.principal(admin.address)],
+        [types.uint(enhancedShield1)],
         admin.address
       ),
     ]);
@@ -3434,7 +3434,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedShield2), types.principal(admin.address)],
+        [types.uint(enhancedShield2)],
         admin.address
       ),
     ]);
@@ -3448,7 +3448,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedShield3), types.principal(admin.address)],
+        [types.uint(enhancedShield3)],
         admin.address
       ),
     ]);
@@ -3462,7 +3462,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenHelmet1), types.principal(admin.address)],
+        [types.uint(woodenHelmet1)],
         admin.address
       ),
     ]);
@@ -3476,7 +3476,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenHelmet2), types.principal(admin.address)],
+        [types.uint(woodenHelmet2)],
         admin.address
       ),
     ]);
@@ -3490,7 +3490,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenHelmet3), types.principal(admin.address)],
+        [types.uint(woodenHelmet3)],
         admin.address
       ),
     ]);
@@ -3504,7 +3504,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironHelmet1), types.principal(admin.address)],
+        [types.uint(ironHelmet1)],
         admin.address
       ),
     ]);
@@ -3518,7 +3518,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironHelmet2), types.principal(admin.address)],
+        [types.uint(ironHelmet2)],
         admin.address
       ),
     ]);
@@ -3532,7 +3532,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironHelmet3), types.principal(admin.address)],
+        [types.uint(ironHelmet3)],
         admin.address
       ),
     ]);
@@ -3564,7 +3564,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedHelmet1), types.principal(admin.address)],
+        [types.uint(enhancedHelmet1)],
         admin.address
       ),
     ]);
@@ -3578,7 +3578,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedHelmet2), types.principal(admin.address)],
+        [types.uint(enhancedHelmet2)],
         admin.address
       ),
     ]);
@@ -3592,7 +3592,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedHelmet3), types.principal(admin.address)],
+        [types.uint(enhancedHelmet3)],
         admin.address
       ),
     ]);
@@ -3606,7 +3606,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenShoes1), types.principal(admin.address)],
+        [types.uint(woodenShoes1)],
         admin.address
       ),
     ]);
@@ -3620,7 +3620,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenShoes2), types.principal(admin.address)],
+        [types.uint(woodenShoes2)],
         admin.address
       ),
     ]);
@@ -3634,7 +3634,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenShoes3), types.principal(admin.address)],
+        [types.uint(woodenShoes3)],
         admin.address
       ),
     ]);
@@ -3648,7 +3648,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironShoes1), types.principal(admin.address)],
+        [types.uint(ironShoes1)],
         admin.address
       ),
     ]);
@@ -3662,7 +3662,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironShoes2), types.principal(admin.address)],
+        [types.uint(ironShoes2)],
         admin.address
       ),
     ]);
@@ -3676,7 +3676,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironShoes3), types.principal(admin.address)],
+        [types.uint(ironShoes3)],
         admin.address
       ),
     ]);
@@ -3708,7 +3708,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedShoes1), types.principal(admin.address)],
+        [types.uint(enhancedShoes1)],
         admin.address
       ),
     ]);
@@ -3722,7 +3722,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedShoes2), types.principal(admin.address)],
+        [types.uint(enhancedShoes2)],
         admin.address
       ),
     ]);
@@ -3736,7 +3736,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedShoes3), types.principal(admin.address)],
+        [types.uint(enhancedShoes3)],
         admin.address
       ),
     ]);
@@ -3789,7 +3789,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenSword1), types.principal(admin.address)],
+        [types.uint(woodenSword1)],
         admin.address
       ),
     ]);
@@ -3803,7 +3803,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenSword2), types.principal(admin.address)],
+        [types.uint(woodenSword2)],
         admin.address
       ),
     ]);
@@ -3817,7 +3817,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironSword2), types.principal(admin.address)],
+        [types.uint(ironSword2)],
         admin.address
       ),
     ]);
@@ -3831,7 +3831,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(enhancedSword2), types.principal(admin.address)],
+        [types.uint(enhancedSword2)],
         admin.address
       ),
     ]);
@@ -3845,7 +3845,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenArmor1), types.principal(admin.address)],
+        [types.uint(woodenArmor1)],
         admin.address
       ),
     ]);
@@ -3859,7 +3859,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenArmor3), types.principal(admin.address)],
+        [types.uint(woodenArmor3)],
         admin.address
       ),
     ]);
@@ -3873,7 +3873,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironArmor2), types.principal(admin.address)],
+        [types.uint(ironArmor2)],
         admin.address
       ),
     ]);
@@ -3887,7 +3887,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(enhancedArmor2), types.principal(admin.address)],
+        [types.uint(enhancedArmor2)],
         admin.address
       ),
     ]);
@@ -3901,7 +3901,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenShield3), types.principal(admin.address)],
+        [types.uint(woodenShield3)],
         admin.address
       ),
     ]);
@@ -3915,7 +3915,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironShield2), types.principal(admin.address)],
+        [types.uint(ironShield2)],
         admin.address
       ),
     ]);
@@ -3929,7 +3929,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(enhancedShield2), types.principal(admin.address)],
+        [types.uint(enhancedShield2)],
         admin.address
       ),
     ]);
@@ -3943,7 +3943,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenHelmet3), types.principal(admin.address)],
+        [types.uint(woodenHelmet3)],
         admin.address
       ),
     ]);
@@ -3957,7 +3957,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironHelmet2), types.principal(admin.address)],
+        [types.uint(ironHelmet2)],
         admin.address
       ),
     ]);
@@ -3971,7 +3971,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(enhancedHelmet1), types.principal(admin.address)],
+        [types.uint(enhancedHelmet1)],
         admin.address
       ),
     ]);
@@ -3985,7 +3985,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenShoes2), types.principal(admin.address)],
+        [types.uint(woodenShoes2)],
         admin.address
       ),
     ]);
@@ -3999,7 +3999,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenShoes3), types.principal(admin.address)],
+        [types.uint(woodenShoes3)],
         admin.address
       ),
     ]);
@@ -4013,7 +4013,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironShoes2), types.principal(admin.address)],
+        [types.uint(ironShoes2)],
         admin.address
       ),
     ]);
@@ -4034,7 +4034,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenSword1), types.principal(admin.address)],
+        [types.uint(woodenSword1)],
         admin.address
       ),
     ]);
@@ -4062,7 +4062,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironSword1), types.principal(admin.address)],
+        [types.uint(ironSword1)],
         admin.address
       ),
     ]);
@@ -4094,7 +4094,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedSword1), types.principal(admin.address)],
+        [types.uint(enhancedSword1)],
         admin.address
       ),
     ]);
@@ -4122,7 +4122,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenArmor1), types.principal(admin.address)],
+        [types.uint(woodenArmor1)],
         admin.address
       ),
     ]);
@@ -4150,7 +4150,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironArmor1), types.principal(admin.address)],
+        [types.uint(ironArmor1)],
         admin.address
       ),
     ]);
@@ -4189,7 +4189,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedArmor1), types.principal(admin.address)],
+        [types.uint(enhancedArmor1)],
         admin.address
       ),
     ]);
@@ -4217,7 +4217,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenShield1), types.principal(admin.address)],
+        [types.uint(woodenShield1)],
         admin.address
       ),
     ]);
@@ -4244,7 +4244,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironShield1), types.principal(admin.address)],
+        [types.uint(ironShield1)],
         admin.address
       ),
     ]);
@@ -4272,7 +4272,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenHelmet1), types.principal(admin.address)],
+        [types.uint(woodenHelmet1)],
         admin.address
       ),
     ]);
@@ -4300,7 +4300,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironHelmet1), types.principal(admin.address)],
+        [types.uint(ironHelmet1)],
         admin.address
       ),
     ]);
@@ -4328,7 +4328,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenShoes1), types.principal(admin.address)],
+        [types.uint(woodenShoes1)],
         admin.address
       ),
     ]);
@@ -4356,7 +4356,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironShoes1), types.principal(admin.address)],
+        [types.uint(ironShoes1)],
         admin.address
       ),
     ]);
@@ -4479,7 +4479,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenSword1), types.principal(admin.address)],
+        [types.uint(woodenSword1)],
         admin.address
       ),
     ]);
@@ -4507,7 +4507,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenSword2), types.principal(admin.address)],
+        [types.uint(woodenSword2)],
         admin.address
       ),
     ]);
@@ -4542,7 +4542,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenSword3), types.principal(admin.address)],
+        [types.uint(woodenSword3)],
         admin.address
       ),
     ]);
@@ -4570,7 +4570,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironSword1), types.principal(admin.address)],
+        [types.uint(ironSword1)],
         admin.address
       ),
     ]);
@@ -4605,7 +4605,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironSword2), types.principal(admin.address)],
+        [types.uint(ironSword2)],
         admin.address
       ),
     ]);
@@ -4640,7 +4640,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironSword3), types.principal(admin.address)],
+        [types.uint(ironSword3)],
         admin.address
       ),
     ]);
@@ -4708,7 +4708,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedSword1), types.principal(admin.address)],
+        [types.uint(enhancedSword1)],
         admin.address
       ),
     ]);
@@ -4750,7 +4750,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedSword2), types.principal(admin.address)],
+        [types.uint(enhancedSword2)],
         admin.address
       ),
     ]);
@@ -4792,7 +4792,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedSword3), types.principal(admin.address)],
+        [types.uint(enhancedSword3)],
         admin.address
       ),
     ]);
@@ -4820,7 +4820,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenArmor1), types.principal(admin.address)],
+        [types.uint(woodenArmor1)],
         admin.address
       ),
     ]);
@@ -4855,7 +4855,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenArmor2), types.principal(admin.address)],
+        [types.uint(woodenArmor2)],
         admin.address
       ),
     ]);
@@ -4890,7 +4890,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenArmor3), types.principal(admin.address)],
+        [types.uint(woodenArmor3)],
         admin.address
       ),
     ]);
@@ -4918,7 +4918,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironArmor1), types.principal(admin.address)],
+        [types.uint(ironArmor1)],
         admin.address
       ),
     ]);
@@ -4953,7 +4953,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironArmor2), types.principal(admin.address)],
+        [types.uint(ironArmor2)],
         admin.address
       ),
     ]);
@@ -4988,7 +4988,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironArmor3), types.principal(admin.address)],
+        [types.uint(ironArmor3)],
         admin.address
       ),
     ]);
@@ -5033,7 +5033,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedArmor1), types.principal(admin.address)],
+        [types.uint(enhancedArmor1)],
         admin.address
       ),
     ]);
@@ -5075,7 +5075,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedArmor2), types.principal(admin.address)],
+        [types.uint(enhancedArmor2)],
         admin.address
       ),
     ]);
@@ -5117,7 +5117,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedArmor3), types.principal(admin.address)],
+        [types.uint(enhancedArmor3)],
         admin.address
       ),
     ]);
@@ -5145,7 +5145,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenShield1), types.principal(admin.address)],
+        [types.uint(woodenShield1)],
         admin.address
       ),
     ]);
@@ -5180,7 +5180,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenShield2), types.principal(admin.address)],
+        [types.uint(woodenShield2)],
         admin.address
       ),
     ]);
@@ -5215,7 +5215,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenShield3), types.principal(admin.address)],
+        [types.uint(woodenShield3)],
         admin.address
       ),
     ]);
@@ -5243,7 +5243,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironShield1), types.principal(admin.address)],
+        [types.uint(ironShield1)],
         admin.address
       ),
     ]);
@@ -5278,7 +5278,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironShield2), types.principal(admin.address)],
+        [types.uint(ironShield2)],
         admin.address
       ),
     ]);
@@ -5313,7 +5313,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironShield3), types.principal(admin.address)],
+        [types.uint(ironShield3)],
         admin.address
       ),
     ]);
@@ -5358,7 +5358,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedShield1), types.principal(admin.address)],
+        [types.uint(enhancedShield1)],
         admin.address
       ),
     ]);
@@ -5400,7 +5400,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedShield2), types.principal(admin.address)],
+        [types.uint(enhancedShield2)],
         admin.address
       ),
     ]);
@@ -5442,7 +5442,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedShield3), types.principal(admin.address)],
+        [types.uint(enhancedShield3)],
         admin.address
       ),
     ]);
@@ -5470,7 +5470,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenHelmet1), types.principal(admin.address)],
+        [types.uint(woodenHelmet1)],
         admin.address
       ),
     ]);
@@ -5505,7 +5505,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenHelmet2), types.principal(admin.address)],
+        [types.uint(woodenHelmet2)],
         admin.address
       ),
     ]);
@@ -5540,7 +5540,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenHelmet3), types.principal(admin.address)],
+        [types.uint(woodenHelmet3)],
         admin.address
       ),
     ]);
@@ -5568,7 +5568,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironHelmet1), types.principal(admin.address)],
+        [types.uint(ironHelmet1)],
         admin.address
       ),
     ]);
@@ -5603,7 +5603,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironHelmet2), types.principal(admin.address)],
+        [types.uint(ironHelmet2)],
         admin.address
       ),
     ]);
@@ -5638,7 +5638,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironHelmet3), types.principal(admin.address)],
+        [types.uint(ironHelmet3)],
         admin.address
       ),
     ]);
@@ -5683,7 +5683,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedHelmet1), types.principal(admin.address)],
+        [types.uint(enhancedHelmet1)],
         admin.address
       ),
     ]);
@@ -5725,7 +5725,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedHelmet2), types.principal(admin.address)],
+        [types.uint(enhancedHelmet2)],
         admin.address
       ),
     ]);
@@ -5767,7 +5767,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedHelmet3), types.principal(admin.address)],
+        [types.uint(enhancedHelmet3)],
         admin.address
       ),
     ]);
@@ -5795,7 +5795,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenShoes1), types.principal(admin.address)],
+        [types.uint(woodenShoes1)],
         admin.address
       ),
     ]);
@@ -5830,7 +5830,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenShoes2), types.principal(admin.address)],
+        [types.uint(woodenShoes2)],
         admin.address
       ),
     ]);
@@ -5865,7 +5865,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenShoes3), types.principal(admin.address)],
+        [types.uint(woodenShoes3)],
         admin.address
       ),
     ]);
@@ -5893,7 +5893,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironShoes1), types.principal(admin.address)],
+        [types.uint(ironShoes1)],
         admin.address
       ),
     ]);
@@ -5928,7 +5928,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironShoes2), types.principal(admin.address)],
+        [types.uint(ironShoes2)],
         admin.address
       ),
     ]);
@@ -5963,7 +5963,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironShoes3), types.principal(admin.address)],
+        [types.uint(ironShoes3)],
         admin.address
       ),
     ]);
@@ -6008,7 +6008,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedShoes1), types.principal(admin.address)],
+        [types.uint(enhancedShoes1)],
         admin.address
       ),
     ]);
@@ -6050,7 +6050,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedShoes2), types.principal(admin.address)],
+        [types.uint(enhancedShoes2)],
         admin.address
       ),
     ]);
@@ -6092,7 +6092,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(enhancedShoes3), types.principal(admin.address)],
+        [types.uint(enhancedShoes3)],
         admin.address
       ),
     ]);
@@ -6115,7 +6115,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenSword1), types.principal(admin.address)],
+        [types.uint(woodenSword1)],
         admin.address
       ),
     ]);
@@ -6143,7 +6143,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenSword2), types.principal(admin.address)],
+        [types.uint(woodenSword2)],
         admin.address
       ),
     ]);
@@ -6178,7 +6178,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironSword2), types.principal(admin.address)],
+        [types.uint(ironSword2)],
         admin.address
       ),
     ]);
@@ -6206,7 +6206,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(enhancedSword2), types.principal(admin.address)],
+        [types.uint(enhancedSword2)],
         admin.address
       ),
     ]);
@@ -6234,7 +6234,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenArmor1), types.principal(admin.address)],
+        [types.uint(woodenArmor1)],
         admin.address
       ),
     ]);
@@ -6268,7 +6268,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenArmor3), types.principal(admin.address)],
+        [types.uint(woodenArmor3)],
         admin.address
       ),
     ]);
@@ -6301,7 +6301,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironArmor2), types.principal(admin.address)],
+        [types.uint(ironArmor2)],
         admin.address
       ),
     ]);
@@ -6336,7 +6336,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(enhancedArmor2), types.principal(admin.address)],
+        [types.uint(enhancedArmor2)],
         admin.address
       ),
     ]);
@@ -6370,7 +6370,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenShield3), types.principal(admin.address)],
+        [types.uint(woodenShield3)],
         admin.address
       ),
     ]);
@@ -6404,7 +6404,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironShield2), types.principal(admin.address)],
+        [types.uint(ironShield2)],
         admin.address
       ),
     ]);
@@ -6446,7 +6446,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(enhancedShield2), types.principal(admin.address)],
+        [types.uint(enhancedShield2)],
         admin.address
       ),
     ]);
@@ -6481,7 +6481,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenHelmet3), types.principal(admin.address)],
+        [types.uint(woodenHelmet3)],
         admin.address
       ),
     ]);
@@ -6516,7 +6516,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironHelmet2), types.principal(admin.address)],
+        [types.uint(ironHelmet2)],
         admin.address
       ),
     ]);
@@ -6558,7 +6558,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(enhancedHelmet1), types.principal(admin.address)],
+        [types.uint(enhancedHelmet1)],
         admin.address
       ),
     ]);
@@ -6593,7 +6593,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenShoes2), types.principal(admin.address)],
+        [types.uint(woodenShoes2)],
         admin.address
       ),
     ]);
@@ -6628,7 +6628,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenShoes3), types.principal(admin.address)],
+        [types.uint(woodenShoes3)],
         admin.address
       ),
     ]);
@@ -6663,7 +6663,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironShoes2), types.principal(admin.address)],
+        [types.uint(ironShoes2)],
         admin.address
       ),
     ]);
@@ -7115,7 +7115,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenSword1), types.principal(admin.address)],
+        [types.uint(woodenSword1)],
         admin.address
       ),
     ]);
@@ -7143,7 +7143,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironSword1), types.principal(admin.address)],
+        [types.uint(ironSword1)],
         admin.address
       ),
     ]);
@@ -7171,7 +7171,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenArmor1), types.principal(admin.address)],
+        [types.uint(woodenArmor1)],
         admin.address
       ),
     ]);
@@ -7199,7 +7199,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironArmor1), types.principal(admin.address)],
+        [types.uint(ironArmor1)],
         admin.address
       ),
     ]);
@@ -7245,7 +7245,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedSword1), types.principal(admin.address)],
+        [types.uint(enhancedSword1)],
         admin.address
       ),
     ]);
@@ -7291,7 +7291,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(enhancedArmor1), types.principal(admin.address)],
+        [types.uint(enhancedArmor1)],
         admin.address
       ),
     ]);
@@ -7800,7 +7800,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenSword1), types.principal(admin.address)],
+        [types.uint(woodenSword1)],
         admin.address
       ),
     ]);
@@ -7835,7 +7835,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenSword2), types.principal(admin.address)],
+        [types.uint(woodenSword2)],
         admin.address
       ),
     ]);
@@ -7870,7 +7870,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenSword3), types.principal(admin.address)],
+        [types.uint(woodenSword3)],
         admin.address
       ),
     ]);
@@ -7898,7 +7898,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironSword1), types.principal(admin.address)],
+        [types.uint(ironSword1)],
         admin.address
       ),
     ]);
@@ -7933,7 +7933,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironSword2), types.principal(admin.address)],
+        [types.uint(ironSword2)],
         admin.address
       ),
     ]);
@@ -7968,7 +7968,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironSword3), types.principal(admin.address)],
+        [types.uint(ironSword3)],
         admin.address
       ),
     ]);
@@ -7996,7 +7996,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenArmor1), types.principal(admin.address)],
+        [types.uint(woodenArmor1)],
         admin.address
       ),
     ]);
@@ -8031,7 +8031,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenArmor2), types.principal(admin.address)],
+        [types.uint(woodenArmor2)],
         admin.address
       ),
     ]);
@@ -8066,7 +8066,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenArmor3), types.principal(admin.address)],
+        [types.uint(woodenArmor3)],
         admin.address
       ),
     ]);
@@ -8094,7 +8094,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(ironArmor1), types.principal(admin.address)],
+        [types.uint(ironArmor1)],
         admin.address
       ),
     ]);
@@ -8129,7 +8129,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironArmor2), types.principal(admin.address)],
+        [types.uint(ironArmor2)],
         admin.address
       ),
     ]);
@@ -8164,7 +8164,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(ironArmor3), types.principal(admin.address)],
+        [types.uint(ironArmor3)],
         admin.address
       ),
     ]);
@@ -8517,7 +8517,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenSword1), types.principal(admin.address)],
+        [types.uint(woodenSword1)],
         admin.address
       ),
     ]);
@@ -8551,7 +8551,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenSword2), types.principal(admin.address)],
+        [types.uint(woodenSword2)],
         admin.address
       ),
     ]);
@@ -8585,7 +8585,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironSword2), types.principal(admin.address)],
+        [types.uint(ironSword2)],
         admin.address
       ),
     ]);
@@ -8625,7 +8625,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(enhancedSword2), types.principal(admin.address)],
+        [types.uint(enhancedSword2)],
         admin.address
       ),
     ]);
@@ -8653,7 +8653,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenArmor1), types.principal(admin.address)],
+        [types.uint(woodenArmor1)],
         admin.address
       ),
     ]);
@@ -8687,7 +8687,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenArmor3), types.principal(admin.address)],
+        [types.uint(woodenArmor3)],
         admin.address
       ),
     ]);
@@ -9154,31 +9154,31 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
+        [types.uint(wood)],
         user1.address
       ),
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
+        [types.uint(wood)],
         user1.address
       ),
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
+        [types.uint(wood)],
         user1.address
       ),
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
+        [types.uint(wood)],
         user1.address
       ),
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenSword1), types.principal(user1.address)],
+        [types.uint(woodenSword1)],
         user1.address
       ),
     ]);
@@ -9242,55 +9242,55 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(woodenArmor1), types.principal(user1.address)],
+        [types.uint(woodenArmor1)],
         user1.address
       ),
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
+        [types.uint(wood)],
         user1.address
       ),
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
+        [types.uint(wood)],
         user1.address
       ),
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenShield1), types.principal(user1.address)],
+        [types.uint(woodenShield1)],
         user1.address
       ),
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
+        [types.uint(wood)],
         user1.address
       ),
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
+        [types.uint(wood)],
         user1.address
       ),
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenHelmet1), types.principal(user1.address)],
+        [types.uint(woodenHelmet1)],
         user1.address
       ),
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(wood), types.principal(user1.address)],
+        [types.uint(wood)],
         user1.address
       ),
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(woodenShoes1), types.principal(user1.address)],
+        [types.uint(woodenShoes1)],
         user1.address
       ),
     ]);
@@ -9451,13 +9451,13 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironAxe), types.principal(user1.address)],
+        [types.uint(ironAxe)],
         user1.address
       ),
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(ironPickaxe), types.principal(user1.address)],
+        [types.uint(ironPickaxe)],
         user1.address
       ),
     ]);
@@ -9762,7 +9762,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         levelUpFn,
-        [types.uint(woodenSword2), types.principal(user1.address)],
+        [types.uint(woodenSword2)],
         user1.address
       ),
     ]);
@@ -9839,7 +9839,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(rubyAxe), types.principal(user1.address)],
+        [types.uint(rubyAxe)],
         user1.address
       ),
     ]);
@@ -9852,7 +9852,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         acquisitionFn,
-        [types.uint(rubyPickaxe), types.principal(user1.address)],
+        [types.uint(rubyPickaxe)],
         user1.address
       ),
     ]);
@@ -9990,7 +9990,7 @@ Clarinet.test({
       Tx.contractCall(
         contractName,
         craftingFn,
-        [types.uint(rubyPickaxe), types.principal(user1.address)],
+        [types.uint(rubyPickaxe)],
         user1.address
       ),
     ]);
@@ -10065,20 +10065,6 @@ Clarinet.test({
     ]);
     assertEquals(block.receipts.length, 1);
     assertEquals(block.height, 4);
-    block.receipts[0].result.expectErr().expectUint(errInexistentItem);
-
-    // mint wrapper user inexistent
-
-    block = chain.mineBlock([
-      Tx.contractCall(
-        contractName,
-        mintWrapperUser,
-        [types.uint(58), types.uint(1), types.principal(user1.address)],
-        admin.address
-      ),
-    ]);
-    assertEquals(block.receipts.length, 1);
-    assertEquals(block.height, 5);
     block.receipts[0].result.expectErr().expectUint(errInexistentItem);
   },
 });
