@@ -8,8 +8,10 @@ import {
 import { assertEquals } from "https://deno.land/std@0.90.0/testing/asserts.ts";
 
 const errorInsufficientBalance = 101;
+const errorAdminOnly = 105;
 const contractName = "items";
 const mint = "mint";
+const mintUser = "mint-user";
 const burn = "burn";
 const burnWrapper = "burn-wrapper";
 const transferFn = "transfer";
@@ -520,6 +522,21 @@ Clarinet.test({
     assertEquals(block.height, 4);
     block.receipts[0].result.expectOk();
     assertEquals(block.receipts[0].result, `(ok (some "${tokenURI8}"))`);
+    block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mintUser,
+        [
+          types.uint(woodenArmor1),
+          types.uint(1),
+          types.principal(user1.address),
+        ],
+        user1.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 5);
+    block.receipts[0].result.expectErr().expectUint(errorAdminOnly);
   },
 });
 Clarinet.test({
