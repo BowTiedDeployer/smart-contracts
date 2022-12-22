@@ -403,10 +403,7 @@
     (asserts! (not (is-none (unwrap-panic (get-harvesting-rewards token-id harvesting-time)))) err-not-some)
     (let ((harvesting-rewards (unwrap-panic (get-harvesting-rewards token-id harvesting-time)))) 
       (asserts! (is-some harvesting-rewards) err-not-some)
-      (ok (fold mint-harvesting-rewards (unwrap-panic harvesting-rewards) user)))))
-
-(define-private (mint-harvesting-rewards (reward-tuple {resource-id: uint, resource-qty: uint}) (user principal)) 
-  (mint-wrapper-admin (get resource-id reward-tuple) (get resource-qty reward-tuple) user))
+      (ok (fold mint-rewards (unwrap-panic harvesting-rewards) user)))))
 
 (define-read-only (get-harvesting-rewards (token-id uint) (harvesting-time uint))
     (let ((token-urr (map-get? harvesting-system {token-id: token-id, harvesting-time: harvesting-time})))
