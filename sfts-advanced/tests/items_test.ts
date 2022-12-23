@@ -808,13 +808,6 @@ Clarinet.test({
   },
 });
 
-// todo: TODO:
-// items:
-// get contract admin
-// set contract admin
-//   - set another address with the current owner
-//   - set with another wallet error
-//   - get contract admin good
 Clarinet.test({
   name: 'Items: Set-Get Contract Admin',
   async fn(chain: Chain, accounts: Map<string, Account>) {
