@@ -9,13 +9,6 @@ plan:
     - id: 0
       transactions:
         - contract-publish:
-            contract-name: sip013-semi-fungible-token-trait
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 9620
-            path: "contracts\\sip013-semi-fungible-token-trait.clar"
-            anchor-block-only: true
-            clarity-version: 1
-        - contract-publish:
             contract-name: sip013-transfer-many-trait
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 4010
@@ -23,30 +16,37 @@ plan:
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
+            contract-name: sip013-semi-fungible-token-trait
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 9620
+            path: "contracts\\sip013-semi-fungible-token-trait.clar"
+            anchor-block-only: true
+            clarity-version: 1
+        - contract-publish:
+            contract-name: items
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 174630
+            path: "contracts\\items.clar"
+            anchor-block-only: true
+            clarity-version: 1
+        - contract-publish:
             contract-name: collection-1
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 84750
+            cost: 91860
             path: "contracts\\collection-1.clar"
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
             contract-name: resources
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 76120
+            cost: 83210
             path: "contracts\\resources.clar"
-            anchor-block-only: true
-            clarity-version: 1
-        - contract-publish:
-            contract-name: items
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 165600
-            path: "contracts\\items.clar"
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
             contract-name: main-sc
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 275290
+            cost: 284380
             path: "contracts\\main-sc.clar"
             anchor-block-only: true
             clarity-version: 1

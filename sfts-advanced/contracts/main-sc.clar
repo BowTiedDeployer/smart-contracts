@@ -119,10 +119,9 @@
 (define-public (level-up (id-new uint))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-level-up-resources id-new)))) err-not-some)
-    (let  ((level-up-resources (unwrap-panic (get-level-up-resources id-new)))
-          (verified-ownership (fold and (map is-owned-needed-wrapper (unwrap-panic level-up-resources)) true)))
-      (asserts! (is-some level-up-resources) err-not-some)
-      (asserts! verified-ownership err-insufficient-balance)
+    (let  ((level-up-resources (unwrap-panic (get-level-up-resources id-new))))
+      (asserts! (verified-ownership-function (unwrap-panic level-up-resources)) err-insufficient-balance)
+      ;;(asserts! (is-some level-up-resources) err-not-some)
       (some (map  burn-wrapper (unwrap-panic level-up-resources)))
       (mint-wrapper-user id-new u1 tx-sender))))
 
@@ -167,17 +166,27 @@
 (map-set level-up-system {id: u48} (list {resource-id: u3, resource-qty: u3} {resource-id: u4, resource-qty: u3} {resource-id: u47, resource-qty: u1} {resource-id: u2, resource-qty: u6}))
 (map-set level-up-system {id: u49} (list {resource-id: u3, resource-qty: u5} {resource-id: u4, resource-qty: u5} {resource-id: u48, resource-qty: u1} {resource-id: u2, resource-qty: u7}))
 
+(define-constant level-up-id-list (list u6 u7 u9 u10 u12 u13 u15 u16 u18 u19 u21 u22 u24 u25 u27 u28 u30 u31 u33 u34 u36 u37 u39 u40 u42 u43 u45 u46 u48 u49))
+
+(define-private (get-data-level-up (id uint))
+  {id: id, level-up-data: (unwrap-panic (map-get? level-up-system {id: id}))})
+
+(define-public (get-all-level-up-data) 
+  (ok (map get-data-level-up level-up-id-list)))
+
 ;; Crafting
+
+(define-private (verified-ownership-function (resources-needed (list 100 { resource-id: uint, resource-qty: uint} )))
+  (fold and (map is-owned-needed-wrapper resources-needed) true)) 
+
 
 (define-map crafting-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
 (define-public (craft-item (id-new uint))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-crafting-resources id-new)))) err-not-some)
-    (let  ((crafting-resources (unwrap-panic (get-crafting-resources id-new)))
-          (verified-ownership (fold and (map is-owned-needed-wrapper (unwrap-panic crafting-resources)) true)))
-      (asserts! (is-some crafting-resources) err-not-some)
-      (asserts! verified-ownership err-insufficient-balance)
+    (let  ((crafting-resources (unwrap-panic (get-crafting-resources id-new))))
+      (asserts! (verified-ownership-function (unwrap-panic crafting-resources)) err-insufficient-balance)
       (some (map burn-wrapper (unwrap-panic crafting-resources)))
       (mint-wrapper-user id-new u1 tx-sender))))
 
@@ -214,6 +223,14 @@
 (map-set crafting-system {id: u56} (list {resource-id: u3, resource-qty: u2} {resource-id: u50, resource-qty: u5}))
 (map-set crafting-system {id: u57} (list {resource-id: u3, resource-qty: u2} {resource-id: u51, resource-qty: u5}))
 
+(define-constant crafting-id-list (list u5 u8 u11 u14 u17 u20 u23 u26 u29 u32 u35 u38 u41 u44 u47 u52 u53 u54 u55 u56 u57))
+
+(define-private (get-data-crafting (id uint))
+  {id: id, crafting-data: (unwrap-panic (map-get? crafting-system {id: id}))})
+
+(define-public (get-all-crafting-data) 
+  (ok (map get-data-crafting crafting-id-list)))
+
 ;; Acquisition
 
 (define-map acquisition-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
@@ -221,10 +238,8 @@
 (define-public (buy-item (id-new uint))
   (begin
     (asserts! (not (is-none (unwrap-panic (get-acquisition-resources id-new)))) err-not-some)
-    (let  ((acquisition-resources (unwrap-panic (get-acquisition-resources id-new)))
-          (verified-ownership (fold and (map is-owned-needed-wrapper (unwrap-panic acquisition-resources)) true))) 
-      (asserts! (is-some acquisition-resources) err-not-some)
-      (asserts! verified-ownership err-insufficient-balance)
+    (let  ((acquisition-resources (unwrap-panic (get-acquisition-resources id-new)))) 
+      (asserts! (verified-ownership-function (unwrap-panic acquisition-resources)) err-insufficient-balance)
       (some (map burn-wrapper (unwrap-panic acquisition-resources)))
       (mint-wrapper-user id-new u1 tx-sender))))
 
@@ -267,6 +282,14 @@
 (map-set acquisition-system {id: u56} (list {resource-id: u1, resource-qty: u100}))
 (map-set acquisition-system {id: u57} (list {resource-id: u1, resource-qty: u200}))
 
+(define-constant acquisition-id-list (list u3 u4 u5 u6 u9 u14 u16 u18 u21 u25 u27 u30 u34 u36 u38 u42 u43 u45 u50 u51 u52 u53 u54 u55 u56 u57))
+
+(define-private (get-data-acquisition (id uint))
+  {id: id, acquisition-data: (unwrap-panic (map-get? acquisition-system {id: id}))})
+
+(define-public (get-all-acquisition-data) 
+  (ok (map get-data-acquisition acquisition-id-list)))
+
 ;; Fighting 
 ;; Fight Needed Resources
 
@@ -275,10 +298,8 @@
 (define-public (start-fight (fight-number uint)) 
   (begin
     (asserts! (not (is-none (unwrap-panic (get-fight-needed-resources fight-number)))) err-not-some)
-    (let ((fight-resources-needed (unwrap-panic (get-fight-needed-resources fight-number)))
-          (verified-ownership (fold and (map is-owned-needed-wrapper (unwrap-panic fight-resources-needed)) true))) 
-            (asserts! (is-some fight-resources-needed) err-not-some)
-            (asserts! verified-ownership err-insufficient-balance)
+    (let ((fight-resources-needed (unwrap-panic (get-fight-needed-resources fight-number)))) 
+            (asserts! (verified-ownership-function (unwrap-panic fight-resources-needed)) err-insufficient-balance)
               (some (map burn-wrapper (unwrap-panic fight-resources-needed)))
               (ok true))))
 
@@ -302,6 +323,14 @@
 (map-set fight-needed-resources {fight-number: u9} (list {resource-id: u2, resource-qty: u50}))
 (map-set fight-needed-resources {fight-number: u10} (list {resource-id: u2, resource-qty: u70}))
 
+(define-constant fight-resources-id-list (list u1 u2 u3 u4 u5 u6 u7 u8 u9 u10))
+
+(define-private (get-data-fight-resources (id uint))
+  {fight-number: id, fight-resources-data: (unwrap-panic (map-get? fight-needed-resources {fight-number: id}))})
+
+(define-public (get-all-fight-resources-data) 
+  (ok (map get-data-fight-resources fight-resources-id-list)))
+
 ;; Fight Rewards
 
 (define-map fight-reward-system { fight-number: uint } (list 100 { resource-id: uint, resource-qty: uint }))
@@ -310,7 +339,7 @@
   (begin
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)
     (asserts! (not (is-none (unwrap-panic (get-fight-rewards fight-number)))) err-not-some)
-    (let  ((fighting-rewards (unwrap-panic (get-fight-rewards fight-number)))) 
+    (let ((fighting-rewards (unwrap-panic (get-fight-rewards fight-number)))) 
       (asserts! (is-some fighting-rewards) err-not-some)
       (ok (fold mint-rewards (unwrap-panic fighting-rewards) user)))))
 
@@ -334,6 +363,13 @@
 (map-set fight-reward-system {fight-number: u9} (list {resource-id: u1, resource-qty: u500}))
 (map-set fight-reward-system {fight-number: u10} (list {resource-id: u1, resource-qty: u700} {resource-id: u13, resource-qty: u1}))
 
+(define-constant fight-rewards-id-list (list u1 u2 u3 u4 u5 u6 u7 u8 u9 u10))
+
+(define-private (get-data-fight-rewards (id uint))
+  {fight-number: id, fight-rewards-data: (unwrap-panic (map-get? fight-reward-system {fight-number: id}))})
+
+(define-public (get-all-fight-rewards-data) 
+  (ok (map get-data-fight-rewards fight-rewards-id-list)))
 
 ;; Sleeping reward center
 
@@ -343,7 +379,7 @@
   (begin
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)
     (asserts! (not (is-none (unwrap-panic (get-sleeping-rewards sleeping-time)))) err-not-some)
-    (let  ((sleeping-rewards (unwrap-panic (get-sleeping-rewards sleeping-time)))) 
+    (let ((sleeping-rewards (unwrap-panic (get-sleeping-rewards sleeping-time)))) 
       (asserts! (is-some sleeping-rewards) err-not-some)
       (ok (fold mint-rewards (unwrap-panic sleeping-rewards) user)))))
 
@@ -360,6 +396,13 @@
 (map-set sleeping-reward-system {sleeping-time: u10} (list {resource-id: u2, resource-qty: u15}))
 (map-set sleeping-reward-system {sleeping-time: u20} (list {resource-id: u2, resource-qty: u40}))
 
+(define-constant sleeping-rewards-id-list (list u5 u10 u20))
+
+(define-private (get-data-sleeping-rewards (id uint))
+  {sleeping-time: id, sleeping-rewards-data: (unwrap-panic (map-get? sleeping-reward-system {sleeping-time: id}))})
+
+(define-public (get-all-sleeping-rewards-data) 
+  (ok (map get-data-sleeping-rewards sleeping-rewards-id-list)))
 
 ;; Mining reward center
 
@@ -393,6 +436,21 @@
 (map-set mining-reward-system {token-id: u57, mining-time: u10} (list {resource-id: u4, resource-qty: u18} {resource-id: u50, resource-qty: u2} {resource-id: u51, resource-qty: u1}))
 (map-set mining-reward-system {token-id: u57, mining-time: u20} (list {resource-id: u4, resource-qty: u29} {resource-id: u50, resource-qty: u4} {resource-id: u51, resource-qty: u3}))
 
+(define-constant mining-rewards-id-list 
+  (list 
+    {token-id: u55, mining-time: u5} {token-id: u55, mining-time: u10} {token-id: u55, mining-time: u20}
+    {token-id: u56, mining-time: u5} {token-id: u56, mining-time: u10} {token-id: u56, mining-time: u20}
+    {token-id: u57, mining-time: u5} {token-id: u57, mining-time: u10} {token-id: u57, mining-time: u20}))
+
+(define-private (get-data-mining-rewards (mining-tuple {token-id: uint, mining-time: uint}))
+  {mining-time: (get mining-time mining-tuple), mining-item: (get token-id mining-tuple), mining-rewards-data: 
+    (unwrap-panic 
+      (map-get? mining-reward-system 
+        {mining-time: (get mining-time mining-tuple), token-id: (get token-id mining-tuple)}))})
+
+(define-public (get-all-mining-rewards-data) 
+  (ok (map get-data-mining-rewards mining-rewards-id-list)))
+
 ;; Harvesting reward center
 
 (define-map harvesting-system { token-id: uint, harvesting-time: uint } (list 100 { resource-id: uint, resource-qty: uint }))
@@ -423,3 +481,18 @@
 (map-set harvesting-system {token-id: u54, harvesting-time: u5} (list {resource-id: u3, resource-qty: u20}))
 (map-set harvesting-system {token-id: u54, harvesting-time: u10} (list {resource-id: u3, resource-qty: u45}))
 (map-set harvesting-system {token-id: u54, harvesting-time: u20} (list {resource-id: u3, resource-qty: u100}))
+
+(define-constant harvesting-rewards-id-list 
+  (list 
+    {token-id: u52, harvesting-time: u5} {token-id: u52, harvesting-time: u10} {token-id: u52, harvesting-time: u20}
+    {token-id: u53, harvesting-time: u5} {token-id: u53, harvesting-time: u10} {token-id: u53, harvesting-time: u20}
+    {token-id: u54, harvesting-time: u5} {token-id: u54, harvesting-time: u10} {token-id: u54, harvesting-time: u20}))
+
+(define-private (get-data-harvesting-rewards (harvesting-tuple {token-id: uint, harvesting-time: uint}))
+  {harvesting-time: (get harvesting-time harvesting-tuple), harvesting-item: (get token-id harvesting-tuple), harvesting-rewards-data: 
+    (unwrap-panic 
+      (map-get? harvesting-system 
+        {harvesting-time: (get harvesting-time harvesting-tuple), token-id: (get token-id harvesting-tuple)}))})
+
+(define-public (get-all-harvesting-rewards-data) 
+  (ok (map get-data-harvesting-rewards harvesting-rewards-id-list)))
