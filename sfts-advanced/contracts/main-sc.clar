@@ -97,6 +97,9 @@
           (contract-call? .collection-1 is-owned-needed item) 
           err-inexistent-item)))))
 
+(define-private (verified-ownership-function (resources-needed (list 100 { resource-id: uint, resource-qty: uint} )))
+  (fold and (map is-owned-needed-wrapper resources-needed) true)) 
+
 ;; Starter kit
 
 (define-map starter-kit-system { user: principal } { claimed: bool })
@@ -121,7 +124,6 @@
     (asserts! (not (is-none (unwrap-panic (get-level-up-resources id-new)))) err-not-some)
     (let  ((level-up-resources (unwrap-panic (get-level-up-resources id-new))))
       (asserts! (verified-ownership-function (unwrap-panic level-up-resources)) err-insufficient-balance)
-      ;;(asserts! (is-some level-up-resources) err-not-some)
       (some (map  burn-wrapper (unwrap-panic level-up-resources)))
       (mint-wrapper-user id-new u1 tx-sender))))
 
@@ -175,10 +177,6 @@
   (ok (map get-data-level-up level-up-id-list)))
 
 ;; Crafting
-
-(define-private (verified-ownership-function (resources-needed (list 100 { resource-id: uint, resource-qty: uint} )))
-  (fold and (map is-owned-needed-wrapper resources-needed) true)) 
-
 
 (define-map crafting-system { id: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
@@ -299,9 +297,9 @@
   (begin
     (asserts! (not (is-none (unwrap-panic (get-fight-needed-resources fight-number)))) err-not-some)
     (let ((fight-resources-needed (unwrap-panic (get-fight-needed-resources fight-number)))) 
-            (asserts! (verified-ownership-function (unwrap-panic fight-resources-needed)) err-insufficient-balance)
-              (some (map burn-wrapper (unwrap-panic fight-resources-needed)))
-              (ok true))))
+      (asserts! (verified-ownership-function (unwrap-panic fight-resources-needed)) err-insufficient-balance)
+      (some (map burn-wrapper (unwrap-panic fight-resources-needed)))
+      (ok true))))
 
 (define-read-only (get-fight-needed-resources (fight-number uint))
   (let ((token-urr (map-get? fight-needed-resources {fight-number: fight-number})))
