@@ -199,8 +199,8 @@
 (define-private (get-data-level-up (id uint))
   {id: id, level-up-data: (unwrap-panic (map-get? level-up-system {id: id}))})
 
-(define-read-only (get-all-level-up-data) 
-  (ok (map get-data-level-up level-up-id-list)))
+(define-read-only (get-all-level-up-data (token-id-list (list 100 uint))) 
+  (map get-data-level-up token-id-list))
 
 ;; Crafting
 
@@ -252,8 +252,8 @@
 (define-private (get-data-crafting (id uint))
   {id: id, crafting-data: (unwrap-panic (map-get? crafting-system {id: id}))})
 
-(define-read-only (get-all-crafting-data) 
-  (ok (map get-data-crafting crafting-id-list)))
+(define-read-only (get-all-crafting-data (token-id-list (list 100 uint))) 
+  (map get-data-crafting token-id-list))
 
 ;; Acquisition
 
@@ -311,8 +311,8 @@
 (define-private (get-data-acquisition (id uint))
   {id: id, acquisition-data: (unwrap-panic (map-get? acquisition-system {id: id}))})
 
-(define-read-only (get-all-acquisition-data) 
-  (ok (map get-data-acquisition acquisition-id-list)))
+(define-read-only (get-all-acquisition-data (token-id-list (list 100 uint))) 
+  (map get-data-acquisition token-id-list))
 
 ;; Fighting 
 ;; Fight Needed Resources
@@ -347,13 +347,13 @@
 (map-set fight-needed-resources {fight-number: u9} (list {resource-id: u2, resource-qty: u50}))
 (map-set fight-needed-resources {fight-number: u10} (list {resource-id: u2, resource-qty: u70}))
 
-(define-constant fight-resources-id-list (list u1 u2 u3 u4 u5 u6 u7 u8 u9 u10))
+(define-constant fight-resources-id-list (list u1 u2 u3 u4 u5))
 
 (define-private (get-data-fight-resources (id uint))
   {fight-number: id, fight-resources-data: (unwrap-panic (map-get? fight-needed-resources {fight-number: id}))})
 
-(define-read-only (get-all-fight-resources-data) 
-  (ok (map get-data-fight-resources fight-resources-id-list)))
+(define-read-only (get-all-fight-resources-data (token-id-list (list 100 uint))) 
+  (map get-data-fight-resources token-id-list))
 
 ;; Fight Rewards
 
@@ -392,8 +392,8 @@
 (define-private (get-data-fight-rewards (id uint))
   {fight-number: id, fight-rewards-data: (unwrap-panic (map-get? fight-reward-system {fight-number: id}))})
 
-(define-read-only (get-all-fight-rewards-data) 
-  (ok (map get-data-fight-rewards fight-rewards-id-list)))
+(define-read-only (get-all-fight-rewards-data (token-id-list (list 100 uint))) 
+  (map get-data-fight-rewards token-id-list))
 
 ;; Sleeping reward center
 
@@ -425,8 +425,8 @@
 (define-private (get-data-sleeping-rewards (id uint))
   {sleeping-time: id, sleeping-rewards-data: (unwrap-panic (map-get? sleeping-reward-system {sleeping-time: id}))})
 
-(define-read-only (get-all-sleeping-rewards-data) 
-  (ok (map get-data-sleeping-rewards sleeping-rewards-id-list)))
+(define-read-only (get-all-sleeping-rewards-data (token-id-list (list 100 uint))) 
+  (map get-data-sleeping-rewards token-id-list))
 
 ;; Mining reward center
 
@@ -472,8 +472,8 @@
       (map-get? mining-reward-system 
         {mining-time: (get mining-time mining-tuple), token-id: (get token-id mining-tuple)}))})
 
-(define-read-only (get-all-mining-rewards-data) 
-  (ok (map get-data-mining-rewards mining-rewards-id-list)))
+(define-read-only (get-all-mining-rewards-data (tuple-list (list 100 {token-id: uint, mining-time: uint}))) 
+  (map get-data-mining-rewards tuple-list))
 
 ;; Harvesting reward center
 
@@ -518,5 +518,5 @@
       (map-get? harvesting-system 
         {harvesting-time: (get harvesting-time harvesting-tuple), token-id: (get token-id harvesting-tuple)}))})
 
-(define-read-only (get-all-harvesting-rewards-data) 
-  (ok (map get-data-harvesting-rewards harvesting-rewards-id-list)))
+(define-read-only (get-all-harvesting-rewards-data (tuple-list (list 100 {token-id: uint, harvesting-time: uint}))) 
+  (map get-data-harvesting-rewards tuple-list))
