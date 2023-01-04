@@ -33,7 +33,33 @@
       (contract-call? .items get-balance token-id who) 
       (if (< token-id u58) 
         (contract-call? .collection-1 get-balance token-id who)
-        err-inexistent-item))))      
+        err-inexistent-item))))
+
+  (define-constant all-items-list (list {token-id: u1} {token-id: u2} {token-id: u3} {token-id: u4} {token-id: u5} {token-id: u6} {token-id: u7} {token-id: u8} {token-id: u9} {token-id: u10} {token-id: u11} {token-id: u12} {token-id: u13} {token-id: u14}))
+
+  (define-private (create-balance-tuple (token-id uint) (who principal)) 
+    {token-id: token-id, who: who })
+
+  (define-private (get-data-balance-all-items (balance-tuple {token-id: uint, who: principal})) 
+    {token-id: (get token-id balance-tuple), balance: (get-balance-wrapper (get token-id balance-tuple) (get who balance-tuple))})
+
+  ;; (define-read-only (get-balance-all-items (who principal)) 
+  ;; ;; (let ((list-who (list who who who who who who who who who who who who who who)))
+  ;;   (merge  tuple-2)))
+
+  ;; (define-private (merge-tuples) (tuple (key-1 val-1)))
+
+ ;;(map get-data-balance-all-items 
+    ;;(map (create-balance-tuple all-items-list ) who))
+    ;;
+ ;;(let  ((level-up-resources (unwrap-panic (get-level-up-resources id-new))))
+
+
+;;  (define-private (get-data-level-up (id uint))
+;;   {id: id, level-up-data: (unwrap-panic (map-get? level-up-system {id: id}))})
+
+;; (define-read-only (get-all-level-up-data) 
+;;   (ok (map get-data-level-up level-up-id-list)))
 
 
 ;; Mint
