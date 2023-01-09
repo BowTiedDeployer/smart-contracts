@@ -73,7 +73,7 @@
         err-inexistent-item))))
 
 (define-private (get-data-token-name (id uint))
-  {id: id, token-name: (unwrap-panic (get-token-name-wrapper id))})
+  {id: id, token-name-data: (unwrap-panic (get-token-name-wrapper id))})
 
 (define-read-only (get-all-token-name-data (token-id-list (list 100 uint))) 
   (map get-data-token-name token-id-list))

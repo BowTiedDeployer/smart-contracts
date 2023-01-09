@@ -23,30 +23,30 @@ plan:
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
-            contract-name: items
+            contract-name: resources
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 174630
-            path: "contracts\\items.clar"
+            cost: 83250
+            path: "contracts\\resources.clar"
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
-            contract-name: resources
+            contract-name: items
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 83210
-            path: "contracts\\resources.clar"
+            cost: 175080
+            path: "contracts\\items.clar"
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
             contract-name: collection-1
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 91860
+            cost: 91940
             path: "contracts\\collection-1.clar"
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
             contract-name: main-sc
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 330810
+            cost: 336840
             path: "contracts\\main-sc.clar"
             anchor-block-only: true
             clarity-version: 1
