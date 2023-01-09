@@ -61,6 +61,23 @@
 ;; (define-read-only (get-all-level-up-data) 
 ;;   (ok (map get-data-level-up level-up-id-list)))
 
+;; Token Name
+
+(define-read-only (get-token-name-wrapper (token-id uint)) 
+  (if (< token-id u5) 
+    (contract-call? .resources get-token-name token-id) 
+    (if (< token-id u50) 
+      (contract-call? .items get-token-name token-id) 
+      (if (< token-id u58) 
+        (contract-call? .collection-1 get-token-name token-id)
+        err-inexistent-item))))
+
+(define-private (get-data-token-name (id uint))
+  {id: id, token-name: (unwrap-panic (get-token-name-wrapper id))})
+
+(define-read-only (get-all-token-name-data (token-id-list (list 100 uint))) 
+  (map get-data-token-name token-id-list))
+
 
 ;; Mint
 

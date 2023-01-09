@@ -146,10 +146,10 @@
   (let ((token-urr  (get url (map-get? token-uri {id: token-id}))))
     (ok token-urr)))
 
-(map-set token-uri {id: u1} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/1.png"})
-(map-set token-uri {id: u2} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/2.png"})
-(map-set token-uri {id: u3} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/3.png"})
-(map-set token-uri {id: u4} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/4.png"})
+(map-set token-uri {id: u1} {url: "ipfs://QmdrB3pecXRiTcPUoX6mresftQHfXfSebpZNyVKzuGa57S/1.json"})
+(map-set token-uri {id: u2} {url: "ipfs://QmdrB3pecXRiTcPUoX6mresftQHfXfSebpZNyVKzuGa57S/2.json"})
+(map-set token-uri {id: u3} {url: "ipfs://QmdrB3pecXRiTcPUoX6mresftQHfXfSebpZNyVKzuGa57S/3.json"})
+(map-set token-uri {id: u4} {url: "ipfs://QmdrB3pecXRiTcPUoX6mresftQHfXfSebpZNyVKzuGa57S/4.json"})
 
 ;; Token Name
 

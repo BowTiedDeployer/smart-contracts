@@ -147,14 +147,14 @@
   (let ((token-urr  (get url (map-get? token-uri {id: token-id}))))
     (ok token-urr)))
 
-(map-set token-uri {id: u50} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/50.png"})
-(map-set token-uri {id: u51} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/51.png"})
-(map-set token-uri {id: u52} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/52.png"})
-(map-set token-uri {id: u53} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/53.png"})
-(map-set token-uri {id: u54} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/54.png"})
-(map-set token-uri {id: u55} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/55.png"})
-(map-set token-uri {id: u56} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/56.png"})
-(map-set token-uri {id: u57} {url: "ipfs://QmcQzR4zcamVTzCPfCRBYywHVHGVncB2o3YpojvRmakVkC/57.png"})
+(map-set token-uri {id: u50} {url: "ipfs://QmdrB3pecXRiTcPUoX6mresftQHfXfSebpZNyVKzuGa57S/50.json"})
+(map-set token-uri {id: u51} {url: "ipfs://QmdrB3pecXRiTcPUoX6mresftQHfXfSebpZNyVKzuGa57S/51.json"})
+(map-set token-uri {id: u52} {url: "ipfs://QmdrB3pecXRiTcPUoX6mresftQHfXfSebpZNyVKzuGa57S/52.json"})
+(map-set token-uri {id: u53} {url: "ipfs://QmdrB3pecXRiTcPUoX6mresftQHfXfSebpZNyVKzuGa57S/53.json"})
+(map-set token-uri {id: u54} {url: "ipfs://QmdrB3pecXRiTcPUoX6mresftQHfXfSebpZNyVKzuGa57S/54.json"})
+(map-set token-uri {id: u55} {url: "ipfs://QmdrB3pecXRiTcPUoX6mresftQHfXfSebpZNyVKzuGa57S/55.json"})
+(map-set token-uri {id: u56} {url: "ipfs://QmdrB3pecXRiTcPUoX6mresftQHfXfSebpZNyVKzuGa57S/56.json"})
+(map-set token-uri {id: u57} {url: "ipfs://QmdrB3pecXRiTcPUoX6mresftQHfXfSebpZNyVKzuGa57S/57.json"})
 
 ;; Token Name
 
