@@ -52,6 +52,7 @@ const getAllFightRewardsData = "get-all-fight-rewards-data";
 const getAllSleepingRewardsData = "get-all-sleeping-rewards-data";
 const getAllMiningRewardsData = "get-all-mining-rewards-data";
 const getAllHarvestingRewardsData = "get-all-harvesting-rewards-data";
+const allBalancesUser = "all-balances-user";
 const fight1 = "1";
 const fight2 = "2";
 const fight3 = "3";
@@ -10814,6 +10815,185 @@ Clarinet.test({
     assertEquals(
       '[{id: u1, token-name-data: (some {name: "gold", type: "resource", values: {defense: u0, dmg: u0, health: u0}})}, {id: u2, token-name-data: (some {name: "energy-power", type: "resource", values: {defense: u0, dmg: u0, health: u0}})}, {id: u3, token-name-data: (some {name: "wood", type: "resource", values: {defense: u0, dmg: u0, health: u0}})}, {id: u4, token-name-data: (some {name: "iron", type: "resource", values: {defense: u0, dmg: u0, health: u0}})}, {id: u5, token-name-data: (some {name: "wooden_sword_1", type: "sword", values: {defense: u0, dmg: u1, health: u0}})}, {id: u6, token-name-data: (some {name: "wooden_sword_2", type: "sword", values: {defense: u0, dmg: u2, health: u0}})}, {id: u7, token-name-data: (some {name: "wooden_sword_3", type: "sword", values: {defense: u0, dmg: u4, health: u0}})}, {id: u8, token-name-data: (some {name: "iron_sword_1", type: "sword", values: {defense: u0, dmg: u3, health: u0}})}, {id: u9, token-name-data: (some {name: "iron_sword_2", type: "sword", values: {defense: u0, dmg: u6, health: u0}})}, {id: u10, token-name-data: (some {name: "iron_sword_3", type: "sword", values: {defense: u0, dmg: u9, health: u0}})}, {id: u11, token-name-data: (some {name: "enhanced_sword_1", type: "sword", values: {defense: u0, dmg: u11, health: u0}})}, {id: u12, token-name-data: (some {name: "enhanced_sword_2", type: "sword", values: {defense: u0, dmg: u15, health: u0}})}, {id: u13, token-name-data: (some {name: "enhanced_sword_3", type: "sword", values: {defense: u0, dmg: u19, health: u0}})}, {id: u14, token-name-data: (some {name: "wooden_armor_1", type: "armor", values: {defense: u5, dmg: u0, health: u10}})}, {id: u15, token-name-data: (some {name: "wooden_armor_2", type: "armor", values: {defense: u8, dmg: u0, health: u15}})}, {id: u16, token-name-data: (some {name: "wooden_armor_3", type: "armor", values: {defense: u11, dmg: u0, health: u20}})}, {id: u17, token-name-data: (some {name: "iron_armor_1", type: "armor", values: {defense: u10, dmg: u0, health: u15}})}, {id: u18, token-name-data: (some {name: "iron_armor_2", type: "armor", values: {defense: u14, dmg: u0, health: u25}})}, {id: u19, token-name-data: (some {name: "iron_armor_3", type: "armor", values: {defense: u18, dmg: u0, health: u35}})}, {id: u20, token-name-data: (some {name: "enhanced_armor_1", type: "armor", values: {defense: u25, dmg: u0, health: u50}})}, {id: u21, token-name-data: (some {name: "enhanced_armor_2", type: "armor", values: {defense: u30, dmg: u0, health: u65}})}, {id: u22, token-name-data: (some {name: "enhanced_armor_3", type: "armor", values: {defense: u35, dmg: u0, health: u80}})}, {id: u23, token-name-data: (some {name: "wooden_shield_1", type: "shield", values: {defense: u5, dmg: u0, health: u0}})}, {id: u24, token-name-data: (some {name: "wooden_shield_2", type: "shield", values: {defense: u10, dmg: u0, health: u0}})}, {id: u25, token-name-data: (some {name: "wooden_shield_3", type: "shield", values: {defense: u15, dmg: u0, health: u0}})}, {id: u26, token-name-data: (some {name: "iron_shield_1", type: "shield", values: {defense: u13, dmg: u0, health: u0}})}, {id: u27, token-name-data: (some {name: "iron_shield_2", type: "shield", values: {defense: u19, dmg: u0, health: u0}})}, {id: u28, token-name-data: (some {name: "iron_shield_3", type: "shield", values: {defense: u25, dmg: u0, health: u0}})}, {id: u29, token-name-data: (some {name: "enhanced_shield_1", type: "shield", values: {defense: u35, dmg: u0, health: u0}})}, {id: u30, token-name-data: (some {name: "enhanced_shield_2", type: "shield", values: {defense: u45, dmg: u0, health: u0}})}, {id: u31, token-name-data: (some {name: "enhanced_shield_3", type: "shield", values: {defense: u55, dmg: u0, health: u0}})}, {id: u32, token-name-data: (some {name: "wooden_helmet_1", type: "helmet", values: {defense: u0, dmg: u0, health: u10}})}, {id: u33, token-name-data: (some {name: "wooden_helmet_2", type: "helmet", values: {defense: u0, dmg: u0, health: u17}})}, {id: u34, token-name-data: (some {name: "wooden_helmet_3", type: "helmet", values: {defense: u0, dmg: u0, health: u24}})}, {id: u35, token-name-data: (some {name: "iron_helmet_1", type: "helmet", values: {defense: u0, dmg: u0, health: u20}})}, {id: u36, token-name-data: (some {name: "iron_helmet_2", type: "helmet", values: {defense: u0, dmg: u0, health: u30}})}, {id: u37, token-name-data: (some {name: "iron_helmet_3", type: "helmet", values: {defense: u0, dmg: u0, health: u40}})}, {id: u38, token-name-data: (some {name: "enhanced_helmet_1", type: "helmet", values: {defense: u0, dmg: u0, health: u55}})}, {id: u39, token-name-data: (some {name: "enhanced_helmet_2", type: "helmet", values: {defense: u0, dmg: u0, health: u70}})}, {id: u40, token-name-data: (some {name: "enhanced_helmet_3", type: "helmet", values: {defense: u0, dmg: u0, health: u85}})}, {id: u41, token-name-data: (some {name: "wooden_shoes_1", type: "shoes", values: {defense: u2, dmg: u3, health: u0}})}, {id: u42, token-name-data: (some {name: "wooden_shoes_2", type: "shoes", values: {defense: u4, dmg: u4, health: u0}})}, {id: u43, token-name-data: (some {name: "wooden_shoes_3", type: "shoes", values: {defense: u6, dmg: u5, health: u0}})}, {id: u44, token-name-data: (some {name: "iron_shoes_1", type: "shoes", values: {defense: u5, dmg: u3, health: u0}})}, {id: u45, token-name-data: (some {name: "iron_shoes_2", type: "shoes", values: {defense: u8, dmg: u4, health: u0}})}, {id: u46, token-name-data: (some {name: "iron_shoes_3", type: "shoes", values: {defense: u11, dmg: u5, health: u0}})}, {id: u47, token-name-data: (some {name: "enhanced_shoes_1", type: "shoes", values: {defense: u14, dmg: u3, health: u0}})}, {id: u48, token-name-data: (some {name: "enhanced_shoes_2", type: "shoes", values: {defense: u18, dmg: u4, health: u0}})}, {id: u49, token-name-data: (some {name: "enhanced_shoes_3", type: "shoes", values: {defense: u22, dmg: u5, health: u0}})}, {id: u50, token-name-data: (some {name: "gold-bar", type: "resource", values: {defense: u0, dmg: u0, health: u0}})}, {id: u51, token-name-data: (some {name: "ruby", type: "resource", values: {defense: u0, dmg: u0, health: u0}})}, {id: u52, token-name-data: (some {name: "iron_axe", type: "axe", values: {defense: u0, dmg: u4, health: u3}})}, {id: u53, token-name-data: (some {name: "gold_axe", type: "axe", values: {defense: u0, dmg: u10, health: u5}})}, {id: u54, token-name-data: (some {name: "ruby_axe", type: "axe", values: {defense: u0, dmg: u18, health: u6}})}, {id: u55, token-name-data: (some {name: "iron_pickaxe", type: "pickaxe", values: {defense: u0, dmg: u5, health: u3}})}, {id: u56, token-name-data: (some {name: "gold_pickaxe", type: "pickaxe", values: {defense: u0, dmg: u12, health: u5}})}, {id: u57, token-name-data: (some {name: "ruby_pickaxe", type: "pickaxe", values: {defense: u0, dmg: u22, health: u6}})}]',
       tokenNameData.result
+    );
+
+    let block = chain.mineBlock([
+      Tx.contractCall(
+        contractName,
+        mintWrapper,
+        [types.uint(gold), types.uint(10), types.principal(admin.address)],
+        admin.address
+      ),
+    ]);
+
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 2);
+    block.receipts[0].result.expectOk().expectBool(true);
+
+    let balances = chain.callReadOnlyFn(
+      contractName,
+      allBalancesUser,
+      [
+        types.principal(admin.address),
+        types.list([
+          types.uint(1),
+          types.uint(2),
+          types.uint(3),
+          types.uint(4),
+          types.uint(5),
+          types.uint(6),
+          types.uint(7),
+          types.uint(8),
+          types.uint(9),
+          types.uint(10),
+        ]),
+      ],
+      admin.address
+    );
+
+    assertEquals(
+      "[{balance: (ok u10), token-id: u1}, {balance: (ok u0), token-id: u2}, {balance: (ok u0), token-id: u3}, {balance: (ok u0), token-id: u4}, {balance: (ok u0), token-id: u5}, {balance: (ok u0), token-id: u6}, {balance: (ok u0), token-id: u7}, {balance: (ok u0), token-id: u8}, {balance: (ok u0), token-id: u9}, {balance: (ok u0), token-id: u10}]",
+      balances.result
+    );
+
+    balances = chain.callReadOnlyFn(
+      contractName,
+      allBalancesUser,
+      [
+        types.principal(admin.address),
+        types.list([
+          types.uint(11),
+          types.uint(12),
+          types.uint(13),
+          types.uint(14),
+          types.uint(15),
+          types.uint(16),
+          types.uint(17),
+          types.uint(18),
+          types.uint(19),
+          types.uint(20),
+        ]),
+      ],
+      admin.address
+    );
+
+    assertEquals(
+      "[{balance: (ok u0), token-id: u11}, {balance: (ok u0), token-id: u12}, {balance: (ok u0), token-id: u13}, {balance: (ok u0), token-id: u14}, {balance: (ok u0), token-id: u15}, {balance: (ok u0), token-id: u16}, {balance: (ok u0), token-id: u17}, {balance: (ok u0), token-id: u18}, {balance: (ok u0), token-id: u19}, {balance: (ok u0), token-id: u20}]",
+      balances.result
+    );
+
+    balances = chain.callReadOnlyFn(
+      contractName,
+      allBalancesUser,
+      [
+        types.principal(admin.address),
+        types.list([
+          types.uint(21),
+          types.uint(22),
+          types.uint(23),
+          types.uint(24),
+          types.uint(25),
+          types.uint(26),
+          types.uint(27),
+          types.uint(28),
+          types.uint(29),
+          types.uint(30),
+        ]),
+      ],
+      admin.address
+    );
+
+    assertEquals(
+      "[{balance: (ok u0), token-id: u21}, {balance: (ok u0), token-id: u22}, {balance: (ok u0), token-id: u23}, {balance: (ok u0), token-id: u24}, {balance: (ok u0), token-id: u25}, {balance: (ok u0), token-id: u26}, {balance: (ok u0), token-id: u27}, {balance: (ok u0), token-id: u28}, {balance: (ok u0), token-id: u29}, {balance: (ok u0), token-id: u30}]",
+      balances.result
+    );
+
+    balances = chain.callReadOnlyFn(
+      contractName,
+      allBalancesUser,
+      [
+        types.principal(admin.address),
+        types.list([
+          types.uint(31),
+          types.uint(32),
+          types.uint(33),
+          types.uint(34),
+          types.uint(35),
+          types.uint(36),
+          types.uint(37),
+          types.uint(38),
+          types.uint(39),
+          types.uint(40),
+        ]),
+      ],
+      admin.address
+    );
+
+    assertEquals(
+      "[{balance: (ok u0), token-id: u31}, {balance: (ok u0), token-id: u32}, {balance: (ok u0), token-id: u33}, {balance: (ok u0), token-id: u34}, {balance: (ok u0), token-id: u35}, {balance: (ok u0), token-id: u36}, {balance: (ok u0), token-id: u37}, {balance: (ok u0), token-id: u38}, {balance: (ok u0), token-id: u39}, {balance: (ok u0), token-id: u40}]",
+      balances.result
+    );
+
+    balances = chain.callReadOnlyFn(
+      contractName,
+      allBalancesUser,
+      [
+        types.principal(admin.address),
+        types.list([
+          types.uint(41),
+          types.uint(42),
+          types.uint(43),
+          types.uint(44),
+          types.uint(45),
+          types.uint(46),
+          types.uint(47),
+          types.uint(48),
+          types.uint(49),
+          types.uint(50),
+        ]),
+      ],
+      admin.address
+    );
+
+    assertEquals(
+      "[{balance: (ok u0), token-id: u41}, {balance: (ok u0), token-id: u42}, {balance: (ok u0), token-id: u43}, {balance: (ok u0), token-id: u44}, {balance: (ok u0), token-id: u45}, {balance: (ok u0), token-id: u46}, {balance: (ok u0), token-id: u47}, {balance: (ok u0), token-id: u48}, {balance: (ok u0), token-id: u49}, {balance: (ok u0), token-id: u50}]",
+      balances.result
+    );
+
+    balances = chain.callReadOnlyFn(
+      contractName,
+      allBalancesUser,
+      [
+        types.principal(admin.address),
+        types.list([
+          types.uint(51),
+          types.uint(52),
+          types.uint(53),
+          types.uint(54),
+          types.uint(55),
+        ]),
+      ],
+      admin.address
+    );
+
+    assertEquals(
+      "[{balance: (ok u0), token-id: u51}, {balance: (ok u0), token-id: u52}, {balance: (ok u0), token-id: u53}, {balance: (ok u0), token-id: u54}, {balance: (ok u0), token-id: u55}]",
+      balances.result
+    );
+
+    balances = chain.callReadOnlyFn(
+      contractName,
+      allBalancesUser,
+      [
+        types.principal(admin.address),
+        types.list([types.uint(56), types.uint(57), types.uint(58)]),
+      ],
+      admin.address
+    );
+
+    assertEquals(
+      "[{balance: (ok u0), token-id: u56}, {balance: (ok u0), token-id: u57}, {balance: (err u105), token-id: u58}]",
+      balances.result
     );
   },
 });

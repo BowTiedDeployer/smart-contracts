@@ -43,7 +43,7 @@
 ;; create list of tuples for given who
 ;; TODO: can we merge dinamically a 'who' with the elements of the token-id-list to get the balances using map
 (define-private (construct-list-who (who principal)) 
-  (list who who who who who who who who who who who who who who who who who who who who)) ;; TODO: modify on how much can be on read-only
+  (list who who who who who who who who who who )) ;; TODO: modify on how much can be on read-only
 
 (define-private (create-balance-tuple (token-id uint) (who principal)) 
   {token-id: token-id, who: who })
