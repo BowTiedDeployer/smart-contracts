@@ -134,9 +134,9 @@
 
 ;; Token URI
 
-(define-map token-uri { id: uint } { url: (string-ascii 256) })
+(define-map token-uri { id: uint } { url: (string-ascii 70) })
 
-(define-public (set-token-uri (token-id uint) (token-url (string-ascii 256)))
+(define-public (set-token-uri (token-id uint) (token-url (string-ascii 70)))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
     (map-set token-uri {id: token-id} {url: token-url}) 
@@ -153,9 +153,9 @@
 
 ;; Token Name
 
-(define-map token-name { id: uint } { name: (string-ascii 256), type: (string-ascii 256), values: {dmg: uint, health: uint, defense: uint} })
+(define-map token-name { id: uint } { name: (string-ascii 18), type: (string-ascii 10), values: {dmg: uint, health: uint, defense: uint} })
 
-(define-public (set-token-name (token-id uint) (token-details {name: (string-ascii 256), type: (string-ascii 256), values: {dmg: uint, health: uint, defense: uint}}))
+(define-public (set-token-name (token-id uint) (token-details {name: (string-ascii 18), type: (string-ascii 10), values: {dmg: uint, health: uint, defense: uint}}))
   (begin 
     (asserts! (is-eq tx-sender contract-owner) err-owner-only)    
     (map-set token-name {id: token-id} token-details)
