@@ -35,31 +35,34 @@
         (contract-call? .collection-1 get-balance token-id who)
         err-inexistent-item))))
 
-  (define-constant all-items-list (list {token-id: u1} {token-id: u2} {token-id: u3} {token-id: u4} {token-id: u5} {token-id: u6} {token-id: u7} {token-id: u8} {token-id: u9} {token-id: u10} {token-id: u11} {token-id: u12} {token-id: u13} {token-id: u14}))
+;; (define-constant all-items-list-2 (list {token-id: u1} {token-id: u2} {token-id: u3} {token-id: u4} {token-id: u5} {token-id: u6} {token-id: u7} {token-id: u8} {token-id: u9} {token-id: u10} {token-id: u11} {token-id: u12} {token-id: u13} {token-id: u14}))
 
-  (define-private (create-balance-tuple (token-id uint) (who principal)) 
-    {token-id: token-id, who: who })
+(define-private (merge-who (token-id uint) (who principal))
+  (merge {token-id: token-id} {who: who}))
 
-  (define-private (get-data-balance-all-items (balance-tuple {token-id: uint, who: principal})) 
-    {token-id: (get token-id balance-tuple), balance: (get-balance-wrapper (get token-id balance-tuple) (get who balance-tuple))})
+;; create list of tuples for given who
+;; TODO: can we merge dinamically a 'who' with the elements of the token-id-list to get the balances using map
+(define-private (construct-list-who (who principal)) 
+  (list who who who who who who who who who who who who who who who who who who who who)) ;; TODO: modify on how much can be on read-only
 
-  ;; (define-read-only (get-balance-all-items (who principal)) 
-  ;; ;; (let ((list-who (list who who who who who who who who who who who who who who)))
-  ;;   (merge  tuple-2)))
+(define-private (create-balance-tuple (token-id uint) (who principal)) 
+  {token-id: token-id, who: who })
 
-  ;; (define-private (merge-tuples) (tuple (key-1 val-1)))
-
- ;;(map get-data-balance-all-items 
-    ;;(map (create-balance-tuple all-items-list ) who))
-    ;;
- ;;(let  ((level-up-resources (unwrap-panic (get-level-up-resources id-new))))
+(define-private (get-data-balance-all-items (balance-tuple {token-id: uint, who: principal})) 
+  {token-id: (get token-id balance-tuple), balance: (get-balance-wrapper (get token-id balance-tuple) (get who balance-tuple))})
 
 
-;;  (define-private (get-data-level-up (id uint))
-;;   {id: id, level-up-data: (unwrap-panic (map-get? level-up-system {id: id}))})
+(define-private (get-data-balance-all-items-2 (token-id uint) (who principal)) 
+  {token-id: token-id , balance: (get-balance-wrapper token-id who )})
 
-;; (define-read-only (get-all-level-up-data) 
-;;   (ok (map get-data-level-up level-up-id-list)))
+;; to get a balance is needed id, owner
+;; list of ids
+;; for each resource, call with the id and owner provided
+;; merge token id, who => argument to call
+
+(define-read-only (all-balances-user (who principal) (token-id-list (list 60 uint))) ;; TODO: modify on how much can be on read-only
+  (map get-data-balance-all-items-2 token-id-list (construct-list-who who)))
+
 
 ;; Token Name
 
