@@ -335,9 +335,25 @@
   (map get-data-acquisition token-id-list))
 
 ;; Fighting 
+
+;; Fight status
+
+(define-map fight-status-system { user: principal } { next-fight: uint })
+
+(define-read-only (get-fight-status (user principal)) 
+  (let ((next-fight (map-get? fight-status-system {user: user}))) 
+    (ok next-fight)))
+
 ;; Fight Needed Resources
 
 (define-map fight-needed-resources {fight-number: uint } (list 100 { resource-id: uint, resource-qty: uint }))
+
+;; (define-public (claim-starter-kit)
+;;   (begin 
+;;     (asserts! (is-none (map-get? starter-kit-system {user: tx-sender})) err-already-claimed)
+;;     (some (mint-wrapper-user u1 u15 tx-sender))
+;;     (some (mint-wrapper-user u2 u100 tx-sender))
+;;     (ok (map-set starter-kit-system {user: tx-sender} {claimed: true}))))
 
 (define-public (start-fight (fight-number uint)) 
   (begin
@@ -385,6 +401,7 @@
     (asserts! (not (is-none (unwrap-panic (get-fight-rewards fight-number)))) err-not-some)
     (let ((fighting-rewards (unwrap-panic (get-fight-rewards fight-number)))) 
       (asserts! (is-some fighting-rewards) err-not-some)
+      (map-set fight-status-system {user: tx-sender} {next-fight: (+ fight-number u1)})
       (ok (fold mint-rewards (unwrap-panic fighting-rewards) user)))))
 
 (define-read-only (get-fight-rewards (fight-number uint))
@@ -541,8 +558,16 @@
 (define-read-only (get-all-harvesting-rewards-data (tuple-list (list 100 {token-id: uint, harvesting-time: uint}))) 
   (map get-data-harvesting-rewards tuple-list))
 
-  ;; (mint-wrapper u5 u1 'ST2FGK1JPBZ25SXCV7Y3F9B5RTW9EB5R4VRY45YX4)
-  ;; (mint-wrapper u15 u1 'ST2FGK1JPBZ25SXCV7Y3F9B5RTW9EB5R4VRY45YX4)
-  ;; (mint-wrapper u24 u1 'ST2FGK1JPBZ25SXCV7Y3F9B5RTW9EB5R4VRY45YX4)
-  ;; (mint-wrapper u33 u1 'ST2FGK1JPBZ25SXCV7Y3F9B5RTW9EB5R4VRY45YX4)
-  ;; (mint-wrapper u42 u1 'ST2FGK1JPBZ25SXCV7Y3F9B5RTW9EB5R4VRY45YX4)
+  (mint-wrapper u1 u15 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
+  (mint-wrapper u2 u15 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
+  (mint-wrapper u3 u15 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
+  (mint-wrapper u4 u15 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
+  (mint-wrapper u50 u15 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
+  (mint-wrapper u51 u15 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
+  (mint-wrapper u5 u1 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
+  (mint-wrapper u15 u1 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
+  (mint-wrapper u24 u1 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
+  (mint-wrapper u33 u1 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
+  (mint-wrapper u42 u1 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
+  (mint-wrapper u52 u1 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
+  (mint-wrapper u56 u1 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)

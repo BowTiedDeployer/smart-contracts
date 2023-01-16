@@ -9,6 +9,13 @@ plan:
     - id: 0
       transactions:
         - contract-publish:
+            contract-name: sip013-transfer-many-trait
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 4010
+            path: "contracts\\sip013-transfer-many-trait.clar"
+            anchor-block-only: true
+            clarity-version: 1
+        - contract-publish:
             contract-name: sip013-semi-fungible-token-trait
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 9620
@@ -16,10 +23,10 @@ plan:
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
-            contract-name: sip013-transfer-many-trait
+            contract-name: items
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 4010
-            path: "contracts\\sip013-transfer-many-trait.clar"
+            cost: 175020
+            path: "contracts\\items.clar"
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
@@ -37,16 +44,9 @@ plan:
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
-            contract-name: items
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 175020
-            path: "contracts\\items.clar"
-            anchor-block-only: true
-            clarity-version: 1
-        - contract-publish:
             contract-name: main-sc
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 342920
+            cost: 354840
             path: "contracts\\main-sc.clar"
             anchor-block-only: true
             clarity-version: 1
