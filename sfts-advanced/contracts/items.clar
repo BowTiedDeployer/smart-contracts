@@ -248,12 +248,14 @@
 (map-set token-name {id: u39} {name: "enhanced_helmet_2", type: "helmet", values: {dmg: u0, health: u70, defense: u0}})
 (map-set token-name {id: u40} {name: "enhanced_helmet_3", type: "helmet", values: {dmg: u0, health: u85, defense: u0}})
 
-(map-set token-name {id: u41} {name: "wooden_shoes_1", type: "shoes", values: {dmg: u3, health: u0, defense: u2}})
-(map-set token-name {id: u42} {name: "wooden_shoes_2", type: "shoes", values: {dmg: u4, health: u0, defense: u4}})
-(map-set token-name {id: u43} {name: "wooden_shoes_3", type: "shoes", values: {dmg: u5, health: u0, defense: u6}})
-(map-set token-name {id: u44} {name: "iron_shoes_1", type: "shoes", values: {dmg: u3, health: u0, defense: u5}})
-(map-set token-name {id: u45} {name: "iron_shoes_2", type: "shoes", values: {dmg: u4, health: u0, defense: u8}})
-(map-set token-name {id: u46} {name: "iron_shoes_3", type: "shoes", values: {dmg: u5, health: u0, defense: u11}})
-(map-set token-name {id: u47} {name: "enhanced_shoes_1", type: "shoes", values: {dmg: u3, health: u0, defense: u14}})
-(map-set token-name {id: u48} {name: "enhanced_shoes_2", type: "shoes", values: {dmg: u4, health: u0, defense: u18}})
-(map-set token-name {id: u49} {name: "enhanced_shoes_3", type: "shoes", values: {dmg: u5, health: u0, defense: u22}})
+(map-set token-name {id: u41} {name: "wooden_shoes_1", type: "shoes", values: {dmg: u0, health: u0, defense: u2}})
+(map-set token-name {id: u42} {name: "wooden_shoes_2", type: "shoes", values: {dmg: u0, health: u0, defense: u4}})
+(map-set token-name {id: u43} {name: "wooden_shoes_3", type: "shoes", values: {dmg: u0, health: u0, defense: u6}})
+(map-set token-name {id: u44} {name: "iron_shoes_1", type: "shoes", values: {dmg: u0, health: u0, defense: u5}})
+(map-set token-name {id: u45} {name: "iron_shoes_2", type: "shoes", values: {dmg: u0, health: u0, defense: u8}})
+(map-set token-name {id: u46} {name: "iron_shoes_3", type: "shoes", values: {dmg: u0, health: u0, defense: u11}})
+(map-set token-name {id: u47} {name: "enhanced_shoes_1", type: "shoes", values: {dmg: u0, health: u0, defense: u14}})
+(map-set token-name {id: u48} {name: "enhanced_shoes_2", type: "shoes", values: {dmg: u0, health: u0, defense: u18}})
+(map-set token-name {id: u49} {name: "enhanced_shoes_3", type: "shoes", values: {dmg: u0, health: u0, defense: u22}})
+
+
