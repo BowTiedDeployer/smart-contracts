@@ -558,6 +558,24 @@
 (define-read-only (get-all-harvesting-rewards-data (tuple-list (list 100 {token-id: uint, harvesting-time: uint}))) 
   (map get-data-harvesting-rewards tuple-list))
 
+(define-map enemy-system { fight-number: uint } {dmg: uint, health: uint, defense: uint})
+(map-set enemy-system {fight-number: u1} {dmg: u2, health: u0, defense: u0})
+(map-set enemy-system {fight-number: u2} {dmg: u4, health: u0, defense: u4})
+(map-set enemy-system {fight-number: u3} {dmg: u5, health: u50, defense: u16})
+(map-set enemy-system {fight-number: u4} {dmg: u4, health: u50, defense: u17})
+(map-set enemy-system {fight-number: u5} {dmg: u7, health: u100, defense: u27})
+(map-set enemy-system {fight-number: u6} {dmg: u9, health: u70, defense: u50})
+(map-set enemy-system {fight-number: u7} {dmg: u11, health: u100, defense: u72})
+(map-set enemy-system {fight-number: u8} {dmg: u14, health: u135, defense: u100})
+(map-set enemy-system {fight-number: u9} {dmg: u16, health: u135, defense: u125})
+(map-set enemy-system {fight-number: u10} {dmg: u17, health: u200, defense: u125})
+
+(define-private (get-data-enemy (id uint))
+  {fight-number: id, enemy-data: (unwrap-panic (map-get? enemy-system {fight-number: id}))})
+
+(define-read-only (get-all-enemy-data (token-id-list (list 100 uint))) 
+  (map get-data-enemy token-id-list))
+
   (mint-wrapper u1 u15 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
   (mint-wrapper u2 u15 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
   (mint-wrapper u3 u15 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
