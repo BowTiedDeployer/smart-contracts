@@ -35,15 +35,12 @@
         (contract-call? .collection-1 get-balance token-id who)
         err-inexistent-item))))
 
-;; (define-constant all-items-list-2 (list {token-id: u1} {token-id: u2} {token-id: u3} {token-id: u4} {token-id: u5} {token-id: u6} {token-id: u7} {token-id: u8} {token-id: u9} {token-id: u10} {token-id: u11} {token-id: u12} {token-id: u13} {token-id: u14}))
-
 (define-private (merge-who (token-id uint) (who principal))
   (merge {token-id: token-id} {who: who}))
 
 ;; create list of tuples for given who
-;; TODO: can we merge dinamically a 'who' with the elements of the token-id-list to get the balances using map
 (define-private (construct-list-who (who principal)) 
-  (list who who who who who who who who who who )) ;; TODO: modify on how much can be on read-only
+  (list who who who who who who who who who who ))
 
 (define-private (create-balance-tuple (token-id uint) (who principal)) 
   {token-id: token-id, who: who })
@@ -55,12 +52,7 @@
 (define-private (get-data-balance-all-items-2 (token-id uint) (who principal)) 
   {token-id: token-id , balance: (get-balance-wrapper token-id who )})
 
-;; to get a balance is needed id, owner
-;; list of ids
-;; for each resource, call with the id and owner provided
-;; merge token id, who => argument to call
-
-(define-read-only (all-balances-user (who principal) (token-id-list (list 60 uint))) ;; TODO: modify on how much can be on read-only
+(define-read-only (all-balances-user (who principal) (token-id-list (list 60 uint))) 
   (map get-data-balance-all-items-2 token-id-list (construct-list-who who)))
 
 
@@ -157,8 +149,9 @@
 (define-public (claim-starter-kit)
   (begin 
     (asserts! (is-none (map-get? starter-kit-system {user: tx-sender})) err-already-claimed)
-    (some (mint-wrapper-user u1 u15 tx-sender))
+    (some (mint-wrapper-user u1 u100 tx-sender))
     (some (mint-wrapper-user u2 u100 tx-sender))
+    (some (mint-wrapper-user u3 u30 tx-sender))
     (ok (map-set starter-kit-system {user: tx-sender} {claimed: true}))))
 
 ;; Level-up
@@ -348,13 +341,6 @@
 
 (define-map fight-needed-resources {fight-number: uint } (list 100 { resource-id: uint, resource-qty: uint }))
 
-;; (define-public (claim-starter-kit)
-;;   (begin 
-;;     (asserts! (is-none (map-get? starter-kit-system {user: tx-sender})) err-already-claimed)
-;;     (some (mint-wrapper-user u1 u15 tx-sender))
-;;     (some (mint-wrapper-user u2 u100 tx-sender))
-;;     (ok (map-set starter-kit-system {user: tx-sender} {claimed: true}))))
-
 (define-public (start-fight (fight-number uint)) 
   (begin
     (asserts! (not (is-none (unwrap-panic (get-fight-needed-resources fight-number)))) err-not-some)
@@ -401,7 +387,7 @@
     (asserts! (not (is-none (unwrap-panic (get-fight-rewards fight-number)))) err-not-some)
     (let ((fighting-rewards (unwrap-panic (get-fight-rewards fight-number)))) 
       (asserts! (is-some fighting-rewards) err-not-some)
-      (map-set fight-status-system {user: tx-sender} {next-fight: (+ fight-number u1)})
+      (map-set fight-status-system {user: user} {next-fight: (+ fight-number u1)})
       (ok (fold mint-rewards (unwrap-panic fighting-rewards) user)))))
 
 (define-read-only (get-fight-rewards (fight-number uint))
@@ -575,17 +561,3 @@
 
 (define-read-only (get-all-enemy-data (token-id-list (list 100 uint))) 
   (map get-data-enemy token-id-list))
-
-  (mint-wrapper u1 u15 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
-  (mint-wrapper u2 u15 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
-  (mint-wrapper u3 u15 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
-  (mint-wrapper u4 u15 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
-  (mint-wrapper u50 u15 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
-  (mint-wrapper u51 u15 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
-  (mint-wrapper u5 u1 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
-  (mint-wrapper u15 u1 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
-  (mint-wrapper u24 u1 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
-  (mint-wrapper u33 u1 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
-  (mint-wrapper u42 u1 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
-  (mint-wrapper u52 u1 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
-  (mint-wrapper u56 u1 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
