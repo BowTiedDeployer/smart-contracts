@@ -65,6 +65,97 @@ balance = 100_000_000_000_000
 # stx_address: ST3NBRSFKX28FQ2ZJ1MAKX58HKHSDGNV5N7R21XCP
 # btc_address: n2v875jbJ4RjBnTjgbfikDfnwsDV5iUByw
 
+[accounts.wallet_9]
+mnemonic = "pair comfort obscure dolphin swallow sun side stick inspire game language fetch marine gift crack rubber kiss alien regular kitchen guard venture hold lady"
+balance = 100_000_000_000_000
+# secret_key: 12ef02bbdaff97eb233bdd7cb4505c84ebb9650b515a43cd6106329be80bc13801
+# stx_address: ST268BPGYGM8R960QC735ERJ5QCP5C31W106XXJKA
+# btc_address: mtKyF7TqUUdtzGYDHqGTdPq7jREk3ZxU2g
+
+[accounts.wallet_10]
+mnemonic = "naive boil belt buyer struggle novel grain quiz actual effort hobby fog tide capable chest guard mistake learn wrestle require crawl reveal bus make"
+balance = 100_000_000_000_000
+# secret_key: d21124475d9bd26af0675a82b30bb50b22ba0058662581d56db59f91c046121b01
+# stx_address: ST3YJFJ3Y3XS28J7PD8CBD9CWCMHHGEXXVKNBJAT1
+# btc_address: n4bWumeMBL28m149ncmc6zVJdHNkFSfMKY
+
+[accounts.wallet_11]
+mnemonic = "inch solar spin cricket regret flame intact grief surround update harsh sort mule iron busy helmet oak come mutual under foam blast goddess cupboard"
+balance = 100_000_000_000_000
+# secret_key: cde8779a67a580cda053be50cdc55c1c527c7430b70c802fd1f83a3d8b342e3c01
+# stx_address: ST3MT8Q0E61GSB3HJ0GQ510VPHMMNGGKPZKJMB9PK
+# btc_address: n2pLdex7bRmMhZcy4RRk2tPipnVuHuURnd
+
+[accounts.wallet_12]
+mnemonic = "inquiry across heavy rose loyal flight salad tongue genius enroll buzz pond invite tree tower legal term embrace tooth anchor inside badge guitar drum"
+balance = 100_000_000_000_000
+# secret_key: 257c74ed7940b0892d403f827b4a1c5a6a65a219e309aec80a6df042ecaa1a3b01
+# stx_address: ST3XRFYD6A2A9T8QWT9NFXHP8XFCDEQ30EFZC8CMF
+# btc_address: n4SvnvdrhEiCeFbKyVqRFB4TguPXPXCaLQ
+
+[accounts.wallet_13]
+mnemonic = "nephew impulse stand theory spray situate poem title attend tornado broken spin pony neutral click gun enjoy youth radio credit suffer soccer wheel cram"
+balance = 100_000_000_000_000
+# secret_key: 8b7220f8d4dd62f5eec35e84365454c6b4911bd55121164de11eff65439ae2e901
+# stx_address: STRRXZWHE3WC9WF11WJX3XFDB19BNCRYSJH9EP5
+# btc_address: mff9FBWeBv9rMCamTq36wJbUyTdjzDzpMf
+
+[accounts.wallet_14]
+mnemonic = "athlete despair badge witness winter patrol that bridge account notice approve economy first spawn because furnace clump melt column latin risk toss chunk trouble"
+balance = 100_000_000_000_000
+# secret_key: c9bf74fa04edd1e0fee01e425cdae68215259045100a0f4a02b72f3cef6ba0a301
+# stx_address: ST273Z5AWCAB0P11WP2QRNMR705QYP3VQ4T1JDAZP
+# btc_address: mtV6R9b3Pgnh78z95T8Uh7MF5q5spD98u6
+
+[accounts.wallet_15]
+mnemonic = "dice tank alter true physical illegal badge receive author issue barrel cup damage loud athlete cat accuse paddle response caught asthma crumble wine toy"
+balance = 100_000_000_000_000
+# secret_key: ff0c19bcabe7be046c33fd05dd85bbdb56041bb8b9f13558a6a8b0c64d26ac9f01
+# stx_address: ST2D1SPJ6HZ2BKKH55Z8DQDMQ409KG6H3FVVFZNMX
+# btc_address: muZpvK5EnuVb3qoj7bP4G1TwwkyvmtLFfY
+
+[accounts.wallet_16]
+mnemonic = "answer never focus winner october universe fame aerobic oval loyal chef black choose theory assist column reform impose view motor exact parent return burst"
+balance = 100_000_000_000_000
+# secret_key: a454abd6bbb5ecf57f5d9f93aa79fd6382b76e250794af9245010b1ebcbf0dff01
+# stx_address: STZHX0QH4P4ARZCC1P8AVD8KXYH0QNE7SZNE5WAP
+# btc_address: mmGhR7d2b3f9U4LZGjWjiGrq1Tf8teVwe7
+
+[accounts.wallet_17]
+mnemonic = "quality rigid medal pill chat actress fantasy mansion rice enter crash foster million indicate boil cancel dirt stuff faint loyal again spy obtain educate"
+balance = 100_000_000_000_000
+# secret_key: f529ff709d9e0d74c140ce296ffaa7f3fe9674c79c27666f3785f207aeeb56a401
+# stx_address: ST3S2ZW2CHKJPGMJN4WMAT9DH30YA2RYMPCV6KAJD
+# btc_address: n3bXFKAfKuQEQkHW2VU7A8eZCpXhuscuhV
+
+[accounts.wallet_18]
+mnemonic = "guide task canvas spray pave mother domain age air trophy kick tape install merge earn harbor language cannon penalty omit dynamic arctic tip dumb"
+balance = 100_000_000_000_000
+# secret_key: d5066c61364fc9b261096ad332db4f7fbe8d464607ff2751fa28cbce3ff9c8e401
+# stx_address: ST3RJKHMQ134F8XVR3X3538ATS18J1RB0C96D7FG3
+# btc_address: n3W7Buzy4eSveaDq1uMtrP8C4jF745FASW
+
+[accounts.wallet_19]
+mnemonic = "betray desk drive seven party saddle okay indoor raise upper goose clap teach satoshi dentist camp rebuild short notable combine gaze kitchen style peace"
+balance = 100_000_000_000_000
+# secret_key: 53e8ba702454d6a8e14750b9a292d39f57639c5123662fa008949c9fe7a3746401
+# stx_address: ST4JJ20RC02MESCW46CDJCQ3HBPP6D9XW0YEKADF
+# btc_address: mgMPXhzWTJWwibz389Gi8wCRoZZsp3xFtJ
+
+[accounts.wallet_20]
+mnemonic = "travel wire add sort abstract canal off alcohol rigid orient dice advance flip render blanket witness ranch perfect quarter govern skill climb planet liquid"
+balance = 100_000_000_000_000
+# secret_key: d4bb10aa2d481dd276c859d2403eeee0742f0805cdbf42a8383ad14278372c9601
+# stx_address: ST2RNBTWA0SX7SRRG6SFJKC2EC5NHYF80MS5JB4MG
+# btc_address: mwgcpqeDAAguM9pHLwR8aoaSAqVi3pDAWT
+
+[accounts.wallet_21]
+mnemonic = "refuse frown air snap fever smooth loan boy empty mirror fox talk hedgehog pretty calm shiver tuition stamp fat disagree siren struggle pen inner"
+balance = 100_000_000_000_000
+# secret_key: b068f820264685e12b2c19127769e969ae96c27162d1af8eb755026d540a071e01
+# stx_address: ST3X70HXKKCYDH9DAKJMC6WCDDYB25BVRDZ5MZGFH
+# btc_address: n4M9jNLQ4waRDFom2s46xQ66ymiqJcL7yQ
+
 [accounts.faucet]
 mnemonic = "shadow private easily thought say logic fault paddle word top book during ignore notable orange flight clock image wealth health outside kitten belt reform"
 balance = 100_000_000_000_000
@@ -87,7 +178,7 @@ disable_stacks_api = false
 # bitcoin_node_rpc_port = 18443
 # bitcoin_node_username = "devnet"
 # bitcoin_node_password = "devnet"
-# bitcoin_controller_block_time = 30_000
+bitcoin_controller_block_time = 4_000
 # stacks_node_rpc_port = 20443
 # stacks_node_p2p_port = 20444
 # stacks_api_port = 3999

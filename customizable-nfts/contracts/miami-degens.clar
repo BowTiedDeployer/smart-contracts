@@ -1,6 +1,6 @@
 ;; MiamiDegens
 
-(impl-trait 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.nft-trait.nft-trait)
+(impl-trait .nft-trait.nft-trait)
 
 ;; Non Fungible Token, using sip-009
 (define-non-fungible-token miami-degens uint)
@@ -15,7 +15,7 @@
 (define-data-var last-id uint u0)
 (define-data-var commission-master uint u500)
 (define-data-var commission uint u500)
-(define-data-var total-price uint u69000000)
+(define-data-var total-price uint u690000)
 (define-data-var artist-address principal 'ST3NBRSFKX28FQ2ZJ1MAKX58HKHSDGNV5N7R21XCP)
 (define-data-var commission-address principal 'ST3AM1A56AK2C1XAFJ4115ZSV26EB49BVQ10MGCS0)
 (define-data-var ipfs-root (string-ascii 80) "ipfs://QmQcZyB1GEsZgYQXr82CHN2BeqEY53bmMPB89g6ryKPWJU/")
@@ -148,3 +148,6 @@
 (define-read-only (get-base-uri)
   (ok (var-get ipfs-root)))
   
+;; (mint 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
+;; (mint 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)
+;; (mint 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5)

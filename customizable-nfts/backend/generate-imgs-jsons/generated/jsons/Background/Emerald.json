@@ -1,0 +1,14 @@
+{
+  "sip": 16,
+  "name": "Emerald",
+  "image": "ipfs://QmXweB6wjPHoVoBQWYFUz75TMAPXJGbncyffvxQoaYTria/Emerald.png",
+  "attributes": [
+    {
+      "trait_type": "Background", 
+      "value": "Emerald"
+    }
+  ],
+  "properties": {    
+    "collection": "DegenBackgrounds"
+  }
+}

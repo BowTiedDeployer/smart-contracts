@@ -1,0 +1,14 @@
+
+smart contract functions take the nonce directly
+
+n smart contract calls 
+  use nonce from Global Dictionary
+
+keep in parallel the nonce for every wallet_account
+
+keep nonce globablly in a map and update it
+
+
+
+
+check for transaction number of account lower than 25

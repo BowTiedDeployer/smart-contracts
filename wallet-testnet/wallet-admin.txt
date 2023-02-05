@@ -1,0 +1,10 @@
+{
+  "mnemonic": "demand squirrel maze goddess attack remain home such health online dove tomorrow skill typical chronic fatal miracle vault answer topple venue census lunch dune",
+  "keyInfo": {
+    "privateKey": "2181697f524e7bf8929ea34c3fd28138ceb7e23541f2d124aaae8b9ee277bb1701",
+    "address": "ST2FSGYVG0T3Z7XSSTNVY89D80V31PVFEMPZBK6N2",
+    "btcAddress": "mv4pQChZn4ddsz4KVjU2XUmW4zGN66uDK5",
+    "wif": "KxLqk8xkKhWTTgTDac2aepUXnwSpqFcDgZMkMZh4AiAzMQuc36dr",
+    "index": 0
+  }
+}

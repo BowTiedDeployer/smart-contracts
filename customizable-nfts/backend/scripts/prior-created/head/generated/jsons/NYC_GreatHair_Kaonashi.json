@@ -1,0 +1,24 @@
+{
+  "sip": 16,
+  "name": "NYC_GreatHair_Kaonashi",
+  "image": "ipfs://QmUytSaKD2HGmJgrZWQdYY36DMd6oKDTZVcAvYqkR4hxst/NYC_GreatHair_Kaonashi.png",
+  "attributes": [
+    {
+      "trait_type": "Race", 
+      "value": "Alien"
+    },
+    {
+      "trait_type": "Head", 
+      "value": "GreatHair"
+    },
+    {
+      "trait_type": "Face", 
+      "value": "Kaonashi"
+    }
+  ],
+  "properties": {
+    "image_component": "ipfs://QmeBHNDwNUvwDR9rDT4Vh3oXCxsLyMSLwV2oPk8uAdQpxK/NYC_GreatHair_Kaonashi.png",
+    "image_game": "ipfs://QmbUFUAZfqN1AsDHNSLomFVnDXn7L8baEfRcJiv8jsYxAL/NYC_GreatHair_Kaonashi.png",
+    "collection": "StacksDegensHeads"
+  }
+}
