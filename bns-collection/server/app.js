@@ -1,8 +1,11 @@
-import express from 'express';
+const express = require('express');
+
+const fs = require('fs');
+const path = require('path');
+const { dirname } = require('path');
+const { fileURLToPath } = require('url');
+
 const app = express();
-import fs from 'fs';
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 

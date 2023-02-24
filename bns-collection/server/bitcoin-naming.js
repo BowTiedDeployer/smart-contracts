@@ -1,5 +1,5 @@
-import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
-import {
+const { StacksMainnet, StacksMocknet, StacksTestnet } = require('@stacks/network');
+const {
   network,
   contractBitcoinDegens,
   coreApiUrl,
@@ -7,10 +7,10 @@ import {
   jsonContentCreate,
   convertUintListToHex,
   convertIntListForBlockchainCall,
-} from './consts.js';
-import fs from 'fs';
-import csvWriter from 'csv-write-stream';
-import cron from 'node-cron';
+} = require('./consts.js');
+const fs = require('fs');
+const csvWriter = require('csv-write-stream');
+const cron = require('node-cron');
 let networkN =
   network === 'mainnet'
     ? new StacksMainnet({ url: coreApiUrl[network] })

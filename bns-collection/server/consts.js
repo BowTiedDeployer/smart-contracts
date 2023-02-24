@@ -1,7 +1,15 @@
-import { cvToHex, cvToJSON, hexToCV, standardPrincipalCV, stringAsciiCV, uintCV, listCV } from '@stacks/transactions';
+const {
+  cvToHex,
+  cvToJSON,
+  hexToCV,
+  standardPrincipalCV,
+  stringAsciiCV,
+  uintCV,
+  listCV,
+} = require('@stacks/transactions');
 
-export const network = 'mocknet';
-export const coreApiUrl = {
+const network = 'mocknet';
+const coreApiUrl = {
   mainnet: 'https://muddy-clean-choice.stacks-mainnet.discover.quiknode.pro/9fbe48eca6f617ed40f285ea0b7587d2542bfb4f',
   testnet: 'https://stacks-node-api.testnet.stacks.co',
   // testnet: 'https://sparkling-aged-putty.stacks-testnet.discover.quiknode.pro/105f77e9d2aab693b59849c69305640a65ffd2fa',
@@ -9,7 +17,7 @@ export const coreApiUrl = {
   mocknet: 'http://localhost:3999',
 };
 
-export const contractBitcoinDegens = {
+const contractBitcoinDegens = {
   mainnet: {
     contractAddress: '', //TODO: complete
     contractName: 'bitcoin-degens',
@@ -30,7 +38,7 @@ export const contractBitcoinDegens = {
   },
 };
 
-export const urlApis = {
+const urlApis = {
   readOnly: (network, contractAddress, contractName, functionName) =>
     `${coreApiUrl[network]}/v2/contracts/call-read/${contractAddress}/${contractName}/${functionName}`,
 };
@@ -40,14 +48,14 @@ const convertIntToArgReadOnly = (number) => {
 };
 
 const convertStringToArgReadOnly = (str) => {
-  return cvToHex(stringCV(str, 'ascii'));
+  return cvToHex(stringAsciiCV(str));
 };
 
 const convertPrincipalToArgReadOnly = (principal) => {
-  return cvToHex(principalCV(principal));
+  return cvToHex(standardPrincipalCV(principal));
 };
 
-export const convertIntListForBlockchainCall = (intList) => {
+const convertIntListForBlockchainCall = (intList) => {
   let uintList = [];
   intList.forEach((x) => {
     uintList.push(uintCV(x));
@@ -55,7 +63,7 @@ export const convertIntListForBlockchainCall = (intList) => {
   return uintList;
 };
 
-export const convertUintListToHex = (uintList) => {
+const convertUintListToHex = (uintList) => {
   return cvToHex(listCV(uintList));
 };
 
@@ -82,14 +90,7 @@ const convertArgsReadOnly = (args) => {
   return convertedArgs;
 };
 
-export async function readOnlySCJsonResponse(
-  networkInstance,
-  userAddress,
-  contractAddress,
-  contractName,
-  functionName,
-  args
-) {
+async function readOnlySCJsonResponse(networkInstance, userAddress, contractAddress, contractName, functionName, args) {
   const convertedArgs =
     // convertArgsReadOnly(
     args;
@@ -113,7 +114,7 @@ export async function readOnlySCJsonResponse(
   }
 }
 
-export const getAttributesMapTraitValue = (json) => {
+const getAttributesMapTraitValue = (json) => {
   let attr = {};
   for (const attribute of json.attributes) {
     attr[attribute.trait_type] = attribute.value;
@@ -144,7 +145,7 @@ const createJsonAttributes = (attributes) => {
   return jsonAttributes.slice(0, -1);
 };
 
-export const jsonContentCreate = (degen) => {
+const jsonContentCreate = (degen) => {
   const name = degen.name;
   const image = degen.image;
   const imageInGame = degen.properties.image_game;
@@ -169,4 +170,17 @@ export const jsonContentCreate = (degen) => {
   return metadata;
 };
 
-export const appendToCsv = (id) => {};
+const appendToCsv = (id) => {};
+
+module.exports = {
+  network,
+  coreApiUrl,
+  contractBitcoinDegens,
+  urlApis,
+  convertIntListForBlockchainCall,
+  convertUintListToHex,
+  readOnlySCJsonResponse,
+  getAttributesMapTraitValue,
+  jsonContentCreate,
+  appendToCsv,
+};
