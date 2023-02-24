@@ -15,16 +15,53 @@
 
 ;; price 100 stx
 (define-constant price u100000000)
+;; discount_price 69 stx
+(define-constant discount-price u69000000)
 
 ;; define variables
 ;; Store the last issues token ID
 (define-data-var last-id uint u0)
 (define-data-var contract-owner principal tx-sender)
+(define-data-var only-whitelisted bool true)
 (define-data-var uri-root (string-ascii 80) "https://stacksdegens.com/bitcoin-degens/jsons/")
 
 ;; define maps
 ;; for each id keep in the map the name of the bns his owner has ( if one is present )
 (define-map degen-name uint (string-ascii 30))
+
+;; whitelist system
+;; every address has a number of whitelist values
+(define-map whitelist-spots principal uint)
+
+
+;; whitelist functions
+;; set the whitelist addresses and number of whitelists directly in the smart contract
+;;
+;;
+
+;; TODO: can be done without unwrap-panic?
+(define-read-only (is-whitelisted (address principal)) 
+  (let ((spots (map-get? whitelist-spots address))) 
+    (if (and (is-some spots) (> (unwrap-panic spots) u0))  true false )))
+
+(define-private (can-mint-and-update-spots (address principal)) 
+  (if (is-eq false (var-get only-whitelisted)) 
+    (ok true)
+    (if (is-eq true (is-whitelisted address)) 
+      (begin
+        (map-set whitelist-spots address (- (unwrap-panic (map-get? whitelist-spots address)) u1))
+        (ok true))
+      (ok false))))
+
+;; if address does not have map-get or is 0 => no whitelist
+(define-read-only (get-whitelist-spots (address principal)) 
+  (map-get? whitelist-spots address))
+
+;; if address does not have map-get or is 0 => no whitelist
+(define-public (set-whitelist-spots (address principal) (spots uint))
+  (ok (map-set whitelist-spots address spots)))
+
+
 
 ;; bns related functions
 ;;
@@ -38,6 +75,21 @@
   (unwrap-panic (contract-call? .conversions resolve-principal-to-ascii bns)))
 
 
+;; fees: 0.69 stx
+(define-private (fee-processing)
+  (stx-transfer? price tx-sender (var-get contract-owner)))
+
+(define-private (discount-fee-processing)
+  (stx-transfer? discount-price tx-sender (var-get contract-owner)))
+
+(define-private (payment-by-address (address principal)) 
+  ;; check if has bns in wallet 
+  (if (is-err (contract-call? 'ST000000000000000000002AMW42H.bns resolve-principal address)) 
+    (fee-processing )
+    ;; if it has, pay discount price 
+    (discount-fee-processing )))
+
+
 ;; nft general functions
 ;;
 ;;
@@ -46,7 +98,7 @@
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
   (begin
     (asserts! (is-eq tx-sender sender) err-no-rights)
-    (let ((address-bns-name (contract-call? .bns resolve-principal recipient))) 
+    (let ((address-bns-name (contract-call? 'ST000000000000000000002AMW42H.bns resolve-principal recipient))) 
     (if (is-err address-bns-name)  
       ;; if address doen't own a bns-name -> change name to BitcoinDegen -> even if it was already that
       (set-nft-name token-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string token-id)))
@@ -86,10 +138,10 @@
 (define-private (mint (new-owner principal))
   (let 
     ((next-id (+ u1 (var-get last-id)))
-      (address-bns-name (contract-call? .bns resolve-principal new-owner))) 
+      (address-bns-name (contract-call? 'ST000000000000000000002AMW42H.bns resolve-principal new-owner))) 
     (if (is-err address-bns-name)  
-        ;; does not have bns address
-        (set-nft-name next-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string next-id)))
+      ;; does not have bns address
+      (set-nft-name next-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string next-id)))
       (let 
         ((complete-bns-name (unwrap! address-bns-name err-bns-convert))
           (bns-name (as-max-len? (get name complete-bns-name) u20))
@@ -107,24 +159,33 @@
 (define-read-only (get-nft-name (id uint)) 
   (map-get? degen-name id )) 
 
-(define-read-only (get-batch-nft-name (token-id-list (list 50 uint))) 
-  (map get-nft-name token-id-list))
-
 (define-private (set-nft-name (id uint) (name (string-ascii 30)))
-    (map-set degen-name id name))
+  (begin
+    (print (concat (concat "New Name BitcoinDegen#" (contract-call? .conversions uint-to-string id)) name))  
+    (map-set degen-name id name))) 
 
 (define-public (set-nft-name-public (id uint) (name (string-ascii 30)))
-  (ok (map-set degen-name id name)))
+  (ok (begin
+    (print (concat (concat "New Name BitcoinDegen#" (contract-call? .conversions uint-to-string id)) name))  
+    (map-set degen-name id name)))) 
+
 
 (define-public (claim) 
   (begin    
-    ;; pay to mint price
-    (try! (stx-transfer? price tx-sender (var-get contract-owner)))
+    ;; verify can mint
+    (asserts! (is-eq (can-mint-and-update-spots tx-sender) (ok true)) err-cannot-mint)
+    ;; pay to mint price / discount_price
+    (try! (payment-by-address tx-sender))
     (ok (try! (mint tx-sender)))))
-
+    
 ;; Burn a token
 (define-public (burn-token (token-id uint))
 	(begin     
 		(asserts! (is-eq (some tx-sender) (nft-get-owner? bitcoin-degen token-id)) err-no-rights)
 		(nft-burn? bitcoin-degen token-id tx-sender)))
 
+(define-public (set-only-whitelisted (value bool)) 
+  (begin 
+    (asserts! (is-eq tx-sender (var-get contract-owner))  err-owner-only)
+    (var-set only-whitelisted value)
+    (ok value)))
