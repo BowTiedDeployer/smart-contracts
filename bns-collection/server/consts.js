@@ -1,6 +1,6 @@
-import { cvToHex, cvToJSON, hexToCV, standardPrincipalCV, stringAsciiCV, uintCV } from '@stacks/transactions';
+import { cvToHex, cvToJSON, hexToCV, standardPrincipalCV, stringAsciiCV, uintCV, listCV } from '@stacks/transactions';
 
-export const network = 'testnet';
+export const network = 'mocknet';
 export const coreApiUrl = {
   mainnet: 'https://muddy-clean-choice.stacks-mainnet.discover.quiknode.pro/9fbe48eca6f617ed40f285ea0b7587d2542bfb4f',
   testnet: 'https://stacks-node-api.testnet.stacks.co',
@@ -14,16 +14,19 @@ export const contractBitcoinDegens = {
     contractAddress: '', //TODO: complete
     contractName: 'bitcoin-degens',
     functionName: 'get-nft-name',
+    functionBatchName: 'get-batch-nft-name',
   },
   testnet: {
     contractAddress: 'ST26FG29A6Q187QW0QGTCKYDAYVGY1GN21XJCVABG',
     contractName: 'dolphin-apple-juice',
     functionName: 'get-nft-name',
+    functionBatchName: 'get-batch-nft-name',
   },
   mocknet: {
     contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
     contractName: 'bitcoin-degens',
     functionName: 'get-nft-name',
+    functionBatchName: 'get-batch-nft-name',
   },
 };
 
@@ -42,6 +45,18 @@ const convertStringToArgReadOnly = (str) => {
 
 const convertPrincipalToArgReadOnly = (principal) => {
   return cvToHex(principalCV(principal));
+};
+
+export const convertIntListForBlockchainCall = (intList) => {
+  let uintList = [];
+  intList.forEach((x) => {
+    uintList.push(uintCV(x));
+  });
+  return uintList;
+};
+
+export const convertUintListToHex = (uintList) => {
+  return cvToHex(listCV(uintList));
 };
 
 const isPrincipal = (str) => {

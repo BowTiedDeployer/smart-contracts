@@ -1,5 +1,13 @@
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
-import { network, contractBitcoinDegens, coreApiUrl, readOnlySCJsonResponse, jsonContentCreate } from './consts.js';
+import {
+  network,
+  contractBitcoinDegens,
+  coreApiUrl,
+  readOnlySCJsonResponse,
+  jsonContentCreate,
+  convertUintListToHex,
+  convertIntListForBlockchainCall,
+} from './consts.js';
 import fs from 'fs';
 import csvWriter from 'csv-write-stream';
 import cron from 'node-cron';
@@ -35,21 +43,49 @@ const getNFTNameBitcoinDegens = async (id) => {
   ).then((x) => (x.value != null ? x.value.value : null));
 };
 
+const getNFTNameListBitcoinDegens = async (idList) => {
+  let convertedIdList = convertUintListToHex(convertIntListForBlockchainCall(idList));
+
+  //format idList to be called
+  return readOnlySCJsonResponse(
+    networkN,
+    contractBitcoinDegens[network].contractAddress,
+    contractBitcoinDegens[network].contractAddress,
+    contractBitcoinDegens[network].contractName,
+    contractBitcoinDegens[network].functionBatchName,
+    [convertedIdList]
+  ).then((x) => {
+    console.log(x.json());
+  });
+};
+
 // find all the names of bitcoin degens
 const findAllNames = async () => {
-  for (let i = 1; i <= 3; i++) {
-    // read json
-    let degenJson = JSON.parse(fs.readFileSync(`../files_stored/jsons/${i}.json`));
-    const blockchainDegenName = await getNFTNameBitcoinDegens(i);
-    if (degenJson.name != blockchainDegenName) {
-      // replace json.name = getNFTNameBitcoinDegens
-      degenJson.name = blockchainDegenName;
-      const jsonContent = jsonContentCreate(degenJson);
-      // reWrite json
-      fs.writeFileSync(`../files_stored/jsons/${i}.json`, jsonContent);
+  let idList = [];
+  let blockchainDegenNameMap;
 
-      // keep a log with the updates jsons
-      appendToCsv(i, degenJson.name);
+  for (let j = 0; i < 1; i++) {
+    // how many batch get name calls are done
+    for (let i = 1; i <= 4; i++) {
+      // how many ids are in a batch call
+      idList.push(i);
+    }
+    blockchainDegenNameMap = await getNFTNameListBitcoinDegens(idList);
+
+    for (let i = 1; i <= 4; i++) {
+      let curr_id = j * 4 + i;
+      // read json
+      let degenJson = JSON.parse(fs.readFileSync(`../files_stored/jsons/${curr_id}.json`));
+      if (degenJson.name != blockchainDegenNameMap[curr_id]) {
+        // replace json.name = getNFTNameBitcoinDegens
+        degenJson.name = blockchainDegenName;
+        const jsonContent = jsonContentCreate(degenJson);
+        // reWrite json
+        fs.writeFileSync(`../files_stored/jsons/${curr_id}.json`, jsonContent);
+
+        // keep a log with the updates jsons
+        appendToCsv(i, degenJson.name);
+      }
     }
   }
 };
