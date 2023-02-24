@@ -47,30 +47,34 @@ const getNFTNameListBitcoinDegens = async (idList) => {
   let convertedIdList = convertUintListToHex(convertIntListForBlockchainCall(idList));
 
   //format idList to be called
-  return readOnlySCJsonResponse(
+  return await readOnlySCJsonResponse(
     networkN,
     contractBitcoinDegens[network].contractAddress,
     contractBitcoinDegens[network].contractAddress,
     contractBitcoinDegens[network].contractName,
     contractBitcoinDegens[network].functionBatchName,
     [convertedIdList]
-  ).then((x) => {
-    console.log(x.json());
-  });
+  );
 };
 
 // find all the names of bitcoin degens
 const findAllNames = async () => {
   let idList = [];
-  let blockchainDegenNameMap;
-
-  for (let j = 0; i < 1; i++) {
+  let blockchainDegenNameMap = {};
+  let blockchainDegenNameMapRaw;
+  let mapId = 0;
+  for (let j = 0; j < 1; j++) {
     // how many batch get name calls are done
     for (let i = 1; i <= 4; i++) {
       // how many ids are in a batch call
       idList.push(i);
     }
-    blockchainDegenNameMap = await getNFTNameListBitcoinDegens(idList);
+    blockchainDegenNameMapRaw = await getNFTNameListBitcoinDegens(idList);
+
+    blockchainDegenNameMapRaw.value.forEach((listItem) => {
+      mapId++;
+      blockchainDegenNameMap[mapId] = blockchainDegenNameMapRaw.value[mapId - 1].value.value;
+    });
 
     for (let i = 1; i <= 4; i++) {
       let curr_id = j * 4 + i;
@@ -78,7 +82,7 @@ const findAllNames = async () => {
       let degenJson = JSON.parse(fs.readFileSync(`../files_stored/jsons/${curr_id}.json`));
       if (degenJson.name != blockchainDegenNameMap[curr_id]) {
         // replace json.name = getNFTNameBitcoinDegens
-        degenJson.name = blockchainDegenName;
+        degenJson.name = blockchainDegenNameMap[curr_id];
         const jsonContent = jsonContentCreate(degenJson);
         // reWrite json
         fs.writeFileSync(`../files_stored/jsons/${curr_id}.json`, jsonContent);

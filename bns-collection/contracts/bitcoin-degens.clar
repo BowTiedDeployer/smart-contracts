@@ -127,4 +127,3 @@
 	(begin     
 		(asserts! (is-eq (some tx-sender) (nft-get-owner? bitcoin-degen token-id)) err-no-rights)
 		(nft-burn? bitcoin-degen token-id tx-sender)))
-

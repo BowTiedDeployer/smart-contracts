@@ -90,7 +90,10 @@ export async function readOnlySCJsonResponse(
   functionName,
   args
 ) {
-  const convertedArgs = convertArgsReadOnly(args);
+  const convertedArgs =
+    // convertArgsReadOnly(
+    args;
+  // );
   try {
     const url = urlApis.readOnly(network, contractAddress, contractName, functionName);
     const res = await fetch(url, {
