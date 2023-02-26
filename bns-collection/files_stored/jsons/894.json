@@ -1,0 +1,36 @@
+{
+  "sip": 16,
+  "name": "BitcoinDegen#894",
+  "description": "A tribute to the Stacks blockchain and BNS success. 1000 unique Bitcoin Degens",
+  "image": "https://stacksdegens.com/bitcoin-degens/images/894.png",
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Pine Green"
+    },
+    {
+      "trait_type": "Car",
+      "value": "Sand"
+    },
+    {
+      "trait_type": "Type",
+      "value": "Monkey-Brown"
+    },
+    {
+      "trait_type": "Face",
+      "value": "Pierce"
+    },
+    {
+      "trait_type": "Rims",
+      "value": "WGrey"
+    },
+    {
+      "trait_type": "Head",
+      "value": "Helmet"
+    }
+  ],
+  "properties": {
+    "image_game": "https://stacksdegens.com/bitcoin-degens/in-game/894.png",
+    "collection": "BitcoinDegens"
+  }
+}
