@@ -21,3 +21,5 @@ node file path is not public
 server files cannot access public_html files
 it can modify 1.json if stored on server but is not viewable by default in the app
 probably needs an app over it to display the jsons from the backend
+
+### the smart contract with whitelist, without discount will be used
