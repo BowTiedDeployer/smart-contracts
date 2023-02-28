@@ -15,23 +15,13 @@ path = 'contracts/bns.clar'
 clarity_version = 1
 epoch = 2.0
 
-[contracts.bnsx-extensions]
-path = 'contracts/bnsx-extensions.clar'
-clarity_version = 1
-epoch = 2.0
-
-[contracts.bnsx-registry]
-path = 'contracts/bnsx-registry.clar'
+[contracts.bnsx-fake]
+path = 'contracts/bnsx-fake.clar'
 clarity_version = 1
 epoch = 2.0
 
 [contracts.conversions]
 path = 'contracts/conversions.clar'
-clarity_version = 1
-epoch = 2.0
-
-[contracts.extension-trait]
-path = 'contracts/extension-trait.clar'
 clarity_version = 1
 epoch = 2.0
 
@@ -50,10 +40,6 @@ path = 'contracts/outdated-bitcoin-degens.clar'
 clarity_version = 1
 epoch = 2.0
 
-[contracts.proposal-trait]
-path = 'contracts/proposal-trait.clar'
-clarity_version = 1
-epoch = 2.0
 [repl.analysis]
 passes = ['check_checker']
 
