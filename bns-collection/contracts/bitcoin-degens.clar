@@ -163,7 +163,28 @@
     (asserts! (is-eq (can-mint-and-update-spots tx-sender) (ok true)) err-cannot-mint)
     (try! (stx-transfer? price tx-sender (var-get contract-owner)))
     (ok (try! (mint tx-sender)))))
-    
+
+(define-public (claim-5) 
+  (begin 
+    (try! (claim))
+    (try! (claim))
+    (try! (claim))
+    (try! (claim))
+    (ok (claim))))
+
+(define-public (claim-10) 
+  (begin 
+    (try! (claim))
+    (try! (claim))
+    (try! (claim))
+    (try! (claim))
+    (try! (claim))
+    (try! (claim))
+    (try! (claim))
+    (try! (claim))
+    (try! (claim))
+    (ok (claim))))
+
 ;; Burn a token
 (define-public (burn-token (token-id uint))
 	(begin     
