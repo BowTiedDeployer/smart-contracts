@@ -125,11 +125,10 @@
 (define-private (mint (new-owner principal))
   (let 
     ((next-id (+ u1 (var-get last-id)))
-      (address-bns-name (contract-call? .bns resolve-principal new-owner))) 
-      (asserts! (<= next-id total-amount) err-full-mint-reached)
-    (if (is-err address-bns-name)  
-      ;; does not have bns address
-      (set-nft-name next-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string next-id)))
+      (address-bns-name (contract-call? .bns resolve-principal new-owner))
+      (address-bnsx-name (contract-call? .bnsx-fake get-primary-name new-owner))) 
+    (asserts! (<= next-id total-amount) err-full-mint-reached)
+    (if (not (is-err address-bns-name))  
       (let 
         ((complete-bns-name (unwrap! address-bns-name err-bns-convert))
           (bns-name (as-max-len? (get name complete-bns-name) u20))
@@ -140,7 +139,21 @@
             (get-address-bns-name 
               {name: (unwrap-panic bns-name),
               namespace: (unwrap-panic bns-namespace)}))
-          (set-nft-name next-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string next-id))))))   
+          (set-nft-name next-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string next-id)))))
+      (if (is-some (unwrap! address-bnsx-name err-bns-convert)) 
+        (let 
+          ((complete-bns-name (unwrap! (unwrap! address-bnsx-name err-bns-convert) err-bns-convert))
+            (bns-name (as-max-len? (get name complete-bns-name) u20))
+            (bns-namespace (as-max-len? (get namespace complete-bns-name) u9)))
+          (if (and (is-some bns-name)  (is-some bns-namespace)) 
+            ;; bns address respect the criterias
+            (set-nft-name next-id 
+              (get-address-bns-name 
+                {name: (unwrap-panic bns-name),
+                namespace: (unwrap-panic bns-namespace)}))
+            (set-nft-name next-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string next-id)))))
+        ;; does not have bns address
+        (set-nft-name next-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string next-id)))))
     (var-set last-id next-id)
     (nft-mint? bitcoin-degen next-id new-owner)))
 
