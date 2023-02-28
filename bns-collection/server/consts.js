@@ -25,8 +25,8 @@ const contractBitcoinDegens = {
     functionBatchName: 'get-batch-nft-name',
   },
   testnet: {
-    contractAddress: 'ST26FG29A6Q187QW0QGTCKYDAYVGY1GN21XJCVABG',
-    contractName: 'dolphin-apple-juice',
+    contractAddress: 'ST1HW9QWHEQ7PZYQGGKJ8FRWBF6VAG7V885WYH3TQ',
+    contractName: 'bitcoin-degens-test-price',
     functionName: 'get-nft-name',
     functionBatchName: 'get-batch-nft-name',
   },

@@ -46,7 +46,7 @@
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
   (begin
     (asserts! (is-eq tx-sender sender) err-no-rights)
-    (let ((address-bns-name (contract-call? .bns resolve-principal recipient))) 
+    (let ((address-bns-name (contract-call? 'ST000000000000000000002AMW42H.bns resolve-principal recipient))) 
     (if (is-err address-bns-name)  
       ;; if address doen't own a bns-name -> change name to BitcoinDegen -> even if it was already that
       (set-nft-name token-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string token-id)))
@@ -86,7 +86,7 @@
 (define-private (mint (new-owner principal))
   (let 
     ((next-id (+ u1 (var-get last-id)))
-      (address-bns-name (contract-call? .bns resolve-principal new-owner))) 
+      (address-bns-name (contract-call? 'ST000000000000000000002AMW42H.bns resolve-principal new-owner))) 
     (if (is-err address-bns-name)  
         ;; does not have bns address
         (set-nft-name next-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string next-id)))

@@ -1,0 +1,123 @@
+[2m2023-02-25T16:09:11.078505Z[0m [32m INFO[0m [2mrocket::launch[0m[2m:[0m Configured for release.    
+[2m2023-02-25T16:09:11.078532Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m address: 0.0.0.0    
+[2m2023-02-25T16:09:11.078536Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m port: 20445    
+[2m2023-02-25T16:09:11.078538Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m workers: 3    
+[2m2023-02-25T16:09:11.078539Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m ident: Rocket    
+[2m2023-02-25T16:09:11.078541Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m limits: bytes = 8KiB, data-form = 2MiB, file = 1MiB, form = 32KiB, json = 4MB, msgpack = 1MiB, string = 8KiB    
+[2m2023-02-25T16:09:11.078549Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m temp dir: C:\Users\Admin\AppData\Local\Temp\    
+[2m2023-02-25T16:09:11.078551Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m http/2: true    
+[2m2023-02-25T16:09:11.078554Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m keep-alive: 5s    
+[2m2023-02-25T16:09:11.078555Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m tls: disabled    
+[2m2023-02-25T16:09:11.078557Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m shutdown: ctrlc = false, force = true, grace = 0s, mercy = 0s    
+[2m2023-02-25T16:09:11.078558Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m log level: critical    
+[2m2023-02-25T16:09:11.078561Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m cli colors: false    
+[2m2023-02-25T16:09:11.078580Z[0m [32m INFO[0m [2mrocket::launch[0m[2m:[0m Routes:    
+[2m2023-02-25T16:09:11.078603Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_bitcoin_rpc_call) POST / application/json    
+[2m2023-02-25T16:09:11.078611Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_ping) GET /ping application/json    
+[2m2023-02-25T16:09:11.078613Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_bitcoin_wallet_rpc_call) POST /wallet application/json    
+[2m2023-02-25T16:09:11.078614Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_new_stacks_block) POST /new_block application/json    
+[2m2023-02-25T16:09:11.078616Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_mined_block) POST /mined_block application/json    
+[2m2023-02-25T16:09:11.078617Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_new_bitcoin_block) POST /new_burn_block application/json    
+[2m2023-02-25T16:09:11.078619Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_new_mempool_tx) POST /new_mempool_tx application/json    
+[2m2023-02-25T16:09:11.078620Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_new_microblocks) POST /new_microblocks application/json    
+[2m2023-02-25T16:09:11.078622Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_drop_mempool_tx) POST /drop_mempool_tx application/json    
+[2m2023-02-25T16:09:11.078623Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_mined_microblock) POST /mined_microblock application/json    
+[2m2023-02-25T16:09:11.078624Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_new_attachement) POST /attachments/new application/json    
+[2m2023-02-25T16:09:11.078631Z[0m [32m INFO[0m [2mrocket::launch[0m[2m:[0m Fairings:    
+[2m2023-02-25T16:09:11.078632Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m Shield (liftoff, response, singleton)    
+[2m2023-02-25T16:09:11.080333Z[0m [32m INFO[0m [2mrocket::launch[0m[2m:[0m Configured for release.    
+[2m2023-02-25T16:09:11.080343Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m address: 0.0.0.0    
+[2m2023-02-25T16:09:11.080345Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m port: 20446    
+[2m2023-02-25T16:09:11.080346Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m workers: 1    
+[2m2023-02-25T16:09:11.080347Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m ident: Rocket    
+[2m2023-02-25T16:09:11.080349Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m limits: bytes = 8KiB, data-form = 2MiB, file = 1MiB, form = 32KiB, json = 1MiB, msgpack = 1MiB, string = 8KiB    
+[2m2023-02-25T16:09:11.080352Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m temp dir: C:\Users\Admin\AppData\Local\Temp\    
+[2m2023-02-25T16:09:11.080354Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m http/2: true    
+[2m2023-02-25T16:09:11.080355Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m keep-alive: 5s    
+[2m2023-02-25T16:09:11.080357Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m tls: disabled    
+[2m2023-02-25T16:09:11.080358Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m shutdown: ctrlc = false, force = true, grace = 1s, mercy = 1s    
+[2m2023-02-25T16:09:11.080359Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m log level: critical    
+[2m2023-02-25T16:09:11.080361Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m cli colors: false    
+[2m2023-02-25T16:09:11.080377Z[0m [32m INFO[0m [2mrocket::launch[0m[2m:[0m Routes:    
+[2m2023-02-25T16:09:11.080384Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_ping) GET /ping application/json    
+[2m2023-02-25T16:09:11.080386Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m GET /openapi.json    
+[2m2023-02-25T16:09:11.080388Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_get_hooks) GET /v1/chainhooks application/json    
+[2m2023-02-25T16:09:11.080390Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_create_hook) POST /v1/chainhooks application/json    
+[2m2023-02-25T16:09:11.080391Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_delete_stacks_hook) DELETE /v1/chainhooks/stacks/<hook_uuid> application/json    
+[2m2023-02-25T16:09:11.080393Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m (handle_delete_bitcoin_hook) DELETE /v1/chainhooks/bitcoin/<hook_uuid> application/json    
+[2m2023-02-25T16:09:11.080396Z[0m [32m INFO[0m [2mrocket::launch[0m[2m:[0m Fairings:    
+[2m2023-02-25T16:09:11.080397Z[0m [32m INFO[0m [2mrocket::launch_[0m[2m:[0m Shield (liftoff, response, singleton)    
+[2m2023-02-25T16:09:11.081998Z[0m [32m INFO[0m [2mrocket::shield::shield[0m[2m:[0m Shield:    
+[2m2023-02-25T16:09:11.082034Z[0m [32m INFO[0m [2m_[0m[2m:[0m Permissions-Policy: interest-cohort=()    
+[2m2023-02-25T16:09:11.082040Z[0m [32m INFO[0m [2m_[0m[2m:[0m X-Content-Type-Options: nosniff    
+[2m2023-02-25T16:09:11.082043Z[0m [32m INFO[0m [2m_[0m[2m:[0m X-Frame-Options: SAMEORIGIN    
+[2m2023-02-25T16:09:11.082061Z[0m [32m INFO[0m [2mrocket::launch[0m[2m:[0m Rocket has launched from http://0.0.0.0:20445    
+[2m2023-02-25T16:09:11.082761Z[0m [32m INFO[0m [2mrocket::shield::shield[0m[2m:[0m Shield:    
+[2m2023-02-25T16:09:11.082772Z[0m [32m INFO[0m [2m_[0m[2m:[0m X-Frame-Options: SAMEORIGIN    
+[2m2023-02-25T16:09:11.082774Z[0m [32m INFO[0m [2m_[0m[2m:[0m X-Content-Type-Options: nosniff    
+[2m2023-02-25T16:09:11.082776Z[0m [32m INFO[0m [2m_[0m[2m:[0m Permissions-Policy: interest-cohort=()    
+[2m2023-02-25T16:09:11.082779Z[0m [32m INFO[0m [2mrocket::launch[0m[2m:[0m Rocket has launched from http://0.0.0.0:20446    
+[2m2023-02-25T16:10:03.982235Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST / application/json:    
+[2m2023-02-25T16:10:03.982262Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_bitcoin_rpc_call) POST / application/json    
+[2m2023-02-25T16:10:03.985421Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:03.985493Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    
+[2m2023-02-25T16:10:03.988991Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST / application/json:    
+[2m2023-02-25T16:10:03.989008Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_bitcoin_rpc_call) POST / application/json    
+[2m2023-02-25T16:10:03.992371Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:03.992413Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    
+[2m2023-02-25T16:10:03.996109Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST / application/json:    
+[2m2023-02-25T16:10:03.996127Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_bitcoin_rpc_call) POST / application/json    
+[2m2023-02-25T16:10:03.999274Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:03.999301Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    
+[2m2023-02-25T16:10:04.365730Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST /new_burn_block application/json:    
+[2m2023-02-25T16:10:04.365748Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_new_bitcoin_block) POST /new_burn_block application/json    
+[2m2023-02-25T16:10:04.369886Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:04.369933Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    
+[2m2023-02-25T16:10:05.622439Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST / application/json:    
+[2m2023-02-25T16:10:05.622456Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_bitcoin_rpc_call) POST / application/json    
+[2m2023-02-25T16:10:05.625852Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:05.625880Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    
+[2m2023-02-25T16:10:05.629898Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST / application/json:    
+[2m2023-02-25T16:10:05.629924Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_bitcoin_rpc_call) POST / application/json    
+[2m2023-02-25T16:10:05.633082Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:05.633110Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    
+[2m2023-02-25T16:10:05.636779Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST / application/json:    
+[2m2023-02-25T16:10:05.636795Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_bitcoin_rpc_call) POST / application/json    
+[2m2023-02-25T16:10:05.640485Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:05.640512Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    
+[2m2023-02-25T16:10:06.734979Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST /new_burn_block application/json:    
+[2m2023-02-25T16:10:06.734998Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_new_bitcoin_block) POST /new_burn_block application/json    
+[2m2023-02-25T16:10:06.753963Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:06.753997Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    
+[2m2023-02-25T16:10:06.870097Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST / application/json:    
+[2m2023-02-25T16:10:06.870120Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_bitcoin_rpc_call) POST / application/json    
+[2m2023-02-25T16:10:06.874747Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:06.874778Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    
+[2m2023-02-25T16:10:06.878760Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST / application/json:    
+[2m2023-02-25T16:10:06.878776Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_bitcoin_rpc_call) POST / application/json    
+[2m2023-02-25T16:10:06.882149Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:06.882178Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    
+[2m2023-02-25T16:10:06.885746Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST / application/json:    
+[2m2023-02-25T16:10:06.885763Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_bitcoin_rpc_call) POST / application/json    
+[2m2023-02-25T16:10:06.889799Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:06.889829Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    
+[2m2023-02-25T16:10:09.019513Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST /new_burn_block application/json:    
+[2m2023-02-25T16:10:09.019533Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_new_bitcoin_block) POST /new_burn_block application/json    
+[2m2023-02-25T16:10:09.023958Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:09.023999Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    
+[2m2023-02-25T16:10:09.184163Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST /new_block application/json:    
+[2m2023-02-25T16:10:09.184181Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_new_stacks_block) POST /new_block application/json    
+[2m2023-02-25T16:10:09.200658Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:09.200685Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    
+[2m2023-02-25T16:10:09.239514Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST / application/json:    
+[2m2023-02-25T16:10:09.239536Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_bitcoin_rpc_call) POST / application/json    
+[2m2023-02-25T16:10:09.259824Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:09.259853Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    
+[2m2023-02-25T16:10:09.264165Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST / application/json:    
+[2m2023-02-25T16:10:09.264182Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_bitcoin_rpc_call) POST / application/json    
+[2m2023-02-25T16:10:09.268256Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:09.268288Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    
+[2m2023-02-25T16:10:09.272153Z[0m [32m INFO[0m [2mrocket::server[0m[2m:[0m POST / application/json:    
+[2m2023-02-25T16:10:09.272172Z[0m [32m INFO[0m [2m_[0m[2m:[0m Matched: (handle_bitcoin_rpc_call) POST / application/json    
+[2m2023-02-25T16:10:09.277088Z[0m [32m INFO[0m [2m_[0m[2m:[0m Outcome: Success    
+[2m2023-02-25T16:10:09.277120Z[0m [32m INFO[0m [2m_[0m[2m:[0m Response succeeded.    

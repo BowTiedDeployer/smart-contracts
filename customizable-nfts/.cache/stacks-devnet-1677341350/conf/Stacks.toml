@@ -1,0 +1,145 @@
+
+[node]
+working_dir = "/devnet"
+rpc_bind = "0.0.0.0:20443"
+p2p_bind = "0.0.0.0:20444"
+miner = true
+seed = "3b68e410cc7f9b8bae76f2f2991b69ecd0627c95da22a904065dfb2a73d0585f01"
+local_peer_seed = "3b68e410cc7f9b8bae76f2f2991b69ecd0627c95da22a904065dfb2a73d0585f01"
+pox_sync_sample_secs = 0
+wait_time_for_blocks = 0
+wait_time_for_microblocks = 50
+microblock_frequency = 1000
+
+[connection_options]
+# inv_sync_interval = 10
+# download_interval = 10
+# walk_interval = 10
+disable_block_download = true
+disable_inbound_handshakes = true
+disable_inbound_walks = true
+public_ip_address = "1.1.1.1:1234"
+
+[miner]
+first_attempt_time_ms = 500
+subsequent_attempt_time_ms = 1000
+# microblock_attempt_time_ms = 15000
+
+[[ustx_balance]]
+address = "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST3YJFJ3Y3XS28J7PD8CBD9CWCMHHGEXXVKNBJAT1"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST3MT8Q0E61GSB3HJ0GQ510VPHMMNGGKPZKJMB9PK"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST3XRFYD6A2A9T8QWT9NFXHP8XFCDEQ30EFZC8CMF"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "STRRXZWHE3WC9WF11WJX3XFDB19BNCRYSJH9EP5"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST273Z5AWCAB0P11WP2QRNMR705QYP3VQ4T1JDAZP"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST2D1SPJ6HZ2BKKH55Z8DQDMQ409KG6H3FVVFZNMX"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "STZHX0QH4P4ARZCC1P8AVD8KXYH0QNE7SZNE5WAP"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST3S2ZW2CHKJPGMJN4WMAT9DH30YA2RYMPCV6KAJD"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST3RJKHMQ134F8XVR3X3538ATS18J1RB0C96D7FG3"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST4JJ20RC02MESCW46CDJCQ3HBPP6D9XW0YEKADF"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST2RNBTWA0SX7SRRG6SFJKC2EC5NHYF80MS5JB4MG"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST3X70HXKKCYDH9DAKJMC6WCDDYB25BVRDZ5MZGFH"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST2REHHS5J3CERCRBEPMGH7921Q6PYKAADT7JP2VB"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST3AM1A56AK2C1XAFJ4115ZSV26EB49BVQ10MGCS0"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST3PF13W7Z0RRM42A8VZRVFQ75SV1K26RXEP8YGKJ"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST3NBRSFKX28FQ2ZJ1MAKX58HKHSDGNV5N7R21XCP"
+amount = 100000000000000
+
+[[ustx_balance]]
+address = "ST268BPGYGM8R960QC735ERJ5QCP5C31W106XXJKA"
+amount = 100000000000000
+
+# Add orchestrator (docker-host) as an event observer
+[[events_observer]]
+endpoint = "host.docker.internal:20445"
+retry_count = 255
+include_data_events = true
+events_keys = ["*"]
+
+# Add stacks-api as an event observer
+[[events_observer]]
+endpoint = "stacks-api.customizable-nfts.devnet:3700"
+retry_count = 255
+include_data_events = false
+events_keys = ["*"]
+
+[burnchain]
+chain = "bitcoin"
+mode = "krypton"
+poll_time_secs = 1
+timeout = 30
+peer_host = "host.docker.internal"
+rpc_ssl = false
+wallet_name = "devnet"
+username = "devnet"
+password = "devnet"
+rpc_port = 20445
+peer_port = 18444
