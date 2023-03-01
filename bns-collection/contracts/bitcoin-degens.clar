@@ -18,7 +18,7 @@
 (define-constant err-no-rights (err u403))
 
 ;; price 100 stx
-(define-constant price u100000000)
+(define-constant price u69000000)
 (define-constant total-amount u1000)
 
 ;; define variables

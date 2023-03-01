@@ -24,7 +24,7 @@ const GET_ADDRESS_BNS_NAME = 'get-address-bns-name';
 const CLAIM_OK_RESPONSE = true;
 const ERR_CANNOT_MINT = 101;
 const ERR_FULL_MINT_REACHED = 104;
-const MINT_PRICE = '100000000';
+const MINT_PRICE = '69000000';
 
 // function preorder_name_hash(name: string, salt: string) {
 // return hash160(Buffer.concat([Buffer.from(name),typeof salt !== 'string' ? salt : Buffer.from(salt)]));
