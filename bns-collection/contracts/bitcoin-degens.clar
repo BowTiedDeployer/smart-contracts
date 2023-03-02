@@ -25,6 +25,7 @@
 ;; Store the last issues token ID
 (define-data-var last-id uint u0)
 (define-data-var contract-owner principal tx-sender)
+(define-data-var mint-enabled bool true)
 (define-data-var only-whitelisted bool true)
 (define-data-var uri-root (string-ascii 80) "https://stacksdegens.com/bitcoin-degens/jsons/")
 
@@ -41,6 +42,14 @@
 ;; set the whitelist addresses and number of whitelists directly in the smart contract
 ;;
 ;;
+
+(define-read-only (is-mint-enabled) 
+  (var-get mint-enabled))
+
+(define-public (set-mint-enabler (bool-value bool))
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
+    (ok (var-set mint-enabled bool-value))))
 
 ;; TODO: can be done without unwrap-panic?
 (define-read-only (is-whitelisted (address principal)) 
@@ -61,8 +70,11 @@
   (map-get? whitelist-spots address))
 
 ;; if address does not have map-get or is 0 => no whitelist
+;; only contract owner can set whitelist
 (define-public (set-whitelist-spots (address principal) (spots uint))
-  (ok (map-set whitelist-spots address spots)))
+  (begin
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
+    (ok (map-set whitelist-spots address spots))))
 
 
 
@@ -82,21 +94,21 @@
 ;;
 
 ;; SIP009: Transfer token to a specified principal
-(define-public (transfer (token-id uint) (sender principal) (recipient principal))
-  (begin
-    (asserts! (is-eq tx-sender sender) err-no-rights)
-    (let ((address-bns-name (contract-call? .bns resolve-principal recipient))) 
-    (if (is-err address-bns-name)  
-      ;; if address doen't own a bns-name -> change name to BitcoinDegen -> even if it was already that
-      (set-nft-name token-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string token-id)))
-      ;; else if recipient has bns -> change name to it bns
-      (let ((complete-bns-name (unwrap! address-bns-name err-bns-convert))
-        (bns-name (as-max-len? (get name complete-bns-name) u20))
-        (bns-namespace (as-max-len? (get namespace complete-bns-name) u9)))
-        (if (and (is-some bns-name) (is-some bns-namespace)) 
-          (set-nft-name token-id (get-address-bns-name {name: (unwrap-panic bns-name), namespace: (unwrap-panic bns-namespace)}))
-          false)))
-    (nft-transfer? bitcoin-degen token-id sender recipient))))
+;; (define-public (transfer (token-id uint) (sender principal) (recipient principal))
+;;   (begin
+;;     (asserts! (is-eq tx-sender sender) err-no-rights)
+;;     (let ((address-bns-name (contract-call? .bns resolve-principal recipient))) 
+;;     (if (is-err address-bns-name)  
+;;       ;; if address doen't own a bns-name -> change name to BitcoinDegen -> even if it was already that
+;;       (set-nft-name token-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string token-id)))
+;;       ;; else if recipient has bns -> change name to it bns
+;;       (let ((complete-bns-name (unwrap! address-bns-name err-bns-convert))
+;;         (bns-name (as-max-len? (get name complete-bns-name) u20))
+;;         (bns-namespace (as-max-len? (get namespace complete-bns-name) u9)))
+;;         (if (and (is-some bns-name) (is-some bns-namespace)) 
+;;           (set-nft-name token-id (get-address-bns-name {name: (unwrap-panic bns-name), namespace: (unwrap-panic bns-namespace)}))
+;;           false)))
+;;     (nft-transfer? bitcoin-degen token-id sender recipient))))
     
 
 (define-public (transfer-memo (token-id uint) (sender principal) (recipient principal) (memo (buff 34)))
@@ -120,6 +132,40 @@
 ;; (define-read-only (get-token-uri (token-id uint))
 ;;   (let ((token-urr (map-get? token-url token-id)))
 ;;     (ok token-urr)))
+
+(define-public (transfer (token-id uint) (sender principal) (recipient principal))
+  (begin
+    (asserts! (is-eq tx-sender sender) err-no-rights)
+    (let ((address-bns-name (contract-call? .bns resolve-principal recipient)) 
+      (address-bnsx-name (contract-call? .bnsx-fake get-primary-name recipient)))
+      (if (not (is-err address-bns-name))  
+        (let 
+          ((complete-bns-name (unwrap! address-bns-name err-bns-convert))
+            (bns-name (as-max-len? (get name complete-bns-name) u20))
+            (bns-namespace (as-max-len? (get namespace complete-bns-name) u9)))
+          (if (and (is-some bns-name)  (is-some bns-namespace)) 
+            ;; bns address respect the criterias
+            (set-nft-name token-id 
+              (get-address-bns-name 
+                {name: (unwrap-panic bns-name),
+                namespace: (unwrap-panic bns-namespace)}))
+            (set-nft-name token-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string token-id)))))
+        (if (is-some (unwrap! address-bnsx-name err-bns-convert)) 
+          (let 
+            ((complete-bns-name (unwrap! (unwrap! address-bnsx-name err-bns-convert) err-bns-convert))
+              (bns-name (as-max-len? (get name complete-bns-name) u20))
+              (bns-namespace (as-max-len? (get namespace complete-bns-name) u9)))
+            (if (and (is-some bns-name)  (is-some bns-namespace)) 
+              ;; bns address respect the criterias
+              (set-nft-name token-id 
+                (get-address-bns-name 
+                  {name: (unwrap-panic bns-name),
+                  namespace: (unwrap-panic bns-namespace)}))
+              (set-nft-name token-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string token-id)))))
+          ;; does not have bns address
+          (set-nft-name token-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string token-id)))))
+    (nft-transfer? bitcoin-degen token-id sender recipient))))
+    
 
 ;; Internal - Mint new NFT
 (define-private (mint (new-owner principal))

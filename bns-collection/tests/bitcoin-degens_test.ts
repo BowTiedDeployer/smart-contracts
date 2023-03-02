@@ -1283,6 +1283,8 @@ Clarinet.test({
     const dave = accounts.get('wallet_4')!;
     const elephant = accounts.get('wallet_5')!;
     const fred = accounts.get('wallet_6')!;
+    const graphite = accounts.get('wallet_7')!;
+    const hector = accounts.get('wallet_8')!;
     const cases = [
       {
         namespace: 'btc',
@@ -1427,6 +1429,21 @@ Clarinet.test({
         ],
         fred.address
       ),
+      Tx.contractCall(
+        'bnsx-fake',
+        'set-primary-name',
+        [
+          types.principal(graphite.address),
+          types.tuple({ name: types.buff('graphite'), namespace: types.buff('btc') }),
+        ],
+        fred.address
+      ),
+      Tx.contractCall(
+        'bnsx-fake',
+        'set-primary-name',
+        [types.principal(hector.address), types.tuple({ name: types.buff('hector'), namespace: types.buff('stx') })],
+        fred.address
+      ),
     ]);
     assertEquals(block.height, 6);
     block.receipts[0].result.expectOk().expectBool(true);
@@ -1500,6 +1517,8 @@ Clarinet.test({
       Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], charlie.address), // full-price
       Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], dave.address), // full-price
       Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], elephant.address), // full-price
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], graphite.address), // full-price
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], hector.address), // full-price
     ]);
 
     block.receipts[0].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
@@ -1573,8 +1592,29 @@ Clarinet.test({
       chain.callReadOnlyFn(BNS_NFT_CONTRACT_NAME, GET_NFT_NAME, [types.uint(7)], deployer.address).result.expectSome(),
       '"BitcoinDegen#7"'
     );
+    block.receipts[6].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    assertEquals(block.receipts[7].events[0].stx_transfer_event.sender, graphite.address);
+    assertEquals(block.receipts[7].events[0].stx_transfer_event.recipient, deployer.address);
+    assertEquals(block.receipts[7].events[0].stx_transfer_event.amount, MINT_PRICE);
+    assertEquals(block.receipts[7].events[1].type, 'nft_mint_event');
+    assertEquals(block.receipts[7].events[1].nft_mint_event.recipient, graphite.address);
+    assertEquals(
+      chain.callReadOnlyFn(BNS_NFT_CONTRACT_NAME, GET_NFT_NAME, [types.uint(8)], deployer.address).result.expectSome(),
+      '"graphite.btc"'
+    );
+    block.receipts[6].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    assertEquals(block.receipts[8].events[0].stx_transfer_event.sender, hector.address);
+    assertEquals(block.receipts[8].events[0].stx_transfer_event.recipient, deployer.address);
+    assertEquals(block.receipts[8].events[0].stx_transfer_event.amount, MINT_PRICE);
+    assertEquals(block.receipts[8].events[1].type, 'nft_mint_event');
+    assertEquals(block.receipts[8].events[1].nft_mint_event.recipient, hector.address);
+    assertEquals(
+      chain.callReadOnlyFn(BNS_NFT_CONTRACT_NAME, GET_NFT_NAME, [types.uint(9)], deployer.address).result.expectSome(),
+      '"hector.stx"'
+    );
 
-    // - modified to BTC Name ( bob transfer to dave, bob transfer to charlie, bot transfer to elephant)
+    // - modified to BTC Name BNS ( bob transfer to dave, bob transfer to charlie)
+    // modified to BTC Name BNSX ( bot transfer to graphite)
     // - modified to Degen Name ( elephant to charlie, charlie to bob, dave to bob )
     block = chain.mineBlock([
       Tx.contractCall(
@@ -1592,7 +1632,7 @@ Clarinet.test({
       Tx.contractCall(
         BNS_NFT_CONTRACT_NAME,
         TRANSFER,
-        [types.uint(3), types.principal(bob.address), types.principal(elephant.address)],
+        [types.uint(3), types.principal(bob.address), types.principal(graphite.address)],
         bob.address
       ),
       Tx.contractCall(
@@ -1626,7 +1666,7 @@ Clarinet.test({
     );
     assertEquals(
       chain.callReadOnlyFn(BNS_NFT_CONTRACT_NAME, GET_NFT_NAME, [types.uint(3)], deployer.address).result.expectSome(),
-      '"BitcoinDegen#3"'
+      '"graphite.btc"'
     );
     assertEquals(
       chain.callReadOnlyFn(BNS_NFT_CONTRACT_NAME, GET_NFT_NAME, [types.uint(4)], deployer.address).result.expectSome(),
