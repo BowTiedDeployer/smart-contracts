@@ -61,19 +61,21 @@ const findAllNames = async () => {
   let idList = [];
   let blockchainDegenNameMap = {};
   let blockchainDegenNameMapRaw;
-  let mapId = 0;
   for (let j = 0; j < 40; j++) {
     // how many batch get name calls are done
+    idList = [];
     for (let i = 1; i <= 25; i++) {
       // how many ids are in a batch call
-      idList.push(i);
+      idList.push(j * 25 + i);
     }
     console.log(idList);
     blockchainDegenNameMapRaw = await getNFTNameListBitcoinDegens(idList);
     console.log(await blockchainDegenNameMapRaw);
-    blockchainDegenNameMapRaw.value.forEach((listItem) => {
+    let mapId = 0;
+    idList.forEach((i) => {
+      console.log('i', i);
+      blockchainDegenNameMap[i] = blockchainDegenNameMapRaw.value[mapId].value.value;
       mapId++;
-      blockchainDegenNameMap[mapId] = blockchainDegenNameMapRaw.value[mapId - 1].value.value;
     });
 
     for (let i = 1; i <= 25; i++) {
@@ -88,10 +90,11 @@ const findAllNames = async () => {
         fs.writeFileSync(`../files_stored/jsons/${curr_id}.json`, jsonContent);
 
         // keep a log with the updates jsons
-        appendToCsv(i, degenJson.name);
+        appendToCsv(i + j * 25, degenJson.name);
       }
     }
   }
+  console.log(blockchainDegenNameMap);
 };
 
 // cron-job every 5 minutes

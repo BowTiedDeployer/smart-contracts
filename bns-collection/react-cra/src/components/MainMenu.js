@@ -46,7 +46,7 @@ export const MainMenu = () => {
   const getBnsDomain = async () => {
     let bnsResponse = await fetch(apiBNS(userAddress)).then((res) => res.json());
     if (bnsResponse.names[0] !== undefined) setUserBnsDomain(bnsResponse.names[0]);
-    else setUserBnsDomain(`No BNS domain found`);
+    else setUserBnsDomain(`BitcoinDegen#`); // id of the next NFT
     console.log(userBnsDomain);
   };
 
@@ -112,10 +112,10 @@ export const MainMenu = () => {
     setSelectedNFT(id);
   };
 
-  function handleClaim() {
+  function handleClaim(numberOfClaims) {
     const STXPostConditionAddress = userAddress;
-    const STXPostConditionCode = FungibleConditionCode.LessEqual;
-    const STXPostConditionAmount = 0.1 * 1000000;
+    const STXPostConditionCode = FungibleConditionCode.Equal;
+    const STXPostConditionAmount = numberOfClaims * 1000000 * 0.1; // 69 instead of 0.1 if one degen is 69STX;
     const nonFungiblePostConditionAddress = userAddress;
     const nonFungiblePostConditionCode = NonFungibleConditionCode.Sends;
     const assetAddress = `${contractAddress[network]}`;
@@ -163,7 +163,7 @@ export const MainMenu = () => {
               <figcaption>{userBnsDomain}</figcaption>
             </figure>
           </div>
-          <button className="Claim" onClick={handleClaim}>
+          <button className="Claim" onClick={() => handleClaim(1)}>
             Claim
           </button>
           <br></br>

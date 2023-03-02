@@ -20,7 +20,7 @@ export const baseImgUrl = `https://stacksdegens.com/bitcoin-degens/images/`;
 
 export const apiMapping = {
   mainnet: (userAddress) => ({
-    nftsOwned: `https://stacks-node-api.testnet.stacks.co/extended/v1/tokens/nft/holdings?principal=${userAddress}&&`,
+    nftsOwned: `https://stacks-node-api.mainnet.stacks.co/extended/v1/tokens/nft/holdings?principal=${userAddress}&&`,
   }),
   testnet: (userAddress) => ({
     nftsOwned: `https://stacks-node-api.testnet.stacks.co/extended/v1/tokens/nft/holdings?principal=${userAddress}&&`,
