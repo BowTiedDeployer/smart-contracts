@@ -26,7 +26,7 @@
 (define-data-var last-id uint u0)
 (define-data-var contract-owner principal tx-sender)
 (define-data-var mint-enabled bool true)
-(define-data-var only-whitelisted bool true)
+(define-data-var only-whitelisted bool false)
 (define-data-var uri-root (string-ascii 80) "https://stacksdegens.com/bitcoin-degens/jsons/")
 
 ;; define maps

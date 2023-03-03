@@ -105,6 +105,7 @@ Clarinet.test({
     const wallet_2 = accounts.get('wallet_2')!;
     const wallet_3 = accounts.get('wallet_3')!;
     let block = chain.mineBlock([
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, SET_ONLY_WHITELIST, [types.bool(true)], deployer.address),
       Tx.contractCall(
         BNS_NFT_CONTRACT_NAME,
         SET_WHITELIST_SPOTS,
@@ -118,7 +119,7 @@ Clarinet.test({
         deployer.address
       ),
     ]);
-    assertEquals(block.receipts.length, 2);
+    assertEquals(block.receipts.length, 3);
     assertEquals(block.height, 2);
     block = chain.mineBlock([
       Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_1.address),
@@ -151,6 +152,7 @@ Clarinet.test({
     const wallet_2 = accounts.get('wallet_2')!;
     const wallet_3 = accounts.get('wallet_3')!;
     let block = chain.mineBlock([
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, SET_ONLY_WHITELIST, [types.bool(true)], deployer.address),
       Tx.contractCall(
         BNS_NFT_CONTRACT_NAME,
         SET_WHITELIST_SPOTS,
@@ -164,7 +166,7 @@ Clarinet.test({
         deployer.address
       ),
     ]);
-    assertEquals(block.receipts.length, 2);
+    assertEquals(block.receipts.length, 3);
     assertEquals(block.height, 2);
     block = chain.mineBlock([
       Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_1.address),
@@ -427,6 +429,7 @@ Clarinet.test({
     response['zonefile-hash'].expectBuff(cases[0].zonefile);
 
     block = chain.mineBlock([
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, SET_ONLY_WHITELIST, [types.bool(true)], deployer.address),
       Tx.contractCall(
         BNS_NFT_CONTRACT_NAME,
         SET_WHITELIST_SPOTS,
@@ -452,7 +455,7 @@ Clarinet.test({
         deployer.address
       ),
     ]);
-    assertEquals(block.receipts.length, 4);
+    assertEquals(block.receipts.length, 5);
     assertEquals(block.height, 7);
     chain
       .callReadOnlyFn(BNS_NFT_CONTRACT_NAME, GET_WHITELIST_SPOTS, [types.principal(fred.address)], deployer.address)
@@ -2066,6 +2069,7 @@ Clarinet.test({
     response['zonefile-hash'].expectBuff(cases[0].zonefile);
 
     block = chain.mineBlock([
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, SET_ONLY_WHITELIST, [types.bool(true)], deployer.address),
       Tx.contractCall(
         BNS_NFT_CONTRACT_NAME,
         SET_WHITELIST_SPOTS,
@@ -2103,7 +2107,7 @@ Clarinet.test({
         deployer.address
       ),
     ]);
-    assertEquals(block.receipts.length, 6);
+    assertEquals(block.receipts.length, 7);
     assertEquals(block.height, 7);
     chain
       .callReadOnlyFn(BNS_NFT_CONTRACT_NAME, GET_WHITELIST_SPOTS, [types.principal(fred.address)], deployer.address)

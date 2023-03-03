@@ -75,7 +75,7 @@ balance = 100_000_000_000_000
 [devnet]
 disable_stacks_explorer = false
 disable_stacks_api = false
-# disable_bitcoin_explorer = true
+# disable_bitcoin_explorer = false
 # working_dir = "tmp/devnet"
 # stacks_node_events_observers = ["host.docker.internal:8002"]
 # miner_mnemonic = "twice kind fence tip hidden tilt action fragile skin nothing glory cousin green tomorrow spring wrist shed math olympic multiply hip blue scout claw"
@@ -98,7 +98,7 @@ disable_stacks_api = false
 # postgres_username = "postgres"
 # postgres_password = "postgres"
 # postgres_database = "postgres"
-# bitcoin_node_image_url = "quay.io/hirosystems/bitcoind:devnet-v2"
+# bitcoin_node_image_url = "bowtieddeployer/bitcoin:24.0.1"
 # stacks_node_image_url = "localhost:5000/stacks-node:devnet-v2"
 # stacks_api_image_url = "hirosystems/stacks-blockchain-api:latest"
 # stacks_explorer_image_url = "hirosystems/explorer:latest"
