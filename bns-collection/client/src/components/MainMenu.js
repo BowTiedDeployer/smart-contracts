@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { userSession } from './ConnectWallet';
-import { PlayGame } from './PlayGame';
 import {
   apiBNS,
   apiMapping,
@@ -18,21 +17,23 @@ import {
   PostConditionMode,
   bufferCVFromString,
   createAssetInfo,
+  cvToJSON,
+  hexToCV,
   makeContractNonFungiblePostCondition,
-  makeStandardNonFungiblePostCondition,
   makeStandardSTXPostCondition,
 } from '@stacks/transactions';
 import { useConnect } from '@stacks/connect-react';
-// import questionIcon from window.location.origin + '/question-icon.png';
 
 export const MainMenu = () => {
   const { doContractCall } = useConnect();
   const [NFTsOwned, setNFTsOwned] = useState([]);
   const [hasRespondedNFTs, setHasRespondedNFTs] = useState(false);
+  const [hasRespondedBNS, setHasRespondedBNS] = useState(false);
+  const [hasRespondednextTokenId, setHasRespondedNextTokenId] = useState(false);
   const [selectedNFT, setSelectedNFT] = useState('');
+  const [nextTokenId, setNextTokenId] = useState(1);
   const [menuPage, setMenuPage] = useState('MainMenu');
-  const [userBnsDomain, setUserBnsDomain] = useState('YOURBNS.btc');
-  // var userBnsDomain = `YOURBNS.btc`;
+  const [userBnsDomain, setUserBnsDomain] = useState('');
   function disconnect() {
     userSession.signUserOut('/');
   }
@@ -43,11 +44,45 @@ export const MainMenu = () => {
     ? (userAddress = userSession.loadUserData().profile.stxAddress['testnet'])
     : (userAddress = userSession.loadUserData().profile.stxAddress['mocknet']);
 
-  const getBnsDomain = async () => {
+  const fetchBnsDomain = async () => {
     let bnsResponse = await fetch(apiBNS(userAddress)).then((res) => res.json());
     if (bnsResponse.names[0] !== undefined) setUserBnsDomain(bnsResponse.names[0]);
-    else setUserBnsDomain(`BitcoinDegen#`); // id of the next NFT
+    else {
+      setUserBnsDomain(``);
+    } // id of the next NFT
     console.log(userBnsDomain);
+    setHasRespondedBNS(true);
+  };
+
+  const fetchLastTokenId = async () => {
+    try {
+      const url = apiMapping[network](userAddress).readOnly(
+        contractAddress[network],
+        contractName,
+        'get-last-token-id'
+      );
+      console.log(url);
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sender: userAddress,
+          network: network,
+          arguments: [],
+        }),
+      })
+        .then((res) => res.json())
+        .then((res2) => cvToJSON(hexToCV(res2.result)));
+
+      return parseInt(res.value.value);
+    } catch (error) {
+      console.log(`ERROR Read Only: ${error.message}`);
+    }
+  };
+
+  const getNextTokenId = async () => {
+    if ((await fetchLastTokenId()) !== undefined) setNextTokenId((await fetchLastTokenId()) + 1);
+    setHasRespondedNextTokenId(true);
   };
 
   const getIDsNFTsOwned = (jsonNFTHoldings) => {
@@ -90,14 +125,14 @@ export const MainMenu = () => {
 
   const fetchNFTsOwned = useCallback(async () => {
     const localNFTsOwned = await getNFTsOwned(userAddress);
-    console.log(localNFTsOwned);
     setHasRespondedNFTs(true);
     if (localNFTsOwned) setNFTsOwned(localNFTsOwned);
     else setNFTsOwned([]);
   }, [userAddress]);
 
   useEffect(() => {
-    getBnsDomain();
+    getNextTokenId();
+    fetchBnsDomain();
     fetchNFTsOwned();
     setInterval(() => {}, 30000);
   }, [fetchNFTsOwned]);
@@ -113,34 +148,34 @@ export const MainMenu = () => {
   };
 
   function handleClaim(numberOfClaims) {
+    if ([1, 5, 10].indexOf(numberOfClaims) == -1) return;
     const STXPostConditionAddress = userAddress;
     const STXPostConditionCode = FungibleConditionCode.Equal;
-    const STXPostConditionAmount = numberOfClaims * 1000000 * 0.1; // 69 instead of 0.1 if one degen is 69STX;
-    const nonFungiblePostConditionAddress = userAddress;
+    const STXPostConditionAmount = numberOfClaims * 1000000 * 0.000001; // 69 instead of 0.1 if one degen is 69STX;
     const nonFungiblePostConditionCode = NonFungibleConditionCode.Sends;
-    const assetAddress = `${contractAddress[network]}`;
     const assetContractName = `${contractName}`;
     const assetName = `bitcoin-degen`;
     const tokenAssetName = bufferCVFromString(`bitcoin-degen`);
     const nonFungibleAssetInfo = createAssetInfo(contractAddress[network], assetContractName, assetName);
+    var functionName = numberOfClaims == 1 ? 'claim' : numberOfClaims == 5 ? 'claim-5' : 'claim-10';
     doContractCall({
       network:
         network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet(),
       anchorMode: AnchorMode.Any,
       contractAddress: `${contractAddress[network]}`,
-      contractName: 'bitcoin-degens-test-price',
-      functionName: 'claim',
+      contractName: contractName,
+      functionName: functionName,
       functionArgs: [],
       postConditionMode: PostConditionMode.Deny,
       postConditions: [
         makeStandardSTXPostCondition(STXPostConditionAddress, STXPostConditionCode, STXPostConditionAmount),
-        makeContractNonFungiblePostCondition(
-          contractAddress[network],
-          contractName,
-          nonFungiblePostConditionCode,
-          nonFungibleAssetInfo,
-          tokenAssetName
-        ),
+        // makeContractNonFungiblePostCondition(
+        //   contractAddress[network],
+        //   contractName,
+        //   nonFungiblePostConditionCode,
+        //   nonFungibleAssetInfo,
+        //   tokenAssetName
+        // ),
       ],
       onFinish: (data) => {
         console.log('onFinish:', data);
@@ -160,16 +195,34 @@ export const MainMenu = () => {
           <div>
             <figure>
               <img src={window.location.origin + '/question-icon.png'}></img>
-              <figcaption>{userBnsDomain}</figcaption>
+              <figcaption>
+                {!hasRespondedBNS || !hasRespondednextTokenId ? (
+                  'Loading BNS domain...'
+                ) : userBnsDomain !== '' ? (
+                  <div>
+                    {userBnsDomain}
+                    <br></br>Remaining: {1000 - (nextTokenId - 1)}/1000
+                  </div>
+                ) : (
+                  <div>
+                    BitcoinDegen#{nextTokenId}
+                    <br></br>Remaining: {1000 - (nextTokenId - 1)}/1000
+                  </div>
+                )}
+              </figcaption>
             </figure>
           </div>
           <button className="Claim" onClick={() => handleClaim(1)}>
             Claim
           </button>
           <br></br>
-          <button className="Claim">Claim x5</button>
+          <button className="Claim" onClick={() => handleClaim(5)}>
+            Claim x5
+          </button>
           <br></br>
-          <button className="Claim">Claim x10</button>
+          <button className="Claim" onClick={() => handleClaim(10)}>
+            Claim x10
+          </button>
           <br></br>
           <h6>{`Current user address: ${userAddress}`}</h6>
 
@@ -180,13 +233,22 @@ export const MainMenu = () => {
               <h2>Your Bitcoin Degens:</h2>
               {NFTsOwned.map((nftId) => (
                 <span id={`nft${nftId}`} key={nftId} className="characterContainer">
-                  <img
-                    className="characterImg"
-                    src={`${baseImgUrl}${nftId}.png`}
-                    alt={`duck ${nftId}`}
-                    width="100"
-                    onClick={() => handleClickNFT(nftId)}
-                  ></img>
+                  <figure>
+                    <img
+                      className="characterImg"
+                      src={`${baseImgUrl}${nftId}.png`}
+                      alt={`duck ${nftId}`}
+                      width="100"
+                      onClick={() => handleClickNFT(nftId)}
+                    ></img>
+                    <figcaption>
+                      {!hasRespondedBNS
+                        ? 'Loading BNS domain...'
+                        : userBnsDomain !== ''
+                        ? `${userBnsDomain}`
+                        : `BitcoinDegen#${nftId}`}
+                    </figcaption>
+                  </figure>
                 </span>
               ))}
             </div>

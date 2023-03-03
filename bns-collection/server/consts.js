@@ -27,7 +27,7 @@ const contractBitcoinDegens = {
   },
   testnet: {
     contractAddress: 'ST1HW9QWHEQ7PZYQGGKJ8FRWBF6VAG7V885WYH3TQ',
-    contractName: 'bitcoin-degens-test-price',
+    contractName: 'bitcoin-degens-test-price-3',
     functionName: 'get-nft-name',
     functionBatchName: 'get-batch-nft-name',
     userAddress: 'STPFGWKX2XVJF82CCR7ZR5C8PEQPVSJA410P1X0F',

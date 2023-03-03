@@ -11,21 +11,26 @@ export const apiBNS = (userAddress) => {
   return `https://api.bns.xyz/bns/addresses/stacks/${userAddress}`;
 };
 
-export const contractName = `bitcoin-degens-test-price`;
+export const contractName = `bitcoin-degens-test-price-3`;
 
 export const assetIdentifierBitcoinDegens = (network) =>
-  `asset_identifiers=${contractAddress[network]}.bitcoin-degens-test-price::bitcoin-degen`;
+  `asset_identifiers=${contractAddress[network]}.bitcoin-degens-test-price-3::bitcoin-degen`;
 
 export const baseImgUrl = `https://stacksdegens.com/bitcoin-degens/images/`;
 
 export const apiMapping = {
   mainnet: (userAddress) => ({
     nftsOwned: `https://stacks-node-api.mainnet.stacks.co/extended/v1/tokens/nft/holdings?principal=${userAddress}&&`,
+    readOnly: (contractAddress, contractName, functionName) =>
+      `https://stacks-node-api.mainnet.stacks.co/v2/contracts/call-read/${contractAddress}/${contractName}/${functionName}`,
   }),
   testnet: (userAddress) => ({
     nftsOwned: `https://stacks-node-api.testnet.stacks.co/extended/v1/tokens/nft/holdings?principal=${userAddress}&&`,
+    readOnly: (contractAddress, contractName, functionName) =>
+      `https://stacks-node-api.testnet.stacks.co/v2/contracts/call-read/${contractAddress}/${contractName}/${functionName}`,
   }),
   mocknet: (userAddress) => ({
     nftsOwned: ``,
+    readOnly: '',
   }),
 };
