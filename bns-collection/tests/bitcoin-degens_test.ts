@@ -7,10 +7,13 @@ const BNS_NFT_CONTRACT_NAME = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.bitcoin
 const FNC_PREORDER = 'preorder';
 const FNC_REGISTER = 'register';
 const FNC_CLAIM = 'claim';
+const FNC_CLAIM_5 = 'claim-5';
+const FNC_CLAIM_10 = 'claim-10';
 const IS_WHITELISTED = 'is-whitelisted';
 const GET_WHITELIST_SPOTS = 'get-whitelist-spots';
 const SET_WHITELIST_SPOTS = 'set-whitelist-spots';
 const SET_ONLY_WHITELIST = 'set-only-whitelisted';
+const SET_MINT_ENABLER = 'set-mint-enabler';
 const GET_NFT_NAME = 'get-nft-name';
 const GET_BATCH_NFT_NAME = 'get-batch-nft-name';
 const GET_LAST_TOKNE_ID = 'get-last-token-id';
@@ -22,9 +25,12 @@ const TRANSFER = 'transfer';
 const GET_ADDRESS_BNS_NAME = 'get-address-bns-name';
 
 const CLAIM_OK_RESPONSE = true;
-const ERR_CANNOT_MINT = 101;
-const ERR_FULL_MINT_REACHED = 104;
+const ERR_MINT_DISABLED = 300;
+const ERR_WHITELIST_ONLY = 301;
+const ERR_FULL_MINT_REACHED = 302;
 const MINT_PRICE = '69000000';
+
+// transfer from normal to bns
 
 // function preorder_name_hash(name: string, salt: string) {
 // return hash160(Buffer.concat([Buffer.from(name),typeof salt !== 'string' ? salt : Buffer.from(salt)]));
@@ -135,10 +141,10 @@ Clarinet.test({
     block.receipts[0].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
     block.receipts[1].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
     block.receipts[2].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
-    block.receipts[3].result.expectErr().expectUint(ERR_CANNOT_MINT);
+    block.receipts[3].result.expectErr().expectUint(ERR_WHITELIST_ONLY);
     block.receipts[4].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
-    block.receipts[5].result.expectErr().expectUint(ERR_CANNOT_MINT);
-    block.receipts[6].result.expectErr().expectUint(ERR_CANNOT_MINT);
+    block.receipts[5].result.expectErr().expectUint(ERR_WHITELIST_ONLY);
+    block.receipts[6].result.expectErr().expectUint(ERR_WHITELIST_ONLY);
   },
 });
 
@@ -182,10 +188,10 @@ Clarinet.test({
     block.receipts[0].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
     block.receipts[1].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
     block.receipts[2].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
-    block.receipts[3].result.expectErr().expectUint(ERR_CANNOT_MINT);
+    block.receipts[3].result.expectErr().expectUint(ERR_WHITELIST_ONLY);
     block.receipts[4].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
-    block.receipts[5].result.expectErr().expectUint(ERR_CANNOT_MINT);
-    block.receipts[6].result.expectErr().expectUint(ERR_CANNOT_MINT);
+    block.receipts[5].result.expectErr().expectUint(ERR_WHITELIST_ONLY);
+    block.receipts[6].result.expectErr().expectUint(ERR_WHITELIST_ONLY);
 
     block = chain.mineBlock([
       Tx.contractCall(BNS_NFT_CONTRACT_NAME, SET_ONLY_WHITELIST, [types.bool(false)], deployer.address),
@@ -503,7 +509,7 @@ Clarinet.test({
     assertEquals(block.receipts[3].events[0].stx_transfer_event.amount, MINT_PRICE);
     assertEquals(block.receipts[3].events[1].type, 'nft_mint_event');
     assertEquals(block.receipts[3].events[1].nft_mint_event.recipient, charlie.address);
-    block.receipts[4].result.expectErr().expectUint(ERR_CANNOT_MINT);
+    block.receipts[4].result.expectErr().expectUint(ERR_WHITELIST_ONLY);
     block.receipts[5].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
     assertEquals(block.receipts[5].events[0].stx_transfer_event.sender, dave.address);
     assertEquals(block.receipts[5].events[0].stx_transfer_event.recipient, deployer.address);
@@ -516,7 +522,7 @@ Clarinet.test({
     assertEquals(block.receipts[6].events[0].stx_transfer_event.amount, MINT_PRICE);
     assertEquals(block.receipts[6].events[1].type, 'nft_mint_event');
     assertEquals(block.receipts[6].events[1].nft_mint_event.recipient, elephant.address);
-    block.receipts[7].result.expectErr().expectUint(ERR_CANNOT_MINT);
+    block.receipts[7].result.expectErr().expectUint(ERR_WHITELIST_ONLY);
   },
 });
 
@@ -2157,7 +2163,7 @@ Clarinet.test({
     assertEquals(block.receipts[3].events[0].stx_transfer_event.amount, MINT_PRICE);
     assertEquals(block.receipts[3].events[1].type, 'nft_mint_event');
     assertEquals(block.receipts[3].events[1].nft_mint_event.recipient, charlie.address);
-    block.receipts[4].result.expectErr().expectUint(ERR_CANNOT_MINT);
+    block.receipts[4].result.expectErr().expectUint(ERR_WHITELIST_ONLY);
     block.receipts[5].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
     assertEquals(block.receipts[5].events[0].stx_transfer_event.sender, dave.address);
     assertEquals(block.receipts[5].events[0].stx_transfer_event.recipient, deployer.address);
@@ -2170,7 +2176,7 @@ Clarinet.test({
     assertEquals(block.receipts[6].events[0].stx_transfer_event.amount, MINT_PRICE);
     assertEquals(block.receipts[6].events[1].type, 'nft_mint_event');
     assertEquals(block.receipts[6].events[1].nft_mint_event.recipient, elephant.address);
-    block.receipts[7].result.expectErr().expectUint(ERR_CANNOT_MINT);
+    block.receipts[7].result.expectErr().expectUint(ERR_WHITELIST_ONLY);
     block.receipts[8].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
     assertEquals(block.receipts[8].events[0].stx_transfer_event.sender, graphite.address);
     assertEquals(block.receipts[8].events[0].stx_transfer_event.recipient, deployer.address);
@@ -2226,3 +2232,171 @@ Clarinet.test({
     chain.callReadOnlyFn(BNS_NFT_CONTRACT_NAME, GET_NFT_NAME, [types.uint(9)], deployer.address).result.expectNone();
   },
 });
+
+// flow full
+//
+// Launch SC mint true and whitelist false
+// mint 200 degens
+// Stop mint
+// Accept whitelist
+// start mint
+// mint 400 degens
+// Close whitelist => open for everyone
+// mint 600 degens
+// fail to mint 100 degens more
+
+Clarinet.test({
+  name: 'Ensure that mainnet flow mint is working',
+  // wallet 1, 2 are whitelisted, 3 is not whitelisted
+  // wallet 1, 2 can mint, 3 cannot mint
+  async fn(chain: Chain, accounts: Map<string, Account>) {
+    const deployer = accounts.get('deployer')!;
+    const wallet_1 = accounts.get('wallet_1')!;
+    const wallet_2 = accounts.get('wallet_2')!;
+    const wallet_3 = accounts.get('wallet_3')!;
+    const wallet_4 = accounts.get('wallet_4')!;
+    const wallet_5 = accounts.get('wallet_5')!;
+    const wallet_6 = accounts.get('wallet_6')!;
+    // wallet 4 mints 1 degen 5 times
+    // wallet 5 mints 5 degens 1 time
+    // wallet 6 mints 10 degens 20 times
+
+    let block = chain.mineBlock([
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_4.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_4.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_4.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_4.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_4.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_5, [], wallet_5.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM_10, [], wallet_6.address),
+    ]);
+    assertEquals(block.receipts.length, 26);
+    assertEquals(block.height, 2);
+    block.receipts[0].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[1].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[2].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[3].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[4].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[5].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[6].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[7].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[8].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[9].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[10].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[11].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[12].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[13].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[14].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[15].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[16].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[17].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[18].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[19].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[20].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[21].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[22].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[23].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[24].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[25].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+
+    block = chain.mineBlock([
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, SET_MINT_ENABLER, [types.bool(false)], deployer.address),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 3);
+
+    block = chain.mineBlock([
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, SET_ONLY_WHITELIST, [types.bool(true)], deployer.address),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 4);
+
+    block = chain.mineBlock([
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, SET_MINT_ENABLER, [types.bool(true)], deployer.address),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 5);
+
+    block = chain.mineBlock([
+      Tx.contractCall(
+        BNS_NFT_CONTRACT_NAME,
+        SET_WHITELIST_SPOTS,
+        [types.principal(wallet_1.address), types.uint(3)],
+        deployer.address
+      ),
+      Tx.contractCall(
+        BNS_NFT_CONTRACT_NAME,
+        SET_WHITELIST_SPOTS,
+        [types.principal(wallet_2.address), types.uint(1)],
+        deployer.address
+      ),
+    ]);
+    assertEquals(block.receipts.length, 2);
+    assertEquals(block.height, 6);
+    block = chain.mineBlock([
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_1.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_1.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_1.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_1.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_2.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_2.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_3.address),
+    ]);
+    assertEquals(block.receipts.length, 7);
+    assertEquals(block.height, 7);
+    block.receipts[0].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[1].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[2].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[3].result.expectErr().expectUint(ERR_WHITELIST_ONLY);
+    block.receipts[4].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[5].result.expectErr().expectUint(ERR_WHITELIST_ONLY);
+    block.receipts[6].result.expectErr().expectUint(ERR_WHITELIST_ONLY);
+
+    block = chain.mineBlock([
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, SET_ONLY_WHITELIST, [types.bool(false)], deployer.address),
+    ]);
+    assertEquals(block.receipts.length, 1);
+    assertEquals(block.height, 8);
+    block.receipts[0].result.expectOk().expectBool(false);
+
+    block = chain.mineBlock([
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_1.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_1.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_1.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_1.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_2.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_2.address),
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], wallet_3.address),
+    ]);
+    assertEquals(block.receipts.length, 7);
+    assertEquals(block.height, 9);
+    block.receipts[0].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[1].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[2].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[3].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[4].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[5].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    block.receipts[6].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+  },
+});
+
+// mint 5 and mint 10 called
