@@ -33,18 +33,25 @@
   width: 90px;
 }
 .characterContainer {
-  display: inline-block;
-  padding: 10px;
-  margin-left: 10px;
-  font-weight: bold;
-  text-align: center;
-  align-items: center;
-  align-content: center;
+  margin: 10px;
+  flex-basis: calc(33.33% - 20px);
 }
-.nftContainer {
-  display: inline-block;
-  color: white;
-  padding: 7px;
+
+@media (max-width: 768px) {
+  .characterContainer {
+    flex-basis: calc(50% - 20px);
+  }
+}
+
+@media (max-width: 480px) {
+  .characterContainer {
+    flex-basis: 100%;
+  }
+}
+.nftsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .nftImg {
   display: block;

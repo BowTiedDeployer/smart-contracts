@@ -23,6 +23,7 @@ import {
   makeStandardSTXPostCondition,
 } from '@stacks/transactions';
 import { useConnect } from '@stacks/connect-react';
+import QuestionIcon from '../images/question-icon.png';
 
 export const MainMenu = () => {
   const { doContractCall } = useConnect();
@@ -194,7 +195,7 @@ export const MainMenu = () => {
           <h1>Claim your brand new Bitcoin Degen!</h1>
           <div>
             <figure>
-              <img src={window.location.origin + '/question-icon.png'}></img>
+              <img src={QuestionIcon}></img>
               <figcaption>
                 {!hasRespondedBNS || !hasRespondednextTokenId ? (
                   'Loading BNS domain...'
@@ -205,7 +206,7 @@ export const MainMenu = () => {
                   </div>
                 ) : (
                   <div>
-                    BitcoinDegen#{nextTokenId}
+                    {nextTokenId == 1001 ? 'Fully Minted' : 'BitcoinDegen#' + nextTokenId}
                     <br></br>Remaining: {1000 - (nextTokenId - 1)}/1000
                   </div>
                 )}
@@ -227,30 +228,31 @@ export const MainMenu = () => {
           <h6>{`Current user address: ${userAddress}`}</h6>
 
           {!hasRespondedNFTs && <h1> Loading NFTs... </h1>}
-          {hasRespondedNFTs && NFTsOwned.length == 0 && <h1> No NFTs available </h1>}
+          {hasRespondedNFTs && NFTsOwned.length == 0 && <h1> No Bitcoin Degens owned </h1>}
           {hasRespondedNFTs && NFTsOwned.length > 0 && (
             <div>
               <h2>Your Bitcoin Degens:</h2>
-              {NFTsOwned.map((nftId) => (
-                <span id={`nft${nftId}`} key={nftId} className="characterContainer">
-                  <figure>
-                    <img
-                      className="characterImg"
-                      src={`${baseImgUrl}${nftId}.png`}
-                      alt={`duck ${nftId}`}
-                      width="100"
-                      onClick={() => handleClickNFT(nftId)}
-                    ></img>
-                    <figcaption>
-                      {!hasRespondedBNS
-                        ? 'Loading BNS domain...'
-                        : userBnsDomain !== ''
-                        ? `${userBnsDomain}`
-                        : `BitcoinDegen#${nftId}`}
-                    </figcaption>
-                  </figure>
-                </span>
-              ))}
+              <div className="nftsContainer">
+                {NFTsOwned.map((nftId) => (
+                  <div id={`nft${nftId}`} key={nftId} className="characterContainer">
+                    <figure>
+                      <img
+                        className="characterImg"
+                        src={`${baseImgUrl}${nftId}.png`}
+                        alt={`BitcoinDegen ${nftId}`}
+                        onClick={() => handleClickNFT(nftId)}
+                      ></img>
+                      <figcaption>
+                        {!hasRespondedBNS
+                          ? 'Loading BNS domain...'
+                          : userBnsDomain !== ''
+                          ? `${userBnsDomain}`
+                          : `BitcoinDegen#${nftId}`}
+                      </figcaption>
+                    </figure>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
           <button className="Connect" onClick={disconnect}>
