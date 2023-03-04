@@ -11,10 +11,10 @@ export const apiBNS = (userAddress) => {
   return `https://api.bns.xyz/bns/addresses/stacks/${userAddress}`;
 };
 
-export const contractName = `bitcoin-degens-test-price-3`;
+export const contractName = `bitcoin-degens-test-price-4`;
 
 export const assetIdentifierBitcoinDegens = (network) =>
-  `asset_identifiers=${contractAddress[network]}.bitcoin-degens-test-price-3::bitcoin-degen`;
+  `asset_identifiers=${contractAddress[network]}.bitcoin-degens-test-price-4::bitcoin-degen`;
 
 export const baseImgUrl = `https://stacksdegens.com/bitcoin-degens/images/`;
 

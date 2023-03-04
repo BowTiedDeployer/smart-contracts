@@ -151,7 +151,7 @@ export const MainMenu = () => {
     if ([1, 5, 10].indexOf(numberOfClaims) == -1) return;
     const STXPostConditionAddress = userAddress;
     const STXPostConditionCode = FungibleConditionCode.Equal;
-    const STXPostConditionAmount = numberOfClaims * 1000000 * 0.000001; // 69 instead of 0.1 if one degen is 69STX;
+    const STXPostConditionAmount = numberOfClaims * 1000000 * 69; // 69 instead of 0.1 if one degen is 69STX;
     const nonFungiblePostConditionCode = NonFungibleConditionCode.Sends;
     const assetContractName = `${contractName}`;
     const assetName = `bitcoin-degen`;
