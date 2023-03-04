@@ -8,7 +8,7 @@ const {
   listCV,
 } = require('@stacks/transactions');
 
-const network = 'mocknet';
+const network = 'testnet';
 const coreApiUrl = {
   mainnet: 'https://muddy-clean-choice.stacks-mainnet.discover.quiknode.pro/9fbe48eca6f617ed40f285ea0b7587d2542bfb4f',
   testnet: 'https://stacks-node-api.testnet.stacks.co',
@@ -23,18 +23,21 @@ const contractBitcoinDegens = {
     contractName: 'bitcoin-degens',
     functionName: 'get-nft-name',
     functionBatchName: 'get-batch-nft-name',
+    userAddress: '',
   },
   testnet: {
-    contractAddress: 'ST26FG29A6Q187QW0QGTCKYDAYVGY1GN21XJCVABG',
-    contractName: 'dolphin-apple-juice',
+    contractAddress: 'ST1HW9QWHEQ7PZYQGGKJ8FRWBF6VAG7V885WYH3TQ',
+    contractName: 'bitcoin-degens-test-price-4',
     functionName: 'get-nft-name',
     functionBatchName: 'get-batch-nft-name',
+    userAddress: 'STPFGWKX2XVJF82CCR7ZR5C8PEQPVSJA410P1X0F',
   },
   mocknet: {
     contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
     contractName: 'bitcoin-degens',
     functionName: 'get-nft-name',
     functionBatchName: 'get-batch-nft-name',
+    userAddress: '',
   },
 };
 

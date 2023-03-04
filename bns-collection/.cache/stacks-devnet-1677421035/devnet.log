@@ -1,0 +1,97 @@
+Feb 26 14:17:16.124 INFO Checking contracts
+Feb 26 14:17:16.154 INFO Starting Devnet
+Feb 26 14:17:16.156 INFO Event observer starting with config EventObserverConfig { normalization_enabled: true, grpc_server_enabled: false, hooks_enabled: true, chainhook_config: Some(ChainhookConfig { stacks_chainhooks: [], bitcoin_chainhooks: [] }), bitcoin_rpc_proxy_enabled: true, event_handlers: [], ingestion_port: 20445, control_port: 20446, bitcoin_node_username: "devnet", bitcoin_node_password: "devnet", bitcoin_node_rpc_url: "http://localhost:18443", stacks_node_rpc_url: "http://localhost:20443", operators: {}, display_logs: true }
+Feb 26 14:17:18.007 INFO Initiating Devnet boot sequence (working_dir: C:\Users\Admin\StacksDegens\smart-contracts\bns-collection\.cache\stacks-devnet-1677421035)
+Feb 26 14:17:18.018 INFO Creating network bns-collection.devnet
+Feb 26 14:17:18.023 INFO Starting bitcoin-node
+Feb 26 14:17:18.806 INFO Created container bitcoin-node: 8fb04600b7c2d95c2f3857717ad1f54636fdb28bf22f65c99ee3a1f0e6301315
+Feb 26 14:17:20.719 INFO Configuring bitcoin-node
+Feb 26 14:17:23.151 INFO Starting postgres
+Feb 26 14:17:25.817 INFO Created container postgres: 31592c1be9635be967b6160a06072718282955694ea803cbdf0b8f766549ed64
+Feb 26 14:17:27.550 INFO Starting stacks-api
+Feb 26 14:17:29.604 INFO Created container stacks-api: ac4addc91756013c8b09dd8d7b15e5bc27fc2aa0f7d1545ddfa48b87add8848a
+Feb 26 14:17:31.218 INFO Starting stacks-node
+Feb 26 14:17:34.789 INFO Created container stacks-node: d7f2a8a1fddb263d0fe944db7cf49a497cf224defa982b8a8e10effd14fe20a3
+Feb 26 14:17:36.891 INFO POST /
+Feb 26 14:17:36.910 INFO POST /
+Feb 26 14:17:36.921 INFO POST /
+Feb 26 14:17:37.350 INFO POST /new_burn_block
+Feb 26 14:17:37.360 INFO Start processing Bitcoin Block #101 (0x6a95...3350)
+Feb 26 14:17:37.360 INFO Active fork 0: Fork [], height = 0
+Feb 26 14:17:37.360 INFO Trying to append Block #101 (0x6a95...3350) to Fork [], height = 0
+Feb 26 14:17:37.361 INFO Active fork: 0 - Fork [Block #101 (0x6a95...3350)], height = 1
+Feb 26 14:17:37.361 INFO Active fork selected as canonical: 0
+Feb 26 14:17:37.361 INFO Handling PropagateBitcoinChainEvent command
+Feb 26 14:17:37.361 INFO Evaluating 0 bitcoin chainhooks registered
+Feb 26 14:17:37.361 INFO 0 bitcoin chainhooks positive evaluations
+Feb 26 14:17:37.362 INFO 0 bitcoin chainhooks will be triggered
+Feb 26 14:17:37.363 INFO 0 bitcoin chainhooks to deregister
+Feb 26 14:17:38.018 INFO Created container stacks-explorer: 3f9db36f169c5849cfdd2b788f5fa7e7201bf84cc5edd297f38ae435c362efe2
+Feb 26 14:17:38.018 INFO Starting stacks-explorer
+Feb 26 14:17:38.724 INFO POST /
+Feb 26 14:17:38.734 INFO POST /
+Feb 26 14:17:38.744 INFO POST /
+Feb 26 14:17:38.745 INFO Handling NotifyBitcoinTransactionProxied command
+Feb 26 14:17:39.917 INFO POST /new_burn_block
+Feb 26 14:17:39.922 INFO Start processing Bitcoin Block #102 (0x4b2c...77fc)
+Feb 26 14:17:39.922 INFO Active fork 0: Fork [Block #101 (0x6a95...3350)], height = 1
+Feb 26 14:17:39.922 INFO Trying to append Block #102 (0x4b2c...77fc) to Fork [Block #101 (0x6a95...3350)], height = 1
+Feb 26 14:17:39.922 INFO Comparing Block #101 (0x6a95...3350) with Block #102 (0x4b2c...77fc)
+Feb 26 14:17:39.922 INFO Active fork: 0 - Fork [Block #102 (0x4b2c...77fc), Block #101 (0x6a95...3350)], height = 2
+Feb 26 14:17:39.922 INFO Active fork selected as canonical: 0
+Feb 26 14:17:39.922 INFO Handling PropagateBitcoinChainEvent command
+Feb 26 14:17:39.922 INFO Evaluating 0 bitcoin chainhooks registered
+Feb 26 14:17:39.922 INFO 0 bitcoin chainhooks positive evaluations
+Feb 26 14:17:39.922 INFO 0 bitcoin chainhooks will be triggered
+Feb 26 14:17:39.922 INFO 0 bitcoin chainhooks to deregister
+Feb 26 14:17:40.048 INFO POST /
+Feb 26 14:17:40.059 INFO POST /
+Feb 26 14:17:40.070 INFO POST /
+Feb 26 14:17:40.070 INFO Handling NotifyBitcoinTransactionProxied command
+Feb 26 14:17:42.229 INFO POST /new_burn_block
+Feb 26 14:17:42.235 INFO Start processing Bitcoin Block #103 (0x37e3...b97a)
+Feb 26 14:17:42.235 INFO Active fork 0: Fork [Block #102 (0x4b2c...77fc), Block #101 (0x6a95...3350)], height = 2
+Feb 26 14:17:42.235 INFO Trying to append Block #103 (0x37e3...b97a) to Fork [Block #102 (0x4b2c...77fc), Block #101 (0x6a95...3350)], height = 2
+Feb 26 14:17:42.235 INFO Comparing Block #102 (0x4b2c...77fc) with Block #103 (0x37e3...b97a)
+Feb 26 14:17:42.235 INFO Active fork: 0 - Fork [Block #103 (0x37e3...b97a), Block #102 (0x4b2c...77fc), Block #101 (0x6a95...3350)], height = 3
+Feb 26 14:17:42.235 INFO Active fork selected as canonical: 0
+Feb 26 14:17:42.235 INFO Handling PropagateBitcoinChainEvent command
+Feb 26 14:17:42.236 INFO Evaluating 0 bitcoin chainhooks registered
+Feb 26 14:17:42.236 INFO 0 bitcoin chainhooks positive evaluations
+Feb 26 14:17:42.236 INFO 0 bitcoin chainhooks will be triggered
+Feb 26 14:17:42.236 INFO 0 bitcoin chainhooks to deregister
+Feb 26 14:17:42.589 INFO POST /
+Feb 26 14:17:42.599 INFO POST /new_block
+Feb 26 14:17:42.606 INFO Start processing Stacks Block #1 (0x8780...6081)
+Feb 26 14:17:42.606 INFO Active fork 0: Fork [], height = 0
+Feb 26 14:17:42.606 INFO Trying to append Block #1 (0x8780...6081) to Fork [], height = 0
+Feb 26 14:17:42.606 INFO Stacks Block #1 (0x8780...6081) successfully appended to Fork [Block #1 (0x8780...6081)], height = 1
+Feb 26 14:17:42.606 INFO Active fork: 0 - Fork [Block #1 (0x8780...6081)], height = 1 / 103
+Feb 26 14:17:42.606 INFO Active fork selected as canonical: 0
+Feb 26 14:17:42.606 INFO No block to confirm
+Feb 26 14:17:42.607 INFO Handling PropagateStacksChainEvent command
+Feb 26 14:17:42.608 INFO POST /
+Feb 26 14:17:42.620 INFO POST /
+Feb 26 14:17:42.620 INFO Handling NotifyBitcoinTransactionProxied command
+Feb 26 14:17:42.640 INFO Stacks block #1 anchored in Bitcoin block #103 includes 8 transactions
+Feb 26 14:17:42.744 INFO POST /new_mempool_tx
+Feb 26 14:17:42.746 INFO Handling PropagateStacksMempoolEvent command
+Feb 26 14:17:43.153 INFO POST /new_mempool_tx
+Feb 26 14:17:43.153 INFO Handling PropagateStacksMempoolEvent command
+Feb 26 14:17:43.224 INFO POST /new_mempool_tx
+Feb 26 14:17:43.224 INFO Handling PropagateStacksMempoolEvent command
+Feb 26 14:17:43.271 INFO POST /new_mempool_tx
+Feb 26 14:17:43.271 INFO Handling PropagateStacksMempoolEvent command
+Feb 26 14:17:43.337 INFO POST /new_mempool_tx
+Feb 26 14:17:43.337 INFO Handling PropagateStacksMempoolEvent command
+Feb 26 14:17:43.364 INFO Created container bitcoin-explorer: ac9134f7e33b5f7c0224a8c38095279ea7ffa4a58692991c8ea965610e5163ae
+Feb 26 14:17:43.364 INFO Starting bitcoin-explorer
+Feb 26 14:17:43.687 ERRO Fatal: unable to create container: Docker responded with status code 500: {"message":"driver failed programming external connectivity on endpoint bitcoin-explorer.bns-collection.devnet (7fbcafb1a298333bc8f0dabbb961667ddcae232e2d6ee53aaa97479fca9b7f0b): Bind for 0.0.0.0:8001 failed: port is already allocated"}
+
+Feb 26 14:17:43.691 INFO Terminating bitcoin-explorer
+Feb 26 14:17:43.754 INFO Handling Termination command
+Feb 26 14:17:44.384 INFO Terminating stacks-explorer
+Feb 26 14:17:45.276 INFO Terminating bitcoin-node
+Feb 26 14:17:46.165 INFO Terminating stacks-api
+Feb 26 14:17:46.890 INFO Terminating postgres
+Feb 26 14:17:47.931 INFO Terminating stacks-node

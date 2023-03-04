@@ -43,4 +43,4 @@ plan:
             path: contracts/og-bitcoin-degens.clar
             anchor-block-only: true
             clarity-version: 1
-      epoch: "2.0"
+            epoch: "2.0"
