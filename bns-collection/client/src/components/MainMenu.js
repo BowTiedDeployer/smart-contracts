@@ -24,6 +24,7 @@ import {
 } from '@stacks/transactions';
 import { useConnect } from '@stacks/connect-react';
 import QuestionIcon from '../images/question-icon.png';
+import Popup from './Popup';
 
 export const MainMenu = () => {
   const { doContractCall } = useConnect();
@@ -35,6 +36,11 @@ export const MainMenu = () => {
   const [nextTokenId, setNextTokenId] = useState(1);
   const [menuPage, setMenuPage] = useState('MainMenu');
   const [userBnsDomain, setUserBnsDomain] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const [successfulState, setSuccessfulState] = useState(false);
+  const [cancelledState, setCancelledState] = useState(false);
+  const [lastTxID, setLastTxID] = useState('');
+
   function disconnect() {
     userSession.signUserOut('/');
   }
@@ -53,6 +59,14 @@ export const MainMenu = () => {
     } // id of the next NFT
     console.log(userBnsDomain);
     setHasRespondedBNS(true);
+  };
+
+  const handleOpenPopup = () => {
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
   };
 
   const fetchLastTokenId = async () => {
@@ -179,10 +193,16 @@ export const MainMenu = () => {
         // ),
       ],
       onFinish: (data) => {
+        setCancelledState(false);
+        setSuccessfulState(true);
+        setLastTxID(data.txId);
+        handleOpenPopup();
         console.log('onFinish:', data);
-        console.log('Explorer:', `localhost:8000/txid/${data.txId}?chain=testnet`);
       },
       onCancel: () => {
+        setSuccessfulState(false);
+        setCancelledState(true);
+        handleOpenPopup();
         console.log('onCancel:', 'Transaction was canceled');
       },
     });
@@ -213,6 +233,17 @@ export const MainMenu = () => {
               </figcaption>
             </figure>
           </div>
+          {showPopup && successfulState && (
+            <Popup
+              title="Successfully minted"
+              content="View your mint "
+              txId={lastTxID}
+              closePopup={() => handleClosePopup()}
+            />
+          )}
+          {showPopup && cancelledState && (
+            <Popup title="Cancelled mint" content="You have cancelled the mint" closePopup={() => handleClosePopup()} />
+          )}
           <button className="Claim" onClick={() => handleClaim(1)}>
             Claim
           </button>

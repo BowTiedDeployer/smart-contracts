@@ -34,3 +34,9 @@ export const apiMapping = {
     readOnly: '',
   }),
 };
+
+export const explorerMapping = {
+  mainnet: (txId) => `https://explorer.stacks.co/txid/${txId}?chain=mainnet`,
+  testnet: (txId) => `https://explorer.stacks.co/txid/${txId}?chain=testnet`,
+  mocknet: (txId) => `not used right now`,
+};
