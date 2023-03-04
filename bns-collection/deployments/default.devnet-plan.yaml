@@ -12,35 +12,35 @@ plan:
             contract-name: bns
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 407580
-            path: "contracts\\bns.clar"
+            path: contracts/bns.clar
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
             contract-name: conversions
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 24950
-            path: "contracts\\conversions.clar"
+            path: contracts/conversions.clar
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
             contract-name: nft-trait
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 4670
-            path: "contracts\\nft-trait.clar"
+            path: contracts/nft-trait.clar
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
             contract-name: bitcoin-degens
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 52220
-            path: "contracts\\bitcoin-degens.clar"
+            cost: 50930
+            path: contracts/bitcoin-degens.clar
             anchor-block-only: true
             clarity-version: 1
         - contract-publish:
             contract-name: og-bitcoin-degens
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 73270
-            path: "contracts\\og-bitcoin-degens.clar"
+            path: contracts/og-bitcoin-degens.clar
             anchor-block-only: true
             clarity-version: 1
-      epoch: "2.0"
+            epoch: "2.0"
