@@ -50,7 +50,7 @@ export const MainMenu = () => {
   const [lastTxID, setLastTxID] = useState('');
 
   function disconnect() {
-    userSession.signUserOut('/');
+    userSession.signUserOut('/mint-bitcoin-degens');
   }
 
   let userAddress = '';
@@ -258,13 +258,13 @@ export const MainMenu = () => {
           )}
           {!userSession.isUserSignedIn() && (
             <div className="mint-btn-holder">
-              <button className="btn-mint" onClick={() => authenticate()}>
+              <button className="btn-mint" disabled={nextTokenId == 201} onClick={() => authenticate()}>
                 Mint
               </button>
-              <button className="btn-mint" onClick={() => authenticate()}>
+              <button className="btn-mint" disabled={nextTokenId == 201} onClick={() => authenticate()}>
                 Mint 5
               </button>
-              <button className="btn-mint" onClick={() => authenticate()}>
+              <button className="btn-mint" disabled={nextTokenId == 201} onClick={() => authenticate()}>
                 Mint 10
               </button>
             </div>
@@ -386,8 +386,10 @@ export const MainMenu = () => {
             </div>
           </div>
 
-          {!hasRespondedNFTs && <h1> Loading Bitcoin Degens minted </h1>}
-          {hasRespondedNFTs && mapBNSNames.length == 0 && <h4> No Bitcoin Degens minted yet... </h4>}
+          {!hasRespondedNFTs && <h1> Loading minted Bitcoin Degens... </h1>}
+          {hasRespondedNFTs && mapBNSNames.length == 0 && nextTokenId - 1 == 0 && (
+            <h4> No Bitcoin Degens minted yet... </h4>
+          )}
           {hasRespondedNFTs && mapBNSNames.length > 0 && (
             <div>
               <div className="nftsContainer">
