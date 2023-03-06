@@ -203,11 +203,11 @@
   margin: 0 auto;
   padding: 30px;
   max-width: 1200px;
-  font-size: 15px;
+  font-size: 20px;
 }
 
 .btn-connect-wallet {
-  font-size: 16px;
+  font-size: 20px;
   background-color: black;
   color: white;
   cursor: pointer;

@@ -5,7 +5,7 @@ import App from './App';
 
 import { Connect } from '@stacks/connect-react';
 
-import { userSession } from './components/ConnectWallet';
+import { userSession } from './components/MainMenu';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

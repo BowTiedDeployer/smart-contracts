@@ -1,14 +1,5 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { authenticate, userSession } from './ConnectWallet';
-import {
-  apiBNS,
-  apiMapping,
-  assetIdentifierBitcoinDegens,
-  baseImgUrl,
-  contractAddress,
-  contractName,
-  network,
-} from '../constants/consts';
+import React, { useEffect, useState } from 'react';
+import { apiBNS, apiMapping, baseImgUrl, contractAddress, contractName, network } from '../constants/consts';
 import { StacksMainnet, StacksMocknet, StacksTestnet } from '@stacks/network';
 import {
   AnchorMode,
@@ -19,20 +10,35 @@ import {
   createAssetInfo,
   cvToJSON,
   hexToCV,
-  makeContractNonFungiblePostCondition,
   makeStandardSTXPostCondition,
 } from '@stacks/transactions';
-import { useConnect } from '@stacks/connect-react';
+import { AppConfig, UserSession, showConnect, useConnect } from '@stacks/connect-react';
 import QuestionIcon from '../images/question-icon.png';
 import Popup from './Popup';
 
+const appConfig = new AppConfig(['store_write', 'publish_data']);
+
+export const userSession = new UserSession({ appConfig });
+
+export function authenticate() {
+  showConnect({
+    appDetails: {
+      name: 'Mint Bitcoin Degen!',
+      icon: 'https://stacksdegens.com/assets/images/collections/bitcoin-degens/2.jpeg',
+    },
+    redirectTo: '/',
+    onFinish: () => {
+      window.location.reload();
+    },
+    userSession,
+  });
+}
+
 export const MainMenu = () => {
   const { doContractCall } = useConnect();
-  const [NFTsOwned, setNFTsOwned] = useState([]);
   const [hasRespondedNFTs, setHasRespondedNFTs] = useState(false);
   const [hasRespondedBNS, setHasRespondedBNS] = useState(false);
-  const [hasRespondednextTokenId, setHasRespondedNextTokenId] = useState(false);
-  const [selectedNFT, setSelectedNFT] = useState('');
+  const [hasRespondedNextTokenId, setHasRespondedNextTokenId] = useState(false);
   const [nextTokenId, setNextTokenId] = useState(1);
   const [volumeSold, setVolumeSold] = useState('');
   const [menuPage, setMenuPage] = useState('MainMenu');
@@ -46,12 +52,15 @@ export const MainMenu = () => {
   function disconnect() {
     userSession.signUserOut('/');
   }
+
   let userAddress = '';
-  network == 'mainnet'
-    ? (userAddress = userSession.loadUserData().profile.stxAddress['mainnet'])
-    : network == 'testnet'
-    ? (userAddress = userSession.loadUserData().profile.stxAddress['testnet'])
-    : (userAddress = userSession.loadUserData().profile.stxAddress['mocknet']);
+
+  if (userSession.isUserSignedIn())
+    network == 'mainnet'
+      ? (userAddress = userSession.loadUserData().profile.stxAddress['mainnet'])
+      : network == 'testnet'
+      ? (userAddress = userSession.loadUserData().profile.stxAddress['testnet'])
+      : (userAddress = userSession.loadUserData().profile.stxAddress['mocknet']);
 
   const fetchBnsDomain = async () => {
     let bnsResponse = await fetch(apiBNS(userAddress)).then((res) => res.json());
@@ -59,7 +68,6 @@ export const MainMenu = () => {
     else {
       setUserBnsDomain(``);
     } // id of the next NFT
-    console.log(userBnsDomain);
     setHasRespondedBNS(true);
   };
 
@@ -73,17 +81,12 @@ export const MainMenu = () => {
 
   const fetchLastTokenId = async () => {
     try {
-      const url = apiMapping[network](userAddress).readOnly(
-        contractAddress[network],
-        contractName,
-        'get-last-token-id'
-      );
-      console.log(url);
+      const url = apiMapping[network].readOnly(contractAddress[network], contractName, 'get-last-token-id');
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          sender: userAddress,
+          sender: contractAddress[network],
           network: network,
           arguments: [],
         }),
@@ -91,7 +94,7 @@ export const MainMenu = () => {
         .then((res) => res.json())
         .then((res2) => cvToJSON(hexToCV(res2.result)));
 
-      return parseInt(res.value.value);
+      return parseInt(await res.value.value);
     } catch (error) {
       console.log(`ERROR Read Only: ${error.message}`);
     }
@@ -100,7 +103,6 @@ export const MainMenu = () => {
   const fetchLastNDegensMinted = async (N) => {
     let mapBNSNamesLocal = [];
     const lastValueSearched = nextTokenId - 1 - N <= 1 ? 1 : nextTokenId - 1 - N;
-    console.log(nextTokenId - 1);
     if (nextTokenId - 1 > 0)
       for (let i = nextTokenId - 1; i >= lastValueSearched; i--) {
         let jsonDegen = await fetch(`https://stacksdegens.com/bitcoin-degens/jsons/${i}.json`).then((res) =>
@@ -108,8 +110,8 @@ export const MainMenu = () => {
         );
         mapBNSNamesLocal.push({ id: i, name: await jsonDegen.name });
       }
-    setHasRespondedNFTs(true);
     setMapBNSNames(mapBNSNamesLocal);
+    setHasRespondedNFTs(true);
   };
 
   const getNextTokenId = async () => {
@@ -142,29 +144,20 @@ export const MainMenu = () => {
       getVolumeSold(nextTokenId - 1);
       await fetchLastNDegensMinted(24);
     });
-    await fetchBnsDomain();
+    if (userSession.isUserSignedIn()) await fetchBnsDomain();
   };
 
   useEffect(() => {
     wrapper();
-  }, [hasRespondednextTokenId]);
-
-  const changeSelection = (nftId, localSelectedNFT) => {
-    document.getElementById(`nft${localSelectedNFT}`)?.classList.remove('card-selected');
-    document.getElementById(`nft${nftId}`)?.classList.add('card-selected');
-  };
+  }, [hasRespondedNextTokenId]);
 
   function handleClaim(numberOfClaims) {
     if ([1, 5, 10].indexOf(numberOfClaims) == -1) return;
     const STXPostConditionAddress = userAddress;
     const STXPostConditionCode = FungibleConditionCode.Equal;
     const STXPostConditionAmount = numberOfClaims * 1000000 * 69; // 69 instead of 0.1 if one degen is 69STX;
-    const nonFungiblePostConditionCode = NonFungibleConditionCode.Sends;
-    const assetContractName = `${contractName}`;
-    const assetName = `bitcoin-degen`;
-    const tokenAssetName = bufferCVFromString(`bitcoin-degen`);
-    const nonFungibleAssetInfo = createAssetInfo(contractAddress[network], assetContractName, assetName);
     var functionName = numberOfClaims == 1 ? 'claim' : numberOfClaims == 5 ? 'claim-5' : 'claim-10';
+
     doContractCall({
       network:
         network === 'mainnet' ? new StacksMainnet() : network === 'testnet' ? new StacksTestnet() : new StacksMocknet(),
@@ -210,9 +203,16 @@ export const MainMenu = () => {
                 </a>
               </div>
               <div>
-                <button className="btn-connect-wallet" onClick={authenticate}>
-                  Connect wallet
-                </button>
+                {userSession.isUserSignedIn() && (
+                  <button className="btn-connect-wallet" onClick={disconnect}>
+                    Disconnect wallet
+                  </button>
+                )}
+                {!userSession.isUserSignedIn() && (
+                  <button className="btn-connect-wallet" onClick={authenticate}>
+                    Connect wallet
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -220,7 +220,9 @@ export const MainMenu = () => {
             <figure>
               <img className="img-character" src={QuestionIcon}></img>
               <figcaption>
-                {!hasRespondedBNS || !hasRespondednextTokenId ? (
+                {!userSession.isUserSignedIn() ? (
+                  'Connect wallet to see your BNS domain!'
+                ) : !hasRespondedBNS || !hasRespondedNextTokenId ? (
                   'Loading BNS domain...'
                 ) : userBnsDomain !== '' ? (
                   <div>{userBnsDomain}</div>
@@ -241,17 +243,32 @@ export const MainMenu = () => {
           {showPopup && cancelledState && (
             <Popup title="Cancelled mint" content="You have cancelled the mint" closePopup={() => handleClosePopup()} />
           )}
-          <div className="mint-btn-holder">
-            <button className="btn-mint" onClick={() => handleClaim(1)}>
-              Mint
-            </button>
-            <button className="btn-mint" onClick={() => handleClaim(5)}>
-              Mint 5
-            </button>
-            <button className="btn-mint" onClick={() => handleClaim(10)}>
-              Mint 10
-            </button>
-          </div>
+          {userSession.isUserSignedIn() && (
+            <div className="mint-btn-holder">
+              <button className="btn-mint" onClick={() => handleClaim(1)}>
+                Mint
+              </button>
+              <button className="btn-mint" onClick={() => handleClaim(5)}>
+                Mint 5
+              </button>
+              <button className="btn-mint" onClick={() => handleClaim(10)}>
+                Mint 10
+              </button>
+            </div>
+          )}
+          {!userSession.isUserSignedIn() && (
+            <div className="mint-btn-holder">
+              <button className="btn-mint" onClick={() => authenticate()}>
+                Mint
+              </button>
+              <button className="btn-mint" onClick={() => authenticate()}>
+                Mint 5
+              </button>
+              <button className="btn-mint" onClick={() => authenticate()}>
+                Mint 10
+              </button>
+            </div>
+          )}
           <div className="mint-info">
             <div className="mint-info-container">
               1000
@@ -370,10 +387,9 @@ export const MainMenu = () => {
           </div>
 
           {!hasRespondedNFTs && <h1> Loading Bitcoin Degens minted </h1>}
-          {hasRespondedNFTs && mapBNSNames.length == 0 && <h1> No Bitcoin Degens minted yet </h1>}
+          {hasRespondedNFTs && mapBNSNames.length == 0 && <h4> No Bitcoin Degens minted yet... </h4>}
           {hasRespondedNFTs && mapBNSNames.length > 0 && (
             <div>
-              {/* <h2>Last Bitcoin Degens Minted</h2> */}
               <div className="nftsContainer">
                 {mapBNSNames.map((degen) => (
                   <div id={`nft${degen.id}`} key={degen.name} className="nft-card">
@@ -539,9 +555,6 @@ export const MainMenu = () => {
               </div>
             </div>
           )}
-          <button className="Connect" onClick={disconnect}>
-            Disconnect Wallet
-          </button>
         </header>
       </div>
     ),

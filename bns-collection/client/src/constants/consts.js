@@ -2,7 +2,7 @@ export const network = 'testnet';
 // || mainnet || mocknet
 
 export const contractAddress = {
-  mainnet: ``,
+  mainnet: `SP1SCEXE6PMGPAC6B4N5P2MDKX8V4GF9QDE1FNNGJ`,
   testnet: `ST1HW9QWHEQ7PZYQGGKJ8FRWBF6VAG7V885WYH3TQ`,
   mocknet: ``,
 };
@@ -19,20 +19,17 @@ export const assetIdentifierBitcoinDegens = (network) =>
 export const baseImgUrl = `https://stacksdegens.com/bitcoin-degens/images/`;
 
 export const apiMapping = {
-  mainnet: (userAddress) => ({
-    nftsOwned: `https://stacks-node-api.mainnet.stacks.co/extended/v1/tokens/nft/holdings?principal=${userAddress}&&`,
+  mainnet: {
     readOnly: (contractAddress, contractName, functionName) =>
       `https://stacks-node-api.mainnet.stacks.co/v2/contracts/call-read/${contractAddress}/${contractName}/${functionName}`,
-  }),
-  testnet: (userAddress) => ({
-    nftsOwned: `https://stacks-node-api.testnet.stacks.co/extended/v1/tokens/nft/holdings?principal=${userAddress}&&`,
+  },
+  testnet: {
     readOnly: (contractAddress, contractName, functionName) =>
       `https://stacks-node-api.testnet.stacks.co/v2/contracts/call-read/${contractAddress}/${contractName}/${functionName}`,
-  }),
-  mocknet: (userAddress) => ({
-    nftsOwned: ``,
+  },
+  mocknet: {
     readOnly: '',
-  }),
+  },
 };
 
 export const explorerMapping = {
