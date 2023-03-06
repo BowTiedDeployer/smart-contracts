@@ -234,8 +234,8 @@ export const MainMenu = () => {
           </div>
           {showPopup && successfulState && (
             <Popup
-              title="Successfully minted"
-              content="View your mint "
+              title="Successfully started mint"
+              content="View your TX: "
               txId={lastTxID}
               closePopup={() => handleClosePopup()}
             />
