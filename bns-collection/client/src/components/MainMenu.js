@@ -99,7 +99,7 @@ export const MainMenu = () => {
 
   const fetchLastNDegensMinted = async (N) => {
     let mapBNSNamesLocal = [];
-    const lastValueSearched = nextTokenId - 1 - N <= 0 ? 0 : nextTokenId - 1 - N;
+    const lastValueSearched = nextTokenId - 1 - N <= 1 ? 1 : nextTokenId - 1 - N;
     console.log(nextTokenId - 1);
     if (nextTokenId - 1 > 0)
       for (let i = nextTokenId - 1; i >= lastValueSearched; i--) {
