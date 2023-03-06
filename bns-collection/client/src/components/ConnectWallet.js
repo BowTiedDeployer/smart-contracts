@@ -6,11 +6,11 @@ const appConfig = new AppConfig(['store_write', 'publish_data']);
 
 export const userSession = new UserSession({ appConfig });
 
-function authenticate() {
+export function authenticate() {
   showConnect({
     appDetails: {
-      name: 'Claim your brand new Bitcoin Degen!',
-      icon: window.location.origin + '/logo.png',
+      name: 'Mint Bitcoin Degen!',
+      icon: 'https://stacksdegens.com/assets/images/collections/bitcoin-degens/2.jpeg',
     },
     redirectTo: '/',
     onFinish: () => {

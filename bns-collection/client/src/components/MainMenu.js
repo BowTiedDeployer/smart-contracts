@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { userSession } from './ConnectWallet';
+import { authenticate, userSession } from './ConnectWallet';
 import {
   apiBNS,
   apiMapping,
@@ -34,7 +34,9 @@ export const MainMenu = () => {
   const [hasRespondednextTokenId, setHasRespondedNextTokenId] = useState(false);
   const [selectedNFT, setSelectedNFT] = useState('');
   const [nextTokenId, setNextTokenId] = useState(1);
+  const [volumeSold, setVolumeSold] = useState('');
   const [menuPage, setMenuPage] = useState('MainMenu');
+  const [mapBNSNames, setMapBNSNames] = useState([]);
   const [userBnsDomain, setUserBnsDomain] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [successfulState, setSuccessfulState] = useState(false);
@@ -53,7 +55,7 @@ export const MainMenu = () => {
 
   const fetchBnsDomain = async () => {
     let bnsResponse = await fetch(apiBNS(userAddress)).then((res) => res.json());
-    if (bnsResponse.names[0] !== undefined) setUserBnsDomain(bnsResponse.names[0]);
+    if ((await bnsResponse.names[0]) !== undefined) setUserBnsDomain(await bnsResponse.names[0]);
     else {
       setUserBnsDomain(``);
     } // id of the next NFT
@@ -95,71 +97,61 @@ export const MainMenu = () => {
     }
   };
 
-  const getNextTokenId = async () => {
-    if ((await fetchLastTokenId()) !== undefined) setNextTokenId((await fetchLastTokenId()) + 1);
-    setHasRespondedNextTokenId(true);
-  };
-
-  const getIDsNFTsOwned = (jsonNFTHoldings) => {
-    let ids = [];
-    if (jsonNFTHoldings.results) {
-      jsonNFTHoldings.results.map((x) => {
-        const id = x.value.repr.substring(1).toString();
-        if (id != '') ids.push(id);
-      });
-    }
-    return ids;
-  };
-
-  const getNFTsOwned = async () => {
-    console.log(assetIdentifierBitcoinDegens(network));
-    const urlHoldings = `${apiMapping[network](userAddress).nftsOwned}${assetIdentifierBitcoinDegens(network)}`;
-    const limit = 50;
-    let offsetHoldings = 0;
-    let jsonNFT = await fetch(urlHoldings).then((res) => {
-      return res.json();
-    });
-
-    let listOfNFTs = getIDsNFTsOwned(jsonNFT);
-    console.log('List of NFTs: ', listOfNFTs);
-    const totalDegens = jsonNFT.total;
-    offsetHoldings += limit;
-    console.log(totalDegens);
-
-    while (offsetHoldings < totalDegens) {
-      const offsetUrlHoldings = `&&offset=${offsetHoldings}`;
-      jsonNFT = await fetch(urlHoldings + offsetUrlHoldings).then((res) => {
-        return res.json();
-      });
-      listOfNFTs = listOfNFTs.concat(getIDsNFTsOwned(jsonNFT));
-      offsetHoldings += limit;
-    }
-
-    return listOfNFTs;
-  };
-
-  const fetchNFTsOwned = useCallback(async () => {
-    const localNFTsOwned = await getNFTsOwned(userAddress);
+  const fetchLastNDegensMinted = async (N) => {
+    let mapBNSNamesLocal = [];
+    const lastValueSearched = nextTokenId - 1 - N <= 0 ? 0 : nextTokenId - 1 - N;
+    console.log(nextTokenId - 1);
+    if (nextTokenId - 1 > 0)
+      for (let i = nextTokenId - 1; i >= lastValueSearched; i--) {
+        let jsonDegen = await fetch(`https://stacksdegens.com/bitcoin-degens/jsons/${i}.json`).then((res) =>
+          res.json()
+        );
+        mapBNSNamesLocal.push({ id: i, name: await jsonDegen.name });
+      }
     setHasRespondedNFTs(true);
-    if (localNFTsOwned) setNFTsOwned(localNFTsOwned);
-    else setNFTsOwned([]);
-  }, [userAddress]);
+    setMapBNSNames(mapBNSNamesLocal);
+  };
+
+  const getNextTokenId = async () => {
+    let lastTokenId = await fetchLastTokenId();
+    if (lastTokenId !== undefined) setNextTokenId(lastTokenId + 1);
+    setHasRespondedNextTokenId(true);
+    if (lastTokenId !== undefined)
+      setVolumeSold(
+        lastTokenId * 69 < 1000
+          ? `${lastTokenId * 69}`
+          : lastTokenId * 69 < 1000000
+          ? `${(lastTokenId * 69) / 1000}K`
+          : `${(lastTokenId * 69) / 1000000}M`
+      );
+    await fetchLastNDegensMinted(11);
+  };
+
+  const getVolumeSold = (lastTokenId) => {
+    setVolumeSold(
+      lastTokenId * 69 < 1000
+        ? `${lastTokenId * 69}`
+        : lastTokenId * 69 < 1000000
+        ? `${(lastTokenId * 69) / 1000}K`
+        : `${(lastTokenId * 69) / 1000000}M`
+    );
+  };
+
+  const wrapper = async () => {
+    await getNextTokenId().then(async () => {
+      getVolumeSold(nextTokenId - 1);
+      await fetchLastNDegensMinted(24);
+    });
+    await fetchBnsDomain();
+  };
 
   useEffect(() => {
-    getNextTokenId();
-    fetchBnsDomain();
-    fetchNFTsOwned();
-    setInterval(() => {}, 30000);
-  }, [fetchNFTsOwned]);
+    wrapper();
+  }, [hasRespondednextTokenId]);
 
   const changeSelection = (nftId, localSelectedNFT) => {
     document.getElementById(`nft${localSelectedNFT}`)?.classList.remove('card-selected');
     document.getElementById(`nft${nftId}`)?.classList.add('card-selected');
-  };
-
-  const handleClickNFT = (id) => {
-    changeSelection(id, selectedNFT);
-    setSelectedNFT(id);
   };
 
   function handleClaim(numberOfClaims) {
@@ -184,13 +176,6 @@ export const MainMenu = () => {
       postConditionMode: PostConditionMode.Deny,
       postConditions: [
         makeStandardSTXPostCondition(STXPostConditionAddress, STXPostConditionCode, STXPostConditionAmount),
-        // makeContractNonFungiblePostCondition(
-        //   contractAddress[network],
-        //   contractName,
-        //   nonFungiblePostConditionCode,
-        //   nonFungibleAssetInfo,
-        //   tokenAssetName
-        // ),
       ],
       onFinish: (data) => {
         setCancelledState(false);
@@ -212,23 +197,35 @@ export const MainMenu = () => {
     MainMenu: (
       <div>
         <header className="App-header">
-          <h1>Claim your brand new Bitcoin Degen!</h1>
+          <div className="header-header">
+            <div className="header-nav">
+              <div>
+                <a className="menu-item" href="https://stacksdegens.com/">
+                  Home
+                </a>
+              </div>
+              <div>
+                <a className="menu-item" href="https://stacksdegens.com/game-lobby/">
+                  Game
+                </a>
+              </div>
+              <div>
+                <button className="btn-connect-wallet" onClick={authenticate}>
+                  Connect wallet
+                </button>
+              </div>
+            </div>
+          </div>
           <div>
             <figure>
-              <img src={QuestionIcon}></img>
+              <img className="img-character" src={QuestionIcon}></img>
               <figcaption>
                 {!hasRespondedBNS || !hasRespondednextTokenId ? (
                   'Loading BNS domain...'
                 ) : userBnsDomain !== '' ? (
-                  <div>
-                    {userBnsDomain}
-                    <br></br>Remaining: {1000 - (nextTokenId - 1)}/1000
-                  </div>
+                  <div>{userBnsDomain}</div>
                 ) : (
-                  <div>
-                    {nextTokenId == 1001 ? 'Fully Minted' : 'BitcoinDegen#' + nextTokenId}
-                    <br></br>Remaining: {1000 - (nextTokenId - 1)}/1000
-                  </div>
+                  <div>{nextTokenId == 1001 ? 'Fully Minted' : 'BitcoinDegen#' + nextTokenId}</div>
                 )}
               </figcaption>
             </figure>
@@ -244,43 +241,299 @@ export const MainMenu = () => {
           {showPopup && cancelledState && (
             <Popup title="Cancelled mint" content="You have cancelled the mint" closePopup={() => handleClosePopup()} />
           )}
-          <button className="Claim" onClick={() => handleClaim(1)}>
-            Claim
-          </button>
-          <br></br>
-          <button className="Claim" onClick={() => handleClaim(5)}>
-            Claim x5
-          </button>
-          <br></br>
-          <button className="Claim" onClick={() => handleClaim(10)}>
-            Claim x10
-          </button>
-          <br></br>
-          <h6>{`Current user address: ${userAddress}`}</h6>
+          <div className="mint-btn-holder">
+            <button className="btn-mint" onClick={() => handleClaim(1)}>
+              Mint
+            </button>
+            <button className="btn-mint" onClick={() => handleClaim(5)}>
+              Mint 5
+            </button>
+            <button className="btn-mint" onClick={() => handleClaim(10)}>
+              Mint 10
+            </button>
+          </div>
+          <div className="mint-info">
+            <div className="mint-info-container">
+              1000
+              <div className="mint-info-title">TOTAL</div>
+            </div>
+            <div className="mint-info-container">
+              {1000 - (nextTokenId - 1)}
+              <div className="mint-info-title">REMAINING</div>
+            </div>
+            <div className="mint-info-container">
+              <svg width="15px" height="18px" viewBox="0 0 15 18" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                  <g transform="translate(-889.000000, -497.000000)" stroke="#707071">
+                    <g transform="translate(528.000000, 492.000000)">
+                      <g transform="translate(361.000000, 6.000000)">
+                        <g>
+                          <line x1="3.84615385" y1="6.58823529" x2="13.0769231" y2="6.58823529"></line>
+                          <line
+                            x1="-9.60769925e-17"
+                            y1="6.17647059"
+                            x2="6.15384615"
+                            y2="6.17647059"
+                            strokeWidth="2"
+                          ></line>
+                          <line
+                            x1="1.53846154"
+                            y1="6.17647059"
+                            x2="6.15384615"
+                            y2="6.17647059"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          ></line>
+                          <line
+                            x1="8.46153846"
+                            y1="6.17647059"
+                            x2="13.0769231"
+                            y2="6.17647059"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          ></line>
+                          <line x1="8.46153846" y1="6.17647059" x2="14.6153846" y2="6.17647059" strokeWidth="2"></line>
+                          <line
+                            x1="2.30769231"
+                            y1="0.411764706"
+                            x2="6.15384615"
+                            y2="6.17647059"
+                            strokeWidth="2"
+                            strokeLinejoin="round"
+                          ></line>
+                          <line
+                            x1="8.46153846"
+                            y1="0.411764706"
+                            x2="12.3076923"
+                            y2="6.17647059"
+                            strokeWidth="2"
+                            strokeLinejoin="round"
+                            transform="translate(10.384615, 3.294118) scale(-1, 1) translate(-10.384615, -3.294118) "
+                          ></line>
+                        </g>
+                        <g transform="translate(7.500000, 12.500000) scale(1, -1) translate(-7.500000, -12.500000) translate(0.000000, 9.000000)">
+                          <line x1="3.84615385" y1="6.58823529" x2="13.0769231" y2="6.58823529"></line>
+                          <line
+                            x1="-9.60769925e-17"
+                            y1="6.17647059"
+                            x2="6.15384615"
+                            y2="6.17647059"
+                            strokeWidth="2"
+                          ></line>
+                          <line
+                            x1="1.53846154"
+                            y1="6.17647059"
+                            x2="6.15384615"
+                            y2="6.17647059"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          ></line>
+                          <line
+                            x1="8.46153846"
+                            y1="6.17647059"
+                            x2="13.0769231"
+                            y2="6.17647059"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          ></line>
+                          <line x1="8.46153846" y1="6.17647059" x2="14.6153846" y2="6.17647059" strokeWidth="2"></line>
+                          <line
+                            x1="2.30769231"
+                            y1="0.411764706"
+                            x2="6.15384615"
+                            y2="6.17647059"
+                            strokeWidth="2"
+                            strokeLinejoin="round"
+                          ></line>
+                          <line
+                            x1="8.46153846"
+                            y1="0.411764706"
+                            x2="12.3076923"
+                            y2="6.17647059"
+                            strokeWidth="2"
+                            strokeLinejoin="round"
+                            transform="translate(10.384615, 3.294118) scale(-1, 1) translate(-10.384615, -3.294118) "
+                          ></line>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </svg>
+              69
+              <div className="mint-info-title">MINT PRICE</div>
+            </div>
+            <div className="mint-info-container">
+              {volumeSold}
+              <div className="mint-info-title">VOLUME SOLD</div>
+            </div>
+          </div>
 
-          {!hasRespondedNFTs && <h1> Loading NFTs... </h1>}
-          {hasRespondedNFTs && NFTsOwned.length == 0 && <h1> No Bitcoin Degens owned </h1>}
-          {hasRespondedNFTs && NFTsOwned.length > 0 && (
+          {!hasRespondedNFTs && <h1> Loading Bitcoin Degens minted </h1>}
+          {hasRespondedNFTs && mapBNSNames.length == 0 && <h1> No Bitcoin Degens minted yet </h1>}
+          {hasRespondedNFTs && mapBNSNames.length > 0 && (
             <div>
-              <h2>Your Bitcoin Degens:</h2>
+              {/* <h2>Last Bitcoin Degens Minted</h2> */}
               <div className="nftsContainer">
-                {NFTsOwned.map((nftId) => (
-                  <div id={`nft${nftId}`} key={nftId} className="characterContainer">
-                    <figure>
-                      <img
-                        className="characterImg"
-                        src={`${baseImgUrl}${nftId}.png`}
-                        alt={`BitcoinDegen ${nftId}`}
-                        onClick={() => handleClickNFT(nftId)}
-                      ></img>
-                      <figcaption>
-                        {!hasRespondedBNS
-                          ? 'Loading BNS domain...'
-                          : userBnsDomain !== ''
-                          ? `${userBnsDomain}`
-                          : `BitcoinDegen#${nftId}`}
-                      </figcaption>
-                    </figure>
+                {mapBNSNames.map((degen) => (
+                  <div id={`nft${degen.id}`} key={degen.name} className="nft-card">
+                    <div className="nft-card-inner">
+                      <div className="nft-card-front">
+                        <div className="nft-card-content">
+                          <div className="renderer">
+                            <img
+                              className="renderer-image"
+                              src={`${baseImgUrl}${degen.id}.png`}
+                              alt={`BitcoinDegen ${degen.id}`}
+                            ></img>
+                          </div>
+                          <div className="select"></div>
+                          <div className="details">
+                            <div className="details-nft-info">
+                              <div className="details-top-level">{`BitcoinDegen#${degen.id}`}</div>
+                              <div className="details-name">{degen.name}</div>
+                            </div>
+                          </div>
+                          <div className="actions">
+                            <div className="actions-sold-badge">SOLD</div>
+                            <div className="actions-price-container">
+                              <div className="actions-price">
+                                <div className="actions-sold-for">Sold for</div>
+                                <div className="actions-price-symbol">
+                                  <svg
+                                    width="15px"
+                                    height="18px"
+                                    viewBox="0 0 15 18"
+                                    version="1.1"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                                      <g transform="translate(-889.000000, -497.000000)" stroke="#707071">
+                                        <g transform="translate(528.000000, 492.000000)">
+                                          <g transform="translate(361.000000, 6.000000)">
+                                            <g>
+                                              <line
+                                                x1="3.84615385"
+                                                y1="6.58823529"
+                                                x2="13.0769231"
+                                                y2="6.58823529"
+                                              ></line>
+                                              <line
+                                                x1="-9.60769925e-17"
+                                                y1="6.17647059"
+                                                x2="6.15384615"
+                                                y2="6.17647059"
+                                                strokeWidth="2"
+                                              ></line>
+                                              <line
+                                                x1="1.53846154"
+                                                y1="6.17647059"
+                                                x2="6.15384615"
+                                                y2="6.17647059"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                              ></line>
+                                              <line
+                                                x1="8.46153846"
+                                                y1="6.17647059"
+                                                x2="13.0769231"
+                                                y2="6.17647059"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                              ></line>
+                                              <line
+                                                x1="8.46153846"
+                                                y1="6.17647059"
+                                                x2="14.6153846"
+                                                y2="6.17647059"
+                                                strokeWidth="2"
+                                              ></line>
+                                              <line
+                                                x1="2.30769231"
+                                                y1="0.411764706"
+                                                x2="6.15384615"
+                                                y2="6.17647059"
+                                                strokeWidth="2"
+                                                strokeLinejoin="round"
+                                              ></line>
+                                              <line
+                                                x1="8.46153846"
+                                                y1="0.411764706"
+                                                x2="12.3076923"
+                                                y2="6.17647059"
+                                                strokeWidth="2"
+                                                strokeLinejoin="round"
+                                                transform="translate(10.384615, 3.294118) scale(-1, 1) translate(-10.384615, -3.294118) "
+                                              ></line>
+                                            </g>
+                                            <g transform="translate(7.500000, 12.500000) scale(1, -1) translate(-7.500000, -12.500000) translate(0.000000, 9.000000)">
+                                              <line
+                                                x1="3.84615385"
+                                                y1="6.58823529"
+                                                x2="13.0769231"
+                                                y2="6.58823529"
+                                              ></line>
+                                              <line
+                                                x1="-9.60769925e-17"
+                                                y1="6.17647059"
+                                                x2="6.15384615"
+                                                y2="6.17647059"
+                                                strokeWidth="2"
+                                              ></line>
+                                              <line
+                                                x1="1.53846154"
+                                                y1="6.17647059"
+                                                x2="6.15384615"
+                                                y2="6.17647059"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                              ></line>
+                                              <line
+                                                x1="8.46153846"
+                                                y1="6.17647059"
+                                                x2="13.0769231"
+                                                y2="6.17647059"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                              ></line>
+                                              <line
+                                                x1="8.46153846"
+                                                y1="6.17647059"
+                                                x2="14.6153846"
+                                                y2="6.17647059"
+                                                strokeWidth="2"
+                                              ></line>
+                                              <line
+                                                x1="2.30769231"
+                                                y1="0.411764706"
+                                                x2="6.15384615"
+                                                y2="6.17647059"
+                                                strokeWidth="2"
+                                                strokeLinejoin="round"
+                                              ></line>
+                                              <line
+                                                x1="8.46153846"
+                                                y1="0.411764706"
+                                                x2="12.3076923"
+                                                y2="6.17647059"
+                                                strokeWidth="2"
+                                                strokeLinejoin="round"
+                                                transform="translate(10.384615, 3.294118) scale(-1, 1) translate(-10.384615, -3.294118) "
+                                              ></line>
+                                            </g>
+                                          </g>
+                                        </g>
+                                      </g>
+                                    </g>
+                                  </svg>
+                                </div>
+                                <div>69</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
