@@ -755,6 +755,7 @@ Clarinet.test({
       Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], charlie.address), // full-price
       Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], dave.address), // full-price
       Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], elephant.address), // full-price
+      Tx.contractCall(BNS_NFT_CONTRACT_NAME, FNC_CLAIM, [], deployer.address), // full-price
     ]);
 
     block.receipts[0].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
@@ -827,6 +828,15 @@ Clarinet.test({
     assertEquals(
       chain.callReadOnlyFn(BNS_NFT_CONTRACT_NAME, GET_NFT_NAME, [types.uint(7)], deployer.address).result.expectSome(),
       '"BitcoinDegen#7"'
+    );
+
+    block.receipts[7].result.expectOk().expectBool(CLAIM_OK_RESPONSE);
+    // no stx transfer event
+    assertEquals(block.receipts[7].events[0].type, 'nft_mint_event');
+    assertEquals(block.receipts[7].events[0].nft_mint_event.recipient, deployer.address);
+    assertEquals(
+      chain.callReadOnlyFn(BNS_NFT_CONTRACT_NAME, GET_NFT_NAME, [types.uint(8)], deployer.address).result.expectSome(),
+      '"BitcoinDegen#8"'
     );
   },
 });
