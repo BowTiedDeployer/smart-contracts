@@ -84,7 +84,9 @@
 (define-public (transfer (token-id uint) (sender principal) (recipient principal))
   (begin
     (asserts! (is-eq tx-sender sender) err-no-rights)
+    ;; SP000000000000000000002Q6VF78.bns
     (let ((address-bns-name (contract-call? .bns resolve-principal recipient)) 
+      ;; SP1JTCR202ECC6333N7ZXD7MK7E3ZTEEE1MJ73C60.bnsx-registry
       (address-bnsx-name (contract-call? .bnsx-fake get-primary-name recipient)))
       (if (not (is-err address-bns-name))  
         (let 
@@ -140,7 +142,9 @@
     (asserts! (var-get mint-enabled) err-mint-disabled)
     (let 
       ((next-id (+ u1 (var-get last-id)))
+        ;; SP000000000000000000002Q6VF78.bns
         (address-bns-name (contract-call? .bns resolve-principal new-owner))
+        ;; SP1JTCR202ECC6333N7ZXD7MK7E3ZTEEE1MJ73C60.bnsx-registry
         (address-bnsx-name (contract-call? .bnsx-fake get-primary-name new-owner))) 
       (asserts! (<= next-id total-amount) err-full-mint-reached)
       (if (not (is-err address-bns-name))  
