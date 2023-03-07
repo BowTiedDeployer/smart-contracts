@@ -14,6 +14,7 @@ const lines = fileContents.trim().split('\n');
 lines.forEach((line) => {
   let [address, numero] = line.split(',');
   numero = parseInt(numero.slice(1, -1));
+  address = "'" + address.slice(1, -1);
   const message = `(map-set whitelist-spots ${address} u${parseInt(numero) * 5})\n`;
   outputFile.write(message);
 });
