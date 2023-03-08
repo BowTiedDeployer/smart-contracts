@@ -8,18 +8,16 @@ const {
   listCV,
 } = require('@stacks/transactions');
 
-const network = 'testnet';
+const network = 'mainnet';
 const coreApiUrl = {
-  mainnet: 'https://muddy-clean-choice.stacks-mainnet.discover.quiknode.pro/9fbe48eca6f617ed40f285ea0b7587d2542bfb4f',
+  mainnet: 'https://stacks-node-api.mainnet.stacks.co',
   testnet: 'https://stacks-node-api.testnet.stacks.co',
-  // testnet: 'https://sparkling-aged-putty.stacks-testnet.discover.quiknode.pro/105f77e9d2aab693b59849c69305640a65ffd2fa',
-  // testnet-notworking: 'https://damp-serene-dew.stacks-testnet.discover.quiknode.pro/d310070672d029b398e6314a17e73be0a6bf2595',
   mocknet: 'http://localhost:3999',
 };
 
 const contractBitcoinDegens = {
   mainnet: {
-    contractAddress: '', //TODO: complete
+    contractAddress: 'SP1SCEXE6PMGPAC6B4N5P2MDKX8V4GF9QDE1FNNGJ',
     contractName: 'bitcoin-degens',
     functionName: 'get-nft-name',
     functionBatchName: 'get-batch-nft-name',
