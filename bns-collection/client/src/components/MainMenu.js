@@ -243,28 +243,32 @@ export const MainMenu = () => {
           {showPopup && cancelledState && (
             <Popup title="Cancelled mint" content="You have cancelled the mint" closePopup={() => handleClosePopup()} />
           )}
+          <div className="mint-message">
+            Update: The first 100 brand-new Bitcoin Degens are on the run. Grab them now and be one of the first
+            collectors with a linked BNS domain!{' '}
+          </div>
           {userSession.isUserSignedIn() && (
             <div className="mint-btn-holder">
-              <button className="btn-mint" onClick={() => handleClaim(1)}>
+              <button className="btn-mint" disabled={nextTokenId >= 101} onClick={() => handleClaim(1)}>
                 Mint
               </button>
-              <button className="btn-mint" onClick={() => handleClaim(5)}>
+              <button className="btn-mint" disabled={nextTokenId >= 101} onClick={() => handleClaim(5)}>
                 Mint 5
               </button>
-              <button className="btn-mint" onClick={() => handleClaim(10)}>
+              <button className="btn-mint" disabled={nextTokenId >= 101} onClick={() => handleClaim(10)}>
                 Mint 10
               </button>
             </div>
           )}
           {!userSession.isUserSignedIn() && (
             <div className="mint-btn-holder">
-              <button className="btn-mint" disabled={nextTokenId == 201} onClick={() => authenticate()}>
+              <button className="btn-mint" disabled={nextTokenId >= 101} onClick={() => authenticate()}>
                 Mint
               </button>
-              <button className="btn-mint" disabled={nextTokenId == 201} onClick={() => authenticate()}>
+              <button className="btn-mint" disabled={nextTokenId >= 101} onClick={() => authenticate()}>
                 Mint 5
               </button>
-              <button className="btn-mint" disabled={nextTokenId == 201} onClick={() => authenticate()}>
+              <button className="btn-mint" disabled={nextTokenId >= 101} onClick={() => authenticate()}>
                 Mint 10
               </button>
             </div>
