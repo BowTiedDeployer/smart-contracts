@@ -7,10 +7,10 @@ const fieldValue = 'Background';
 const mapAttributes = {
   backgrounds: {},
   cars: {},
-  rims: {},
   type: {},
-  head: {},
+  rims: {},
   face: {},
+  head: {},
 };
 // const listBackgrounds=[]
 // Set the directory where the JSON files are stored
@@ -43,17 +43,17 @@ fs.readdir(dir, (err, files) => {
     if (mapAttributes['cars'][jsonAttributes[1].value]) mapAttributes['cars'][jsonAttributes[1].value]++;
     else mapAttributes['cars'][jsonAttributes[1].value] = 1;
 
-    if (mapAttributes['rims'][jsonAttributes[2].value]) mapAttributes['rims'][jsonAttributes[2].value]++;
-    else mapAttributes['rims'][jsonAttributes[2].value] = 1;
+    if (mapAttributes['type'][jsonAttributes[2].value]) mapAttributes['type'][jsonAttributes[2].value]++;
+    else mapAttributes['type'][jsonAttributes[2].value] = 1;
 
-    if (mapAttributes['type'][jsonAttributes[3].value]) mapAttributes['type'][jsonAttributes[3].value]++;
-    else mapAttributes['type'][jsonAttributes[3].value] = 1;
+    if (mapAttributes['rims'][jsonAttributes[3].value]) mapAttributes['rims'][jsonAttributes[3].value]++;
+    else mapAttributes['rims'][jsonAttributes[3].value] = 1;
 
-    if (mapAttributes['head'][jsonAttributes[4].value]) mapAttributes['head'][jsonAttributes[4].value]++;
-    else mapAttributes['head'][jsonAttributes[4].value] = 1;
+    if (mapAttributes['face'][jsonAttributes[4].value]) mapAttributes['face'][jsonAttributes[4].value]++;
+    else mapAttributes['face'][jsonAttributes[4].value] = 1;
 
-    if (mapAttributes['face'][jsonAttributes[5].value]) mapAttributes['face'][jsonAttributes[5].value]++;
-    else mapAttributes['face'][jsonAttributes[5].value] = 1;
+    if (mapAttributes['head'][jsonAttributes[5].value]) mapAttributes['head'][jsonAttributes[5].value]++;
+    else mapAttributes['head'][jsonAttributes[5].value] = 1;
   });
   console.log(mapAttributes);
 
