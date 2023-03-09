@@ -9,4 +9,4 @@
     (ok true)))
 
 (define-read-only (get-primary-name (account principal))
-  (ok (map-get? primary-names account)))
+  (map-get? primary-names account))

@@ -34,7 +34,7 @@ Clarinet.test({
       [types.principal(deployer.address)],
       deployer.address
     );
-    let response = call.result.expectOk().expectSome().expectTuple();
+    let response = call.result.expectSome().expectTuple();
     console.log('this is ' + response);
     response['name'].expectBuff(name);
     response['namespace'].expectBuff(namespace);

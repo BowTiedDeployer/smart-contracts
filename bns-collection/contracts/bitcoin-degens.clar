@@ -100,17 +100,17 @@
                 {name: (unwrap-panic bns-name),
                 namespace: (unwrap-panic bns-namespace)}))
             (set-nft-name token-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string token-id)))))
-        (if (is-some (unwrap! address-bnsx-name err-bnsx-convert)) 
+        (if (is-some address-bnsx-name) 
           (let 
-            ((complete-bns-name (unwrap! (unwrap! address-bnsx-name err-bnsx-convert) err-bnsx-convert))
-              (bns-name (as-max-len? (get name complete-bns-name) u20))
-              (bns-namespace (as-max-len? (get namespace complete-bns-name) u9)))
-            (if (and (is-some bns-name)  (is-some bns-namespace)) 
+            ((complete-bnsx-name (unwrap! address-bnsx-name err-bnsx-convert))
+              (bnsx-name (as-max-len? (get name complete-bnsx-name) u20))
+              (bnsx-namespace (as-max-len? (get namespace complete-bnsx-name) u9)))
+            (if (and (is-some bnsx-name)  (is-some bnsx-namespace)) 
               ;; bnsx address respects the criterias
               (set-nft-name token-id 
                 (get-address-bns-name 
-                  {name: (unwrap-panic bns-name),
-                  namespace: (unwrap-panic bns-namespace)}))
+                  {name: (unwrap-panic bnsx-name),
+                  namespace: (unwrap-panic bnsx-namespace)}))
               (set-nft-name token-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string token-id)))))
           ;; does not have bns address
           (set-nft-name token-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string token-id)))))
@@ -159,17 +159,17 @@
                 {name: (unwrap-panic bns-name),
                 namespace: (unwrap-panic bns-namespace)}))
             (set-nft-name next-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string next-id)))))
-        (if (is-some (unwrap! address-bnsx-name err-bns-convert)) 
+        (if (is-some address-bnsx-name) 
           (let 
-            ((complete-bns-name (unwrap! (unwrap! address-bnsx-name err-bns-convert) err-bns-convert))
-              (bns-name (as-max-len? (get name complete-bns-name) u20))
-              (bns-namespace (as-max-len? (get namespace complete-bns-name) u9)))
-            (if (and (is-some bns-name)  (is-some bns-namespace)) 
+            ((complete-bnsx-name (unwrap! address-bnsx-name err-bnsx-convert))
+              (bnsx-name (as-max-len? (get name complete-bnsx-name) u20))
+              (bnsx-namespace (as-max-len? (get namespace complete-bnsx-name) u9)))
+            (if (and (is-some bnsx-name)  (is-some bnsx-namespace)) 
               ;; bnsx address respects the criterias
               (set-nft-name next-id 
                 (get-address-bns-name 
-                  {name: (unwrap-panic bns-name),
-                  namespace: (unwrap-panic bns-namespace)}))
+                  {name: (unwrap-panic bnsx-name),
+                  namespace: (unwrap-panic bnsx-namespace)}))
               (set-nft-name next-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string next-id)))))
           ;; does not have bns address
           (set-nft-name next-id (concat "BitcoinDegen#" (contract-call? .conversions uint-to-string next-id)))))
@@ -232,10 +232,9 @@
 
 (define-public (set-only-whitelisted (value bool)) 
   (begin 
-    (asserts! (is-eq tx-sender (var-get contract-owner))  err-owner-only)
+    (asserts! (is-eq tx-sender (var-get contract-owner)) err-owner-only)
     (var-set only-whitelisted value)
     (ok value)))
-
 
 ;; whitelist instantiation
 ;; (map-set whitelist-spots 'SP398XE371G08T84A99TCBD8XKWY3S7VVX6JKJWKY u5)

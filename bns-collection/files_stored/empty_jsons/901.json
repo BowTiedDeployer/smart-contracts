@@ -1,0 +1,15 @@
+{
+    "sip": 16,
+    "name": "BitcoinDegen#901",
+    "image": "https://stacksdegens.com/bitcoin-degens/images/901.png",
+    "attributes": [
+      {
+        "trait_type": "unknown",
+        "value": "unknown"
+      }
+    ],
+    "properties": {
+      "image_game": "https://stacksdegens.com/bitcoin-degens/in-game/901.png",
+      "collection": "BitcoinDegens"
+    }
+  }

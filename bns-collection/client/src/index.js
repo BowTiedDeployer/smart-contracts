@@ -13,9 +13,8 @@ root.render(
     <Connect
       authOptions={{
         appDetails: {
-          name: 'Stacks React Template',
-          // todo:
-          icon: window.location.origin + '/logo.png',
+          name: 'Mint Bitcoin Degens',
+          icon: 'https://stacksdegens.com/assets/images/collections/bitcoin-degens/2.jpeg',
         },
         redirectTo: '/',
         onFinish: () => {

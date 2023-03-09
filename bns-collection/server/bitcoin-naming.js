@@ -12,7 +12,6 @@ const {
 const fs = require('fs');
 const csvWriter = require('csv-write-stream');
 const cron = require('node-cron');
-// const { ct, contractName } = require('./consts.js');
 const { cvToJSON, hexToCV } = require('@stacks/transactions');
 let networkN =
   network === 'mainnet'
@@ -66,7 +65,7 @@ const fetchLastTokenId = async () => {
       contractBitcoinDegens[network].contractAddress,
       contractBitcoinDegens[network].contractName,
       'get-last-token-id'
-    ); //apiMapping[network].readOnly(contractAddress[network], contractName, 'get-last-token-id');
+    );
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -111,12 +110,14 @@ const findAllNames = async () => {
       let curr_id = j * 25 + i;
       if (curr_id <= (await lastTokenId)) {
         // read json
+        // namecheap location: ../public_html/bitcoin-degens/jsons/${curr_id}.json
         let degenJson = JSON.parse(fs.readFileSync(`../files_stored/jsons/${curr_id}.json`));
         if (degenJson.name != blockchainDegenNameMap[curr_id]) {
           // replace json.name = getNFTNameBitcoinDegens
           degenJson.name = blockchainDegenNameMap[curr_id];
           const jsonContent = jsonContentCreate(degenJson);
           // reWrite json
+          // namecheap location: ../public_html/bitcoin-degens/jsons/${curr_id}.json
           fs.writeFileSync(`../files_stored/jsons/${curr_id}.json`, jsonContent);
 
           // keep a log with the updates jsons
@@ -129,6 +130,6 @@ const findAllNames = async () => {
 };
 
 // cron-job every 5 minutes
-//cron.schedule('*/2 * * * *', () => {
-findAllNames();
-//});
+cron.schedule('*/2 * * * *', () => {
+  findAllNames();
+});

@@ -12,6 +12,9 @@ const mapAttributes = {
   face: {},
   head: {},
 };
+
+const worthBuying = [];
+
 // const listBackgrounds=[]
 // Set the directory where the JSON files are stored
 const dir = '../files_stored/jsons';
@@ -46,17 +49,29 @@ fs.readdir(dir, (err, files) => {
     if (mapAttributes['type'][jsonAttributes[2].value]) mapAttributes['type'][jsonAttributes[2].value]++;
     else mapAttributes['type'][jsonAttributes[2].value] = 1;
 
-    if (mapAttributes['rims'][jsonAttributes[3].value]) mapAttributes['rims'][jsonAttributes[3].value]++;
-    else mapAttributes['rims'][jsonAttributes[3].value] = 1;
+    if (mapAttributes['face'][jsonAttributes[3].value]) mapAttributes['face'][jsonAttributes[3].value]++;
+    else mapAttributes['face'][jsonAttributes[3].value] = 1;
 
-    if (mapAttributes['face'][jsonAttributes[4].value]) mapAttributes['face'][jsonAttributes[4].value]++;
-    else mapAttributes['face'][jsonAttributes[4].value] = 1;
+    if (mapAttributes['rims'][jsonAttributes[4].value]) mapAttributes['rims'][jsonAttributes[4].value]++;
+    else mapAttributes['rims'][jsonAttributes[4].value] = 1;
 
     if (mapAttributes['head'][jsonAttributes[5].value]) mapAttributes['head'][jsonAttributes[5].value]++;
     else mapAttributes['head'][jsonAttributes[5].value] = 1;
-  });
-  console.log(mapAttributes);
 
+    if (
+      jsonAttributes[1].value == 'Gold' ||
+      jsonAttributes[2].value == 'Monkey-Pink' ||
+      jsonAttributes[3].value == 'Cool-Glasses' ||
+      jsonAttributes[3].value == 'Pipe' ||
+      jsonAttributes[4].value == 'WGold' ||
+      jsonAttributes[5].value == 'Crown' ||
+      jsonAttributes[5].value == 'Exposed-Brain'
+    )
+      worthBuying.push(jsonData.name.split('#')[1]);
+  });
+  // console.log(mapAttributes);
+
+  console.log(worthBuying.filter((item) => item >= 0 && item <= 100));
   // {
   //   backgrounds: { 'Lux Yellow': 337, 'Pine Green': 357, 'Deep Magenta': 306 },
   //   cars: {

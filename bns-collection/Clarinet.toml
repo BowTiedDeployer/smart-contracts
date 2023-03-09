@@ -5,6 +5,11 @@ authors = []
 telemetry = false
 cache_dir = '.cache'
 requirements = []
+[contracts.basic-nefete]
+path = 'contracts/basic-nefete.clar'
+clarity_version = 1
+epoch = 2.0
+
 [contracts.bitcoin-degens]
 path = 'contracts/bitcoin-degens.clar'
 clarity_version = 1
@@ -25,6 +30,26 @@ path = 'contracts/conversions.clar'
 clarity_version = 1
 epoch = 2.0
 
+[contracts.name-bns]
+path = 'contracts/name-bns.clar'
+clarity_version = 1
+epoch = 2.0
+
+[contracts.name-only-bnsx]
+path = 'contracts/name-only-bnsx.clar'
+clarity_version = 1
+epoch = 2.0
+
+[contracts.name-without-bnsx]
+path = 'contracts/name-without-bnsx.clar'
+clarity_version = 1
+epoch = 2.0
+
+[contracts.naming]
+path = 'contracts/naming.clar'
+clarity_version = 1
+epoch = 2.0
+
 [contracts.nft-trait]
 path = 'contracts/nft-trait.clar'
 clarity_version = 1
@@ -40,6 +65,10 @@ path = 'contracts/outdated-bitcoin-degens.clar'
 clarity_version = 1
 epoch = 2.0
 
+[contracts.whitelist-fns]
+path = 'contracts/whitelist-fns.clar'
+clarity_version = 1
+epoch = 2.0
 [repl.analysis]
 passes = ['check_checker']
 
