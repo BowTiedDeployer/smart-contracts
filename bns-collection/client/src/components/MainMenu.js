@@ -142,7 +142,7 @@ export const MainMenu = () => {
   const wrapper = async () => {
     await getNextTokenId().then(async () => {
       getVolumeSold(nextTokenId - 1);
-      await fetchLastNDegensMinted(24);
+      await fetchLastNDegensMinted(23);
     });
     if (userSession.isUserSignedIn()) await fetchBnsDomain();
   };
@@ -155,7 +155,7 @@ export const MainMenu = () => {
     if ([1, 5, 10].indexOf(numberOfClaims) == -1) return;
     const STXPostConditionAddress = userAddress;
     const STXPostConditionCode = FungibleConditionCode.Equal;
-    const STXPostConditionAmount = numberOfClaims * 1000000 * 69; // 69 instead of 0.1 if one degen is 69STX;
+    const STXPostConditionAmount = numberOfClaims * 1000000 * 0; // 69 instead of 0.1 if one degen is 69STX;
     var functionName = numberOfClaims == 1 ? 'claim' : numberOfClaims == 5 ? 'claim-5' : 'claim-10';
 
     doContractCall({
@@ -244,31 +244,33 @@ export const MainMenu = () => {
             <Popup title="Cancelled mint" content="You have cancelled the mint" closePopup={() => handleClosePopup()} />
           )}
           <div className="mint-message">
-            Update: The first 100 brand-new Bitcoin Degens are on the run. Grab them now and be one of the first
-            collectors with a linked BNS domain!{' '}
+            A tribute to the Stacks blockchain and BNS success. 1000 unique Bitcoin Degens
+            {/* Update: The first 100
+            brand-new Bitcoin Degens are on the run. Grab them now and be one of the first collectors with a linked BNS
+            domain! */}
           </div>
           {userSession.isUserSignedIn() && (
             <div className="mint-btn-holder">
-              <button className="btn-mint" disabled={nextTokenId >= 101} onClick={() => handleClaim(1)}>
+              <button className="btn-mint" disabled={nextTokenId >= 1001} onClick={() => handleClaim(1)}>
                 Mint
               </button>
-              <button className="btn-mint" disabled={nextTokenId >= 101} onClick={() => handleClaim(5)}>
+              <button className="btn-mint" disabled={nextTokenId >= 1001} onClick={() => handleClaim(5)}>
                 Mint 5
               </button>
-              <button className="btn-mint" disabled={nextTokenId >= 101} onClick={() => handleClaim(10)}>
+              <button className="btn-mint" disabled={nextTokenId >= 1001} onClick={() => handleClaim(10)}>
                 Mint 10
               </button>
             </div>
           )}
           {!userSession.isUserSignedIn() && (
             <div className="mint-btn-holder">
-              <button className="btn-mint" disabled={nextTokenId >= 101} onClick={() => authenticate()}>
+              <button className="btn-mint" disabled={nextTokenId >= 1001} onClick={() => authenticate()}>
                 Mint
               </button>
-              <button className="btn-mint" disabled={nextTokenId >= 101} onClick={() => authenticate()}>
+              <button className="btn-mint" disabled={nextTokenId >= 1001} onClick={() => authenticate()}>
                 Mint 5
               </button>
-              <button className="btn-mint" disabled={nextTokenId >= 101} onClick={() => authenticate()}>
+              <button className="btn-mint" disabled={nextTokenId >= 1001} onClick={() => authenticate()}>
                 Mint 10
               </button>
             </div>
