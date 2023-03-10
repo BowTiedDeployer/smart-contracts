@@ -15,7 +15,7 @@ const mapAttributes = {
 
 // each NFT has a rarity
 // place them all in an array/map
-const rarity = [0];
+const rarity = [{ id: 0, rarity: 0 }];
 
 const worthBuying = [];
 
@@ -86,6 +86,7 @@ fs.readdir(dir, (err, files) => {
     throw err;
   }
 
+  var id = 1;
   // Iterate over each file
   files.forEach((file) => {
     // Construct the full path to the file
@@ -106,11 +107,18 @@ fs.readdir(dir, (err, files) => {
       mapAttributes['rims'][jsonAttributes[4].value] *
       mapAttributes['head'][jsonAttributes[5].value];
     // console log each mapAttribute from above
-
-    rarity.push(rarityNTF);
+    id++;
+    rarity.push({ id: id, rarity: rarityNTF });
   });
+  console.log(rarity);
 
-  for (let i = 0; i < rarity.length; i++) {
+  function sortByRarityAsc(a, b) {
+    return a.rarity - b.rarity;
+  }
+
+  rarity.sort(sortByRarityAsc);
+
+  for (let i = 1; i < rarity.length; i++) {
     console.log(rarity[i]);
   }
 });
